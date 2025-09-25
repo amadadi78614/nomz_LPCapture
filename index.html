@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lowveld Padel Pro - Season 2</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+<link href="css/styles.css" rel="stylesheet"/>
+</head>
+<body class="bg-gray-900 text-white">
+<!-- Navigation -->
+<nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between h-16">
+<a class="flex items-center" href="index.html">
+<h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            Lowveld Padel
+          </h1>
+<h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+            powered by Nomz
+          </h2>
+</a>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-white hover:text-blue-400 transition-colors" href="#franchises">Franchises</a>
+<a class="text-white hover:text-blue-400 transition-colors" href="#fantasy">Fantasy</a>
+<a class="text-white hover:text-blue-400 transition-colors" href="#marketplace">Marketplace</a>
+<a class="text-white hover:text-blue-400 transition-colors" href="#auctions">Live Stream</a>
+<a class="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all" href="login.html" id="navGetStarted">
+            Sign In / Register
+          </a>
+</div>
+<div class="md:hidden flex items-center">
+<button aria-label="Open menu" class="text-white" onclick="toggleMobileMenu()">
+<i class="fas fa-bars text-xl"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Mobile Menu -->
+<div class="hidden md:hidden bg-black/95 backdrop-blur-sm" id="mobileMenu">
+<div class="px-2 pt-2 pb-3 space-y-1">
+<a class="block px-3 py-2 hover:bg-gray-800 rounded" href="#franchises">Franchises</a>
+<a class="block px-3 py-2 hover:bg-gray-800 rounded" href="#fantasy">Fantasy</a>
+<a class="block px-3 py-2 hover:bg-gray-800 rounded" href="#marketplace">Marketplace</a>
+<a class="block px-3 py-2 hover:bg-gray-800 rounded" href="#auctions">Auctions</a>
+<a class="block w-full px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded" href="login.html" id="mobileGetStarted">
+          Sign In / Register
+        </a>
+</div>
+</div>
+</nav>
+<!-- Features Section -->
+<section class="py-20 bg-gradient-to-br from-gray-900 to-black" id="fantasy">
+<div class="max-w-7xl mx-auto px-4">
+<div class="text-center mb-16">
+<h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Platform Features
+        </h2>
+<p class="text-xl text-gray-400">Everything you need for the ultimate padel experience</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="feature-card bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-xl p-6 hover:scale-105 transition-all">
+<div class="text-center">
+<div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="fas fa-trophy text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-purple-400 mb-2">Fantasy League</h3>
+<p class="text-gray-400 text-sm">Build your dream team with R100k salary cap</p>
+</div>
+</div>
+<div class="feature-card bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-xl p-6 hover:scale-105 transition-all">
+<div class="text-center">
+<div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="fas fa-gavel text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-blue-400 mb-2">Live Stream</h3>
+<p class="text-gray-400 text-sm">Watch Players in action real-time!</p>
+</div>
+</div>
+<div class="feature-card bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl p-6 hover:scale-105 transition-all">
+<div class="text-center">
+<div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="fas fa-store text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-green-400 mb-2">Marketplace</h3>
+<p class="text-gray-400 text-sm">Buy equipment, coaching, and more</p>
+</div>
+</div>
+<a aria-label="Open League Management" class="feature-card bg-gradient-to-br from-orange-900/30 to-red-900/30 rounded-xl p-6 hover:scale-105 transition-all block group" href="league.html">
+<div class="text-center">
+<div class="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-500 rounded-full flex items-center justify-center mx-auto mb-4">
+<i class="fas fa-users text-2xl text-white"></i>
+</div>
+<h3 class="text-xl font-bold text-orange-400 mb-2">League Management</h3>
+<p class="text-gray-400 text-sm">Complete tournament and league control</p>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Franchises -->
+<section class="scroll-mt-24 py-20 bg-gradient-to-br from-gray-900 to-black" id="franchises">
+<div class="max-w-7xl mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+          Lowveld Padel Franchises
+        </h2>
+<p class="text-sm md:text-base tracking-widest text-indigo-200/80">
+          MEET THE 8 POWERHOUSE FRANCHISES COMPETING FOR GLORY!!!
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<!-- Desert Falcons -->
+<a class="franchise-card bg-gradient-to-br from-orange-900/50 to-yellow-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=desert-falcons">
+<div class="text-center">
+<img alt="Desert Falcons" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/desert-falcons.jpeg"/>
+<h3 class="text-2xl font-extrabold text-orange-300 mb-2">Desert Falcons</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Soaring to victory with precision and power</p>
+<div class="flex justify-between text-sm">
+<span class="text-orange-300 font-semibold" id="count-desert-falcons"></span>
+</div>
+</div>
+</a>
+<!-- Globo Boomerangs -->
+<a class="franchise-card bg-gradient-to-br from-blue-900/50 to-red-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=globo-boomerangs">
+<div class="text-center">
+<img alt="Globo Boomerangs" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/globo-boomerangs.jpeg"/>
+<h3 class="text-2xl font-extrabold text-blue-300 mb-2">Globo Boomerangs</h3>
+<p class="text-indigo-100/80 text-sm mb-6">What goes around, comes around stronger</p>
+<div class="flex justify-between text-sm">
+<span class="text-blue-300 font-semibold" id="count-globo-boomerangs"></span>
+</div>
+</div>
+</a>
+<!-- Ice Breakers -->
+<a class="franchise-card bg-gradient-to-br from-cyan-900/50 to-blue-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=ice-breakers">
+<div class="text-center">
+<img alt="Ice Breakers" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/ice-breakers.jpeg"/>
+<h3 class="text-2xl font-extrabold text-cyan-300 mb-2">Ice Breakers</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Breaking through with cool precision</p>
+<div class="flex justify-between text-sm">
+<span class="text-cyan-300 font-semibold" id="count-ice-breakers"></span>
+</div>
+</div>
+</a>
+<!-- Baltic Blades -->
+<a class="franchise-card bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=baltic-blades">
+<div class="text-center">
+<img alt="Baltic Blades" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/baltic-blades.jpeg"/>
+<h3 class="text-2xl font-extrabold text-blue-300 mb-2">Baltic Blades</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Sharp, swift, and unstoppable</p>
+<div class="flex justify-between text-sm">
+<span class="text-blue-300 font-semibold" id="count-baltic-blades"></span>
+</div>
+</div>
+</a>
+<!-- Avalanche Aces -->
+<a class="franchise-card bg-gradient-to-br from-blue-900/50 to-orange-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=avalanche-aces">
+<div class="text-center">
+<img alt="Avalanche Aces" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/avalanche-aces.jpeg"/>
+<h3 class="text-2xl font-extrabold text-blue-300 mb-2">Avalanche Aces</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Unstoppable force of nature</p>
+<div class="flex justify-between text-sm">
+<span class="text-blue-300 font-semibold" id="count-avalanche-aces"></span>
+</div>
+</div>
+</a>
+<!-- Rulo Apaches -->
+<a class="franchise-card bg-gradient-to-br from-red-900/50 to-orange-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=rulo-apaches">
+<div class="text-center">
+<img alt="Rulo Apaches" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/rulo-apaches.jpeg"/>
+<h3 class="text-2xl font-extrabold text-red-300 mb-2">Rulo Apaches</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Warriors of the court</p>
+<div class="flex justify-between text-sm">
+<span class="text-red-300 font-semibold" id="count-rulo-apaches"></span>
+</div>
+</div>
+</a>
+<!-- Samurai Kicksmashers -->
+<a class="franchise-card bg-gradient-to-br from-orange-900/50 to-blue-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=samurai-kicksmashers">
+<div class="text-center">
+<img alt="Samurai Kicksmashers" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/samurai-kicksmashers.jpeg"/>
+<h3 class="text-2xl font-extrabold text-orange-300 mb-2">Samurai Kicksmashers</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Honor, discipline, victory</p>
+<div class="flex justify-between text-sm">
+<span class="text-orange-300 font-semibold" id="count-samurai-kicksmashers"></span>
+</div>
+</div>
+</a>
+<!-- Sonic Viboras -->
+<a class="franchise-card bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer" href="franchise.html?team=sonic-viboras">
+<div class="text-center">
+<img alt="Sonic Viboras" class="w-28 h-28 mx-auto mb-4 rounded-full object-cover ring-2 ring-white/20" src="assets/logos/sonic-viboras.jpeg"/>
+<h3 class="text-2xl font-extrabold text-purple-300 mb-2">Sonic Viboras</h3>
+<p class="text-indigo-100/80 text-sm mb-6">Lightning fast, deadly accurate</p>
+<div class="flex justify-between text-sm">
+<span class="text-purple-300 font-semibold" id="count-sonic-viboras"></span>
+</div>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Match Results Section -->
+<section class="py-20 bg-gradient-to-br from-gray-900 to-black" id="results">
+<div class="max-w-7xl mx-auto px-4">
+<div class="text-center mb-12">
+<h2 class="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+          Match Results
+        </h2>
+<p class="text-sm md:text-base tracking-widest text-indigo-200/80">
+          Latest outcomes from Championship and Premier matches
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="results-container">
+<!-- Match results will be dynamically inserted here -->
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-r from-blue-600 to-purple-700">
+<div class="max-w-4xl mx-auto text-center px-4">
+<h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">
+        Ready to Dominate?
+      </h2>
+<p class="text-xl mb-8 text-blue-100">
+        Join Padel Pro and experience the future of padel competition
+      </p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<a class="bg-white text-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-all transform hover:scale-105" href="login.html" id="ctaJoinNow">
+          Sign In / Register
+        </a>
+<a class="border border-white px-8 py-4 rounded-lg text-lg font-semibold text-white hover:bg-white/10 transition-all" href="dashboard.html" id="ctaAdmin">
+          🎮 Admin Dashboard
+        </a>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-black py-12">
+<div class="max-w-7xl mx-auto px-4 text-center text-gray-400">
+      © <span id="year"></span> Lowveld Padel Pro. All rights reserved.
+    </div>
+</footer>
+<!-- Scripts -->
+<script></script></body></html>

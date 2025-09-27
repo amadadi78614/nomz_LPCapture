@@ -203,6 +203,24 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 }
 </style>
 
+
+<style id="lp-mobile-v3">
+@media (max-width: 640px) {
+  /* Make titles compact and consistent */
+  .lp-acc-title{font-size:0.98rem!important;line-height:1.25!important;font-weight:700!important;word-break:break-word}
+  .lp-acc-btn{padding:.6rem .75rem!important}
+
+  /* Relax any inner scroll areas inside fixtures so the page can scroll normally */
+  .lp-fx-section, .lp-fx-section * {
+    max-height: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  /* Disable sticky children that can trap scroll */
+  .lp-fx-section .sticky { position: static !important; top: auto !important; }
+}
+</style>
+
 </head>
 <body>
 <!-- Fixed Nav added -->
@@ -1528,6 +1546,8 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
   /* ---------- Fixtures -> Accordions ---------- */
   
   /* ---------- Fixtures -> Accordions (improved parsing) ---------- */
+  
+  /* ---------- Fixtures -> Accordions (clean title + relaxed scroll) ---------- */
   function buildFixtureAccordions(){
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
     if (w > 640) return;
@@ -1542,14 +1562,18 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
     fixSections.forEach(sec => {
       if (sec.__lpFxBuilt) return;
 
+      // mark this and a couple ancestors to relax scroll limits via CSS
+      let up = sec, steps = 0;
+      while (up && steps < 3) { up.classList.add('lp-fx-section'); up = up.parentElement; steps++; }
+
       let candidates = qa('li, div, article, p', sec).filter(el => {
         const t = (el.textContent||'').trim();
         const low = t.toLowerCase();
-        // must have exactly one " vs ", must show Winner, and not be overly long (avoid whole block wrappers)
-        return low.includes(' vs ') && low.includes('winner:') && countVs(t) === 1 && t.length < 260;
+        // Must contain "vs" and "Winner:", but avoid wrappers containing multiple matches
+        return low.includes(' vs ') && low.includes('winner:') && countVs(t) === 1 && t.length < 400;
       });
 
-      // Keep deepest nodes only
+      // keep deepest nodes only
       candidates = candidates.filter(el => !candidates.some(other => other !== el && other.contains(el)));
       if (!candidates.length) return;
 
@@ -1557,39 +1581,57 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
       list.className = 'lp-acc-list';
 
       candidates.forEach(el => {
-        const full = (el.textContent||'').replace(/\s+/g, ' ').trim();
+        const raw = (el.textContent||'').replace(/\s+/g,' ').trim();
 
-        // Tokenize by newlines/double spaces to separate lines
-        const tokens = (el.textContent||'').split(/\n+|\s{2,}/).map(s=>s.trim()).filter(Boolean);
+        // Robust "Team A vs Team B" capture
+        const vsCap = raw.match(/(.+?)\s+vs\s+(.+?)(?:\s+(?:winner:|at|on|monday|tuesday|wednesday|thursday|friday|saturday|sunday|,|-)\b|$)/i);
+        const titleLine = vsCap ? (vsCap[1].trim() + ' vs ' + vsCap[2].trim()) : (raw.split(/winner:/i)[0] || raw);
 
-        const titleTok  = tokens.find(x => /\bvs\b/i.test(x)) || '';
-        const winnerTok = (tokens.find(x => /winner:/i.test(x)) || '').replace(/^\s*winner:\s*/i, '').trim();
-        const dateTok   = tokens.find(x => /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(x)) || '';
+        // Winner & Date
+        const winMatch  = raw.match(/winner:\s*([^,•\n\r]+)/i);
+        const winner    = winMatch ? winMatch[1].trim() : '';
+        const dateMatch = raw.match(/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^,]*/i);
+        const dateStr   = dateMatch ? dateMatch[0].trim() : '';
 
-        const item = document.createElement('div');
-        item.className = 'lp-acc-item';
-
-        const btn = document.createElement('button');
-        btn.className = 'lp-acc-btn';
-        const caret = document.createElement('span');
-        caret.className = 'lp-acc-caret'; caret.textContent = '▾';
-
-        const title = document.createElement('span');
-        title.className = 'lp-acc-title';
-        title.textContent = winnerTok ? `${titleTok} — ${winnerTok}` : titleTok;
+        const item  = document.createElement('div'); item.className='lp-acc-item';
+        const btn   = document.createElement('button'); btn.className='lp-acc-btn';
+        const caret = document.createElement('span'); caret.className='lp-acc-caret'; caret.textContent='▾';
+        const title = document.createElement('span'); title.className='lp-acc-title';
+        title.textContent = winner ? `${titleLine} — ${winner}` : titleLine;
         btn.appendChild(title); btn.appendChild(caret);
 
-        const panel = document.createElement('div');
-        panel.className = 'lp-acc-panel hidden';
+        const panel = document.createElement('div'); panel.className='lp-acc-panel hidden';
+        const grid  = document.createElement('div'); grid.className='lp-acc-grid';
 
-        const grid = document.createElement('div');
-        grid.className = 'lp-acc-grid';
-
-        if (dateTok){
-          const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'DATE';
-          const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = dateTok;
+        if (dateStr){
+          const k = document.createElement('div'); k.className='lp-acc-key'; k.textContent='DATE';
+          const v = document.createElement('div'); v.className='lp-acc-val'; v.textContent=dateStr;
           grid.appendChild(k); grid.appendChild(v);
         }
+        if (winner){
+          const k = document.createElement('div'); k.className='lp-acc-key'; k.textContent='WINNER';
+          const v = document.createElement('div'); v.className='lp-acc-val'; v.textContent=winner;
+          grid.appendChild(k); grid.appendChild(v);
+        }
+
+        panel.appendChild(grid);
+        item.appendChild(btn); item.appendChild(panel);
+        list.appendChild(item);
+
+        btn.addEventListener('click', ()=>{
+          const open = !panel.classList.contains('hidden');
+          panel.classList.toggle('hidden', open);
+          caret.style.transform = open ? '' : 'rotate(180deg)';
+        });
+      });
+
+      // Insert list and hide original items on mobile
+      const anchor = candidates[0];
+      anchor.parentElement.insertBefore(list, anchor);
+      candidates.forEach(el => el.classList.add('lp-hide-mobile'));
+      sec.__lpFxBuilt = true;
+    });
+  }
         if (winnerTok){
           const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'WINNER';
           const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = winnerTok;

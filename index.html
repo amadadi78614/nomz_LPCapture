@@ -10,66 +10,48 @@
   <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
 
-  <!-- Optional extra CSS -->
-  <link rel="stylesheet" href="css/styles.css"/>
-
-  <!-- Small helper styles -->
   <style>
     .franchise-media { position: relative; width: 7rem; height: 7rem; margin: 0 auto 1rem; }
     .franchise-media > * {
-      width: 100%; height: 100%;
-      object-fit: cover; border-radius: 9999px;
-      box-shadow: 0 0 0 2px rgba(255,255,255,.15) inset;
-      display: block;
+      width: 100%; height: 100%; object-fit: cover; border-radius: 9999px;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.15) inset; display: block;
     }
-    /* Hide the logo by default; show it only if the video fails */
     .franchise-media img { display: none; }
   </style>
 </head>
-
 <body class="bg-gray-900 text-white">
   <!-- Navigation -->
   <nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
-        <a href="index.html" class="flex items-center gap-2">
-          <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Lowveld Padel
-          </h1>
-          <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            powered by Nomz
-          </h2>
+        <a href="index_home.html" class="flex items-center gap-2">
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Lowveld Padel</h1>
+          <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">powered by Nomz</h2>
         </a>
-
         <div class="hidden md:flex items-center space-x-8">
           <a href="#franchises" class="text-white hover:text-blue-400 transition-colors">Franchises</a>
-          <a href="#fixtures" class="text-white hover:text-blue-400 transition-colors">Fixtures</a>
-          <a href="#standings" class="text-white hover:text-blue-400 transition-colors">Standings</a>
           <a href="#marketplace" class="text-white hover:text-blue-400 transition-colors">Marketplace</a>
           <a href="#live-stream" class="text-white hover:text-blue-400 transition-colors">Live Stream</a>
+          <a href="#fantasy" class="text-white hover:text-blue-400 transition-colors">Fantasy League</a>
+          <a href="padel_league_gui_with_constructors_nav_home.html" target="_blank" rel="noopener" class="text-white hover:text-blue-400 transition-colors">Analysis Center</a>
         </div>
-
         <div class="md:hidden flex items-center">
-          <button aria-label="Open menu" class="text-white" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars text-xl"></i>
-          </button>
+          <button aria-label="Open menu" class="text-white" onclick="toggleMobileMenu()"><i class="fas fa-bars text-xl"></i></button>
         </div>
       </div>
     </div>
-
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="hidden md:hidden bg-black/95 backdrop-blur-sm">
       <div class="px-2 pt-2 pb-3 space-y-1">
         <a href="#franchises" class="block px-3 py-2 hover:bg-gray-800 rounded">Franchises</a>
-        <a href="#fixtures" class="block px-3 py-2 hover:bg-gray-800 rounded">Fixtures</a>
-        <a href="#standings" class="block px-3 py-2 hover:bg-gray-800 rounded">Standings</a>
         <a href="#marketplace" class="block px-3 py-2 hover:bg-gray-800 rounded">Marketplace</a>
         <a href="#live-stream" class="block px-3 py-2 hover:bg-gray-800 rounded">Live Stream</a>
+        <a href="#fantasy" class="block px-3 py-2 hover:bg-gray-800 rounded">Fantasy League</a>
+        <a href="padel_league_gui_with_constructors_nav_home.html" target="_blank" rel="noopener" class="block px-3 py-2 hover:bg-gray-800 rounded">Analysis Center</a>
       </div>
     </div>
   </nav>
 
-  <!-- Spacer for fixed nav -->
   <div class="h-16"></div>
 
   <!-- Feature Tiles -->
@@ -79,341 +61,107 @@
         <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
           Platform Features
         </h2>
-        <p class="text-xl text-gray-400">Everything you need for the ultimate padel experience</p>
+        <p class="text-xl text-gray-400">Your one-click hub for league insights</p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Fixtures -->
-        <a href="#fixtures" class="feature-card bg-gradient-to-br from-indigo-900/30 to-blue-900/30 rounded-xl p-6 hover:scale-105 transition-all block">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Analysis Center -->
+        <a href="padel_league_gui_with_constructors_nav_home.html" target="_blank" rel="noopener" class="feature-card bg-gradient-to-br from-indigo-900/30 to-purple-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
           <div class="text-center">
-            <div class="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i class="fas fa-calendar-days text-2xl text-white"></i>
+            <div class="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-chart-line text-3xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-indigo-300 mb-2">Fixtures</h3>
-            <p class="text-gray-400 text-sm">Match schedule for all franchises</p>
-          </div>
-        </a>
-
-        <!-- Standings (right of Fixtures) -->
-        <a href="#standings" class="feature-card bg-gradient-to-br from-purple-900/30 to-pink-900/30 rounded-xl p-6 hover:scale-105 transition-all block">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i class="fas fa-ranking-star text-2xl text-white"></i>
-            </div>
-            <h3 class="text-xl font-bold text-purple-300 mb-2">Standings</h3>
-            <p class="text-gray-400 text-sm">Live ladder and points table</p>
-          </div>
-        </a>
-
-        <!-- Live Stream -->
-        <a href="#live-stream" class="feature-card bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-xl p-6 hover:scale-105 transition-all block">
-          <div class="text-center">
-            <div class="w-16 h-16 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i class="fas fa-video text-2xl text-white"></i>
-            </div>
-            <h3 class="text-xl font-bold text-blue-400 mb-2">Live Stream</h3>
-            <p class="text-gray-400 text-sm">Watch players in action real-time</p>
+            <h3 class="text-2xl font-extrabold text-indigo-200 mb-2">Analysis Center</h3>
+            <p class="text-gray-400 text-sm">Open the live Constructors dashboard (winners, sweeps & charts)</p>
           </div>
         </a>
 
         <!-- Marketplace -->
-        <a href="#marketplace" class="feature-card bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl p-6 hover:scale-105 transition-all block">
+        <a href="#marketplace" class="feature-card bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
           <div class="text-center">
-            <div class="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <i class="fas fa-store text-2xl text-white"></i>
+            <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-store text-3xl text-white"></i>
             </div>
-            <h3 class="text-xl font-bold text-green-400 mb-2">Marketplace</h3>
-            <p class="text-gray-400 text-sm">Buy equipment, coaching, and more</p>
+            <h3 class="text-2xl font-extrabold text-green-300 mb-2">Marketplace</h3>
+            <p class="text-gray-400 text-sm">Buy/sell gear, book coaching & more</p>
+          </div>
+        </a>
+
+        <!-- Live Stream -->
+        <a href="#live-stream" class="feature-card bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-video text-3xl text-white"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Live Stream</h3>
+            <p class="text-gray-400 text-sm">Watch Padel24 & Play360 matches</p>
+          </div>
+        </a>
+
+        <!-- Fantasy League -->
+        <a href="#fantasy" class="feature-card bg-gradient-to-br from-yellow-900/30 to-amber-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-trophy text-3xl text-white"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-yellow-300 mb-2">Fantasy League</h3>
+            <p class="text-gray-400 text-sm">Pick squads, earn points, climb the ladder</p>
           </div>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Franchises (MP4 videos with logo fallback) -->
+  <!-- Franchises placeholder -->
   <section id="franchises" class="scroll-mt-24 py-20 bg-gradient-to-br from-gray-900 to-black">
     <div class="max-w-7xl mx-auto px-4">
       <div class="text-center mb-12">
         <h2 class="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
           Lowveld Padel Franchises
         </h2>
-        <p class="text-sm md:text-base tracking-widest text-indigo-200/80">
-          MEET THE 8 POWERHOUSE FRANCHISES COMPETING FOR GLORY!!!
-        </p>
+        <p class="text-sm md:text-base tracking-widest text-indigo-200/80">MEET THE 8 POWERHOUSE FRANCHISES COMPETING FOR GLORY!!!</p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-
-        <!-- Desert Falcons -->
-        <a href="franchise.html?team=desert-falcons"
-           class="franchise-card bg-gradient-to-br from-orange-900/50 to-yellow-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/desert-falcons.mp4"
-                     poster="assets/logos/desert-falcons.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/desert-falcons.jpeg" alt="Desert Falcons">
-            </div>
-            <h3 class="text-2xl font-extrabold text-orange-300 mb-2">Desert Falcons</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Soaring to victory with precision and power</p>
-          </div>
-        </a>
-
-        <!-- Globo Boomerangs -->
-        <a href="franchise.html?team=globo-boomerangs"
-           class="franchise-card bg-gradient-to-br from-blue-900/50 to-red-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/globo-boomerangs.mp4"
-                     poster="assets/logos/globo-boomerangs.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/globo-boomerangs.jpeg" alt="Globo Boomerangs">
-            </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Globo Boomerangs</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">What goes around, comes around stronger</p>
-          </div>
-        </a>
-
-        <!-- Ice Breakers -->
-        <a href="franchise.html?team=ice-breakers"
-           class="franchise-card bg-gradient-to-br from-cyan-900/50 to-blue-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/ice-breakers.mp4"
-                     poster="assets/logos/ice-breakers.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/ice-breakers.jpeg" alt="Ice Breakers">
-            </div>
-            <h3 class="text-2xl font-extrabold text-cyan-300 mb-2">Ice Breakers</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Breaking through with cool precision</p>
-          </div>
-        </a>
-
-        <!-- Baltic Blades -->
-        <a href="franchise.html?team=baltic-blades"
-           class="franchise-card bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/baltic-blades.mp4"
-                     poster="assets/logos/baltic-blades.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/baltic-blades.jpeg" alt="Baltic Blades">
-            </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Baltic Blades</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Sharp, swift, and unstoppable</p>
-          </div>
-        </a>
-
-        <!-- Avalanche Aces -->
-        <a href="franchise.html?team=avalanche-aces"
-           class="franchise-card bg-gradient-to-br from-blue-900/50 to-orange-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/avalanche-aces.mp4"
-                     poster="assets/logos/avalanche-aces.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/avalanche-aces.jpeg" alt="Avalanche Aces">
-            </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Avalanche Aces</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Unstoppable force of nature</p>
-          </div>
-        </a>
-
-        <!-- Rulo Apaches -->
-        <a href="franchise.html?team=rulo-apaches"
-           class="franchise-card bg-gradient-to-br from-red-900/50 to-orange-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/rulo-apaches.mp4"
-                     poster="assets/logos/rulo-apaches.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/rulo-apaches.jpeg" alt="Rulo Apaches">
-            </div>
-            <h3 class="text-2xl font-extrabold text-red-300 mb-2">Rulo Apaches</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Warriors of the court</p>
-          </div>
-        </a>
-
-        <!-- Samurai Kicksmashers -->
-        <a href="franchise.html?team=samurai-kicksmashers"
-           class="franchise-card bg-gradient-to-br from-orange-900/50 to-blue-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/samurai-kicksmashers.mp4"
-                     poster="assets/logos/samurai-kicksmashers.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/samurai-kicksmashers.jpeg" alt="Samurai Kicksmashers">
-            </div>
-            <h3 class="text-2xl font-extrabold text-orange-300 mb-2">Samurai Kicksmashers</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Honor, discipline, victory</p>
-          </div>
-        </a>
-
-        <!-- Sonic Viboras -->
-        <a href="franchise.html?team=sonic-viboras"
-           class="franchise-card bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/sonic-viboras.mp4"
-                     poster="assets/logos/sonic-viboras.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/sonic-viboras.jpeg" alt="Sonic Viboras">
-            </div>
-            <h3 class="text-2xl font-extrabold text-purple-300 mb-2">Sonic Viboras</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Lightning fast, deadly accurate</p>
-          </div>
-        </a>
-
-      </div>
+      <div class="text-gray-400 text-center">[Franchise cards unchanged – paste yours here]</div>
     </div>
   </section>
 
-  <!-- Fixtures + Standings (side by side) -->
-  <section id="fixtures-standings" class="py-20 bg-gradient-to-br from-gray-900 to-black">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-
-        <!-- Fixtures (LEFT) -->
-        <div id="fixtures" class="rounded-xl border border-white/10 p-6 bg-black/20">
-          <div class="text-center mb-6">
-            <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-indigo-300 to-blue-300 bg-clip-text text-transparent">
-              Fixtures
-            </h2>
-            <p class="text-gray-400">Upcoming matches and times</p>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="min-w-full text-left text-sm text-gray-300">
-              <thead class="text-gray-400 uppercase border-b border-white/10">
-                <tr>
-                  <th class="py-3 pr-4">Date</th>
-                  <th class="py-3 pr-4">Match</th>
-                  <th class="py-3 pr-4">Venue</th>
-                  <th class="py-3 pr-4">Time</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5">
-                <tr>
-                  <td class="py-3 pr-4">Sat 12 Oct</td>
-                  <td class="py-3 pr-4">Desert Falcons vs Ice Breakers</td>
-                  <td class="py-3 pr-4">Court A</td>
-                  <td class="py-3 pr-4">14:00</td>
-                </tr>
-                <tr>
-                  <td class="py-3 pr-4">Sun 13 Oct</td>
-                  <td class="py-3 pr-4">Rulo Apaches vs Sonic Viboras</td>
-                  <td class="py-3 pr-4">Court B</td>
-                  <td class="py-3 pr-4">16:30</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Standings (RIGHT) -->
-        <div id="standings" class="rounded-xl border border-white/10 p-6 bg-black/20">
-          <div class="text-center mb-6">
-            <h2 class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-300 to-pink-300 bg-clip-text text-transparent">
-              Standings
-            </h2>
-            <p class="text-gray-400">Live ladder and points</p>
-          </div>
-
-          <div class="overflow-x-auto">
-            <table class="min-w-full text-left text-sm text-gray-300">
-              <thead class="text-gray-400 uppercase border-b border-white/10">
-                <tr>
-                  <th class="py-3 pr-4">#</th>
-                  <th class="py-3 pr-4">Team</th>
-                  <th class="py-3 pr-4">P</th>
-                  <th class="py-3 pr-4">W</th>
-                  <th class="py-3 pr-4">L</th>
-                  <th class="py-3 pr-4">Pts</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5">
-                <tr>
-                  <td class="py-3 pr-4">1</td>
-                  <td class="py-3 pr-4">Desert Falcons</td>
-                  <td class="py-3 pr-4">4</td>
-                  <td class="py-3 pr-4">4</td>
-                  <td class="py-3 pr-4">0</td>
-                  <td class="py-3 pr-4">12</td>
-                </tr>
-                <tr>
-                  <td class="py-3 pr-4">2</td>
-                  <td class="py-3 pr-4">Sonic Viboras</td>
-                  <td class="py-3 pr-4">4</td>
-                  <td class="py-3 pr-4">3</td>
-                  <td class="py-3 pr-4">1</td>
-                  <td class="py-3 pr-4">9</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
-
-  <!-- Placeholder sections for anchors -->
+  <!-- Marketplace -->
   <section id="marketplace" class="py-20 bg-gradient-to-br from-gray-900 to-black">
     <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text text-transparent">
-        Marketplace
-      </h2>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text text-transparent">Marketplace</h2>
       <p>Coming soon…</p>
     </div>
   </section>
 
+  <!-- Live Stream -->
   <section id="live-stream" class="py-20 bg-gradient-to-br from-gray-900 to-black">
     <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
-        Live Stream
-      </h2>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">Live Stream</h2>
       <p>Coming soon…</p>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Fantasy League -->
+  <section id="fantasy" class="py-20 bg-gradient-to-br from-gray-900 to-black">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">Fantasy League</h2>
+      <p>Coming soon…</p>
+    </div>
+  </section>
+
   <footer class="bg-black py-12">
     <div class="max-w-7xl mx-auto px-4 text-center text-gray-400">
       © <span id="year"></span> Lowveld Padel Pro. All rights reserved.
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script>
-    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Mobile menu toggle
     function toggleMobileMenu() {
       const el = document.getElementById('mobileMenu');
       if (!el) return;
       el.classList.toggle('hidden');
     }
-
-    // Autoplay videos when ready; fallback to logo if video errors
-    document.querySelectorAll('.franchise-video').forEach(v => {
-      const tryPlay = () => v.play().catch(() => {});
-      v.addEventListener('loadeddata', tryPlay, { once: true });
-      v.addEventListener('canplay', tryPlay, { once: true });
-      v.addEventListener('error', () => {
-        v.style.display = 'none';
-        const img = v.nextElementSibling;
-        if (img) img.style.display = 'block';
-      });
-    });
   </script>
 </body>
 </html>

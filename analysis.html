@@ -1526,36 +1526,45 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
   }
 
   /* ---------- Fixtures -> Accordions ---------- */
+  
+  /* ---------- Fixtures -> Accordions (improved parsing) ---------- */
   function buildFixtureAccordions(){
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
     if (w > 640) return;
 
+    const countVs = (s) => ((s.match(/\s+vs\s+/gi) || []).length);
+
     const fixSections = qa('section, div').filter(sec => {
       const h = sec.querySelector('h2, h3, h4');
-      return h && /fixtures/i.test(text(h));
+      return h && /fixtures/i.test((h.textContent||'').trim());
     });
 
     fixSections.forEach(sec => {
       if (sec.__lpFxBuilt) return;
 
       let candidates = qa('li, div, article, p', sec).filter(el => {
-        const t = text(el).toLowerCase();
-        return t.includes(' vs ') && t.includes('winner:');
+        const t = (el.textContent||'').trim();
+        const low = t.toLowerCase();
+        // must have exactly one " vs ", must show Winner, and not be overly long (avoid whole block wrappers)
+        return low.includes(' vs ') && low.includes('winner:') && countVs(t) === 1 && t.length < 260;
       });
 
+      // Keep deepest nodes only
       candidates = candidates.filter(el => !candidates.some(other => other !== el && other.contains(el)));
-      if (candidates.length < 2) return;
+      if (!candidates.length) return;
 
       const list = document.createElement('div');
       list.className = 'lp-acc-list';
 
       candidates.forEach(el => {
-        const full = text(el).replace(/\s+/g, ' ');
+        const full = (el.textContent||'').replace(/\s+/g, ' ').trim();
 
-        let m = full.match(/(.+?vs.+?)(?:winner:| at | - |,|$)/i);
-        let titleLine = m ? m[1].trim() : full.split(' Winner:')[0].trim();
-        let win = (full.match(/winner:\s*([^,•\n\r]+)/i) || [,'']).pop().trim();
-        let date = (full.match(/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)[^,]*,[^,]*/i) || [,'']).pop().trim();
+        // Tokenize by newlines/double spaces to separate lines
+        const tokens = (el.textContent||'').split(/\n+|\s{2,}/).map(s=>s.trim()).filter(Boolean);
+
+        const titleTok  = tokens.find(x => /\bvs\b/i.test(x)) || '';
+        const winnerTok = (tokens.find(x => /winner:/i.test(x)) || '').replace(/^\s*winner:\s*/i, '').trim();
+        const dateTok   = tokens.find(x => /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i.test(x)) || '';
 
         const item = document.createElement('div');
         item.className = 'lp-acc-item';
@@ -1567,8 +1576,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 
         const title = document.createElement('span');
         title.className = 'lp-acc-title';
-        title.textContent = win ? `${titleLine} — ${win}` : titleLine;
-
+        title.textContent = winnerTok ? `${titleTok} — ${winnerTok}` : titleTok;
         btn.appendChild(title); btn.appendChild(caret);
 
         const panel = document.createElement('div');
@@ -1577,11 +1585,36 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
         const grid = document.createElement('div');
         grid.className = 'lp-acc-grid';
 
-        if (date){
+        if (dateTok){
           const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'DATE';
-          const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = date;
+          const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = dateTok;
           grid.appendChild(k); grid.appendChild(v);
         }
+        if (winnerTok){
+          const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'WINNER';
+          const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = winnerTok;
+          grid.appendChild(k); grid.appendChild(v);
+        }
+
+        panel.appendChild(grid);
+        item.appendChild(btn); item.appendChild(panel);
+        list.appendChild(item);
+
+        btn.addEventListener('click', ()=>{
+          const open = !panel.classList.contains('hidden');
+          panel.classList.toggle('hidden', open);
+          caret.style.transform = open ? '' : 'rotate(180deg)';
+        });
+      });
+
+      // Insert the list before the first candidate; hide originals on mobile
+      const anchor = candidates[0];
+      anchor.parentElement.insertBefore(list, anchor);
+      candidates.forEach(el => el.classList.add('lp-hide-mobile'));
+
+      sec.__lpFxBuilt = true;
+    });
+  }
 
         if (win){
           const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'WINNER';

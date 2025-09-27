@@ -155,6 +155,34 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 }
 </style>
 
+
+<style id="lp-mobile-v2">
+@media (max-width: 640px) {
+  /* Scrollable subnav */
+  .lp-subnav-scroll{display:flex;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:.75rem;padding:.25rem 0 .5rem;white-space:nowrap}
+  .lp-subnav-scroll a,.lp-subnav-scroll button{display:inline-block;padding:.25rem .6rem;border-radius:.6rem;border:1px solid rgba(255,255,255,.08)}
+
+  /* Hide original wide tables when we render cards */
+  .lp-hide-mobile{display:none!important}
+
+  /* Card list rebuilt from tables */
+  .lp-cardlist{display:grid;grid-template-columns:1fr;gap:.75rem;margin:.5rem 0 1rem}
+  .lp-card{border:1px solid rgba(255,255,255,.08);border-radius:.9rem;background:rgba(255,255,255,.03);padding:.6rem .75rem}
+  .lp-card h4{font-size:1rem;margin:0 0 .35rem 0}
+  .lp-kv{display:grid;grid-template-columns:1fr auto;gap:.25rem .75rem}
+  .lp-kv div{padding:.15rem 0;border-bottom:1px dashed rgba(255,255,255,.06)}
+  .lp-kv div:last-child{border-bottom:none}
+  .lp-key{color:rgba(229,231,235,.8);font-size:.8rem}
+  .lp-val{font-weight:600}
+  /* Small fonts for dense stats */
+  .lp-card .lp-kv .lp-val,.lp-card .lp-kv .lp-key{font-size:.9rem}
+
+  /* Safer floating button */
+  .lp-fab-safe{position:fixed!important;bottom:86px!important;right:12px!important;left:auto!important;max-width:calc(100% - 24px);}
+  body{padding-bottom:96px;} /* keep content above FAB */
+}
+</style>
+
 </head>
 <body>
 <!-- Fixed Nav added -->
@@ -1352,6 +1380,112 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
   }
   adjustFab();
   window.addEventListener('resize', adjustFab);
+})();
+</script>
+
+
+<script id="lp-mobile-builder">
+(function(){
+  const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
+
+  // Make tab row scrollable (same as before)
+  try {
+    const anchors = qa('a, button').filter(el => {
+      const t = (el.textContent||'').toLowerCase();
+      return /(premier standings|championship standings|premier player stats|championship player stats|fixtures|analysis center)/.test(t);
+    });
+    if (anchors.length){
+      const container = anchors[0].closest('nav,div,section') || anchors[0].parentElement;
+      if (container) container.classList.add('lp-subnav-scroll');
+    }
+  } catch(e){}
+
+  // Build mobile cards from standings/player tables
+  function buildCards(){
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
+    if (w > 640) return;
+
+    const wanted = ['#','team','p','w','l','sw','sl','gw','gl','pts','player','mp','mw','ml']; // generic pool
+
+    qa('table').forEach(tbl=>{
+      // Skip if we already built cards for this table
+      if (tbl.__lpCardsBuilt) return;
+
+      // Collect headers
+      const headers = qa('thead th, thead td', tbl).map(th => (th.textContent||'').trim().toLowerCase());
+      if (!headers.length) return;
+
+      // Decide which columns to show on mobile, in order
+      const mobileCols = [];
+      const preferredOrder = ['#','team','player','p','w','l','sw','sl','gw','gl','pts','mp','mw','ml'];
+      preferredOrder.forEach(label=>{
+        const idx = headers.indexOf(label);
+        if (idx !== -1) mobileCols.push({label, idx});
+      });
+      // Fallback: if we found less than 3, probably not a standings table; skip
+      if (mobileCols.length < 3) return;
+
+      // Build container
+      const list = document.createElement('div');
+      list.className = 'lp-cardlist';
+
+      qa('tbody tr', tbl).forEach(tr=>{
+        const tds = qa('td', tr);
+        if (!tds.length) return;
+        const card = document.createElement('div');
+        card.className = 'lp-card';
+
+        // Title line: either Player or Team + rank if present
+        const obj = Object.fromEntries(headers.map((h,i)=>[h, (tds[i]?.textContent||'').trim()]));
+        let title = obj['team'] || obj['player'] || '';
+        const rank = obj['#'] || '';
+        const h4 = document.createElement('h4');
+        h4.textContent = (rank? `${rank}. ` : '') + (title || '—');
+        card.appendChild(h4);
+
+        // Key values grid
+        const kv = document.createElement('div');
+        kv.className = 'lp-kv';
+
+        mobileCols.forEach(col=>{
+          if (col.label === '#' || col.label === 'team' || col.label === 'player') return;
+          const key = document.createElement('div');
+          key.className = 'lp-key';
+          key.textContent = col.label.toUpperCase();
+          const val = document.createElement('div');
+          val.className = 'lp-val';
+          val.textContent = (tds[col.idx]?.textContent||'').trim();
+          // Append as two adjacent cells
+          kv.appendChild(key);
+          kv.appendChild(val);
+        });
+
+        card.appendChild(kv);
+        list.appendChild(card);
+      });
+
+      // Place the list after the table and hide original on mobile
+      tbl.insertAdjacentElement('afterend', list);
+      tbl.classList.add('lp-hide-mobile');
+      tbl.__lpCardsBuilt = true;
+    });
+  }
+
+  // FAB safety
+  function adjustFab(){
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
+    const candidates = qa('a, button').filter(el => (el.textContent||'').toLowerCase().includes('analysis') && (el.textContent||'').toLowerCase().includes('constructors'));
+    if (candidates.length && w <= 640){
+      candidates.forEach(el => el.classList.add('lp-fab-safe'));
+    }
+  }
+
+  // Initial + on changes
+  const run = ()=>{ try{ buildCards(); adjustFab(); }catch(e){} };
+  run();
+  window.addEventListener('resize', run);
+  const mo = new MutationObserver(run);
+  mo.observe(document.body, {childList:true, subtree:true});
 })();
 </script>
 

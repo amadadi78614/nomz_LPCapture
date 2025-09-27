@@ -101,6 +101,60 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
   .btn-secondary.btn-sm, .btn-primary.btn-sm { display: none !important; }
 </style>
 
+
+<style id="lp-mobile-tweaks">
+/* ===== Mobile tweaks for Analysis Center ===== */
+@media (max-width: 640px) {
+  /* Make sub-nav horizontally scrollable */
+  .lp-subnav-scroll {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+    padding-bottom: .25rem;
+    scrollbar-width: thin;
+    white-space: nowrap;
+  }
+  .lp-subnav-scroll a, .lp-subnav-scroll button {
+    display: inline-block;
+    padding: .25rem .5rem;
+    border-radius: .5rem;
+    border: 1px solid rgba(255,255,255,.08);
+  }
+
+  /* Force multi-column grids to single column on phone */
+  .lp-analysis main .grid,
+  .lp-analysis .grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Responsive tables -> cards */
+  table.lp-responsive-table { display: block; width: 100%; }
+  table.lp-responsive-table thead { display: none; }
+  table.lp-responsive-table tbody { display: block; width: 100%; }
+  table.lp-responsive-table tr { display: block; margin: .5rem 0; border: 1px solid rgba(255,255,255,.08); border-radius: .75rem; background: rgba(255,255,255,.03); }
+  table.lp-responsive-table td { display: flex; justify-content: space-between; gap: 1rem; padding: .5rem .75rem; border-bottom: 1px solid rgba(255,255,255,.06); }
+  table.lp-responsive-table td:last-child { border-bottom: none; }
+  table.lp-responsive-table td::before {
+    content: attr(data-label);
+    color: rgba(229,231,235,.8); /* text-gray-200 */
+    font-size: .8rem;
+  }
+
+  /* Make long code/labels wrap nicely inside cards */
+  .lp-wrap { white-space: normal !important; word-break: break-word; }
+
+  /* Safer floating button position on mobile */
+  .lp-fab-safe {
+    position: fixed !important;
+    bottom: 88px !important;  /* above bottom bars */
+    right: 14px !important;
+    left: auto !important;
+    max-width: calc(100% - 28px);
+  }
+}
+</style>
+
 </head>
 <body>
 <!-- Fixed Nav added -->
@@ -1240,6 +1294,66 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 })();
 </script>
 
+
+
+<script id="lp-mobile-boot">
+(function(){
+  const q = (s, r=document) => r.querySelector(s);
+  const qa = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+  // Tag the page root for safer selectors
+  document.documentElement.classList.add('lp-analysis');
+
+  // Make the sub-tab row scroll on mobile
+  try {
+    // Find a container that holds the section tabs (e.g., "Premier Standings", "Championship Standings", ...)
+    const anchors = qa('a, button').filter(el => {
+      const t = (el.textContent||'').toLowerCase();
+      return /(premier standings|championship standings|premier player stats|championship player stats|fixtures|analysis center)/.test(t);
+    });
+    if (anchors.length) {
+      const container = anchors[0].closest('nav,div,section') || anchors[0].parentElement;
+      if (container) container.classList.add('lp-subnav-scroll');
+    }
+  } catch(e){}
+
+  // Convert wide tables into card stacks on small screens by copying headers into data-label
+  function makeTablesResponsive(scope=document){
+    qa('table', scope).forEach(tbl => {
+      try {
+        // Skip if already processed
+        if (tbl.classList.contains('lp-responsive-table')) return;
+
+        const heads = qa('thead th, thead td', tbl).map(th => (th.textContent||'').trim());
+        if (!heads.length) return;
+
+        qa('tbody tr', tbl).forEach(tr => {
+          qa('td', tr).forEach((td, i) => {
+            if (!td.getAttribute('data-label')) {
+              td.setAttribute('data-label', heads[i] || '');
+            }
+            td.classList.add('lp-wrap');
+          });
+        });
+        tbl.classList.add('lp-responsive-table');
+      } catch(e){}
+    });
+  }
+  makeTablesResponsive();
+  // Also handle dynamic renders
+  const mo = new MutationObserver(() => makeTablesResponsive());
+  mo.observe(document.body, {childList:true, subtree:true});
+
+  // Nudge the floating Analysis/Constructors button to a safe spot on mobile
+  function adjustFab(){
+    const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
+    const fab = qa('a, button').find(el => ((el.textContent||'').toLowerCase().includes('analysis') && (el.textContent||'').toLowerCase().includes('constructors')));
+    if (fab && w <= 640) fab.classList.add('lp-fab-safe');
+  }
+  adjustFab();
+  window.addEventListener('resize', adjustFab);
+})();
+</script>
 
 </body>
 </html>

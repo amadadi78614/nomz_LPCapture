@@ -95,6 +95,12 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 .note { color:#9ca3af; font-size:.8rem; margin-top:6px; }
 .badge { border:1px solid rgba(255,255,255,.14); border-radius:9999px; padding:2px 8px; font-size:.75rem; }
 </style>
+
+<style id="public-hide-scoring">
+  /* Public mode: hide score/edit controls */
+  .btn-secondary.btn-sm, .btn-primary.btn-sm { display: none !important; }
+</style>
+
 </head>
 <body>
 <!-- Fixed Nav added -->
@@ -175,7 +181,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                     let t1Games   = 0, t2Games   = 0;
                     (match.sets || []).forEach(([raw1, raw2], idx) => {
                         const s1 = parseInt(raw1, 10), s2 = parseInt(raw2, 10);
-                        if (Number.isFinite(s1) && Number.isFinite(s2) && countThisSetForGames(tier, idx)) {
+                        if (Number.isFinite(s1) && Number.isFinite(s2) && countThisSetForGames((fixture.tier || "Premier"), idx)) {
                             t1Games += s1; t2Games += s2;
                         }
                         if (isValidSetForSets(s1, s2, idx)) {
@@ -236,13 +242,22 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                     let t1Sets = 0, t2Sets = 0, t1Games = 0, t2Games = 0;
                     (match.sets || []).forEach(([raw1, raw2], idx) => {
                         const s1 = parseInt(raw1, 10), s2 = parseInt(raw2, 10);
-                        if (Number.isFinite(s1) && Number.isFinite(s2) && countThisSetForGames(tier, idx)) {
+                        if (Number.isFinite(s1) && Number.isFinite(s2) && countThisSetForGames((fixture.tier || "Premier"), idx)) {
                             t1Games += s1; t2Games += s2;
                         }
                         if (isValidSetForSets(s1, s2, idx)) {
                             if (s1 > s2) t1Sets++; else t2Sets++;
                         }
                     });
+                    // Top-up sets when fixture winner is known but set rows are incomplete
+                    const expectedSets = ((fixture.tier || 'Premier') === 'Championship') ? 3 : 2;
+                    const countedSets = t1Sets + t2Sets;
+                    if (countedSets < expectedSets) {
+                        const missing = expectedSets - countedSets;
+                        if (match.winner === fixture.team1) t1Sets += missing;
+                        else if (match.winner === fixture.team2) t2Sets += missing;
+                    }
+
 
                     const team1Won = match.winner === fixture.team1;
                     const team2Won = match.winner === fixture.team2;
@@ -263,19 +278,14 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                     });
                 });
             });
-            return Object.values(playerStats).filter(p => p.matchesPlayed > 0).sort((a, b) => {
-  const wrB = (b.matchesPlayed ? b.matchesWon / b.matchesPlayed : 0);
-  const wrA = (a.matchesPlayed ? a.matchesWon / a.matchesPlayed : 0);
-  if (wrB !== wrA) return wrB - wrA; // 1) Win %
-  const sdB = (b.setsWon - b.setsLost);
-  const sdA = (a.setsWon - a.setsLost);
-  if (sdB !== sdA) return sdB - sdA; // 2) Set differential
-  if (b.setsWon !== a.setsWon) return b.setsWon - a.setsWon; // 3) Sets won
-  const gdB = (b.gamesWon - b.gamesLost);
-  const gdA = (a.gamesWon - a.gamesLost);
-  if (gdB !== gdA) return gdB - gdA; // 4) Game differential
-  return b.matchesWon - a.matchesWon; // 5) Matches won (final tiebreak)
-});
+            return Object.values(playerStats)
+  .filter(p => p.matchesPlayed > 0)
+  .sort((a, b) => {
+    if (b.matchesWon !== a.matchesWon) return b.matchesWon - a.matchesWon; // 1) Matches won
+    if (b.setsWon !== a.setsWon) return b.setsWon - a.setsWon;             // 2) Sets won
+    if (b.gamesWon !== a.gamesWon) return b.gamesWon - a.gamesWon;         // 3) Games won
+    return (a.playerName||a.name||'').localeCompare(b.playerName||b.name||''); // stable tie-break
+  });
 };
 
         // --- Components ---
@@ -493,7 +503,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                     processedMatches.forEach(match => {
                         let s1 = 0, s2 = 0;
                         match.sets.forEach(([a,b], idx) => {
-                            if (countThisSetForGames(tier, idx)) { team1TotalGames += a; team2TotalGames += b; }
+                            if (countThisSetForGames((fixture.tier || "Premier"), idx)) { team1TotalGames += a; team2TotalGames += b; }
                             const valid = isValidSetForSets(a, b, idx);
                             if (valid) { if (a > b) s1++; else s2++; }
                         });
@@ -587,7 +597,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                                                     <button onClick={() => onScoreAction(match)} className="btn btn-primary btn-sm">Record Score</button>
                                                 )}
                                                 {match.winner && !match.team1.includes("Play off") && !match.team1.includes("FINALS") && (
-                                                     <button onClick={() => onScoreAction(match)} className="btn btn-secondary btn-sm">Edit Result</button>
+                                                     <button onClick={() => onScoreAction(match)} className="btn btn-secondary btn-sm"></button>
                                                 )}
                                             </div>
                                         </div>
@@ -750,7 +760,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                         fixture.matches.forEach(match => {
                             const isTeam1 = normalizeTeamName(fixture.team1) === normalizeTeamName(teamName);
                             match.sets.forEach(([s1,s2], idx) => {
-                                if (countThisSetForGames(tier, idx)) {
+                                if (countThisSetForGames((fixture.tier || "Premier"), idx)) {
                                     if (isTeam1) { stats.gamesWon += s1; stats.gamesLost += s2; }
                                     else { stats.gamesWon += s2; stats.gamesLost += s1; }
                                 }
@@ -1190,6 +1200,46 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
   }
 })();
 </script>
+
+<script>
+// Public hardening: strip any 'Edit Result' buttons if present, even after React re-renders.
+(function(){
+  const kill = () => {
+    document.querySelectorAll('button').forEach(btn => {
+      const t = (btn.textContent||'').trim().toLowerCase();
+      if (t === 'edit result') btn.remove();
+    });
+  };
+  const mo = new MutationObserver(kill);
+  mo.observe(document.documentElement, { childList:true, subtree:true });
+  document.addEventListener('DOMContentLoaded', kill);
+  window.addEventListener('load', kill);
+})();
+</script>
+
+
+
+<script id="public-hardening-blocker">
+(function(){
+  const kill = () => {
+    document.querySelectorAll('.btn-secondary.btn-sm, .btn-primary.btn-sm').forEach(el => el.remove());
+    document.querySelectorAll('button, a, [role="button"]').forEach(el => {
+      const t = (el.textContent||'').toLowerCase().replace(/\s+/g,' ').trim();
+      const title = (el.getAttribute('title')||'').toLowerCase();
+      if (t === 'edit score' || t === 'edit result' || t.includes('edit score') || t.includes('edit result') || t.includes('record score') || title.includes('edit') || title.includes('score')) {
+        el.remove();
+      }
+    });
+  };
+  const run = () => { try { kill(); } catch(e) {} };
+  document.addEventListener('DOMContentLoaded', run);
+  window.addEventListener('load', run);
+  setInterval(run, 500);
+  const mo = new MutationObserver(run);
+  mo.observe(document.documentElement, { childList:true, subtree:true });
+})();
+</script>
+
+
 </body>
 </html>
-

@@ -203,24 +203,6 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 }
 </style>
 
-
-<style id="lp-mobile-v3">
-@media (max-width: 640px) {
-  /* Make titles compact and consistent */
-  .lp-acc-title{font-size:0.98rem!important;line-height:1.25!important;font-weight:700!important;word-break:break-word}
-  .lp-acc-btn{padding:.6rem .75rem!important}
-
-  /* Relax any inner scroll areas inside fixtures so the page can scroll normally */
-  .lp-fx-section, .lp-fx-section * {
-    max-height: none !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-  /* Disable sticky children that can trap scroll */
-  .lp-fx-section .sticky { position: static !important; top: auto !important; }
-}
-</style>
-
 </head>
 <body>
 <!-- Fixed Nav added -->
@@ -1422,150 +1404,110 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 </script>
 
 
-
-
 <script id="lp-mobile-builder">
 (function(){
   const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
-  const text = (el)=> (el && (el.textContent||'').trim()) || '';
 
-  // Make the tab row scrollable on mobile
+  // Make tab row scrollable (same as before)
   try {
-    const tabs = qa('a, button').filter(el => {
+    const anchors = qa('a, button').filter(el => {
       const t = (el.textContent||'').toLowerCase();
       return /(premier standings|championship standings|premier player stats|championship player stats|fixtures|analysis center)/.test(t);
     });
-    if (tabs.length){
-      const container = tabs[0].closest('nav,div,section') || tabs[0].parentElement;
+    if (anchors.length){
+      const container = anchors[0].closest('nav,div,section') || anchors[0].parentElement;
       if (container) container.classList.add('lp-subnav-scroll');
     }
   } catch(e){}
 
-  function pct(n){ return Math.round(n*100); }
-
-  /* ---------- Build accordion for Standings & Player Stats ONLY ---------- */
-  function buildStandingsAccordions(){
+  // Build mobile cards from standings/player tables
+  function buildCards(){
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
     if (w > 640) return;
 
-    qa('table').forEach(tbl=>{
-      if (tbl.__lpAccBuilt) return;
+    const wanted = ['#','team','p','w','l','sw','sl','gw','gl','pts','player','mp','mw','ml']; // generic pool
 
-      const headers = qa('thead th, thead td', tbl).map(th => text(th).toLowerCase());
+    qa('table').forEach(tbl=>{
+      // Skip if we already built cards for this table
+      if (tbl.__lpCardsBuilt) return;
+
+      // Collect headers
+      const headers = qa('thead th, thead td', tbl).map(th => (th.textContent||'').trim().toLowerCase());
       if (!headers.length) return;
 
-      const hasTeam   = headers.includes('team') || headers.includes('franchise');
-      const hasPlayer = headers.includes('player');
-      if (!hasTeam && !hasPlayer) return; // ignore non-standings tables (e.g., fixtures)
+      // Decide which columns to show on mobile, in order
+      const mobileCols = [];
+      const preferredOrder = ['#','team','player','p','w','l','sw','sl','gw','gl','pts','mp','mw','ml'];
+      preferredOrder.forEach(label=>{
+        const idx = headers.indexOf(label);
+        if (idx !== -1) mobileCols.push({label, idx});
+      });
+      // Fallback: if we found less than 3, probably not a standings table; skip
+      if (mobileCols.length < 3) return;
 
-      const colsTeam   = ['#','team','p','w','l','sw','sl','gw','gl','bpf','bpa','pts'];
-      const colsPlayer = ['#','player','mp','mw','ml','sw','sl','gw','gl'];
-      const cols = (hasTeam? colsTeam : colsPlayer).map(label=>({label, idx: headers.indexOf(label)})).filter(c=>c.idx!==-1 || c.label==='#');
-
+      // Build container
       const list = document.createElement('div');
-      list.className = 'lp-acc-list';
+      list.className = 'lp-cardlist';
 
       qa('tbody tr', tbl).forEach(tr=>{
         const tds = qa('td', tr);
         if (!tds.length) return;
-        const row = Object.fromEntries(headers.map((h,i)=>[h, text(tds[i])]));
+        const card = document.createElement('div');
+        card.className = 'lp-card';
 
-        const item  = document.createElement('div');
-        item.className='lp-acc-item';
+        // Title line: either Player or Team + rank if present
+        const obj = Object.fromEntries(headers.map((h,i)=>[h, (tds[i]?.textContent||'').trim()]));
+        let title = obj['team'] || obj['player'] || '';
+        const rank = obj['#'] || '';
+        const h4 = document.createElement('h4');
+        h4.textContent = (rank? `${rank}. ` : '') + (title || '—');
+        card.appendChild(h4);
 
-        const btn   = document.createElement('button');
-        btn.className='lp-acc-btn';
-        const caret = document.createElement('span');
-        caret.className='lp-acc-caret'; caret.textContent='▾';
+        // Key values grid
+        const kv = document.createElement('div');
+        kv.className = 'lp-kv';
 
-        let titleText = '';
-        if (hasTeam){
-          const rank = row['#'] || '';
-          const team = row['team'] || row['franchise'] || '';
-          const pts  = row['pts'] || '';
-          titleText = (rank? rank+'. ' : '') + team + (pts? ` — ${pts} pts` : '');
-        } else {
-          const rank   = row['#'] || '';
-          const player = row['player'] || '';
-          const mp = parseFloat(row['mp']||'0')||0;
-          const mw = parseFloat(row['mw']||'0')||0;
-          const pctStr = mp>0 ? ` — ${mw}/${mp} wins (${pct(mw/mp)}%)` : '';
-          titleText = (rank? rank+'. ' : '') + player + pctStr;
-        }
-
-        const title = document.createElement('span');
-        title.className='lp-acc-title';
-        title.textContent = titleText;
-        btn.appendChild(title); btn.appendChild(caret);
-
-        const panel = document.createElement('div');
-        panel.className='lp-acc-panel hidden';
-
-        const grid  = document.createElement('div');
-        grid.className='lp-acc-grid';
-
-        cols.forEach(c=>{
-          if (c.label==='#' || c.label==='team' || c.label==='franchise' || c.label==='player') return;
-          const key = document.createElement('div'); key.className='lp-acc-key'; key.textContent = c.label.toUpperCase();
-          const val = document.createElement('div'); val.className='lp-acc-val';
-          val.textContent = (c.idx>=0 ? text(qa('td', tr)[c.idx]) : (row[c.label]||''));
-          grid.appendChild(key); grid.appendChild(val);
+        mobileCols.forEach(col=>{
+          if (col.label === '#' || col.label === 'team' || col.label === 'player') return;
+          const key = document.createElement('div');
+          key.className = 'lp-key';
+          key.textContent = col.label.toUpperCase();
+          const val = document.createElement('div');
+          val.className = 'lp-val';
+          val.textContent = (tds[col.idx]?.textContent||'').trim();
+          // Append as two adjacent cells
+          kv.appendChild(key);
+          kv.appendChild(val);
         });
 
-        // Derived WIN% for player tables if not present
-        if (!hasTeam && !headers.includes('win %')){
-          const mp = parseFloat(row['mp']||'0')||0;
-          const mw = parseFloat(row['mw']||'0')||0;
-          const key = document.createElement('div'); key.className='lp-acc-key'; key.textContent='WIN%';
-          const val = document.createElement('div'); val.className='lp-acc-val'; val.textContent = mp>0 ? (pct(mw/mp)+'%') : '—';
-          grid.appendChild(key); grid.appendChild(val);
-        }
-
-        panel.appendChild(grid);
-        item.appendChild(btn); item.appendChild(panel);
-        list.appendChild(item);
-
-        btn.addEventListener('click', ()=>{
-          const open = !panel.classList.contains('hidden');
-          panel.classList.toggle('hidden', open);
-          caret.style.transform = open ? '' : 'rotate(180deg)';
-        });
+        card.appendChild(kv);
+        list.appendChild(card);
       });
 
-      // Append and hide the source table on mobile
+      // Place the list after the table and hide original on mobile
       tbl.insertAdjacentElement('afterend', list);
       tbl.classList.add('lp-hide-mobile');
-      tbl.__lpAccBuilt = true;
+      tbl.__lpCardsBuilt = true;
     });
   }
 
-  /* ---------- Ensure fixtures stay default (UNMODIFIED) ---------- */
-  function unhideFixtures(){
-    // If any previous patch hid fixtures with lp-hide-mobile, unhide them
-    const fixSecs = qa('section, div').filter(sec => {
-      const h = sec.querySelector('h2, h3, h4');
-      return h && /fixtures/i.test((h.textContent||'').trim());
-    });
-    fixSecs.forEach(sec => {
-      sec.querySelectorAll('.lp-hide-mobile').forEach(node => node.classList.remove('lp-hide-mobile'));
-    });
-  }
-
+  // FAB safety
   function adjustFab(){
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
-    const btns = qa('a, button').filter(el => (text(el).toLowerCase().includes('analysis') && text(el).toLowerCase().includes('constructors')));
-    if (btns.length && w <= 640) btns.forEach(el => el.classList.add('lp-fab-safe'));
+    const candidates = qa('a, button').filter(el => (el.textContent||'').toLowerCase().includes('analysis') && (el.textContent||'').toLowerCase().includes('constructors'));
+    if (candidates.length && w <= 640){
+      candidates.forEach(el => el.classList.add('lp-fab-safe'));
+    }
   }
 
-  const run = ()=>{ try{ buildStandingsAccordions(); unhideFixtures(); adjustFab(); } catch(e){} };
+  // Initial + on changes
+  const run = ()=>{ try{ buildCards(); adjustFab(); }catch(e){} };
   run();
   window.addEventListener('resize', run);
   const mo = new MutationObserver(run);
   mo.observe(document.body, {childList:true, subtree:true});
 })();
 </script>
-
-
 
 </body>
 </html>

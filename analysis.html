@@ -1,1191 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Padel League Manager</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family:'Inter',sans-serif; background-color:#111827; color:#f3f4f6; }
-        .card { background-color:#1f2937; border:1px solid #374151; border-radius:.75rem; padding:1.5rem; box-shadow:0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1); }
-        .btn { display:inline-block; padding:.75rem 1.5rem; border-radius:.5rem; font-weight:600; text-align:center; transition:all .2s; cursor:pointer; }
-        .btn-primary { background-color:#3b82f6; color:#fff; }
-        .btn-primary:hover { background-color:#2563eb; }
-        .btn-primary:disabled { background-color:#374151; cursor:not-allowed; }
-        .btn-secondary { background-color:#4b5563; color:#fff; }
-        .btn-secondary:hover { background-color:#374151; }
-        .table-header { background-color:#374151; }
-        .table-row-odd { background-color:#1f2937; }
-        .table-row-even { background-color:#252f3e; }
-        .input-field,.select-field { background-color:#374151; border:1px solid #4b5563; color:#fff; border-radius:.375rem; padding:.5rem .75rem; width:100%; }
-        .modal-backdrop { position:fixed; inset:0; background-color:rgba(0,0,0,.7); display:flex; align-items:center; justify-content:center; z-index:50; }
-        .tab-button { padding:.75rem 1.25rem; font-weight:500; color:#9ca3af; border-bottom:2px solid transparent; cursor:pointer; transition:all .2s; }
-        .tab-button:hover { color:#d1d5db; }
-        .tab-button-active { color:#3b82f6; border-bottom-color:#3b82f6; }
-        .gauge-arc { transition: stroke-dashoffset 0.5s ease-in-out; }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lowveld Padel Franchise League - Season 2</title>
 
-<!-- Embedded league data -->
-<script>
-  window.__EMBEDDED_PLAYERS__ = [{"id":1,"name":"Driaan Odendaal","team":"Avalanche Aces","role":"Vice-Captain","division":"Premier"},{"id":2,"name":"Frik De Beer","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":3,"name":"George du Toit","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":4,"name":"Greg Beyers","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":5,"name":"Hoffmann Maritz","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":6,"name":"Jacques Burger","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":7,"name":"Patrick Leyden","team":"Avalanche Aces","role":"Captain","division":"Premier"},{"id":8,"name":"Phil-Mar Van Rensburg","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":9,"name":"Rafiq Mohamed","team":"Avalanche Aces","role":"Ambassador","division":"Premier"},{"id":10,"name":"Ruaan Naude","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":11,"name":"Ryan Tate","team":"Avalanche Aces","role":"Owner","division":"Premier"},{"id":12,"name":"Sabelo Mathebula","team":"Avalanche Aces","role":"Player","division":"Premier"},{"id":13,"name":"Dian Erasmus","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":14,"name":"Felix Lombard","team":"Avalanche Aces","role":"Captain","division":"Championship"},{"id":15,"name":"Gerco van Rooyen","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":16,"name":"Kobus van Rensburg","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":17,"name":"Mohammed Malek","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":18,"name":"Mohammed Seedat","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":19,"name":"Nicky Joubert","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":20,"name":"Pierre De Villiers","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":21,"name":"Zaeem Sadiq","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":22,"name":"Zunaid Ganchi","team":"Avalanche Aces","role":"Player","division":"Championship"},{"id":23,"name":"Bilal Cassim","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":24,"name":"Dewald Meyer","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":25,"name":"Donavan Taylor","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":26,"name":"Feroz Guman","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":27,"name":"Liam Morgan","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":28,"name":"Marius Loock","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":29,"name":"Niel Pienaar","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":30,"name":"Ozayr Shaik","team":"Baltic Blades","role":"Captain","division":"Premier"},{"id":31,"name":"Sikander Cassim","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":32,"name":"Tim Kaden","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":33,"name":"Yusuf Asvat","team":"Baltic Blades","role":"Player","division":"Premier"},{"id":34,"name":"Zaheer Naby","team":"Baltic Blades","role":"Ambassador","division":"Premier"},{"id":35,"name":"Adil Patel","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":36,"name":"Adnaan Abderoof","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":37,"name":"Ali Choohan","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":38,"name":"Dc Francis","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":39,"name":"Dillon Francis","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":40,"name":"Irfan Mamji","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":41,"name":"Mohamed Dadamia","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":42,"name":"Safeer Jamadar","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":43,"name":"Zahraan Jassat","team":"Baltic Blades","role":"Player","division":"Championship"},{"id":44,"name":"Zainul Choohan","team":"Baltic Blades","role":"Owner","division":"Championship"},{"id":45,"name":"Andries van Niekerk","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":46,"name":"Cameron Jacobsz","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":47,"name":"Jacques Van Zyl","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":48,"name":"Kiran Hansraj","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":49,"name":"Peet Welthagen","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":50,"name":"Ryan Kennett","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":51,"name":"Ryan Wicht","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":52,"name":"Salmaan Methar","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":53,"name":"Uwaiz Patel","team":"Desert Falcons","role":"Owner","division":"Premier"},{"id":54,"name":"Yusuf Packery","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":55,"name":"Yusuf Patel","team":"Desert Falcons","role":"Captain","division":"Premier"},{"id":56,"name":"Zayd Methar","team":"Desert Falcons","role":"Player","division":"Premier"},{"id":57,"name":"Devlin Grix","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":58,"name":"Drew Packman","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":59,"name":"Etienne Grobler","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":60,"name":"Imtiaz Mohamed","team":"Desert Falcons","role":"Ambassador","division":"Championship"},{"id":61,"name":"Mohammed Patel","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":62,"name":"Nathan Treherne","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":63,"name":"Reino Grobler","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":64,"name":"Rishad Shaik","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":65,"name":"Stefan Erasmus","team":"Desert Falcons","role":"Player","division":"Championship"},{"id":66,"name":"Suliman Patel","team":"Desert Falcons","role":"Captain","division":"Championship"},{"id":67,"name":"Ahmed Mungalee","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":68,"name":"Anas Mungalee","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":69,"name":"Cassim Vawda","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":70,"name":"Ebrahim Mungalee","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":71,"name":"Faeez Sebastian","team":"Globo Boomerangs","role":"Captain","division":"Premier"},{"id":72,"name":"Imran Omar","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":73,"name":"Luan Walters","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":74,"name":"Muhammad Khalid Jeewa","team":"Globo Boomerangs","role":"Ambassador","division":"Premier"},{"id":75,"name":"Muhammed Shehzad Meer","team":"Globo Boomerangs","role":"Vice-Captain","division":"Premier"},{"id":76,"name":"Nabeel Meer","team":"Globo Boomerangs","role":"Owner","division":"Premier"},{"id":77,"name":"Pieter Boshoff","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":78,"name":"Warren Morgan","team":"Globo Boomerangs","role":"Player","division":"Premier"},{"id":79,"name":"Aadil Asvat","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":80,"name":"Alfaiz Mamji","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":81,"name":"Duran Greaver","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":82,"name":"Fahad Patel","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":83,"name":"Imraan Khan","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":84,"name":"Irfaan Mahomed","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":85,"name":"Ismail Fakir","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":86,"name":"Jay Nagar","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":87,"name":"Muhammed Shaffique Jeewa","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":88,"name":"Soyab maxi Patel","team":"Globo Boomerangs","role":"Player","division":"Championship"},{"id":89,"name":"Ahmed Ismail","team":"Ice Breakers","role":"Captain","division":"Premier"},{"id":90,"name":"Chris Triegaardt","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":91,"name":"Duhan Swart","team":"Ice Breakers","role":"Vice-Captain","division":"Premier"},{"id":92,"name":"Ebrahim Ismail","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":93,"name":"Erlo Olivier","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":94,"name":"Fiaz Bhikhoo","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":95,"name":"Maaz Randera","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":96,"name":"Marvin Naidoo","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":97,"name":"Muhammed Jina","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":98,"name":"Muneer Shaik","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":99,"name":"Rayhaan Dinath","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":100,"name":"Zaheer Methar","team":"Ice Breakers","role":"Player","division":"Premier"},{"id":101,"name":"Estiaan Maritz","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":102,"name":"Ian Roberts","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":103,"name":"Irshaad Moola","team":"Ice Breakers","role":"Owner","division":"Championship"},{"id":104,"name":"Jaco Nel","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":105,"name":"Luqman Hoosen","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":106,"name":"Muhammad Mangerah","team":"Ice Breakers","role":"Ambassador","division":"Championship"},{"id":107,"name":"Muhammed Minty","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":108,"name":"Saliem Mahomed","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":109,"name":"Suhail Patel","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":110,"name":"Uwais Guman","team":"Ice Breakers","role":"Player","division":"Championship"},{"id":111,"name":"Anton Grote","team":"Rulo Apaches","role":"Captain","division":"Premier"},{"id":112,"name":"Burger Bester","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":113,"name":"Etienne Swart","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":114,"name":"Fanus Wilkens","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":115,"name":"Hendrik Tryhou","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":116,"name":"Jacques Hopkins","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":117,"name":"Justin van Staden","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":118,"name":"Suhayl Packery","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":119,"name":"Uzair Ismail","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":120,"name":"Wayne Enslin","team":"Rulo Apaches","role":"Player","division":"Premier"},{"id":121,"name":"Wiehann Mohlen","team":"Rulo Apaches","role":"Vice-Captain","division":"Premier"},{"id":122,"name":"Yusuf Ismail","team":"Rulo Apaches","role":"Ambassador","division":"Premier"},{"id":123,"name":"Drikus Prins","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":124,"name":"Gavin Moffett","team":"Rulo Apaches","role":"Owner","division":"Championship"},{"id":125,"name":"Ismail Karodia","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":126,"name":"Mickal Bakker","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":127,"name":"Mohammed Mungalee","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":128,"name":"Muhammad Zakariyya Akoojee","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":129,"name":"Muhammed Cachalia","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":130,"name":"Sandeep Daya","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":131,"name":"Stefan De Villiers","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":132,"name":"Waldo van Tonder","team":"Rulo Apaches","role":"Player","division":"Championship"},{"id":133,"name":"Bevan Francis","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":134,"name":"Bryan Theron","team":"Samurai Kicksmashers","role":"Captain","division":"Premier"},{"id":135,"name":"Cian Maritz","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":136,"name":"Danyaal Nomani","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":137,"name":"Faheem Nomani","team":"Samurai Kicksmashers","role":"Owner","division":"Premier"},{"id":138,"name":"JD Herbst","team":"Samurai Kicksmashers","role":"Vice-Captain","division":"Premier"},{"id":139,"name":"Mohamed Nomani","team":"Samurai Kicksmashers","role":"Ambassador","division":"Premier"},{"id":140,"name":"Morne Steenekamp","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":141,"name":"Muhammad Fakir","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":142,"name":"Naeem Omar","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":143,"name":"Shakir Suleman","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":144,"name":"Siraaj Shaik","team":"Samurai Kicksmashers","role":"Player","division":"Premier"},{"id":145,"name":"Akmeer Amod","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":146,"name":"Martin Swart","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":147,"name":"Muhammed Suliman","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":148,"name":"Noah Snell","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":149,"name":"Rayman Vinesh","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":150,"name":"Sailesh Nagar","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":151,"name":"Sergio Correia","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":152,"name":"Shaun Moropa","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":153,"name":"Shoaib Nomani","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":154,"name":"Tim Forssman","team":"Samurai Kicksmashers","role":"Player","division":"Championship"},{"id":155,"name":"Adil Ahmed","team":"Sonic Viboras","role":"Ambassador","division":"Premier"},{"id":156,"name":"Alexander Combrinck","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":157,"name":"Danie Rautenbach","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":158,"name":"Heinrich Coomans","team":"Sonic Viboras","role":"Vice-Captain","division":"Premier"},{"id":159,"name":"Joseph Van der merwe","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":160,"name":"Joshua Hoffman","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":161,"name":"Lefa Moganedi","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":162,"name":"Muhammad Azhar Sujee","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":163,"name":"Pieter Badenhorst","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":164,"name":"Ridhwaan Sujee","team":"Sonic Viboras","role":"Captain","division":"Premier"},{"id":165,"name":"Warwick Morgan","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":166,"name":"Yusuf Moola","team":"Sonic Viboras","role":"Owner","division":"Premier"},{"id":167,"name":"Armand Esterhuizen","team":"Sonic Viboras","role":"Player","division":"Premier"},{"id":168,"name":"Brent Grix","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":169,"name":"Drihan De Klerk","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":170,"name":"Francois Eloff","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":171,"name":"Heinrich van Staden","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":172,"name":"Irshaad Mahomed","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":173,"name":"Mohammed Mayet","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":174,"name":"Taahir Mungalee","team":"Sonic Viboras","role":"Captain","division":"Championship"},{"id":175,"name":"Umar Yunus","team":"Sonic Viboras","role":"Player","division":"Championship"},{"id":176,"name":"Zahid Methar","team":"Sonic Viboras","role":"Player","division":"Championship"}];
-  window.__EMBEDDED_FIXTURES__ = [{"match_id":1,"round":1,"tier":"Championship","venue":"PADEL24","date":"Monday, 15 September 2025","team1":"Globo Boomerangs","team2":"Sonic Viboras","sets":null,"winner":"Globo Boomerangs","matches":[{"sets":[[3,6],[4,6]],"winner":"Sonic Viboras","playerIds":{"team1":[86,83],"team2":[174,172]}},{"sets":[[6,2],[6,3],[10,3]],"winner":"Globo Boomerangs","playerIds":{"team1":[80,84],"team2":[176,157]}},{"sets":[[6,1],[6,0],[10,2]],"winner":"Globo Boomerangs","playerIds":{"team1":[81,82],"team2":[173,170]}}]},{"match_id":2,"round":1,"tier":"Championship","venue":"PADEL24","date":"Monday, 15 September 2025","team1":"Ice Breakers","team2":"Avalanche Aces","sets":null,"winner":"Avalanche Aces","matches":[{"sets":[[0,6],[2,6],[6,10]],"winner":"Avalanche Aces","playerIds":{"team1":[110,101],"team2":[14,16]}},{"sets":[[2,6],[3,6],[10,7]],"winner":"Avalanche Aces","playerIds":{"team1":[109,105],"team2":[19,20]}},{"sets":[[0,6],[2,6],[8,10]],"winner":"Avalanche Aces","playerIds":{"team1":[108,104],"team2":[18,15]}}]},{"match_id":3,"round":1,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 17 September 2025","team1":"Rulo Apaches","team2":"Samurai Kicksmashers","sets":null,"winner":"Rulo Apaches","matches":[{"sets":[[6,4],[2,6],[10,1]],"winner":"Rulo Apaches","playerIds":{"team1":[124,131],"team2":[152,154]}},{"sets":[[6,1],[6,4],[10,4]],"winner":"Rulo Apaches","playerIds":{"team1":[123,129],"team2":[153,150]}},{"sets":[[6,4],[6,0],[10,6]],"winner":"Rulo Apaches","playerIds":{"team1":[126,127],"team2":[147,149]}}]},{"match_id":4,"round":1,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 17 September 2025","team1":"Desert Falcons","team2":"Baltic Blades","sets":null,"winner":"Desert Falcons","matches":[{"sets":[[6,2],[6,1],[10,7]],"winner":"Desert Falcons","playerIds":{"team1":[64,58],"team2":[37,42]}},{"sets":[[6,3],[4,6],[10,7]],"winner":"Desert Falcons","playerIds":{"team1":[60,66],"team2":[39,44]}},{"sets":[[6,4],[7,6],[10,4]],"winner":"Desert Falcons","playerIds":{"team1":[63,59],"team2":[41,35]}}]},{"match_id":5,"round":2,"tier":"Championship","venue":"PADEL24","date":"Thursday, 25 September 2025","team1":"Avalanche Aces","team2":"Rulo Apaches","sets":null,"winner":null},{"match_id":6,"round":2,"tier":"Championship","venue":"PADEL24","date":"Thursday, 25 September 2025","team1":"Sonic Viboras","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":7,"round":2,"tier":"Championship","venue":"PADEL24","date":"Monday, 22 September 2025","team1":"Samurai Kicksmashers","team2":"Desert Falcons","sets":null,"winner":"Desert Falcons","matches":[{"sets":[[6,7],[5,5],[0,0]],"winner":"Desert Falcons","playerIds":{"team1":[146,151],"team2":[59,61]}},{"sets":[[6,3],[6,7],[0,0]],"winner":"Desert Falcons","playerIds":{"team1":[152,154],"team2":[66,60]}},{"sets":[[0,6],[1,6],[2,10]],"winner":"Desert Falcons","playerIds":{"team1":[145,149],"team2":[65,62]}}]},{"match_id":8,"round":2,"tier":"Championship","venue":"PADEL24","date":"Monday, 22 September 2025","team1":"Baltic Blades","team2":"Globo Boomerangs","sets":null,"winner":"Globo Boomerangs","matches":[{"sets":[[5,7],[4,6],[6,10]],"winner":"Globo Boomerangs","playerIds":{"team1":[41,38],"team2":[84,80]}},{"sets":[[3,6],[4,6],[5,9]],"winner":"Globo Boomerangs","playerIds":{"team1":[44,39],"team2":[88,83]}},{"sets":[[3,6],[1,6],[9,10]],"winner":"Globo Boomerangs","playerIds":{"team1":[36,40],"team2":[82,81]}}]},{"match_id":9,"round":3,"tier":"Championship","venue":"PADEL24","date":"Monday, 29 September 2025","team1":"Ice Breakers","team2":"Globo Boomerangs","sets":null,"winner":null},{"match_id":10,"round":3,"tier":"Championship","venue":"PADEL24","date":"Monday, 29 September 2025","team1":"Samurai Kicksmashers","team2":"Baltic Blades","sets":null,"winner":null},{"match_id":11,"round":3,"tier":"Championship","venue":"PADEL24","date":"Thursday, 16 October 2025","team1":"Rulo Apaches","team2":"Sonic Viboras","sets":null,"winner":null},{"match_id":12,"round":3,"tier":"Championship","venue":"PADEL24","date":"Thursday, 16 October 2025","team1":"Desert Falcons","team2":"Avalanche Aces","sets":null,"winner":null},{"match_id":13,"round":4,"tier":"Championship","venue":"PADEL24","date":"Monday, 20 October 2025","team1":"Desert Falcons","team2":"Rulo Apaches","sets":null,"winner":null},{"match_id":14,"round":4,"tier":"Championship","venue":"PADEL24","date":"Monday, 20 October 2025","team1":"Baltic Blades","team2":"Sonic Viboras","sets":null,"winner":null},{"match_id":15,"round":4,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 22 October 2025","team1":"Samurai Kicksmashers","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":16,"round":4,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 22 October 2025","team1":"Avalanche Aces","team2":"Globo Boomerangs","sets":null,"winner":null},{"match_id":17,"round":5,"tier":"Championship","venue":"PADEL24","date":"Monday, 27 October 2025","team1":"Sonic Viboras","team2":"Avalanche Aces","sets":null,"winner":null},{"match_id":18,"round":5,"tier":"Championship","venue":"PADEL24","date":"Monday, 27 October 2025","team1":"Rulo Apaches","team2":"Baltic Blades","sets":null,"winner":null},{"match_id":19,"round":5,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 29 October 2025","team1":"Globo Boomerangs","team2":"Samurai Kicksmashers","sets":null,"winner":null},{"match_id":20,"round":5,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 29 October 2025","team1":"Ice Breakers","team2":"Desert Falcons","sets":null,"winner":null},{"match_id":21,"round":6,"tier":"Championship","venue":"PADEL24","date":"Monday, 03 November 2025","team1":"Rulo Apaches","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":22,"round":6,"tier":"Championship","venue":"PADEL24","date":"Monday, 03 November 2025","team1":"Baltic Blades","team2":"Avalanche Aces","sets":null,"winner":null},{"match_id":23,"round":6,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 05 November 2025","team1":"Desert Falcons","team2":"Globo Boomerangs","sets":null,"winner":null},{"match_id":24,"round":6,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 05 November 2025","team1":"Samurai Kicksmashers","team2":"Sonic Viboras","sets":null,"winner":null},{"match_id":25,"round":7,"tier":"Championship","venue":"PADEL24","date":"Monday, 10 November 2025","team1":"Globo Boomerangs","team2":"Rulo Apaches","sets":null,"winner":null},{"match_id":26,"round":7,"tier":"Championship","venue":"PADEL24","date":"Monday, 10 November 2025","team1":"Avalanche Aces","team2":"Samurai Kicksmashers","sets":null,"winner":null},{"match_id":27,"round":7,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 12 November 2025","team1":"Baltic Blades","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":28,"round":7,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 12 November 2025","team1":"Sonic Viboras","team2":"Desert Falcons","sets":null,"winner":null},{"match_id":29,"round":null,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 26 November 2025","team1":"Play off 1","team2":"TBD","sets":null,"winner":null},{"match_id":30,"round":null,"tier":"Championship","venue":"PADEL24","date":"Wednesday, 26 November 2025","team1":"Play off 2","team2":"TBD","sets":null,"winner":null},{"match_id":31,"round":null,"tier":"Championship","venue":"PADEL24","date":"Tuesday, 02 December 2025","team1":"Play off 3","team2":"TBD","sets":null,"winner":null},{"match_id":32,"round":null,"tier":"Championship","venue":"Play360","date":"Saturday, 06 December 2025","team1":"FINALS: Championship","team2":"TBD","sets":null,"winner":null},{"match_id":33,"round":1,"tier":"Premier","venue":"Play360","date":"Monday, 15 September 2025","team1":"Rulo Apaches","team2":"Samurai Kicksmashers","sets":null,"winner":"Rulo Apaches","matches":[{"sets":[[3,6],[7,6],[10,7]],"winner":"Rulo Apaches","playerIds":{"team1":[111,121],"team2":[134,138]}},{"sets":[[3,6],[7,6],[4,10]],"winner":"Samurai Kicksmashers","playerIds":{"team1":[119,118],"team2":[144,140]}},{"sets":[[6,4],[6,2],[10,5]],"winner":"Rulo Apaches","playerIds":{"team1":[112,117],"team2":[137,143]}},{"sets":[[3,6],[6,3],[10,5]],"winner":"Rulo Apaches","playerIds":{"team1":[113,120],"team2":[139,133]}}]},{"match_id":34,"round":1,"tier":"Premier","venue":"Play360","date":"Tuesday, 16 September 2025","team1":"Desert Falcons","team2":"Baltic Blades","sets":null,"winner":"Desert Falcons","matches":[{"sets":[[4,6],[6,3],[7,10]],"winner":"Baltic Blades","playerIds":{"team1":[53,49],"team2":[33,25]}},{"sets":[[4,6],[7,5],[5,10]],"winner":"Baltic Blades","playerIds":{"team1":[45,47],"team2":[27,23]}},{"sets":[[6,3],[6,4],[10,7]],"winner":"Desert Falcons","playerIds":{"team1":[55,50],"team2":[30,34]}},{"sets":[[6,1],[6,0],[10,8]],"winner":"Desert Falcons","playerIds":{"team1":[54,52],"team2":[26,24]}}]},{"match_id":35,"round":1,"tier":"Premier","venue":"Play360","date":"Wednesday, 17 September 2025","team1":"Globo Boomerangs","team2":"Sonic Viboras","sets":null,"winner":"Sonic Viboras","matches":[{"sets":[[3,6],[3,6],[5,10]],"winner":"Sonic Viboras","playerIds":{"team1":[73,77],"team2":[158,163]}},{"sets":[[6,4],[6,1],[10,4]],"winner":"Globo Boomerangs","playerIds":{"team1":[71,67],"team2":[166,159]}},{"sets":[[3,6],[4,6],[10,6]],"winner":"Sonic Viboras","playerIds":{"team1":[69,68],"team2":[165,156]}},{"sets":[[3,6],[4,6],[1,9]],"winner":"Sonic Viboras","playerIds":{"team1":[72,75],"team2":[161,155]}}]},{"match_id":36,"round":1,"tier":"Premier","venue":"Play360","date":"Thursday, 18 September 2025","team1":"Ice Breakers","team2":"Avalanche Aces","sets":null,"winner":"Ice Breakers","matches":[{"sets":[[7,6],[6,4],[10,7]],"winner":"Ice Breakers","playerIds":{"team1":[89,91],"team2":[7,5]}},{"sets":[[6,3],[6,2],[10,1]],"winner":"Ice Breakers","playerIds":{"team1":[95,100],"team2":[10,2]}},{"sets":[[0,6],[3,6],[10,9]],"winner":"Avalanche Aces","playerIds":{"team1":[94,96],"team2":[6,9]}},{"sets":[[3,6],[2,6],[2,10]],"winner":"Avalanche Aces","playerIds":{"team1":[93,99],"team2":[11,12]}}]},{"match_id":37,"round":2,"tier":"Premier","venue":"Play360","date":"Thursday, 25 September 2025","team1":"Samurai Kicksmashers","team2":"Desert Falcons","sets":null,"winner":null},{"match_id":38,"round":2,"tier":"Premier","venue":"Play360","date":"Monday, 22 September 2025","team1":"Avalanche Aces","team2":"Rulo Apaches","sets":null,"winner":"Avalanche Aces","matches":[{"sets":[[3,6],[6,2],[8,10]],"winner":"Rulo Apaches","playerIds":{"team1":[12,8],"team2":[116,114]}},{"sets":[[6,4],[6,2],[10,6]],"winner":"Avalanche Aces","playerIds":{"team1":[9,4],"team2":[122,115]}},{"sets":[[6,2],[4,6],[10,7]],"winner":"Avalanche Aces","playerIds":{"team1":[7,5],"team2":[117,112]}},{"sets":[[4,6],[0,6],[7,11]],"winner":"Rulo Apaches","playerIds":{"team1":[1,10],"team2":[111,121]}}]},{"match_id":39,"round":2,"tier":"Premier","venue":"Play360","date":"Tuesday, 23 September 2025","team1":"Sonic Viboras","team2":"Ice Breakers","sets":null,"winner":"Sonic Viboras","matches":[{"sets":[[3,6],[6,3],[10,5]],"winner":"Sonic Viboras","playerIds":{"team1":[158,162],"team2":[91,95]}},{"sets":[[7,6],[6,4],[10,7]],"winner":"Sonic Viboras","playerIds":{"team1":[156,165],"team2":[99,97]}},{"sets":[[6,0],[6,2],[10,2]],"winner":"Sonic Viboras","playerIds":{"team1":[166,159],"team2":[90,93]}},{"sets":[[7,6],[4,6],[10,8]],"winner":"Sonic Viboras","playerIds":{"team1":[160,167],"team2":[96,92]}}]},{"match_id":40,"round":2,"tier":"Premier","venue":"Play360","date":"Friday, 26 September 2025","team1":"Globo Boomerangs","team2":"Baltic Blades","sets":null,"winner":"Globo Boomerangs","matches":[{"sets":[[6,4],[6,3],[8,10]],"winner":"Globo Boomerangs","playerIds":{"team1":[77,75],"team2":[28,30]}},{"sets":[[6,3],[6,3],[10,2]],"winner":"Globo Boomerangs","playerIds":{"team1":[70,78],"team2":[31,29]}},{"sets":[[6,1],[6,3],[10,7]],"winner":"Globo Boomerangs","playerIds":{"team1":[71,67],"team2":[34,25]}},{"sets":[[6,1],[6,4],[10,5]],"winner":"Globo Boomerangs","playerIds":{"team1":[69,73],"team2":[32,23]}}]},{"match_id":41,"round":3,"tier":"Premier","venue":"Play360","date":"Tuesday, 30 September 2025","team1":"Desert Falcons","team2":"Avalanche Aces","sets":null,"winner":null},{"match_id":42,"round":3,"tier":"Premier","venue":"Play360","date":"Wednesday, 15 October 2025","team1":"Samurai Kicksmashers","team2":"Baltic Blades","sets":null,"winner":null},{"match_id":43,"round":3,"tier":"Premier","venue":"Play360","date":"Monday, 29 September 2025","team1":"Rulo Apaches","team2":"Sonic Viboras","sets":null,"winner":null},{"match_id":44,"round":3,"tier":"Premier","venue":"Play360","date":"Tuesday, 14 October 2025","team1":"Ice Breakers","team2":"Globo Boomerangs","sets":null,"winner":null},{"match_id":45,"round":4,"tier":"Premier","venue":"Play360","date":"Thursday, 23 October 2025","team1":"Baltic Blades","team2":"Sonic Viboras","sets":null,"winner":null},{"match_id":46,"round":4,"tier":"Premier","venue":"Play360","date":"Wednesday, 22 October 2025","team1":"Desert Falcons","team2":"Rulo Apaches","sets":null,"winner":null},{"match_id":47,"round":4,"tier":"Premier","venue":"Play360","date":"Tuesday, 21 October 2025","team1":"Avalanche Aces","team2":"Globo Boomerangs","sets":null,"winner":null},{"match_id":48,"round":4,"tier":"Premier","venue":"Play360","date":"Monday, 20 October 2025","team1":"Samurai Kicksmashers","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":49,"round":5,"tier":"Premier","venue":"Play360","date":"Thursday, 30 October 2025","team1":"Rulo Apaches","team2":"Baltic Blades","sets":null,"winner":null},{"match_id":50,"round":5,"tier":"Premier","venue":"Play360","date":"Monday, 27 October 2025","team1":"Ice Breakers","team2":"Desert Falcons","sets":null,"winner":null},{"match_id":51,"round":5,"tier":"Premier","venue":"Play360","date":"Tuesday, 28 October 2025","team1":"Globo Boomerangs","team2":"Samurai Kicksmashers","sets":null,"winner":null},{"match_id":52,"round":5,"tier":"Premier","venue":"Play360","date":"Wednesday, 29 October 2025","team1":"Sonic Viboras","team2":"Avalanche Aces","sets":null,"winner":null},{"match_id":53,"round":6,"tier":"Premier","venue":"Play360","date":"Thursday, 06 November 2025","team1":"Baltic Blades","team2":"Avalanche Aces","sets":null,"winner":null},{"match_id":54,"round":6,"tier":"Premier","venue":"Play360","date":"Monday, 03 November 2025","team1":"Desert Falcons","team2":"Globo Boomerangs","sets":null,"winner":null},{"match_id":55,"round":6,"tier":"Premier","venue":"Play360","date":"Wednesday, 05 November 2025","team1":"Rulo Apaches","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":56,"round":6,"tier":"Premier","venue":"Play360","date":"Tuesday, 04 November 2025","team1":"Samurai Kicksmashers","team2":"Sonic Viboras","sets":null,"winner":null},{"match_id":57,"round":7,"tier":"Premier","venue":"Play360","date":"Wednesday, 12 November 2025","team1":"Globo Boomerangs","team2":"Rulo Apaches","sets":null,"winner":null},{"match_id":58,"round":7,"tier":"Premier","venue":"Play360","date":"Monday, 10 November 2025","team1":"Baltic Blades","team2":"Ice Breakers","sets":null,"winner":null},{"match_id":59,"round":7,"tier":"Premier","venue":"Play360","date":"Tuesday, 11 November 2025","team1":"Sonic Viboras","team2":"Desert Falcons","sets":null,"winner":null},{"match_id":60,"round":7,"tier":"Premier","venue":"Play360","date":"Thursday, 13 November 2025","team1":"Avalanche Aces","team2":"Samurai Kicksmashers","sets":null,"winner":null},{"match_id":61,"round":null,"tier":"Premier","venue":"Play360","date":"Monday, 24 November 2025","team1":"Play off 1","team2":"TBD","sets":null,"winner":null},{"match_id":62,"round":null,"tier":"Premier","venue":"Play360","date":"Tuesday, 25 November 2025","team1":"Play off 2","team2":"TBD","sets":null,"winner":null},{"match_id":63,"round":null,"tier":"Premier","venue":"Play360","date":"Monday, 01 December 2025","team1":"Play off 3","team2":"TBD","sets":null,"winner":null},{"match_id":64,"round":null,"tier":"Premier","venue":"Play360","date":"Saturday, 06 December 2025","team1":"FINALS: Premier","team2":"TBD","sets":null,"winner":null}];
-</script>
-<script>
-// Shim fetch for embedded JSON
-(function() {
-  const orig = window.fetch ? window.fetch.bind(window) : null;
-  window.fetch = async function(input, init) {
-    const url = typeof input === 'string' ? input : (input && input.url) || '';
-    const clean = (url||'').split('?')[0];
-    if (clean.endsWith('players.json')) {
-      return new Response(JSON.stringify(window.__EMBEDDED_PLAYERS__), {headers:{'Content-Type':'application/json'}});
+  <!-- Tailwind (CDN) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+
+  <style>
+    .franchise-media { position: relative; width: 7rem; height: 7rem; margin: 0 auto 1rem; }
+    .franchise-media > * {
+      width: 100%; height: 100%; object-fit: cover; border-radius: 9999px;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.15) inset; display: block;
     }
-    if (clean.endsWith('master_fixtures.json') || clean.endsWith('fixtures.json')) {
-      return new Response(JSON.stringify(window.__EMBEDDED_FIXTURES__), {headers:{'Content-Type':'application/json'}});
-    }
-    return orig ? orig(input, init) : Promise.reject(new Error('No fetch available'));
-  };
-})();
-</script>
-<!-- Chart.js for analysis visuals -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-/* Constructors Overlay */
-#constructorsFab {
-  position: fixed; right: 20px; bottom: 20px; z-index: 10000;
-  padding: 12px 16px; border-radius: 9999px; background:#2563eb; color:white;
-  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  box-shadow: 0 10px 20px rgba(0,0,0,.15); cursor: pointer; border:0; font-weight:700;
-}
-#constructorsOverlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 10001; display:none;
-}
-#constructorsPanel {
-  position: absolute; inset: 4% 4% 6% 4%; background:#0f172a; color:#e5e7eb; 
-  border-radius: 16px; overflow:auto; box-shadow: 0 25px 40px rgba(0,0,0,.4);
-  border:1px solid rgba(255,255,255,.08);
-}
-.panelHeader {
-  display:flex; justify-content:space-between; align-items:center; padding:16px 20px; position:sticky; top:0;
-  background:linear-gradient(180deg, rgba(15,23,42,1), rgba(15,23,42,.9) 80%, rgba(15,23,42,0));
-  border-bottom:1px solid rgba(255,255,255,.08);
-}
-.panelHeader h2 { margin:0; font-size:1.25rem; font-weight:800; letter-spacing:.4px; }
-.panelBody { padding: 20px; }
-.kpiGrid { display:grid; grid-template-columns: repeat(auto-fit, minmax(190px,1fr)); gap:14px; margin-bottom:16px; }
-.kpi { background:#111827; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:14px; }
-.kpi .val { font-size:1.6rem; font-weight:900; color:#f59e0b; }
-.kpi .label { font-size:.8rem; color:#9ca3af; text-transform:uppercase; letter-spacing:.08em; }
-.tableWrap { border:1px solid rgba(255,255,255,.08); border-radius:12px; overflow:auto; background:#0b1220; }
-table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
-.constructors th, .constructors td { padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.06); }
-.constructors th { position:sticky; top:0; background:#0b1220; color:#93c5fd; text-align:left; }
-.rankBadge { display:inline-flex; width:30px; height:30px; border-radius:50%; align-items:center; justify-content:center; font-weight:800; }
-.rank1{ background:linear-gradient(135deg,#ffd700,#ffed4e); color:#92400e; }
-.rank2{ background:linear-gradient(135deg,#c0c0c0,#e5e7eb); color:#374151; }
-.rank3{ background:linear-gradient(135deg,#cd7f32,#d97706); color:white; }
-.closeBtn { background:#ef4444; color:white; border:0; border-radius:10px; padding:8px 12px; font-weight:800; cursor:pointer; }
-.section { margin: 18px 0 22px; }
-.section h3 { margin: 0 0 8px; font-weight:800; color:#60a5fa; }
-.chartBox { background:#111827; border:1px solid rgba(255,255,255,.06); border-radius:12px; padding:14px; }
-.note { color:#9ca3af; font-size:.8rem; margin-top:6px; }
-.badge { border:1px solid rgba(255,255,255,.14); border-radius:9999px; padding:2px 8px; font-size:.75rem; }
-</style>
+    .franchise-media img { display: none; }
+  </style>
 </head>
-<body>
-<!-- Fixed Nav added -->
-<nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-14">
-      <a href="index_home.html" class="flex items-center gap-2">
-        <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Lowveld Padel</span>
-        <span class="hidden md:inline text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">powered by Nomz</span>
-      </a>
-      <div class="hidden md:flex items-center space-x-6">
-        <a href="index_home.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
-        <a href="index_home.html#franchises" class="text-white hover:text-blue-400 transition-colors">Franchises</a>
-        <a href="index_home.html#marketplace" class="text-white hover:text-blue-400 transition-colors">Marketplace</a>
-        <a href="index_home.html#live-stream" class="text-white hover:text-blue-400 transition-colors">Live Stream</a>
-        <a href="index_home.html#fantasy" class="text-white hover:text-blue-400 transition-colors">Fantasy League</a>
-      </div>
-      <div class="md:hidden flex items-center">
-        <a href="index_home.html" class="text-white px-3 py-1 border border-white/20 rounded-lg">Home</a>
-      </div>
-    </div>
-  </div>
-</nav>
-<div class="h-14"></div>
-
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useMemo, useCallback, useEffect } = React;
-
-        // --- Helpers ---
-        const normalizeTeamName = (name) => (name ? name.replace(/\s+/g, '').toLowerCase() : '');
-
-        const countThisSetForGames = (tier, setIndex) => {
-            if (tier === 'Championship') return setIndex < 2;
-            return setIndex < 2;
-        };
-
-        const isValidSetForSets = (s1, s2, setIndex) => {
-            if (s1 == null || s2 == null) return false;
-            if (Number.isNaN(s1) || Number.isNaN(s2)) return false;
-            if (s1 === 0 && s2 === 0) return false;
-            if (s1 === s2) return false;
-            if (setIndex < 2) {
-                return Math.max(s1, s2) >= 6;
-            }
-            return true;
-        };
-
-        const calculateStandings = (fixtures, players, tier) => {
-            if (!fixtures || !players || players.length === 0) return [];
-            const normalize = (n) => (n || '').replace(/\s+/g, '').toLowerCase();
-            const canonicalTeams = [...new Set(players.filter(p => p.division === tier).map(p => p.team))];
-            const teamNameMap = {};
-            canonicalTeams.forEach(name => { teamNameMap[normalize(name)] = name; });
-            players.forEach(p => { if (!teamNameMap[normalize(p.team)]) teamNameMap[normalize(p.team)] = p.team; });
-
-            const stats = {};
-            canonicalTeams.forEach(team => {
-                stats[team] = { played: 0, wins: 0, losses: 0, sets_won: 0, sets_lost: 0, games_won: 0, games_lost: 0, bonus_points_for: 0, bonus_points_against: 0, total_points: 0 };
-            });
-
-            const tierFixtures = fixtures.filter(m => m.tier === tier && m.winner);
-            tierFixtures.forEach(fixture => {
-                if (!fixture.winner || !fixture.matches) return;
-                const t1 = teamNameMap[normalize(fixture.team1)];
-                const t2 = teamNameMap[normalize(fixture.team2)];
-                const w  = teamNameMap[normalize(fixture.winner)];
-                if (!t1 || !t2 || !w) return;
-                const l  = (w === t1) ? t2 : t1;
-
-                stats[w].played++; stats[l].played++;
-                stats[w].wins++;   stats[l].losses++;
-                stats[w].total_points += 3;
-
-                fixture.matches.forEach(match => {
-                    let t1SetsWon = 0, t2SetsWon = 0;
-                    let t1Games   = 0, t2Games   = 0;
-                    (match.sets || []).forEach(([raw1, raw2], idx) => {
-                        const s1 = parseInt(raw1, 10), s2 = parseInt(raw2, 10);
-                        if (Number.isFinite(s1) && Number.isFinite(s2) && countThisSetForGames(tier, idx)) {
-                            t1Games += s1; t2Games += s2;
-                        }
-                        if (isValidSetForSets(s1, s2, idx)) {
-                            if (s1 > s2) t1SetsWon++; else t2SetsWon++;
-                        }
-                    });
-                    stats[t1].sets_won  += t1SetsWon;
-                    stats[t1].sets_lost += t2SetsWon;
-                    stats[t2].sets_won  += t2SetsWon;
-                    stats[t2].sets_lost += t1SetsWon;
-                    stats[t1].games_won += t1Games;
-                    stats[t1].games_lost+= t2Games;
-                    stats[t2].games_won += t2Games;
-                    stats[t2].games_lost+= t1Games;
-                    if (t1SetsWon === 3 && t2SetsWon === 0) {
-                        stats[t1].bonus_points_for++;  stats[t1].total_points++;
-                        stats[t2].bonus_points_against++;
-                    } else if (t2SetsWon === 3 && t1SetsWon === 0) {
-                        stats[t2].bonus_points_for++;  stats[t2].total_points++;
-                        stats[t1].bonus_points_against++;
-                    }
-                });
-            });
-            return Object.entries(stats).sort(([,a],[,b]) => {
-                if (b.total_points !== a.total_points) return b.total_points - a.total_points;
-                if (b.bonus_points_for !== a.bonus_points_for) return b.bonus_points_for - a.bonus_points_for;
-                const aGD = a.games_won - a.games_lost;
-                const bGD = b.games_won - b.games_lost;
-                return bGD - aGD;
-            });
-        };
-
-        const calculatePlayerStats = (fixtures, players) => {
-            if (!fixtures || !players || players.length === 0) return [];
-            const tier = fixtures?.[0]?.tier || 'Premier';
-            const normalize = (n) => (n || '').replace(/\s+/g, '').toLowerCase();
-            const playerStats = {};
-            players.forEach(p => {
-                playerStats[p.id] = { id: p.id, name: p.name, team: p.team, division: p.division, matchesPlayed: 0, matchesWon: 0, matchesLost: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0 };
-            });
-
-            const completedFixtures = fixtures.filter(f => f.winner && f.matches);
-            completedFixtures.forEach(fixture => {
-                (fixture.matches || []).forEach(match => {
-                    let team1PlayerIds, team2PlayerIds;
-                    if (match.playerIds) {
-                        team1PlayerIds = match.playerIds.team1;
-                        team2PlayerIds = match.playerIds.team2;
-                    } else if (match.players) {
-                        const n1 = normalize(fixture.team1), n2 = normalize(fixture.team2);
-                        team1PlayerIds = players.filter(p => match.players.team1.includes(p.name) && normalize(p.team) === n1).map(p => p.id);
-                        team2PlayerIds = players.filter(p => match.players.team2.includes(p.name) && normalize(p.team) === n2).map(p => p.id);
-                    } else return;
-
-                    if (!team1PlayerIds || !team2PlayerIds || team1PlayerIds.length < 2 || team2PlayerIds.length < 2) return;
-                    if ([...team1PlayerIds, ...team2PlayerIds].some(id => !playerStats[id])) return;
-                    
-                    let t1Sets = 0, t2Sets = 0, t1Games = 0, t2Games = 0;
-                    (match.sets || []).forEach(([raw1, raw2], idx) => {
-                        const s1 = parseInt(raw1, 10), s2 = parseInt(raw2, 10);
-                        if (Number.isFinite(s1) && Number.isFinite(s2) && countThisSetForGames(tier, idx)) {
-                            t1Games += s1; t2Games += s2;
-                        }
-                        if (isValidSetForSets(s1, s2, idx)) {
-                            if (s1 > s2) t1Sets++; else t2Sets++;
-                        }
-                    });
-
-                    const team1Won = match.winner === fixture.team1;
-                    const team2Won = match.winner === fixture.team2;
-
-                    team1PlayerIds.forEach(id => {
-                        const s = playerStats[id];
-                        s.matchesPlayed++;
-                        s.setsWon  += t1Sets; s.setsLost += t2Sets;
-                        s.gamesWon += t1Games; s.gamesLost += t2Games;
-                        if (team1Won) s.matchesWon++; else if (team2Won) s.matchesLost++;
-                    });
-                    team2PlayerIds.forEach(id => {
-                        const s = playerStats[id];
-                        s.matchesPlayed++;
-                        s.setsWon  += t2Sets; s.setsLost += t1Sets;
-                        s.gamesWon += t2Games; s.gamesLost += t1Games;
-                        if (team2Won) s.matchesWon++; else if (team1Won) s.matchesLost++;
-                    });
-                });
-            });
-            return Object.values(playerStats).filter(p => p.matchesPlayed > 0).sort((a, b) => {
-                const wrB = b.matchesWon / b.matchesPlayed;
-                const wrA = a.matchesWon / a.matchesPlayed;
-                if (wrB !== wrA) return wrB - wrA;
-                const gdB = b.gamesWon - b.gamesLost;
-                const gdA = a.gamesWon - a.gamesLost;
-                if (gdB !== gdA) return gdB - gdA;
-                return b.matchesWon - a.matchesWon;
-            });
-        };
-
-        // --- Components ---
-        const StandingsTable = ({ standings, title }) => (
-            <div className="card w-full overflow-x-auto">
-                <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
-                <table className="w-full min-w-[900px] text-left">
-                    <thead>
-                        <tr className="table-header">
-                            <th className="p-3">#</th><th className="p-3 w-1/3">Team</th><th className="p-3">P</th>
-                            <th className="p-3">W</th><th className="p-3">L</th><th className="p-3">SW</th>
-                            <th className="p-3">SL</th><th className="p-3">GW</th><th className="p-3">GL</th>
-                            <th className="p-3">BPF</th><th className="p-3">BPA</th><th className="p-3">Pts</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {standings.map(([teamName, stats], i) => (
-                            <tr key={teamName} className={i % 2 === 0 ? 'table-row-even' : 'table-row-odd'}>
-                                <td className="p-3 font-semibold">{i + 1}</td><td className="p-3 font-semibold">{teamName}</td>
-                                <td className="p-3">{stats.played}</td><td className="p-3">{stats.wins}</td>
-                                <td className="p-3">{stats.losses}</td><td className="p-3">{stats.sets_won}</td>
-                                <td className="p-3">{stats.sets_lost}</td><td className="p-3">{stats.games_won}</td>
-                                <td className="p-3">{stats.games_lost}</td><td className="p-3">{stats.bonus_points_for}</td>
-                                <td className="p-3">{stats.bonus_points_against}</td><td className="p-3 font-bold">{stats.total_points}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                 <p className="text-xs text-gray-400 mt-4">P: Played, W: Wins, L: Losses, SW: Sets Won, SL: Sets Lost, GW: Games Won, GL: Games Lost, BPF: Bonus Points For, BPA: Bonus Points Against, Pts: Total Points</p>
-            </div>
-        );
-
-        const PlayerStatsTable = ({ playerStats, title }) => (
-            <div className="card w-full overflow-x-auto">
-                <h2 className="text-2xl font-bold mb-4 text-white">{title}</h2>
-                <table className="w-full min-w-[900px] text-left">
-                    <thead>
-                        <tr className="table-header">
-                            <th className="p-3">#</th><th className="p-3 w-1/4">Player</th><th className="p-3 w-1/4">Team</th>
-                            <th className="p-3">MP</th><th className="p-3">MW</th><th className="p-3">ML</th>
-                            <th className="p-3">SW</th><th className="p-3">SL</th><th className="p-3">GW</th>
-                            <th className="p-3">GL</th><th className="p-3">Win %</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {playerStats.map((stats, i) => (
-                            <tr key={stats.id} className={i % 2 === 0 ? 'table-row-even' : 'table-row-odd'}>
-                                <td className="p-3 font-semibold">{i + 1}</td><td className="p-3 font-semibold">{stats.name}</td>
-                                <td className="p-3">{stats.team}</td><td className="p-3">{stats.matchesPlayed}</td>
-                                <td className="p-3">{stats.matchesWon}</td><td className="p-3">{stats.matchesLost}</td>
-                                <td className="p-3">{stats.setsWon}</td><td className="p-3">{stats.setsLost}</td>
-                                <td className="p-3">{stats.gamesWon}</td><td className="p-3">{stats.gamesLost}</td>
-                                <td className="p-3 font-bold">{stats.matchesPlayed > 0 ? ((stats.matchesWon / stats.matchesPlayed) * 100).toFixed(0) + '%' : 'N/A'}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-                <p className="text-xs text-gray-400 mt-4">MP: Matches Played, MW: Matches Won, ML: Matches Lost, SW: Sets Won, SL: Sets Lost, GW: Games Won, GL: Games Lost</p>
-            </div>
-        );
-        
-        const PlayerSelection = ({ teamName, division, players, selectedPlayers, onChange, allSelectedPlayers }) => {
-            const teamPlayers = useMemo(() => {
-                const normalizedTargetName = normalizeTeamName(teamName);
-                return players
-                  .filter(p => normalizeTeamName(p.team) === normalizedTargetName && p.division === division)
-                  .sort((a,b) => a.name.localeCompare(b.name));
-            }, [players, teamName, division]);
-
-            const handleSelect = (playerIndex, playerId) => {
-                const newSelection = [...selectedPlayers];
-                newSelection[playerIndex] = playerId ? parseInt(playerId, 10) : null;
-                onChange(newSelection);
-            };
-            
-            return (
-                <div>
-                    <h4 className="font-semibold mb-2">{teamName}</h4>
-                    <div className="grid grid-cols-2 gap-2">
-                        {[0, 1].map(i => {
-                             const availablePlayers = teamPlayers.filter(p => !allSelectedPlayers.includes(p.id) || selectedPlayers[i] === p.id);
-                            return (
-                                <select key={i} value={selectedPlayers[i] || ''} onChange={e => handleSelect(i, e.target.value)} className="select-field">
-                                    <option value="">Select Player {i + 1}</option>
-                                    {availablePlayers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
-                                </select>
-                            );
-                        })}
-                    </div>
-                </div>
-            );
-        };
-        
-        const MatchEntryForm = ({ matchIndex, matchData, onPlayerChange, onScoreChange, fixture, players, allSelectedPlayersForFixture }) => {
-            const allSelectedInOtherMatches = allSelectedPlayersForFixture.filter((id, index) => Math.floor(index / 4) !== matchIndex);
-
-            return (
-                 <div className="p-4 rounded-lg bg-gray-800 border border-gray-700">
-                    <h3 className="text-lg font-semibold mb-4 text-center">Match {matchIndex + 1}</h3>
-                    <div className="mb-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <PlayerSelection teamName={fixture.team1} division={fixture.tier} players={players} selectedPlayers={matchData.selectedPlayers.team1} onChange={sel => onPlayerChange(matchIndex, 'team1', sel)} allSelectedPlayers={allSelectedInOtherMatches}/>
-                        <PlayerSelection teamName={fixture.team2} division={fixture.tier} players={players} selectedPlayers={matchData.selectedPlayers.team2} onChange={sel => onPlayerChange(matchIndex, 'team2', sel)} allSelectedPlayers={allSelectedInOtherMatches}/>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                        {[0, 1, 2].map(i => (
-                            <div key={i}>
-                                <label className="text-xs font-semibold mb-1 block">Set {i + 1}</label>
-                                <div className="flex items-center gap-2">
-                                    <input type="number" placeholder={fixture.team1.slice(0,3).toUpperCase()} className="input-field text-center" value={matchData.scores[i][0]} onChange={e => onScoreChange(matchIndex, i, 0, e.target.value)} />
-                                    <span>-</span>
-                                    <input type="number" placeholder={fixture.team2.slice(0,3).toUpperCase()} className="input-field text-center" value={matchData.scores[i][1]} onChange={e => onScoreChange(matchIndex, i, 1, e.target.value)} />
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )
-        }
-
-        const FixtureEntry = ({ fixture, players, onSaveFixture, onBack }) => {
-            const isEditing = !!fixture.winner;
-            const numMatches = fixture.tier === 'Premier' ? 4 : 3;
-            
-            const [matchesData, setMatchesData] = useState(() => {
-                if (isEditing && fixture.matches) {
-                    return Array.from({ length: numMatches }, (_, i) => {
-                        const match = fixture.matches[i];
-                        if (match) {
-                            return {
-                                scores: [
-                                    [match.sets[0]?.[0] || '', match.sets[0]?.[1] || ''],
-                                    [match.sets[1]?.[0] || '', match.sets[1]?.[1] || ''],
-                                    [match.sets[2]?.[0] || '', match.sets[2]?.[1] || '']
-                                ],
-                                selectedPlayers: match.playerIds ? match.playerIds : { team1: [null, null], team2: [null, null] }
-                            };
-                        }
-                        return { scores: [['',''],['',''],['','']], selectedPlayers: { team1:[null,null], team2:[null,null] } };
-                    });
-                }
-                return Array.from({ length: numMatches }, () => ({
-                    scores: [['',''],['',''],['','']],
-                    selectedPlayers: { team1:[null,null], team2:[null,null] }
-                }));
-            });
-
-            const handlePlayerChange = (matchIndex, teamKey, selection) => {
-                const newMatchesData = [...matchesData];
-                newMatchesData[matchIndex].selectedPlayers[teamKey] = selection;
-                setMatchesData(newMatchesData);
-            };
-
-            const handleScoreChange = (matchIndex, setIndex, teamIndex, value) => {
-                const newMatchesData = [...matchesData];
-                newMatchesData[matchIndex].scores[setIndex][teamIndex] = value;
-                setMatchesData(newMatchesData);
-            };
-            
-            const allSelectedPlayersForFixture = useMemo(() => {
-                return matchesData.flatMap(m => [...m.selectedPlayers.team1, ...m.selectedPlayers.team2]).filter(p => p !== null);
-            }, [matchesData]);
-
-            const handleSave = () => {
-                const processedMatches = [];
-                let team1FixtureWins = 0;
-                let team2FixtureWins = 0;
-
-                for (let i = 0; i < numMatches; i++) {
-                    const match = matchesData[i];
-                    const { team1, team2 } = match.selectedPlayers;
-                    if (team1.some(p => p === null) || team2.some(p => p === null)) {
-                        alert(`Please select all four players for Match ${i + 1}.`);
-                        return;
-                    }
-                    const parsedSets = [];
-                    let t1SetsWon = 0, t2SetsWon = 0;
-                    for (let j = 0; j < 3; j++) {
-                        const set = match.scores[j];
-                        if (set[0] === '' || set[1] === '') {
-                             alert(`Please enter scores for all 3 sets for Match ${i + 1}.`);
-                             return;
-                        };
-                        const s1 = parseInt(set[0], 10), s2 = parseInt(set[1], 10);
-                        if (isNaN(s1) || isNaN(s2)) {
-                            alert(`Invalid score in Set ${j+1} of Match ${i + 1}. Please use numbers only.`);
-                            return;
-                        }
-                        parsedSets.push([s1, s2]);
-                        if (s1 > s2) t1SetsWon++; else t2SetsWon++;
-                    }
-                    if (t1SetsWon + t2SetsWon !== 3) {
-                         alert(`Invalid set count for Match ${i+1}. The total sets won must be 3.`);
-                         return;
-                    }
-                    const matchWinner = (t1SetsWon > t2SetsWon) ? fixture.team1 : fixture.team2;
-                    if (matchWinner === fixture.team1) team1FixtureWins++; else team2FixtureWins++;
-                    processedMatches.push({
-                        sets: parsedSets,
-                        winner: matchWinner,
-                        playerIds: { team1, team2 }
-                    });
-                }
-                
-                let overallWinner;
-                if (team1FixtureWins > team2FixtureWins) {
-                    overallWinner = fixture.team1;
-                } else if (team2FixtureWins > team1FixtureWins) {
-                    overallWinner = fixture.team2;
-                } else {
-                    const tier = fixture.tier;
-                    let team1BonusPoints = 0, team2BonusPoints = 0;
-                    let team1TotalSets = 0, team2TotalSets = 0;
-                    let team1TotalGames = 0, team2TotalGames = 0;
-                    
-                    processedMatches.forEach(match => {
-                        let s1 = 0, s2 = 0;
-                        match.sets.forEach(([a,b], idx) => {
-                            if (countThisSetForGames(tier, idx)) { team1TotalGames += a; team2TotalGames += b; }
-                            const valid = isValidSetForSets(a, b, idx);
-                            if (valid) { if (a > b) s1++; else s2++; }
-                        });
-                        team1TotalSets += s1; team2TotalSets += s2;
-                        if (s1 === 3 && s2 === 0) team1BonusPoints++;
-                        if (s2 === 3 && s1 === 0) team2BonusPoints++;
-                    });
-                    if (team1BonusPoints > team2BonusPoints) {
-                        overallWinner = fixture.team1;
-                    } else if (team2BonusPoints > team1BonusPoints) {
-                        overallWinner = fixture.team2;
-                    } else if (team1TotalSets > team2TotalSets) {
-                        overallWinner = fixture.team1;
-                    } else if (team2TotalSets > team1TotalSets) {
-                        overallWinner = fixture.team2;
-                    } else if (team1TotalGames > team2TotalGames) {
-                        overallWinner = fixture.team1;
-                    } else if (team2TotalGames > team1TotalGames) {
-                        overallWinner = fixture.team2;
-                    } else {
-                        alert('The fixture is tied on matches, bonus, sets and games. Please adjust a score to break the tie.');
-                        return;
-                    }
-                }
-                onSaveFixture(fixture.match_id, processedMatches, overallWinner);
-            };
-
-            return (
-                <div className="card w-full max-w-4xl mx-auto">
-                    <div className="flex justify-between items-center mb-6">
-                        <h2 className="text-2xl font-bold">{isEditing ? 'Edit Fixture Score' : 'Record Fixture Score'}</h2>
-                        <button onClick={onBack} className="btn btn-secondary">Back to Fixtures</button>
-                    </div>
-                    <div className="mb-4 text-center">
-                        <p className="font-bold text-2xl">{fixture.team1} vs {fixture.team2}</p>
-                        <p className="text-md text-gray-400">{fixture.tier} - {fixture.date}</p>
-                    </div>
-                    <div className="space-y-6">
-                        {matchesData.map((matchData, i) => (
-                           <MatchEntryForm
-                                key={i} matchIndex={i} matchData={matchData}
-                                onPlayerChange={handlePlayerChange} onScoreChange={handleScoreChange}
-                                fixture={fixture} players={players} allSelectedPlayersForFixture={allSelectedPlayersForFixture}
-                           />
-                        ))}
-                    </div>
-                    <div className="mt-8 text-center">
-                        <button onClick={handleSave} className="btn btn-primary w-full md:w-auto text-lg">Save Fixture & Finalize</button>
-                    </div>
-                </div>
-            );
-        };
-        
-        const FixturesView = ({ fixtures, onScoreAction, tier }) => {
-            const groupedFixtures = useMemo(() => {
-                if (!fixtures) return {};
-                return fixtures.reduce((acc, match) => {
-                    const round = match.round || 'Playoffs';
-                    if (!acc[round]) acc[round] = [];
-                    acc[round].push(match);
-                    return acc;
-                }, {});
-            }, [fixtures]);
-
-            return (
-                <div className="card">
-                    <h2 className="text-2xl font-bold mb-4">{tier} Fixtures</h2>
-                    <div className="space-y-6 max-h-[70vh] overflow-y-auto pr-2">
-                        {Object.entries(groupedFixtures).map(([round, matches]) => (
-                            <div key={round}>
-                                <h3 className="text-xl font-semibold mb-3 border-b-2 border-gray-600 pb-2 text-blue-300">
-                                    {round === 'Playoffs' ? 'Playoffs & Finals' : `Round ${round}`}
-                                </h3>
-                                <div className="space-y-3">
-                                    {matches.map(match => {
-                                        let resultDisplay;
-                                        if (match.winner && match.matches) {
-                                            const team1Wins = match.matches.filter(m => m.winner === match.team1).length;
-                                            const team2Wins = match.matches.length - team1Wins;
-                                            resultDisplay = <p className="text-sm font-bold text-green-400">Winner: {match.winner} ({Math.max(team1Wins, team2Wins)} - {Math.min(team1Wins, team2Wins)})</p>
-                                        }
-                                        return (
-                                        <div key={match.match_id} className={`p-3 rounded-lg flex justify-between items-center ${match.winner ? 'bg-gray-800' : 'bg-gray-700'}`}>
-                                            <div>
-                                                <p className="font-semibold">{match.team1} vs {match.team2}</p>
-                                                <p className="text-xs text-gray-400">{match.date} at {match.venue}</p>
-                                                {resultDisplay}
-                                            </div>
-                                            <div className="flex-shrink-0">
-                                                {!match.winner && !match.team1.includes("Play off") && !match.team1.includes("FINALS") && (
-                                                    <button onClick={() => onScoreAction(match)} className="btn btn-primary btn-sm">Record Score</button>
-                                                )}
-                                                {match.winner && !match.team1.includes("Play off") && !match.team1.includes("FINALS") && (
-                                                     <button onClick={() => onScoreAction(match)} className="btn btn-secondary btn-sm">Edit Result</button>
-                                                )}
-                                            </div>
-                                        </div>
-                                    )})}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )
-        };
-
-
-        const SetupScreen = ({ onDataLoad }) => {
-            const [playersJson, setPlayersJson] = useState(window.__EMBEDDED_PLAYERS__ ? JSON.stringify(window.__EMBEDDED_PLAYERS__) : '');
-            const [fixturesJson, setFixturesJson] = useState(window.__EMBEDDED_FIXTURES__ ? JSON.stringify(window.__EMBEDDED_FIXTURES__) : '');
-            useEffect(() => {
-              if (playersJson && fixturesJson) {
-                try {
-                  const players = JSON.parse(playersJson);
-                  const fixtures = JSON.parse(fixturesJson);
-                  onDataLoad(players, fixtures);
-                } catch(e) { /* leave setup visible if parse fails */ }
-              }
-            }, []);
-
-            const handleLoad = () => {
-                try {
-                    const players = JSON.parse(playersJson);
-                    const fixtures = JSON.parse(fixturesJson);
-                    onDataLoad(players, fixtures);
-                } catch (e) {
-                    alert('Invalid JSON format. Please check your data and try again.\nError: ' + e.message);
-                }
-            };
-
-            return (
-                <div className="card max-w-4xl mx-auto">
-                    <h2 className="text-2xl font-bold mb-4">Initial Data Setup</h2>
-                    <p className="mb-6 text-gray-400">Paste <code>players.json</code> and your <code>fixtures.json</code> / <code>master_fixtures.json</code> below.</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label className="font-semibold mb-2 block">players.json</label>
-                            <textarea className="input-field w-full h-64" placeholder="Paste players.json content here..." value={playersJson} onChange={e => setPlayersJson(e.target.value)}></textarea>
-                        </div>
-                        <div>
-                            <label className="font-semibold mb-2 block">Fixtures Data</label>
-                            <textarea className="input-field w-full h-64" placeholder="Paste master_fixtures.json or fixtures.json content here..." value={fixturesJson} onChange={e => setFixturesJson(e.target.value)}></textarea>
-                        </div>
-                    </div>
-                    <div className="mt-6 text-center">
-                        <button onClick={handleLoad} className="btn btn-primary">Load League Data</button>
-                    </div>
-                </div>
-            );
-        };
-        
-        const SaveDataModal = ({ updatedFixturesJson, onClose }) => {
-            const [copied, setCopied] = useState(false);
-            const textAreaRef = React.useRef(null);
-            
-            const handleCopy = () => {
-                textAreaRef.current.select();
-                document.execCommand('copy');
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-            };
-
-            return (
-                <div className="modal-backdrop">
-                    <div className="card w-full max-w-2xl">
-                        <h2 className="text-2xl font-bold mb-4">Save Your Changes</h2>
-                        <p className="mb-4 text-gray-400">Copy the JSON below and replace your <code>fixtures.json</code> file to save.</p>
-                        <textarea ref={textAreaRef} readOnly className="input-field w-full h-64" value={updatedFixturesJson}></textarea>
-                        <div className="mt-4 flex gap-4">
-                            <button onClick={handleCopy} className="btn btn-primary">{copied ? 'Copied!' : 'Copy to Clipboard'}</button>
-                            <button onClick={onClose} className="btn btn-secondary">Close</button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
-
-        const TabNav = ({ activeTab, onTabClick }) => {
-            const tabs = [
-                { id: 'prem_standings', title: 'Premier Standings' },
-                { id: 'champ_standings', title: 'Championship Standings' },
-                { id: 'prem_stats', title: 'Premier Player Stats' },
-                { id: 'champ_stats', title: 'Championship Player Stats' },
-                { id: 'fixtures', title: 'Fixtures & Scoring' },
-                { id: 'analysis', title: 'Analysis Center' },
-            ];
-
-            return (
-                <div className="mb-6 border-b-2 border-gray-700 flex flex-wrap">
-                    {tabs.map(tab => (
-                         <button key={tab.id} onClick={() => onTabClick(tab.id)} className={`tab-button ${activeTab === tab.id ? 'tab-button-active' : ''}`}>
-                            {tab.title}
-                        </button>
-                    ))}
-                </div>
-            )
-        };
-        
-        const Gauge = ({ value, label, color }) => {
-            const percentage = Math.max(0, Math.min(100, value));
-            const radius = 50;
-            const circumference = 2 * Math.PI * radius;
-            const strokeDashoffset = circumference - (percentage / 100) * circumference;
-
-            return (
-                <div className="flex flex-col items-center justify-center p-4 bg-gray-800 rounded-lg">
-                    <svg width="120" height="120" viewBox="0 0 120 120" className="-rotate-90">
-                        <circle cx="60" cy="60" r={radius} fill="none" stroke="#374151" strokeWidth="12" />
-                        <circle
-                            cx="60"
-                            cy="60"
-                            r={radius}
-                            fill="none"
-                            stroke={color}
-                            strokeWidth="12"
-                            strokeDasharray={circumference}
-                            strokeDashoffset={strokeDashoffset}
-                            strokeLinecap="round"
-                            className="gauge-arc"
-                        />
-                    </svg>
-                    <div className="text-center mt-[-85px] mb-[55px]">
-                        <p className="text-2xl font-bold text-white">{percentage.toFixed(0)}%</p>
-                        <p className="text-sm text-gray-400">{label}</p>
-                    </div>
-                </div>
-            );
-        };
-        
-        const AnalysisCenter = ({ players, fixtures }) => {
-            const [selectedLeague, setSelectedLeague] = useState('Premier');
-            const [selectedTeam, setSelectedTeam] = useState('');
-            const [selectedPlayer, setSelectedPlayer] = useState('');
-
-            const teamsInLeague = useMemo(() => {
-                return [...new Set(players.filter(p => p.division === selectedLeague).map(p => p.team))].sort();
-            }, [players, selectedLeague]);
-
-            const playersInLeague = useMemo(() => {
-                return players.filter(p => p.division === selectedLeague).sort((a,b) => a.name.localeCompare(b.name));
-            }, [players, selectedLeague]);
-
-            const TeamAnalysis = ({ teamName, players, fixtures }) => {
-                const teamFixtures = useMemo(() => {
-                    return fixtures.filter(f => f.winner && (normalizeTeamName(f.team1) === normalizeTeamName(teamName) || normalizeTeamName(f.team2) === normalizeTeamName(teamName)));
-                }, [fixtures, teamName]);
-
-                const tier = teamFixtures?.[0]?.tier || selectedLeague;
-
-                const teamStats = useMemo(() => {
-                    const stats = { wins: 0, losses: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0 };
-                    teamFixtures.forEach(fixture => {
-                        if (normalizeTeamName(fixture.winner) === normalizeTeamName(teamName)) stats.wins++; else stats.losses++;
-                        fixture.matches.forEach(match => {
-                            const isTeam1 = normalizeTeamName(fixture.team1) === normalizeTeamName(teamName);
-                            match.sets.forEach(([s1,s2], idx) => {
-                                if (countThisSetForGames(tier, idx)) {
-                                    if (isTeam1) { stats.gamesWon += s1; stats.gamesLost += s2; }
-                                    else { stats.gamesWon += s2; stats.gamesLost += s1; }
-                                }
-                            });
-                             match.sets.forEach(([s1,s2], idx) => {
-                                const valid = isValidSetForSets(s1, s2, idx);
-                                if (!valid) return;
-                                if (isTeam1) { if (s1 > s2) stats.setsWon++; else stats.setsLost++; }
-                                else { if (s2 > s1) stats.setsWon++; else stats.setsLost++; }
-                            });
-                        });
-                    });
-                    return stats;
-                }, [teamFixtures, teamName]);
-
-                const fixtureWinPct = teamStats.wins + teamStats.losses > 0 ? (teamStats.wins / (teamStats.wins + teamStats.losses)) * 100 : 0;
-                const setWinPct = teamStats.setsWon + teamStats.setsLost > 0 ? (teamStats.setsWon / (teamStats.setsWon + teamStats.setsLost)) * 100 : 0;
-                const gameWinPct = teamStats.gamesWon + teamStats.gamesLost > 0 ? (teamStats.gamesWon / (teamStats.gamesWon + teamStats.gamesLost)) * 100 : 0;
-                const getColor = (pct) => pct >= 66 ? '#22c55e' : pct >= 33 ? '#eab308' : '#ef4444';
-
-                return (
-                    <div className="space-y-6">
-                        <div className="p-4 bg-gray-900 rounded-lg">
-                             <h3 className="text-2xl font-bold text-center">{teamName} - Performance</h3>
-                             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
-                                <Gauge value={fixtureWinPct} label="Fixture Win %" color={getColor(fixtureWinPct)} />
-                                <Gauge value={setWinPct} label="Set Win %" color={getColor(setWinPct)} />
-                                <Gauge value={gameWinPct} label="Game Win %" color={getColor(gameWinPct)} />
-                             </div>
-                        </div>
-                    </div>
-                )
-            };
-
-            const PartnershipAnalysis = ({ partnershipStats, players }) => (
-                <div className="card w-full overflow-x-auto">
-                    <h2 className="text-xl font-bold mb-4 text-white">Partnership Performance</h2>
-                    <table className="w-full text-left">
-                        <thead>
-                            <tr className="table-header">
-                                <th className="p-3">Partner</th>
-                                <th className="p-3">MP</th>
-                                <th className="p-3">W</th>
-                                <th className="p-3">L</th>
-                                <th className="p-3">Win %</th>
-                            </tr>
-                        </thead>
-                         <tbody>
-                            {partnershipStats.map((stats) => (
-                                <tr key={stats.partnerId} className="table-row-odd">
-                                    <td className="p-3 font-semibold">{players.find(p => p.id === stats.partnerId)?.name || 'Unknown'}</td>
-                                    <td className="p-3">{stats.played}</td>
-                                    <td className="p-3">{stats.wins}</td>
-                                    <td className="p-3">{stats.losses}</td>
-                                    <td className="p-3 font-bold">{stats.played > 0 ? ((stats.wins / stats.played) * 100).toFixed(0) + '%' : 'N/A'}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            );
-
-            const PlayerAnalysis = ({ playerId, players, fixtures }) => {
-                const player = useMemo(() => players.find(p => p.id === playerId), [players, playerId]);
-                
-                const playerStatSummary = useMemo(() => {
-                    const stats = calculatePlayerStats(fixtures, players).find(p => p.id === playerId);
-                    return stats || { matchesPlayed: 0, matchesWon: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0 };
-                }, [fixtures, players, playerId]);
-
-                const partnershipStats = useMemo(() => {
-                    if (!player) return [];
-                    const partnerData = {};
-                    const playerMatches = fixtures
-                        .filter(f => f.winner && f.matches)
-                        .flatMap(f => f.matches.map(m => ({...m, fixture: f})))
-                        .filter(m => (m.playerIds?.team1?.includes(playerId) || m.playerIds?.team2?.includes(playerId)));
-
-                    playerMatches.forEach(match => {
-                        const isTeam1 = match.playerIds.team1.includes(playerId);
-                        const partnerId = isTeam1 ? match.playerIds.team1.find(id => id !== playerId) : match.playerIds.team2.find(id => id !== playerId);
-                        
-                        if(partnerId) {
-                            if(!partnerData[partnerId]) partnerData[partnerId] = { partnerId, played: 0, wins: 0, losses: 0 };
-                            partnerData[partnerId].played++;
-                            const wonMatch = (isTeam1 && match.winner === match.fixture.team1) || (!isTeam1 && match.winner === match.fixture.team2);
-                            if (wonMatch) partnerData[partnerId].wins++; else partnerData[partnerId].losses++;
-                        }
-                    });
-
-                    return Object.values(partnerData).sort((a,b) => b.wins - a.wins || a.losses - b.losses);
-                }, [fixtures, playerId]);
-
-                if(!player) return null;
-
-                const matchWinPct = playerStatSummary.matchesPlayed > 0 ? (playerStatSummary.matchesWon / playerStatSummary.matchesPlayed) * 100 : 0;
-                const setWinPct = playerStatSummary.setsWon + playerStatSummary.setsLost > 0 ? (playerStatSummary.setsWon / (playerStatSummary.setsWon + playerStatSummary.setsLost)) * 100 : 0;
-                const gameWinPct = playerStatSummary.gamesWon + playerStatSummary.gamesLost > 0 ? (playerStatSummary.gamesWon / (playerStatSummary.gamesWon + playerStatSummary.gamesLost)) * 100 : 0;
-                const getColor = (pct) => pct >= 66 ? '#22c55e' : pct >= 33 ? '#eab308' : '#ef4444';
-
-                return (
-                     <div className="space-y-6">
-                        <div className="p-4 bg-gray-900 rounded-lg">
-                            <h3 className="text-2xl font-bold text-center">{player.name} - {player.team}</h3>
-                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
-                                <Gauge value={matchWinPct} label="Match Win %" color={getColor(matchWinPct)} />
-                                <Gauge value={setWinPct} label="Set Win %" color={getColor(setWinPct)} />
-                                <Gauge value={gameWinPct} label="Game Win %" color={getColor(gameWinPct)} />
-                             </div>
-                        </div>
-                        <PlayerStatsTable playerStats={[playerStatSummary]} title="Detailed Stats" />
-                        {partnershipStats.length > 0 && <PartnershipAnalysis partnershipStats={partnershipStats} players={players} />}
-                    </div>
-                )
-            };
-
-            return (
-                <div className="card space-y-6">
-                    <h2 className="text-3xl font-bold text-center">Analysis Center</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-800 rounded-lg">
-                        <div>
-                             <label className="font-semibold mb-2 block">1. Select League</label>
-                             <select value={selectedLeague} onChange={(e)=>{setSelectedLeague(e.target.value); setSelectedTeam(''); setSelectedPlayer('');}} className="select-field">
-                                <option value="Premier">Premier</option>
-                                <option value="Championship">Championship</option>
-                             </select>
-                        </div>
-                         <div>
-                             <label className="font-semibold mb-2 block">2. Select Team</label>
-                             <select value={selectedTeam} onChange={(e)=>{setSelectedTeam(e.target.value); setSelectedPlayer('');}} className="select-field" disabled={!selectedLeague}>
-                                <option value="">-- View Team Stats --</option>
-                                {teamsInLeague.map(team => <option key={team} value={team}>{team}</option>)}
-                             </select>
-                        </div>
-                         <div>
-                             <label className="font-semibold mb-2 block">3. Select Player</label>
-                              <select value={selectedPlayer} onChange={(e)=>{setSelectedPlayer(e.target.value); setSelectedTeam('');}} className="select-field" disabled={!selectedLeague}>
-                                <option value="">-- View Player Stats --</option>
-                                {playersInLeague.map(player => <option key={player.id} value={player.id}>{player.name}</option>)}
-                             </select>
-                        </div>
-                    </div>
-                    <div className="mt-4">
-                        {selectedTeam && <TeamAnalysis teamName={selectedTeam} players={players} fixtures={fixtures} />}
-                        {selectedPlayer && <PlayerAnalysis playerId={parseInt(selectedPlayer, 10)} players={players} fixtures={fixtures} />}
-                    </div>
-                </div>
-            )
-        };
-
-
-        // --- Main App Component ---
-        function App() {
-            const [dataLoaded, setDataLoaded] = useState(false);
-            const [players, setPlayers] = useState(null);
-            const [fixtures, setFixtures] = useState(null);
-            const [showSaveModal, setShowSaveModal] = useState(false);
-            const [fixtureToScore, setFixtureToScore] = useState(null);
-            const [activeTab, setActiveTab] = useState('prem_standings');
-            
-            const premierStandings = useMemo(() => calculateStandings(fixtures, players, 'Premier'), [fixtures, players]);
-            const championshipStandings = useMemo(() => calculateStandings(fixtures, players, 'Championship'), [fixtures, players]);
-
-            const premierPlayerStats = useMemo(() => {
-                if (!fixtures || !players) return [];
-                return calculatePlayerStats(fixtures.filter(f => f.tier === 'Premier'), players.filter(p => p.division === 'Premier'));
-            }, [fixtures, players]);
-    
-            const championshipPlayerStats = useMemo(() => {
-                if (!fixtures || !players) return [];
-                return calculatePlayerStats(fixtures.filter(f => f.tier === 'Championship'), players.filter(p => p.division === 'Championship'));
-            }, [fixtures, players]);
-
-            const premierFixtures = useMemo(() => fixtures?.filter(f => f.tier === 'Premier'), [fixtures]);
-            const championshipFixtures = useMemo(() => fixtures?.filter(f => f.tier === 'Championship'), [fixtures]);
-
-            const handleDataLoad = (playersData, fixturesData) => {
-                setPlayers(playersData);
-                setFixtures(fixturesData);
-                setDataLoaded(true);
-            };
-
-            const handleSaveFixture = useCallback((fixtureId, processedMatches, overallWinner) => {
-                const updatedFixtures = fixtures.map(f => {
-                    if (f.match_id === fixtureId) {
-                        return { ...f, matches: processedMatches, winner: overallWinner };
-                    }
-                    return f;
-                });
-                setFixtures(updatedFixtures);
-                setFixtureToScore(null);
-                setShowSaveModal(true);
-            }, [fixtures]);
-
-            const handleScoreAction = (match) => {
-                setFixtureToScore(match);
-            }
-
-            const renderContent = () => {
-                if (fixtureToScore) {
-                    return <FixtureEntry fixture={fixtureToScore} players={players} onSaveFixture={handleSaveFixture} onBack={() => setFixtureToScore(null)} />;
-                }
-
-                switch (activeTab) {
-                    case 'prem_standings': return <StandingsTable standings={premierStandings} title="🏆 Premier Standings" />;
-                    case 'champ_standings': return <StandingsTable standings={championshipStandings} title="🏆 Championship Standings" />;
-                    case 'prem_stats': return <PlayerStatsTable playerStats={premierPlayerStats} title="👤 Premier Player Stats" />;
-                    case 'champ_stats': return <PlayerStatsTable playerStats={championshipPlayerStats} title="👤 Championship Player Stats" />;
-                    case 'fixtures': return (
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            <FixturesView fixtures={premierFixtures} onScoreAction={handleScoreAction} tier="Premier" />
-                            <FixturesView fixtures={championshipFixtures} onScoreAction={handleScoreAction} tier="Championship" />
-                        </div>
-                    );
-                    case 'analysis': return <AnalysisCenter players={players} fixtures={fixtures} />;
-                    default: return null;
-                }
-            };
-
-            return (
-                <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-                    <div className="max-w-7xl mx-auto">
-                        {!dataLoaded ? (
-                            <SetupScreen onDataLoad={handleDataLoad} />
-                        ) : (
-                            <>
-                                <h1 className="text-4xl font-bold text-center mb-8">Padel League Dashboard</h1>
-                                <TabNav activeTab={activeTab} onTabClick={setActiveTab} />
-                                <div className="mt-6">
-                                    {renderContent()}
-                                </div>
-                            </>
-                        )}
-                    </div>
-                    {showSaveModal && (
-                        <SaveDataModal 
-                            updatedFixturesJson={JSON.stringify(fixtures, null, 2)} 
-                            onClose={() => setShowSaveModal(false)} 
-                        />
-                    )}
-                </div>
-            );
-        }
-
-        const container = document.getElementById('root');
-        const root = ReactDOM.createRoot(container);
-        root.render(<App />);
-    </script>
-
-<!-- Floating button -->
-<button id="constructorsFab" title="Open Analysis / Constructors">Analysis • Constructors</button>
-
-<!-- Overlay -->
-<div id="constructorsOverlay" aria-hidden="true">
-  <div id="constructorsPanel">
-    <div class="panelHeader">
-      <h2>Franchise “Constructors” Leaderboard & Analysis</h2>
-      <div>
-        <span class="badge" id="datasetBadge">Both Divisions</span>
-        <button class="closeBtn" id="closeConstructors">Close</button>
-      </div>
-    </div>
-    <div class="panelBody">
-      <div class="kpiGrid" id="kpiGrid"></div>
-      
-      <div class="section">
-        <h3>Leaderboard (by unique winning players)</h3>
-        <div class="tableWrap">
-          <table class="constructors" id="constructorsTable">
-            <thead>
-              <tr>
-                <th>Rank</th>
-                <th>Franchise</th>
-                <th>Unique Winning Players</th>
-                <th>Winning Player % of Active</th>
-                <th>Match Wins</th>
-                <th>2–0 Sweeps*</th>
-                <th>Active Players</th>
-                <th>Total Players</th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
+<body class="bg-gray-900 text-white">
+  <!-- Navigation -->
+  <nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <a href="index_home.html" class="flex items-center gap-2">
+          <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Lowveld Padel</h1>
+          <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">powered by Nomz</h2>
+        </a>
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#franchises" class="text-white hover:text-blue-400 transition-colors">Franchises</a>
+          <a href="#marketplace" class="text-white hover:text-blue-400 transition-colors">Marketplace</a>
+          <a href="#live-stream" class="text-white hover:text-blue-400 transition-colors">Live Stream</a>
+          <a href="#fantasy" class="text-white hover:text-blue-400 transition-colors">Fantasy League</a>
+          <a href="analysis.html" target="_blank" rel="noopener" class="text-white hover:text-blue-400 transition-colors">Analysis Center</a>
         </div>
-        <div class="note">* Sweeps are computed from the first two sets only (best‑of‑3). This aligns with prior scoring discussions.</div>
-      </div>
-
-      <div class="section">
-        <h3>Unique Winning Players by Franchise</h3>
-        <div class="chartBox"><canvas id="uwpChart" height="140"></canvas></div>
-      </div>
-
-      <div class="section">
-        <h3>Match Wins by Franchise</h3>
-        <div class="chartBox"><canvas id="mwChart" height="140"></canvas></div>
+        <div class="md:hidden flex items-center">
+          <button aria-label="Open menu" class="text-white" onclick="toggleMobileMenu()"><i class="fas fa-bars text-xl"></i></button>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden bg-black/95 backdrop-blur-sm">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <a href="#franchises" class="block px-3 py-2 hover:bg-gray-800 rounded">Franchises</a>
+        <a href="#marketplace" class="block px-3 py-2 hover:bg-gray-800 rounded">Marketplace</a>
+        <a href="#live-stream" class="block px-3 py-2 hover:bg-gray-800 rounded">Live Stream</a>
+        <a href="#fantasy" class="block px-3 py-2 hover:bg-gray-800 rounded">Fantasy League</a>
+        <a href="analysis.html" target="_blank" rel="noopener" class="block px-3 py-2 hover:bg-gray-800 rounded">Analysis Center</a>
+      </div>
+    </div>
+  </nav>
 
-<script>
-(function() {
-  const players = window.__EMBEDDED_PLAYERS__ || [];
-  const fixtures = window.__EMBEDDED_FIXTURES__ || [];
+  <div class="h-16"></div>
 
-  // Compute stats
-  const playerStats = new Map(players.map(p => [p.id, {team:p.team, division:p.division, matches:0, wins:0}]));
-  const teamNames = [...new Set(players.map(p => p.team))];
-  const agg = new Map(teamNames.map(t => [t, {uniqueWinners:new Set(), matchWins:0, sweeps2:0, active:0, total:0}]));
-  players.forEach(p => agg.get(p.team).total++);
+  <!-- Feature Tiles -->
+  <section id="features" class="py-20 bg-gradient-to-br from-gray-900 to-black">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Platform Features
+        </h2>
+        <p class="text-xl text-gray-400">Your one-click hub for league insights</p>
+      </div>
 
-  // per-match stats
-  fixtures.forEach(f => {
-    (f.matches||[]).forEach(m => {
-      const t1 = f.team1, t2 = f.team2;
-      const p1 = (m.playerIds && m.playerIds.team1) || [];
-      const p2 = (m.playerIds && m.playerIds.team2) || [];
-      [...p1, ...p2].forEach(pid => {
-        const ps = playerStats.get(pid); if (ps) ps.matches++;
-      });
-      const w = m.winner;
-      if (w === t1 || w === t2) {
-        const winners = (w===t1) ? p1 : p2;
-        winners.forEach(pid => { const ps = playerStats.get(pid); if (ps) ps.wins++; });
-        agg.get(w).matchWins++;
-      }
-      const sets = (m.sets||[]).slice(0,2); // 1st two sets only for sweep
-      if (sets.length===2) {
-        const w1 = sets[0][0] > sets[0][1] ? t1 : t2;
-        const w2 = sets[1][0] > sets[1][1] ? t1 : t2;
-        if (w1===w2) { agg.get(w1).sweeps2++; }
-      }
-    });
-  });
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Analysis Center -->
+        <a href="analysis.html" target="_blank" rel="noopener" class="feature-card bg-gradient-to-br from-indigo-900/30 to-purple-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-chart-line text-3xl text-white"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-indigo-200 mb-2">Analysis Center</h3>
+            <p class="text-gray-400 text-sm">Open the live Constructors dashboard (winners, sweeps & charts)</p>
+          </div>
+        </a>
 
-  // derive unique winners + active counts
-  playerStats.forEach((ps, pid) => {
-    if (ps.matches>0) agg.get(ps.team).active++;
-    if (ps.wins>0) agg.get(ps.team).uniqueWinners.add(pid);
-  });
+        <!-- Marketplace -->
+        <a href="#marketplace" class="feature-card bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-store text-3xl text-white"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-green-300 mb-2">Marketplace</h3>
+            <p class="text-gray-400 text-sm">Buy/sell gear, book coaching & more</p>
+          </div>
+        </a>
 
-  const rows = [];
-  agg.forEach((a, team) => {
-    const uw = a.uniqueWinners.size, ap = a.active, tp = a.total, mw = a.matchWins, cs = a.sweeps2;
-    const rate = ap ? (uw/ap*100) : 0;
-    rows.push({ team, uw, ap, tp, mw, cs, rate:+rate.toFixed(1) });
-  });
+        <!-- Live Stream -->
+        <a href="#live-stream" class="feature-card bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-video text-3xl text-white"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Live Stream</h3>
+            <p class="text-gray-400 text-sm">Watch Padel24 & Play360 matches</p>
+          </div>
+        </a>
 
-  rows.sort((x,y)=> y.uw - x.uw || y.mw - x.mw || x.team.localeCompare(y.team));
+        <!-- Fantasy League -->
+        <a href="#fantasy" class="feature-card bg-gradient-to-br from-yellow-900/30 to-amber-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
+          <div class="text-center">
+            <div class="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-5">
+              <i class="fas fa-trophy text-3xl text-white"></i>
+            </div>
+            <h3 class="text-2xl font-extrabold text-yellow-300 mb-2">Fantasy League</h3>
+            <p class="text-gray-400 text-sm">Pick squads, earn points, climb the ladder</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-  // KPIs
-  const totalPlayers = players.length;
-  const activePlayers = Array.from(playerStats.values()).filter(p => p.matches>0).length;
-  const totalUniqueWinners = rows.reduce((s,r)=>s+r.uw,0);
-  const totalMatchWins = rows.reduce((s,r)=>s+r.mw,0);
-  const totalSweeps = rows.reduce((s,r)=>s+r.cs,0);
-  const kpiGrid = document.getElementById('kpiGrid');
-  kpiGrid.innerHTML = [
-    {label:'Total Players', val: totalPlayers},
-    {label:'Active Players', val: activePlayers},
-    {label:'Unique Winners (all franchises, counted once per player per team)', val: totalUniqueWinners},
-    {label:'Match Wins', val: totalMatchWins},
-    {label:'2–0 Sweeps', val: totalSweeps}
-  ].map(k => `<div class="kpi"><div class="val">${k.val}</div><div class="label">${k.label}</div></div>`).join('');
+  <!-- Franchises placeholder -->
+  <section id="franchises" class="scroll-mt-24 py-20 bg-gradient-to-br from-gray-900 to-black">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
+          Lowveld Padel Franchises
+        </h2>
+        <p class="text-sm md:text-base tracking-widest text-indigo-200/80">MEET THE 8 POWERHOUSE FRANCHISES COMPETING FOR GLORY!!!</p>
+      </div>
+      <div class="text-gray-400 text-center">[Franchise cards unchanged – paste yours here]</div>
+    </div>
+  </section>
 
-  // Table
-  const tbody = document.querySelector('#constructorsTable tbody');
-  tbody.innerHTML = rows.map((r, i) => {
-    const rankClass = i===0?'rank1': i===1?'rank2': i===2?'rank3':'';
-    return `<tr>
-      <td><span class="rankBadge ${rankClass}">${i+1}</span></td>
-      <td><strong>${r.team}</strong></td>
-      <td>${r.uw}</td>
-      <td>${r.rate}%</td>
-      <td>${r.mw}</td>
-      <td>${r.cs}</td>
-      <td>${r.ap}</td>
-      <td>${r.tp}</td>
-    </tr>`;
-  }).join('');
+  <!-- Marketplace -->
+  <section id="marketplace" class="py-20 bg-gradient-to-br from-gray-900 to-black">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text text-transparent">Marketplace</h2>
+      <p>Coming soon…</p>
+    </div>
+  </section>
 
-  // Charts
-  const labels = rows.map(r=>r.team);
-  const uwData = rows.map(r=>r.uw);
-  const mwData = rows.map(r=>r.mw);
-  new Chart(document.getElementById('uwpChart').getContext('2d'), {
-     type:'bar',
-     data:{ labels, datasets:[{ label:'Unique Winning Players', data: uwData }] },
-     options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
-  new Chart(document.getElementById('mwChart').getContext('2d'), {
-     type:'bar',
-     data:{ labels, datasets:[{ label:'Match Wins', data: mwData }] },
-     options:{ responsive:true, scales:{ y:{ beginAtZero:true } } }
-  });
+  <!-- Live Stream -->
+  <section id="live-stream" class="py-20 bg-gradient-to-br from-gray-900 to-black">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">Live Stream</h2>
+      <p>Coming soon…</p>
+    </div>
+  </section>
 
-  // Open/close
-  const overlay = document.getElementById('constructorsOverlay');
-  document.getElementById('constructorsFab').onclick = ()=>{ overlay.style.display='block'; overlay.setAttribute('aria-hidden','false'); };
-  document.getElementById('closeConstructors').onclick = ()=>{ overlay.style.display='none'; overlay.setAttribute('aria-hidden','true'); };
-})();
-</script>
+  <!-- Fantasy League -->
+  <section id="fantasy" class="py-20 bg-gradient-to-br from-gray-900 to-black">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">Fantasy League</h2>
+      <p>Coming soon…</p>
+    </div>
+  </section>
 
-<script>
-// Auto-fill setup screen and load embedded data if present
-(function(){
-  const players = window.__EMBEDDED_PLAYERS__;
-  const fixtures = window.__EMBEDDED_FIXTURES__;
-  if (!players || !fixtures) return;
+  <footer class="bg-black py-12">
+    <div class="max-w-7xl mx-auto px-4 text-center text-gray-400">
+      © <span id="year"></span> Lowveld Padel Pro. All rights reserved.
+    </div>
+  </footer>
 
-  function tryLoad() {
-    try {
-      // find textareas (left: players, right: fixtures)
-      const areas = Array.from(document.querySelectorAll('textarea'));
-      // Heuristic: prefer the two biggest textareas on the page at startup
-      const sorted = areas.sort((a,b)=> b.offsetHeight*b.offsetWidth - a.offsetHeight*a.offsetWidth);
-      if (sorted.length >= 2) {
-        sorted[0].value = JSON.stringify(players);
-        sorted[1].value = JSON.stringify(fixtures);
-      }
-      // find load button by text content
-      const buttons = Array.from(document.querySelectorAll('button'));
-      const loadBtn = buttons.find(b => /Load\s+League\s+Data/i.test(b.textContent||''));
-      if (loadBtn) {
-        loadBtn.click();
-        return true;
-      }
-    } catch(e){}
-    return false;
-  }
-
-  // Run after React renders
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(tryLoad, 80);
-  } else {
-    window.addEventListener('DOMContentLoaded', ()=> setTimeout(tryLoad, 80));
-  }
-})();
-</script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    function toggleMobileMenu() {
+      const el = document.getElementById('mobileMenu');
+      if (!el) return;
+      el.classList.toggle('hidden');
+    }
+  </script>
 </body>
 </html>
-

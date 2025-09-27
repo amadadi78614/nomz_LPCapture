@@ -1423,10 +1423,10 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 
 
 
+
 <script id="lp-mobile-builder">
 (function(){
   const qa = (s, r=document)=>Array.from(r.querySelectorAll(s));
-  const q  = (s, r=document)=>r.querySelector(s);
   const text = (el)=> (el && (el.textContent||'').trim()) || '';
 
   // Make the tab row scrollable on mobile
@@ -1443,7 +1443,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 
   function pct(n){ return Math.round(n*100); }
 
-  /* ---------- Standings & Player Stats -> Accordions ---------- */
+  /* ---------- Build accordion for Standings & Player Stats ONLY ---------- */
   function buildStandingsAccordions(){
     const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
     if (w > 640) return;
@@ -1456,7 +1456,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 
       const hasTeam   = headers.includes('team') || headers.includes('franchise');
       const hasPlayer = headers.includes('player');
-      if (!hasTeam && !hasPlayer) return;
+      if (!hasTeam && !hasPlayer) return; // ignore non-standings tables (e.g., fixtures)
 
       const colsTeam   = ['#','team','p','w','l','sw','sl','gw','gl','bpf','bpa','pts'];
       const colsPlayer = ['#','player','mp','mw','ml','sw','sl','gw','gl'];
@@ -1470,13 +1470,13 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
         if (!tds.length) return;
         const row = Object.fromEntries(headers.map((h,i)=>[h, text(tds[i])]));
 
-        const item = document.createElement('div');
-        item.className = 'lp-acc-item';
+        const item  = document.createElement('div');
+        item.className='lp-acc-item';
 
-        const btn = document.createElement('button');
-        btn.className = 'lp-acc-btn';
+        const btn   = document.createElement('button');
+        btn.className='lp-acc-btn';
         const caret = document.createElement('span');
-        caret.className = 'lp-acc-caret'; caret.textContent = '▾';
+        caret.className='lp-acc-caret'; caret.textContent='▾';
 
         let titleText = '';
         if (hasTeam){
@@ -1485,7 +1485,7 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
           const pts  = row['pts'] || '';
           titleText = (rank? rank+'. ' : '') + team + (pts? ` — ${pts} pts` : '');
         } else {
-          const rank = row['#'] || '';
+          const rank   = row['#'] || '';
           const player = row['player'] || '';
           const mp = parseFloat(row['mp']||'0')||0;
           const mw = parseFloat(row['mw']||'0')||0;
@@ -1494,30 +1494,25 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
         }
 
         const title = document.createElement('span');
-        title.className = 'lp-acc-title'; title.textContent = titleText;
+        title.className='lp-acc-title';
+        title.textContent = titleText;
         btn.appendChild(title); btn.appendChild(caret);
 
         const panel = document.createElement('div');
-        panel.className = 'lp-acc-panel hidden';
+        panel.className='lp-acc-panel hidden';
 
-        const grid = document.createElement('div');
-        grid.className = 'lp-acc-grid';
+        const grid  = document.createElement('div');
+        grid.className='lp-acc-grid';
 
         cols.forEach(c=>{
           if (c.label==='#' || c.label==='team' || c.label==='franchise' || c.label==='player') return;
           const key = document.createElement('div'); key.className='lp-acc-key'; key.textContent = c.label.toUpperCase();
           const val = document.createElement('div'); val.className='lp-acc-val';
-
-          if (!hasTeam && c.label==='win %' && !row['win %']) {
-            const mp = parseFloat(row['mp']||'0')||0;
-            const mw = parseFloat(row['mw']||'0')||0;
-            val.textContent = mp>0 ? (pct(mw/mp)+'%') : '—';
-          } else {
-            val.textContent = (c.idx>=0 ? text(qa('td', tr)[c.idx]) : (row[c.label]||''));
-          }
+          val.textContent = (c.idx>=0 ? text(qa('td', tr)[c.idx]) : (row[c.label]||''));
           grid.appendChild(key); grid.appendChild(val);
         });
 
+        // Derived WIN% for player tables if not present
         if (!hasTeam && !headers.includes('win %')){
           const mp = parseFloat(row['mp']||'0')||0;
           const mw = parseFloat(row['mw']||'0')||0;
@@ -1537,148 +1532,22 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
         });
       });
 
+      // Append and hide the source table on mobile
       tbl.insertAdjacentElement('afterend', list);
       tbl.classList.add('lp-hide-mobile');
       tbl.__lpAccBuilt = true;
     });
   }
 
-  /* ---------- Fixtures -> Accordions ---------- */
-  
-  /* ---------- Fixtures -> Accordions (improved parsing) ---------- */
-  
-  /* ---------- Fixtures -> Accordions (clean title + relaxed scroll) ---------- */
-  function buildFixtureAccordions(){
-    const w = Math.max(document.documentElement.clientWidth, window.innerWidth||0);
-    if (w > 640) return;
-
-    const countVs = (s) => ((s.match(/\s+vs\s+/gi) || []).length);
-
-    const fixSections = qa('section, div').filter(sec => {
+  /* ---------- Ensure fixtures stay default (UNMODIFIED) ---------- */
+  function unhideFixtures(){
+    // If any previous patch hid fixtures with lp-hide-mobile, unhide them
+    const fixSecs = qa('section, div').filter(sec => {
       const h = sec.querySelector('h2, h3, h4');
       return h && /fixtures/i.test((h.textContent||'').trim());
     });
-
-    fixSections.forEach(sec => {
-      if (sec.__lpFxBuilt) return;
-
-      // mark this and a couple ancestors to relax scroll limits via CSS
-      let up = sec, steps = 0;
-      while (up && steps < 3) { up.classList.add('lp-fx-section'); up = up.parentElement; steps++; }
-
-      let candidates = qa('li, div, article, p', sec).filter(el => {
-        const t = (el.textContent||'').trim();
-        const low = t.toLowerCase();
-        // Must contain "vs" and "Winner:", but avoid wrappers containing multiple matches
-        return low.includes(' vs ') && low.includes('winner:') && countVs(t) === 1 && t.length < 400;
-      });
-
-      // keep deepest nodes only
-      candidates = candidates.filter(el => !candidates.some(other => other !== el && other.contains(el)));
-      if (!candidates.length) return;
-
-      const list = document.createElement('div');
-      list.className = 'lp-acc-list';
-
-      candidates.forEach(el => {
-        const raw = (el.textContent||'').replace(/\s+/g,' ').trim();
-
-        // Robust "Team A vs Team B" capture
-        const vsCap = raw.match(/(.+?)\s+vs\s+(.+?)(?:\s+(?:winner:|at|on|monday|tuesday|wednesday|thursday|friday|saturday|sunday|,|-)\b|$)/i);
-        const titleLine = vsCap ? (vsCap[1].trim() + ' vs ' + vsCap[2].trim()) : (raw.split(/winner:/i)[0] || raw);
-
-        // Winner & Date
-        const winMatch  = raw.match(/winner:\s*([^,•\n\r]+)/i);
-        const winner    = winMatch ? winMatch[1].trim() : '';
-        const dateMatch = raw.match(/\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b[^,]*/i);
-        const dateStr   = dateMatch ? dateMatch[0].trim() : '';
-
-        const item  = document.createElement('div'); item.className='lp-acc-item';
-        const btn   = document.createElement('button'); btn.className='lp-acc-btn';
-        const caret = document.createElement('span'); caret.className='lp-acc-caret'; caret.textContent='▾';
-        const title = document.createElement('span'); title.className='lp-acc-title';
-        title.textContent = winner ? `${titleLine} — ${winner}` : titleLine;
-        btn.appendChild(title); btn.appendChild(caret);
-
-        const panel = document.createElement('div'); panel.className='lp-acc-panel hidden';
-        const grid  = document.createElement('div'); grid.className='lp-acc-grid';
-
-        if (dateStr){
-          const k = document.createElement('div'); k.className='lp-acc-key'; k.textContent='DATE';
-          const v = document.createElement('div'); v.className='lp-acc-val'; v.textContent=dateStr;
-          grid.appendChild(k); grid.appendChild(v);
-        }
-        if (winner){
-          const k = document.createElement('div'); k.className='lp-acc-key'; k.textContent='WINNER';
-          const v = document.createElement('div'); v.className='lp-acc-val'; v.textContent=winner;
-          grid.appendChild(k); grid.appendChild(v);
-        }
-
-        panel.appendChild(grid);
-        item.appendChild(btn); item.appendChild(panel);
-        list.appendChild(item);
-
-        btn.addEventListener('click', ()=>{
-          const open = !panel.classList.contains('hidden');
-          panel.classList.toggle('hidden', open);
-          caret.style.transform = open ? '' : 'rotate(180deg)';
-        });
-      });
-
-      // Insert list and hide original items on mobile
-      const anchor = candidates[0];
-      anchor.parentElement.insertBefore(list, anchor);
-      candidates.forEach(el => el.classList.add('lp-hide-mobile'));
-      sec.__lpFxBuilt = true;
-    });
-  }
-        if (winnerTok){
-          const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'WINNER';
-          const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = winnerTok;
-          grid.appendChild(k); grid.appendChild(v);
-        }
-
-        panel.appendChild(grid);
-        item.appendChild(btn); item.appendChild(panel);
-        list.appendChild(item);
-
-        btn.addEventListener('click', ()=>{
-          const open = !panel.classList.contains('hidden');
-          panel.classList.toggle('hidden', open);
-          caret.style.transform = open ? '' : 'rotate(180deg)';
-        });
-      });
-
-      // Insert the list before the first candidate; hide originals on mobile
-      const anchor = candidates[0];
-      anchor.parentElement.insertBefore(list, anchor);
-      candidates.forEach(el => el.classList.add('lp-hide-mobile'));
-
-      sec.__lpFxBuilt = true;
-    });
-  }
-
-        if (win){
-          const k = document.createElement('div'); k.className = 'lp-acc-key'; k.textContent = 'WINNER';
-          const v = document.createElement('div'); v.className = 'lp-acc-val'; v.textContent = win;
-          grid.appendChild(k); grid.appendChild(v);
-        }
-
-        panel.appendChild(grid);
-        item.appendChild(btn); item.appendChild(panel);
-        list.appendChild(item);
-
-        btn.addEventListener('click', ()=>{
-          const open = !panel.classList.contains('hidden');
-          panel.classList.toggle('hidden', open);
-          caret.style.transform = open ? '' : 'rotate(180deg)';
-        });
-      });
-
-      const anchor = candidates[0];
-      anchor.parentElement.insertBefore(list, anchor);
-      candidates.forEach(el => el.classList.add('lp-hide-mobile'));
-      sec.__lpFxBuilt = true;
+    fixSecs.forEach(sec => {
+      sec.querySelectorAll('.lp-hide-mobile').forEach(node => node.classList.remove('lp-hide-mobile'));
     });
   }
 
@@ -1688,13 +1557,14 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
     if (btns.length && w <= 640) btns.forEach(el => el.classList.add('lp-fab-safe'));
   }
 
-  const run = ()=>{ try{ buildStandingsAccordions(); buildFixtureAccordions(); adjustFab(); } catch(e){} };
+  const run = ()=>{ try{ buildStandingsAccordions(); unhideFixtures(); adjustFab(); } catch(e){} };
   run();
   window.addEventListener('resize', run);
   const mo = new MutationObserver(run);
   mo.observe(document.body, {childList:true, subtree:true});
 })();
 </script>
+
 
 
 </body>

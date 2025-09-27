@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Nomz Analaysis</title>
+    <title>Padel League Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
@@ -101,19 +101,19 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
 <nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between h-14">
-      <a href="index_home.html" class="flex items-center gap-2">
+      <a href="index.html" class="flex items-center gap-2">
         <span class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Lowveld Padel</span>
         <span class="hidden md:inline text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">powered by Nomz</span>
       </a>
       <div class="hidden md:flex items-center space-x-6">
-        <a href="index_home.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
-        <a href="index_home.html#franchises" class="text-white hover:text-blue-400 transition-colors">Franchises</a>
-        <a href="index_home.html#marketplace" class="text-white hover:text-blue-400 transition-colors">Marketplace</a>
-        <a href="index_home.html#live-stream" class="text-white hover:text-blue-400 transition-colors">Live Stream</a>
-        <a href="index_home.html#fantasy" class="text-white hover:text-blue-400 transition-colors">Fantasy League</a>
+        <a href="index.html" class="text-white hover:text-blue-400 transition-colors">Home</a>
+        <a href="index.html#franchises" class="text-white hover:text-blue-400 transition-colors">Franchises</a>
+        <a href="index.html#marketplace" class="text-white hover:text-blue-400 transition-colors">Marketplace</a>
+        <a href="index.html#live-stream" class="text-white hover:text-blue-400 transition-colors">Live Stream</a>
+        <a href="index.html#fantasy" class="text-white hover:text-blue-400 transition-colors">Fantasy League</a>
       </div>
       <div class="md:hidden flex items-center">
-        <a href="index_home.html" class="text-white px-3 py-1 border border-white/20 rounded-lg">Home</a>
+        <a href="index.html" class="text-white px-3 py-1 border border-white/20 rounded-lg">Home</a>
       </div>
     </div>
   </div>
@@ -264,15 +264,19 @@ table.constructors { width:100%; border-collapse:collapse; font-size:.95rem; }
                 });
             });
             return Object.values(playerStats).filter(p => p.matchesPlayed > 0).sort((a, b) => {
-                const wrB = b.matchesWon / b.matchesPlayed;
-                const wrA = a.matchesWon / a.matchesPlayed;
-                if (wrB !== wrA) return wrB - wrA;
-                const gdB = b.gamesWon - b.gamesLost;
-                const gdA = a.gamesWon - a.gamesLost;
-                if (gdB !== gdA) return gdB - gdA;
-                return b.matchesWon - a.matchesWon;
-            });
-        };
+  const wrB = (b.matchesPlayed ? b.matchesWon / b.matchesPlayed : 0);
+  const wrA = (a.matchesPlayed ? a.matchesWon / a.matchesPlayed : 0);
+  if (wrB !== wrA) return wrB - wrA; // 1) Win %
+  const sdB = (b.setsWon - b.setsLost);
+  const sdA = (a.setsWon - a.setsLost);
+  if (sdB !== sdA) return sdB - sdA; // 2) Set differential
+  if (b.setsWon !== a.setsWon) return b.setsWon - a.setsWon; // 3) Sets won
+  const gdB = (b.gamesWon - b.gamesLost);
+  const gdA = (a.gamesWon - a.gamesLost);
+  if (gdB !== gdA) return gdB - gdA; // 4) Game differential
+  return b.matchesWon - a.matchesWon; // 5) Matches won (final tiebreak)
+});
+};
 
         // --- Components ---
         const StandingsTable = ({ standings, title }) => (

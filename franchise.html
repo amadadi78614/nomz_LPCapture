@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Franchise</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    .badge { border-radius: 9999px; padding: 0.125rem 0.5rem; font-size: 0.75rem; }
+    .role-Captain { background: #1d4ed8; }
+    .role-Vice-Captain { background: #2563eb; }
+    .role-Owner { background: #059669; }
+    .role-Ambassador { background: #a855f7; }
+    .role-Player { background: #374151; }
+    .tier-Premier { color:#e5e7eb; }
+    .tier-Championship { color:#c7d2fe; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white">
+  <!-- Top nav -->
+  <nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-14 items-center">
+        <a href="index.html" class="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">Lowveld Padel</a>
+        <div class="hidden md:flex items-center space-x-6">
+          <a href="index.html#franchises" class="hover:text-blue-400">Franchises</a>
+          <a href="index.html#marketplace" class="hover:text-blue-400">Marketplace</a>
+          <a href="index.html#live-stream" class="hover:text-blue-400">Live Stream</a>
+          <a href="index.html#fantasy" class="hover:text-blue-400">Fantasy League</a>
+          <a href="analysis.html" target="_blank" class="hover:text-blue-400">Analysis</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="h-14"></div>
+
+  <main id="app" class="max-w-7xl mx-auto px-4 py-6">
+    <!-- Header / Hero -->
+    <section id="hero" class="mb-8">
+      <div class="flex items-center gap-4">
+        <div class="w-28 h-28 rounded-full overflow-hidden ring-2 ring-white/20 shrink-0">
+          <video id="teamVideo" class="w-full h-full object-cover" muted playsinline loop preload="metadata"></video>
+        </div>
+        <div>
+          <h1 id="teamTitle" class="text-3xl md:text-4xl font-extrabold"></h1>
+          <p id="teamSubtitle" class="text-gray-400">Franchise Overview</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tabs -->
+    <div class="border-b border-white/10 mb-6">
+      <nav class="-mb-px flex gap-6" aria-label="Tabs">
+        <button data-tab="overview" class="tab font-medium py-3 border-b-2 border-transparent hover:border-white/20">Overview</button>
+        <button data-tab="squad" class="tab font-medium py-3 border-b-2 border-transparent hover:border-white/20">Squad</button>
+        <button data-tab="fixtures" class="tab font-medium py-3 border-b-2 border-transparent hover:border-white/20">Fixtures & Results</button>
+      </nav>
+    </div>
+
+    <!-- Tab panels -->
+    <section id="panel-overview" class="space-y-6 hidden">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="rounded-xl border border-white/10 p-6 bg-white/5">
+          <div class="text-gray-400 text-sm mb-2">Premier Players</div>
+          <div id="kpi-prem" class="text-4xl font-extrabold"></div>
+        </div>
+        <div class="rounded-xl border border-white/10 p-6 bg-white/5">
+          <div class="text-gray-400 text-sm mb-2">Championship Players</div>
+          <div id="kpi-champ" class="text-4xl font-extrabold"></div>
+        </div>
+        <div class="rounded-xl border border-white/10 p-6 bg-white/5">
+          <div class="text-gray-400 text-sm mb-2">Key Staff</div>
+          <div id="key-staff" class="space-y-1 text-sm"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="panel-squad" class="space-y-10 hidden">
+      <div>
+        <h2 class="text-2xl font-bold mb-4">Premier Squad</h2>
+        <div id="premier-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+      <div>
+        <h2 class="text-2xl font-bold mb-4">Championship Squad</h2>
+        <div id="champ-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
+    <section id="panel-fixtures" class="space-y-6 hidden">
+      <div class="rounded-xl border border-white/10 p-6 bg-white/5">
+        <h2 class="text-2xl font-bold mb-4">Fixtures & Results</h2>
+        <p class="text-gray-400 text-sm mb-4">This will auto-populate if your site has loaded fixtures (e.g., from the Analysis dashboard). Otherwise it shows a placeholder.</p>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left text-sm text-gray-300">
+            <thead class="text-gray-400 uppercase border-b border-white/10">
+              <tr><th class="py-3 pr-4">Date</th><th class="py-3 pr-4">Opponent</th><th class="py-3 pr-4">Result</th></tr>
+            </thead>
+            <tbody id="fixtures-body" class="divide-y divide-white/5"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Embedded TSV fallback
+    const TSV = `Full Name	Franchise	Role	Tier
+Driaan Odendaal	Avalanche Aces	Vice-Captain	Premier
+Frik De Beer	Avalanche Aces	Player	Premier
+George du Toit	Avalanche Aces	Player	Premier
+Greg Beyers	Avalanche Aces	Player	Premier
+Hoffmann Maritz	Avalanche Aces	Player	Premier
+Jacques Burger	Avalanche Aces	Player	Premier
+Patrick Leyden	Avalanche Aces	Captain	Premier
+Phil-Mar Van Rensburg	Avalanche Aces	Player	Premier
+Rafiq Mohamed	Avalanche Aces	Ambassador	Premier
+Ruaan Naude	Avalanche Aces	Player	Premier
+Ryan Tate	Avalanche Aces	Owner	Premier
+Sabelo Mathebula	Avalanche Aces	Player	Premier
+Dian Erasmus	Avalanche Aces	Player	Championship
+Felix Lombard	Avalanche Aces	Captain	Championship
+Gerco van Rooyen	Avalanche Aces	Player	Championship
+Kobus van Rensburg	Avalanche Aces	Player	Championship
+Mohammed Malek	Avalanche Aces	Player	Championship
+Mohammed Seedat	Avalanche Aces	Player	Championship
+Nicky Joubert	Avalanche Aces	Player	Championship
+Pierre De Villiers	Avalanche Aces	Player	Championship
+Zaeem Sadiq	Avalanche Aces	Player	Championship
+Zunaid Ganchi	Avalanche Aces	Player	Championship
+Bilal Cassim	Baltic Blades	Player	Premier
+Dewald Meyer	Baltic Blades	Player	Premier
+Donavan Taylor	Baltic Blades	Player	Premier
+Feroz Guman	Baltic Blades	Player	Premier
+Liam Morgan	Baltic Blades	Player	Premier
+Marius Loock	Baltic Blades	Player	Premier
+Niel Pienaar	Baltic Blades	Player	Premier
+Ozayr Shaik	Baltic Blades	Captain	Premier
+Sikander Cassim	Baltic Blades	Player	Premier
+Tim Kaden	Baltic Blades	Player	Premier
+Yusuf Asvat	Baltic Blades	Player	Premier
+Zaheer Naby	Baltic Blades	Ambassador	Premier
+Adil Patel	Baltic Blades	Player	Championship
+Adnaan Abderoof	Baltic Blades	Player	Championship
+Ali Choohan	Baltic Blades	Player	Championship
+Dc Francis	Baltic Blades	Player	Championship
+Dillon Francis	Baltic Blades	Player	Championship
+Irfan Mamji	Baltic Blades	Player	Championship
+Mohamed Dadamia	Baltic Blades	Player	Championship
+Safeer Jamadar	Baltic Blades	Player	Championship
+Zahraan Jassat	Baltic Blades	Player	Championship
+Zainul Choohan	Baltic Blades	Owner	Championship
+Andries van Niekerk	Desert Falcons	Player	Premier
+Cameron Jacobsz	Desert Falcons	Player	Premier
+Jacques Van Zyl	Desert Falcons	Player	Premier
+Kiran Hansraj	Desert Falcons	Player	Premier
+Peet Welthagen	Desert Falcons	Player	Premier
+Ryan Kennett	Desert Falcons	Player	Premier
+Ryan Wicht	Desert Falcons	Player	Premier
+Salmaan Methar	Desert Falcons	Player	Premier
+Uwaiz Patel	Desert Falcons	Owner	Premier
+Yusuf Packery	Desert Falcons	Player	Premier
+Yusuf Patel	Desert Falcons	Captain	Premier
+Zayd Methar	Desert Falcons	Player	Premier
+Devlin Grix	Desert Falcons	Player	Championship
+Drew Packman	Desert Falcons	Player	Championship
+Etienne Grobler	Desert Falcons	Player	Championship
+Imtiaz Mohamed	Desert Falcons	Ambassador	Championship
+Mohammed Patel	Desert Falcons	Player	Championship
+Nathan Treherne	Desert Falcons	Player	Championship
+Reino Grobler	Desert Falcons	Player	Championship
+Rishad Shaik	Desert Falcons	Player	Championship
+Stefan Erasmus	Desert Falcons	Player	Championship
+Suliman Patel	Desert Falcons	Captain	Championship
+Ahmed Mungalee	Globo Boomerangs	Player	Premier
+Anas Mungalee	Globo Boomerangs	Player	Premier
+Cassim Vawda	Globo Boomerangs	Player	Premier
+Ebrahim Mungalee	Globo Boomerangs	Player	Premier
+Faeez Sebastian	Globo Boomerangs	Captain	Premier
+Imran Omar	Globo Boomerangs	Player	Premier
+Luan Walters	Globo Boomerangs	Player	Premier
+Muhammad Khalid Jeewa	Globo Boomerangs	Ambassador	Premier
+Muhammed Shehzad Meer	Globo Boomerangs	Vice-Captain	Premier
+Nabeel Meer	Globo Boomerangs	Owner	Premier
+Pieter Boshoff	Globo Boomerangs	Player	Premier
+Warren Morgan	Globo Boomerangs	Player	Premier
+Aadil Asvat	Globo Boomerangs	Player	Championship
+Alfaiz Mamji	Globo Boomerangs	Player	Championship
+Duran Greaver	Globo Boomerangs	Player	Championship
+Fahad Patel	Globo Boomerangs	Player	Championship
+Imraan Khan	Globo Boomerangs	Player	Championship
+Irfaan Mahomed	Globo Boomerangs	Player	Championship
+Ismail Fakir	Globo Boomerangs	Player	Championship
+Jay Nagar	Globo Boomerangs	Player	Championship
+Muhammed Shaffique Jeewa	Globo Boomerangs	Player	Championship
+Soyab maxi Patel	Globo Boomerangs	Player	Championship
+Ahmed Ismail	Ice Breakers	Captain	Premier
+Chris Triegaardt	Ice Breakers	Player	Premier
+Duhan Swart	Ice Breakers	Vice-Captain	Premier
+Ebrahim Ismail	Ice Breakers	Player	Premier
+Erlo Olivier	Ice Breakers	Player	Premier
+Fiaz Bhikhoo	Ice Breakers	Player	Premier
+Maaz Randera	Ice Breakers	Player	Premier
+Marvin Naidoo	Ice Breakers	Player	Premier
+Muhammed Jina	Ice Breakers	Player	Premier
+Muneer Shaik	Ice Breakers	Player	Premier
+Rayhaan Dinath	Ice Breakers	Player	Premier
+Zaheer Methar	Ice Breakers	Player	Premier
+Estiaan Maritz	Ice Breakers	Player	Championship
+Ian Roberts	Ice Breakers	Player	Championship
+Irshaad Moola	Ice Breakers	Owner	Championship
+Jaco Nel	Ice Breakers	Player	Championship
+Luqman Hoosen	Ice Breakers	Player	Championship
+Muhammad Mangerah	Ice Breakers	Ambassador	Championship
+Muhammed Minty	Ice Breakers	Player	Championship
+Saliem Mahomed	Ice Breakers	Player	Championship
+Suhail Patel	ice Breakers	Player	Championship
+Uwais Guman	Ice Breakers	Player	Championship
+Anton Grote	Rulo Apaches	Captain	Premier
+Burger Bester	Rulo Apaches	Player	Premier
+Etienne Swart	Rulo Apaches	Player	Premier
+Fanus Wilkens	Rulo Apaches	Player	Premier
+Hendrik Tryhou	Rulo Apaches	Player	Premier
+Jacques Hopkins	Rulo Apaches	Player	Premier
+Justin van Staden	Rulo Apaches	Player	Premier
+Suhayl Packery	Rulo Apaches	Player	Premier
+Uzair Ismail	Rulo Apaches	Player	Premier
+Wayne Enslin	Rulo Apaches	Player	Premier
+Wiehann Mohlen	Rulo Apaches	Vice-Captain	Premier
+Yusuf Ismail	Rulo Apaches	Ambassador	Premier
+Drikus Prins	Rulo Apaches	Player	Championship
+Gavin Moffett	Rulo Apaches	Owner	Championship
+Ismail Karodia	Rulo Apaches	Player	Championship
+Míckal Bakker	Rulo Apaches	Player	Championship
+Mohammed Mungalee	Rulo Apaches	Player	Championship
+Muhammad Zakariyya Akoojee	Rulo Apaches	Player	Championship
+Muhammed Cachalia	Rulo Apaches	Player	Championship
+Sandeep Daya	Rulo Apaches	Player	Championship
+Stefan De Villiers	Rulo Apaches	Player	Championship
+Waldo van Tonder	Rulo Apaches	Player	Championship
+Bevan Francis	Samurai Kicksmashers	Player	Premier
+Bryan Theron	Samurai Kicksmashers	Captain	Premier
+Cian Maritz	Samurai Kicksmashers	Player	Premier
+Danyaal Nomani	Samurai Kicksmashers	Player	Premier
+Faheem Nomani	Samurai Kicksmashers	Owner	Premier
+JD Herbst	Samurai Kicksmashers	Vice-Captain	Premier
+Mohamed Nomani	Samurai Kicksmashers	Ambassador	Premier
+Morne Steenekamp	Samurai Kicksmashers	Player	Premier
+Muhammad Fakir	Samurai Kicksmashers	Player	Premier
+Naeem Omar	Samurai Kicksmashers	Player	Premier
+Shakir Suleman	Samurai Kicksmashers	Player	Premier
+Siraaj Shaik	Samurai Kicksmashers	Player	Premier
+Akmeer Amod	Samurai Kicksmashers	Player	Championship
+Martin Swart	Samurai Kicksmashers	Player	Championship
+Muhammed Suliman	Samurai Kicksmashers	Player	Championship
+Noah Snell	Samurai Kicksmashers	Player	Championship
+Rayman Vinesh	Samurai Kicksmashers	Player	Championship
+Sailesh Nagar	Samurai Kicksmashers	Player	Championship
+Sergio Correia	Samurai Kicksmashers	Player	Championship
+Shaun Moropa	Samurai Kicksmashers	Player	Championship
+Shoaib Nomani	Samurai Kicksmashers	Player	Championship
+Tim Forssman	Samurai Kicksmashers	Player	Championship
+Adil Ahmed	Sonic Viboras	Ambassador	Premier
+Alexander Combrinck	Sonic Viboras	Player	Premier
+Danie Rautenbach	Sonic Viboras	Player	Premier
+Heinrich Coomans	Sonic Viboras	Vice-Captain	Premier
+Joseph Van der merwe	Sonic Viboras	Player	Premier
+Joshua Hoffman	Sonic Viboras	Player	Premier
+Lefa Moganedi	Sonic Viboras	Player	Premier
+Muhammad Azhar Sujee	Sonic Viboras	Player	Premier
+Pieter Badenhorst	Sonic Viboras	Player	Premier
+Ridhwaan Sujee	Sonic Viboras	Captain	Premier
+Warwick Morgan	Sonic Viboras	Player	Premier
+Yusuf Moola	Sonic Viboras	Owner	Premier
+Armand Esterhuizen	Sonic Viboras	Player	Championship
+Brent Grix	Sonic Viboras	Player	Championship
+Drihan De Klerk	Sonic Viboras	Player	Championship
+Francois Eloff	Sonic Viboras	Player	Championship
+Heinrich van Staden	Sonic Viboras	Player	Championship
+Irshaad Mahomed	Sonic Viboras	Player	Championship
+Mohammed Mayet	Sonic Viboras	Player	Championship
+Taahir Mungalee	Sonic Viboras	Captain	Championship
+Umar Yunus	Sonic Viboras	Player	Championship
+Zahid Methar	Sonic Viboras	Player	Championship
+`;
+
+    function slugify(s) { return (s||'').toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,''); }
+    const ROLES_ORDER = ['Captain','Vice-Captain','Owner','Ambassador','Player'];
+
+    function parseTSV(tsv) {
+      const [header, ...rows] = tsv.trim().split(/\\r?\\n/);
+      const cols = header.split(/\\t/).map(s=>s.trim());
+      return rows.map(r=> {
+        const cells = r.split(/\\t/);
+        const o={};
+        cols.forEach((c,i)=>o[c]=cells[i]);
+        return o;
+      });
+    }
+
+    const fromEmbed = window.__EMBEDDED_PLAYERS__;
+    const fromLS = (()=>{ try{ return JSON.parse(localStorage.getItem('league_players')||'null'); }catch(e){ return null; } })();
+    let players = null;
+
+    if (Array.isArray(fromEmbed) && fromEmbed.length) {
+      players = fromEmbed.map(p=>({
+        'Full Name': p.name || p.fullName || p.playerName || '',
+        'Franchise': p.teamName || p.franchise || p.team || '',
+        'Role': p.role || 'Player',
+        'Tier': p.tier || p.division || ''
+      }));
+    } else if (fromLS && Array.isArray(fromLS.players)) {
+      players = fromLS.players.map(p=>({
+        'Full Name': p.name || p.fullName || p.playerName || '',
+        'Franchise': p.teamName || p.franchise || p.team || '',
+        'Role': p.role || 'Player',
+        'Tier': p.tier || p.division || ''
+      }));
+    } else {
+      players = parseTSV(TSV);
+    }
+
+    // Build index by franchise
+    const byFranchise = players.reduce((acc,p)=>{
+      const f = (p['Franchise']||'').trim();
+      if (!acc[f]) acc[f]=[];
+      acc[f].push(p);
+      return acc;
+    },{});
+
+    const slugMap = Object.fromEntries(Object.keys(byFranchise).map(name=>[slugify(name), name]));
+
+    // Get which team from URL
+    const params = new URLSearchParams(location.search);
+    const teamSlug = params.get('team');
+    const teamName = slugMap[teamSlug] || Object.keys(byFranchise)[0];
+
+    const teamPlayers = (byFranchise[teamName]||[]);
+
+    // Hero
+    const title = document.getElementById('teamTitle');
+    const subtitle = document.getElementById('teamSubtitle');
+    const vid = document.getElementById('teamVideo');
+    title.textContent = teamName;
+    subtitle.textContent = 'Roster • Media • Fixtures';
+    const src = `assets/${teamSlug||slugify(teamName)}.mp4`;
+    const poster = `assets/logos/${teamSlug||slugify(teamName)}.jpeg`;
+    vid.src = src; vid.poster = poster;
+    const tryPlay = () => vid.play().catch(()=>{});
+    vid.addEventListener('loadeddata', tryPlay, { once: true });
+    vid.addEventListener('canplay', tryPlay, { once: true });
+    vid.addEventListener('error', () => { 
+      const img = document.createElement('img');
+      img.src = poster; img.className='w-28 h-28 object-cover rounded-full';
+      vid.replaceWith(img);
+    });
+
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    const panels = { overview: document.getElementById('panel-overview'), squad: document.getElementById('panel-squad'), fixtures: document.getElementById('panel-fixtures') };
+    function show(tab) {
+      Object.values(panels).forEach(p=>p.classList.add('hidden'));
+      panels[tab].classList.remove('hidden');
+      tabs.forEach(t=>t.classList.toggle('border-blue-400', t.dataset.tab===tab));
+    }
+    tabs.forEach(t=>t.addEventListener('click', ()=>show(t.dataset.tab)));
+    show('overview');
+
+    // Overview KPIs + key staff
+    const prem = teamPlayers.filter(p=>/premier/i.test(p['Tier']));
+    const champ = teamPlayers.filter(p=>/championship/i.test(p['Tier']));
+    document.getElementById('kpi-prem').textContent = prem.length;
+    document.getElementById('kpi-champ').textContent = champ.length;
+
+    const keyRoles = ['Captain','Vice-Captain','Owner','Ambassador'];
+    const staffDiv = document.getElementById('key-staff');
+    keyRoles.forEach(r=>{
+      const names = teamPlayers.filter(p=>new RegExp('^'+r+'$','i').test(p['Role'])).map(p=>p['Full Name']);
+      const line = document.createElement('div');
+      line.innerHTML = `<span class="text-gray-400">${r}:</span> ${names.length? names.join(', ') : '<span class="text-gray-500">—</span>'}`;
+      staffDiv.appendChild(line);
+    });
+
+    // Squad cards
+    function makeCard(p) {
+      const card = document.createElement('div');
+      const role = p['Role']||'Player';
+      const tier = p['Tier']||'';
+      card.className = 'rounded-xl border border-white/10 p-4 bg-white/5';
+      card.innerHTML = `
+        <div class="flex items-center justify-between mb-2">
+          <div class="font-semibold">${p['Full Name']}</div>
+          <span class="badge role-${role.replace(/\\s+/g,'-')}"> ${role} </span>
+        </div>
+        <div class="text-xs text-gray-400">Tier: <span class="tier-${tier}">${tier}</span></div>
+      `;
+      return card;
+    }
+
+    function sortByRoleThenName(a,b) {
+      const RO = (r)=>{{ const i = ['Captain','Vice-Captain','Owner','Ambassador','Player'].indexOf(r); return i===-1?99:i; }};
+      const ar = RO(a['Role']); const br = RO(b['Role']);
+      if (ar!==br) return ar-br;
+      return (a['Full Name']||'').localeCompare(b['Full Name']||'');
+    }
+
+    prem.sort(sortByRoleThenName).forEach(p=>document.getElementById('premier-list').appendChild(makeCard(p)));
+    champ.sort(sortByRoleThenName).forEach(p=>document.getElementById('champ-list').appendChild(makeCard(p)));
+
+    // Fixtures (optional — if fixtures are in localStorage / embedded)
+    const fixtures = (window.__EMBEDDED_FIXTURES__ || ((()=>{ try{ return JSON.parse(localStorage.getItem('league_fixtures')||'null'); }catch(e){ return null; } })()) || {}).fixtures || [];
+    const tbody = document.getElementById('fixtures-body');
+    if (Array.isArray(fixtures) && fixtures.length) {
+      const isTeam = (t)=> (t||'').toLowerCase() === (teamName||'').toLowerCase();
+      fixtures.forEach(f=>{
+        if (!(isTeam(f.team1) || isTeam(f.team2))) return;
+        const opp = isTeam(f.team1)? f.team2 : f.team1;
+        const res = f.winner ? (isTeam(f.winner)? 'W' : 'L') : '—';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="py-2 pr-4">${f.date || f.round || ''}</td><td class="py-2 pr-4">${opp}</td><td class="py-2 pr-4">${res}</td>`;
+        tbody.appendChild(tr);
+      });
+      if (!tbody.children.length) tbody.innerHTML = '<tr><td class="py-3 pr-4" colspan="3">No fixtures found for this team.</td></tr>';
+    } else {
+      tbody.innerHTML = '<tr><td class="py-3 pr-4" colspan="3">Fixtures not loaded yet.</td></tr>';
+    }
+  </script>
+</body>
+</html>

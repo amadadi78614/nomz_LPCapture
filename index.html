@@ -1,326 +1,1574 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lowveld Padel Franchise League - Season 2</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lowveld Padel - Official Website</title>
+    <meta name="description" content="Official website of Lowveld Padel - Premier padel competition in South Africa">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-  <!-- Tailwind (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+        :root {
+            --primary-navy: #1e3a8a;
+            --primary-dark: #1e2a5a;
+            --secondary-cyan: #00bcd4;
+            --accent-orange: #ff6b35;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --text-white: #ffffff;
+            --text-dark: #1f2937;
+            --text-gray: #6b7280;
+            --bg-light: #f8fafc;
+            --bg-dark: #111827;
+            --border-light: #e5e7eb;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+        }
 
-  <style>
-    .franchise-media { position: relative; width: 7rem; height: 7rem; margin: 0 auto 1rem; }
-    .franchise-media > * { width: 100%; height: 100%; object-fit: cover; border-radius: 9999px; box-shadow: 0 0 0 2px rgba(255,255,255,.15) inset; display: block; }
-    .franchise-media img { display: none; }
-  </style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background: var(--primary-dark);
+            color: var(--text-white);
+            padding: 0.5rem 0;
+            font-size: 0.875rem;
+        }
+
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-link {
+            color: var(--text-white);
+            font-size: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-link:hover {
+            color: var(--secondary-cyan);
+        }
+
+        /* Main Header */
+        .main-header {
+            background: var(--primary-navy);
+            box-shadow: var(--shadow-lg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-white);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--secondary-cyan), var(--accent-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: 1.5rem;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .logo-sub {
+            font-size: 0.875rem;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--secondary-cyan);
+        }
+
+        .nav-link.active {
+            background: var(--secondary-cyan);
+            color: white;
+        }
+
+        /* Section Container */
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-title i {
+            color: var(--secondary-cyan);
+        }
+
+        .view-all-btn {
+            background: var(--secondary-cyan);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .view-all-btn:hover {
+            background: var(--primary-navy);
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-dark) 100%);
+            color: var(--text-white);
+            padding: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .hero-meta {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--secondary-cyan);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Standings Section */
+        .standings {
+            padding: 4rem 0;
+            background: var(--bg-light);
+        }
+
+        .standings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .division-standings {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+        }
+
+        .division-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            color: white;
+        }
+
+        .premier-title {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+        }
+
+        .championship-title {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+        }
+
+        .standings-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .standings-table th {
+            background: var(--bg-light);
+            padding: 0.75rem 0.5rem;
+            text-align: center;
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-light);
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .standings-table td {
+            padding: 0.75rem 0.5rem;
+            border-bottom: 1px solid var(--border-light);
+            text-align: center;
+            font-size: 0.8rem;
+        }
+
+        .standings-table .team-name {
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .standings-table tr:hover {
+            background: rgba(0, 188, 212, 0.05);
+        }
+
+        .position {
+            font-weight: 800;
+            color: var(--secondary-cyan);
+            font-size: 0.9rem;
+        }
+
+        .points {
+            font-weight: 800;
+            color: var(--accent-green);
+            font-size: 0.9rem;
+        }
+
+        .positive {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .negative {
+            color: var(--accent-orange);
+            font-weight: 600;
+        }
+
+        /* Fixtures Section */
+        .fixtures {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .fixtures-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .fixture-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .fixture-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .fixture-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .fixture-tier {
+            background: var(--secondary-cyan);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .fixture-tier.championship {
+            background: var(--accent-purple);
+        }
+
+        .fixture-round {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            font-weight: 600;
+        }
+
+        .fixture-teams {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .fixture-team {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .fixture-vs {
+            color: var(--text-gray);
+            margin: 0.5rem 0;
+            font-weight: 500;
+        }
+
+        .fixture-result {
+            font-weight: 700;
+            margin: 1rem 0;
+            font-size: 1rem;
+        }
+
+        .fixture-winner {
+            color: var(--accent-green);
+        }
+
+        .fixture-draw {
+            color: var(--accent-orange);
+        }
+
+        .fixture-scheduled {
+            color: var(--accent-purple);
+        }
+
+        .fixture-info {
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .fixture-info div {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Live Scores */
+        .live-scores {
+            padding: 4rem 0;
+            background: var(--bg-light);
+        }
+
+        .live-score-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+            margin-top: 2rem;
+        }
+
+        .live-score-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .tournament-info h3 {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .tournament-meta {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent-orange);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .courts-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .court-match {
+            background: var(--bg-light);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .court-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .court-name {
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .match-time {
+            color: var(--text-gray);
+            font-size: 0.9rem;
+        }
+
+        .match-players {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .player-team {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .player-flag {
+            width: 40px;
+            height: 30px;
+            background: var(--secondary-cyan);
+            color: white;
+            border-radius: 0.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.75rem;
+        }
+
+        .player-names {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .match-score {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--secondary-cyan);
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-dark);
+            color: var(--text-white);
+            padding: 3rem 0 1rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--secondary-cyan);
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            line-height: 1.8;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--secondary-cyan);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .footer-social-link:hover {
+            background: var(--secondary-cyan);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .standings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fixtures-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-menu {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .standings-table {
+                font-size: 0.7rem;
+            }
+
+            .standings-table th,
+            .standings-table td {
+                padding: 0.5rem 0.25rem;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white">
-  <!-- Navigation -->
-  <nav class="bg-black/90 backdrop-blur-sm fixed w-full z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <a href="index.html" class="flex items-center gap-2">
-          <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            Lowveld Padel
-          </h1>
-          <h2 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-            powered by Nomz
-          </h2>
-        </a>
-
-        <div class="hidden md:flex items-center space-x-8">
-          <a href="#franchises" class="text-white hover:text-blue-400 transition-colors">Franchises</a>
-          <a href="#marketplace" class="text-white hover:text-blue-400 transition-colors">Marketplace</a>
-          <a href="#live-stream" class="text-white hover:text-blue-400 transition-colors">Live Stream</a>
-          <a href="#fantasy" class="text-white hover:text-blue-400 transition-colors">Fantasy League</a>
-          <a href="analysis.html" target="_blank" rel="noopener" class="text-white hover:text-blue-400 transition-colors">Analysis Center</a>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="contact-info">
+                <span><i class="fas fa-phone"></i> +27 (0) 123 456 789</span>
+                <span><i class="fas fa-envelope"></i> info@lowveldpadel.co.za</span>
+                <span><i class="fas fa-map-marker-alt"></i> Lowveld, South Africa</span>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+            </div>
         </div>
+    </div>
 
-        <div class="md:hidden flex items-center">
-          <button aria-label="Open menu" class="text-white" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars text-xl"></i>
-          </button>
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-table-tennis"></i>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-main">LOWVELD PADEL</div>
+                    <div class="logo-sub">Franchise League powered by Nomz</div>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="nav-link active">Home</a></li>
+                    <li><a href="#standings" class="nav-link">Standings</a></li>
+                    <li><a href="#fixtures" class="nav-link">Fixtures</a></li>
+                    <li><a href="#" class="nav-link">Players</a></li>
+                    <li><a href="#" class="nav-link">News</a></li>
+                    <li><a href="#" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
         </div>
-      </div>
-    </div>
+    </header>
 
-    <!-- Mobile Menu -->
-    <div id="mobileMenu" class="hidden md:hidden bg-black/95 backdrop-blur-sm">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="#franchises" class="block px-3 py-2 hover:bg-gray-800 rounded">Franchises</a>
-        <a href="#marketplace" class="block px-3 py-2 hover:bg-gray-800 rounded">Marketplace</a>
-        <a href="#live-stream" class="block px-3 py-2 hover:bg-gray-800 rounded">Live Stream</a>
-        <a href="#fantasy" class="block px-3 py-2 hover:bg-gray-800 rounded">Fantasy League</a>
-        <a href="analysis.html" target="_blank" rel="noopener" class="block px-3 py-2 hover:bg-gray-800 rounded">Analysis Center</a>
-      </div>
-    </div>
-  </nav>
-
-  <!-- Spacer for fixed nav -->
-  <div class="h-16"></div>
-
-  <!-- Feature Tiles -->
-  <section id="features" class="py-20 bg-gradient-to-br from-gray-900 to-black">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-16">
-        <h2 class="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-          Platform Features
-        </h2>
-        <p class="text-xl text-gray-400">Your one-click hub for league insights</p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Analysis Center -->
-        <a href="analysis.html" target="_blank" rel="noopener" class="feature-card bg-gradient-to-br from-indigo-900/30 to-purple-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
-          <div class="text-center">
-            <div class="w-20 h-20 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-5">
-              <i class="fas fa-chart-line text-3xl text-white"></i>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="section-container">
+            <div class="hero-content">
+                <div class="hero-grid">
+                    <div class="hero-column">
+                        <div class="hero-badge">
+                            <i class="fas fa-trophy"></i>
+                            SEASON 2025 LIVE
+                        </div>
+                        <h1 class="hero-title">Lowveld Padel<br>Franchise League Season II</h1>
+                        <p class="hero-subtitle">Experience the excitement of South Africa's premier padel league with 176 players across 8 teams competing in Premier and Championship divisions.</p>
+                        <div class="hero-meta">
+                            <span><i class="fas fa-users"></i> 176 Players</span>
+                            <span><i class="fas fa-trophy"></i> 8 Teams</span>
+                            <span><i class="fas fa-calendar"></i> Season 2024/25</span>
+                        </div>
+                        <div class="hero-actions">
+                            <a href="#standings" class="btn-primary">
+                                <i class="fas fa-chart-line"></i>
+                                View Standings
+                            </a>
+                            <a href="#fixtures" class="btn-secondary">
+                                <i class="fas fa-calendar-alt"></i>
+                                Fixtures
+                            </a>
+                        </div>
+                    </div>
+                    <div class="hero-column">
+                        <div class="hero-badge" style="background-color: var(--accent-purple);">
+                            <i class="fas fa-shield-alt"></i>
+                            LATEST UPDATE
+                        </div>
+                        <h1 class="hero-title">Sonic Viboras vs<br>Rulo Apaches</h1>
+                        <p class="hero-subtitle">Top-of-the-table fireworks: Sonics (10 pts) vs Rulo Apaches for Premier supremacy; Globo Boomerangs still ruling the Championship on 11 pts</p>
+                        <div class="hero-meta">
+                            <span><i class="fas fa-calendar"></i> 13 of 64 fixtures completed</span>
+                            <span><i class="fas fa-map-marker-alt"></i> PADEL24 & Play360</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-indigo-200 mb-2">Analysis Center</h3>
-            <p class="text-gray-400 text-sm">Open the live Constructors dashboard (winners, sweeps & charts)</p>
-          </div>
-        </a>
+        </div>
+    </section>
 
-        <!-- Marketplace -->
-        <a href="#marketplace" class="feature-card bg-gradient-to-br from-green-900/30 to-emerald-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
-          <div class="text-center">
-            <div class="w-20 h-20 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-5">
-              <i class="fas fa-store text-3xl text-white"></i>
+    <!-- Official Standings Section -->
+    <section id="standings" class="standings">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-trophy"></i>
+                    Official League Standings
+                </h2>
+                <div class="view-all-btn">
+                    <i class="fas fa-chart-line"></i>
+                    Season 2024/25
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-green-300 mb-2">Marketplace</h3>
-            <p class="text-gray-400 text-sm">Buy/sell gear, book coaching & more</p>
-          </div>
-        </a>
 
-        <!-- Live Stream -->
-        <a href="#live-stream" class="feature-card bg-gradient-to-br from-blue-900/30 to-cyan-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
-          <div class="text-center">
-            <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-5">
-              <i class="fas fa-video text-3xl text-white"></i>
+            <div class="standings-grid">
+                <!-- Premier Division -->
+                <div class="division-standings">
+                    <div class="division-title premier-title">Premier Division</div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Team</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>SW</th>
+                                <th>SL</th>
+                                <th>SD</th>
+                                <th>GW</th>
+                                <th>GL</th>
+                                <th>GD</th>
+                                <th>BPF</th>
+                                <th>Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="position">1</td>
+                                <td class="team-name">Sonic Viboras</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>18</td>
+                                <td>6</td>
+                                <td class="positive">12</td>
+                                <td>86</td>
+                                <td>65</td>
+                                <td class="positive">21</td>
+                                <td>4</td>
+                                <td class="points">10</td>
+                            </tr>
+                            <tr>
+                                <td class="position">2</td>
+                                <td class="team-name">Globo Boomerangs</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>15</td>
+                                <td>9</td>
+                                <td class="positive">6</td>
+                                <td>80</td>
+                                <td>63</td>
+                                <td class="positive">17</td>
+                                <td>4</td>
+                                <td class="points">7</td>
+                            </tr>
+                            <tr>
+                                <td class="position">3</td>
+                                <td class="team-name">Rulo Apaches</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>14</td>
+                                <td>10</td>
+                                <td class="positive">4</td>
+                                <td>75</td>
+                                <td>74</td>
+                                <td class="positive">1</td>
+                                <td>2</td>
+                                <td class="points">6</td>
+                            </tr>
+                            <tr>
+                                <td class="position">4</td>
+                                <td class="team-name">Desert Falcons</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>8</td>
+                                <td>4</td>
+                                <td class="positive">4</td>
+                                <td>45</td>
+                                <td>28</td>
+                                <td class="positive">17</td>
+                                <td>2</td>
+                                <td class="points">5</td>
+                            </tr>
+                            <tr>
+                                <td class="position">5</td>
+                                <td class="team-name">Ice Breakers</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>9</td>
+                                <td>15</td>
+                                <td class="negative">-6</td>
+                                <td>66</td>
+                                <td>84</td>
+                                <td class="negative">-18</td>
+                                <td>2</td>
+                                <td class="points">5</td>
+                            </tr>
+                            <tr>
+                                <td class="position">6</td>
+                                <td class="team-name">Avalanche Aces</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>11</td>
+                                <td>13</td>
+                                <td class="negative">-2</td>
+                                <td>74</td>
+                                <td>67</td>
+                                <td class="positive">7</td>
+                                <td>2</td>
+                                <td class="points">3</td>
+                            </tr>
+                            <tr>
+                                <td class="position">7</td>
+                                <td class="team-name">Samurai Kicksmashers</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>4</td>
+                                <td>8</td>
+                                <td class="negative">-4</td>
+                                <td>39</td>
+                                <td>41</td>
+                                <td class="negative">-2</td>
+                                <td>0</td>
+                                <td class="points">0</td>
+                            </tr>
+                            <tr>
+                                <td class="position">8</td>
+                                <td class="team-name">Baltic Blades</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>5</td>
+                                <td>19</td>
+                                <td class="negative">-14</td>
+                                <td>50</td>
+                                <td>93</td>
+                                <td class="negative">-43</td>
+                                <td>0</td>
+                                <td class="points">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Championship Division -->
+                <div class="division-standings">
+                    <div class="division-title championship-title">Championship Division</div>
+                    <table class="standings-table">
+                        <thead>
+                            <tr>
+                                <th>Pos</th>
+                                <th>Team</th>
+                                <th>P</th>
+                                <th>W</th>
+                                <th>D</th>
+                                <th>L</th>
+                                <th>SW</th>
+                                <th>SL</th>
+                                <th>SD</th>
+                                <th>GW</th>
+                                <th>GL</th>
+                                <th>GD</th>
+                                <th>BPF</th>
+                                <th>Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="position">1</td>
+                                <td class="team-name">Globo Boomerangs</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>15</td>
+                                <td>2</td>
+                                <td class="positive">13</td>
+                                <td>68</td>
+                                <td>38</td>
+                                <td class="positive">30</td>
+                                <td>5</td>
+                                <td class="points">11</td>
+                            </tr>
+                            <tr>
+                                <td class="position">2</td>
+                                <td class="team-name">Desert Falcons</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>13</td>
+                                <td>2</td>
+                                <td class="positive">11</td>
+                                <td>69</td>
+                                <td>46</td>
+                                <td class="positive">23</td>
+                                <td>3</td>
+                                <td class="points">9</td>
+                            </tr>
+                            <tr>
+                                <td class="position">3</td>
+                                <td class="team-name">Avalanche Aces</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>8</td>
+                                <td>1</td>
+                                <td class="positive">7</td>
+                                <td>36</td>
+                                <td>9</td>
+                                <td class="positive">27</td>
+                                <td>2</td>
+                                <td class="points">5</td>
+                            </tr>
+                            <tr>
+                                <td class="position">4</td>
+                                <td class="team-name">Rulo Apaches</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>8</td>
+                                <td>1</td>
+                                <td class="positive">7</td>
+                                <td>32</td>
+                                <td>19</td>
+                                <td class="positive">13</td>
+                                <td>2</td>
+                                <td class="points">5</td>
+                            </tr>
+                            <tr>
+                                <td class="position">5</td>
+                                <td class="team-name">Sonic Viboras</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>6</td>
+                                <td class="negative">-4</td>
+                                <td>18</td>
+                                <td>31</td>
+                                <td class="negative">-13</td>
+                                <td>0</td>
+                                <td class="points">0</td>
+                            </tr>
+                            <tr>
+                                <td class="position">6</td>
+                                <td class="team-name">Samurai Kicksmashers</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>2</td>
+                                <td>13</td>
+                                <td class="negative">-11</td>
+                                <td>43</td>
+                                <td>66</td>
+                                <td class="negative">-23</td>
+                                <td>0</td>
+                                <td class="points">0</td>
+                            </tr>
+                            <tr>
+                                <td class="position">7</td>
+                                <td class="team-name">Ice Breakers</td>
+                                <td>1</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>8</td>
+                                <td class="negative">-7</td>
+                                <td>9</td>
+                                <td>36</td>
+                                <td class="negative">-27</td>
+                                <td>0</td>
+                                <td class="points">0</td>
+                            </tr>
+                            <tr>
+                                <td class="position">8</td>
+                                <td class="team-name">Baltic Blades</td>
+                                <td>2</td>
+                                <td>0</td>
+                                <td>0</td>
+                                <td>2</td>
+                                <td>1</td>
+                                <td>17</td>
+                                <td class="negative">-16</td>
+                                <td>42</td>
+                                <td>72</td>
+                                <td class="negative">-30</td>
+                                <td>0</td>
+                                <td class="points">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Live Stream</h3>
-            <p class="text-gray-400 text-sm">Watch Padel24 & Play360 matches</p>
-          </div>
-        </a>
+        </div>
+    </section>
 
-        <!-- Fantasy League -->
-        <a href="#fantasy" class="feature-card bg-gradient-to-br from-yellow-900/30 to-amber-900/30 rounded-xl p-8 hover:scale-105 transition-all block">
-          <div class="text-center">
-            <div class="w-20 h-20 bg-gradient-to-r from-yellow-400 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-5">
-              <i class="fas fa-trophy text-3xl text-white"></i>
+    <!-- Fixtures Section -->
+    <section id="fixtures" class="fixtures">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-alt"></i>
+                    Fixtures & Results
+                </h2>
+                <div class="view-all-btn">
+                    <i class="fas fa-chart-bar"></i>
+                    13 of 64 Complete
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-yellow-300 mb-2">Fantasy League</h3>
-            <p class="text-gray-400 text-sm">Pick squads, earn points, climb the ladder</p>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
 
-  <!-- Franchises (video tiles with logo fallback) -->
-  <section id="franchises" class="scroll-mt-24 py-20 bg-gradient-to-br from-gray-900 to-black">
-    <div class="max-w-7xl mx-auto px-4">
-      <div class="text-center mb-12">
-        <h2 class="text-4xl md:text-5xl font-extrabold mb-3 tracking-tight bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-          Lowveld Padel Franchises
-        </h2>
-        <p class="text-sm md:text-base tracking-widest text-indigo-200/80">
-          MEET THE 8 POWERHOUSE FRANCHISES COMPETING FOR GLORY!!!
-        </p>
-      </div>
+            <!-- Completed Fixtures -->
+            <div style="margin-bottom: 3rem;">
+                <h3 style="color: var(--accent-green); margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 700;">
+                    ✅ Recent Results
+                </h3>
+                <div class="fixtures-grid">
+                    <div class="fixture-card">
+                        <div class="fixture-header">
+                            <span class="fixture-tier championship">Championship</span>
+                            <span class="fixture-round">Round 1</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Globo Boomerangs</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Sonic Viboras</div>
+                            <div class="fixture-result fixture-winner">Winner: Globo Boomerangs</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Monday, 15 September 2025</strong></div>
+                            <div>PADEL24</div>
+                        </div>
+                    </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="fixture-card">
+                        <div class="fixture-header">
+                            <span class="fixture-tier">Premier</span>
+                            <span class="fixture-round">Round 1</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Rulo Apaches</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Samurai Kicksmashers</div>
+                            <div class="fixture-result fixture-winner">Winner: Rulo Apaches</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Monday, 15 September 2025</strong></div>
+                            <div>Play360</div>
+                        </div>
+                    </div>
 
-        <!-- Desert Falcons -->
-        <a href="franchise.html?team=desert-falcons"
-           class="franchise-card bg-gradient-to-br from-orange-900/50 to-yellow-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/desert-falcons.mp4"
-                     poster="assets/logos/desert-falcons.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/desert-falcons.jpeg" alt="Desert Falcons">
+                    <div class="fixture-card">
+                        <div class="fixture-header">
+                            <span class="fixture-tier">Premier</span>
+                            <span class="fixture-round">Round 2</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Avalanche Aces</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Rulo Apaches</div>
+                            <div class="fixture-result fixture-draw">Result: Draw</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Monday, 22 September 2025</strong></div>
+                            <div>Play360</div>
+                        </div>
+                    </div>
+
+                    <div class="fixture-card">
+                        <div class="fixture-header">
+                            <span class="fixture-tier">Premier</span>
+                            <span class="fixture-round">Round 2</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Sonic Viboras</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Ice Breakers</div>
+                            <div class="fixture-result fixture-winner">Winner: Sonic Viboras</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Tuesday, 23 September 2025</strong></div>
+                            <div>Play360</div>
+                        </div>
+                    </div>
+
+                    <div class="fixture-card">
+                        <div class="fixture-header">
+                            <span class="fixture-tier">Premier</span>
+                            <span class="fixture-round">Round 2</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Globo Boomerangs</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Baltic Blades</div>
+                            <div class="fixture-result fixture-winner">Winner: Globo Boomerangs</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Friday, 26 September 2025</strong></div>
+                            <div>Play360</div>
+                        </div>
+                    </div>
+
+                    <div class="fixture-card">
+                        <div class="fixture-header">
+                            <span class="fixture-tier championship">Championship</span>
+                            <span class="fixture-round">Round 2</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Desert Falcons</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Baltic Blades</div>
+                            <div class="fixture-result fixture-winner">Winner: Desert Falcons</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Wednesday, 17 September 2025</strong></div>
+                            <div>PADEL24</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-orange-300 mb-2">Desert Falcons</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Soaring to victory with precision and power</p>
-          </div>
-        </a>
 
-        <!-- Globo Boomerangs -->
-        <a href="franchise.html?team=globo-boomerangs"
-           class="franchise-card bg-gradient-to-br from-blue-900/50 to-red-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/globo-boomerangs.mp4"
-                     poster="assets/logos/globo-boomerangs.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/globo-boomerangs.jpeg" alt="Globo Boomerangs">
+            <!-- Upcoming Fixtures -->
+            <div>
+                <h3 style="color: var(--accent-purple); margin-bottom: 1.5rem; font-size: 1.5rem; font-weight: 700;">
+                    📅 Upcoming Fixtures
+                </h3>
+                <div class="fixtures-grid">
+                    <div class="fixture-card" style="opacity: 0.9; border-left: 4px solid var(--accent-purple);">
+                        <div class="fixture-header">
+                            <span class="fixture-tier championship">Championship</span>
+                            <span class="fixture-round">Round 2</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Avalanche Aces</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Rulo Apaches</div>
+                            <div class="fixture-result fixture-scheduled">Scheduled</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Thursday, 25 September 2025</strong></div>
+                            <div>PADEL24</div>
+                        </div>
+                    </div>
+
+                    <div class="fixture-card" style="opacity: 0.9; border-left: 4px solid var(--accent-purple);">
+                        <div class="fixture-header">
+                            <span class="fixture-tier championship">Championship</span>
+                            <span class="fixture-round">Round 2</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Sonic Viboras</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Ice Breakers</div>
+                            <div class="fixture-result fixture-scheduled">Scheduled</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Thursday, 25 September 2025</strong></div>
+                            <div>PADEL24</div>
+                        </div>
+                    </div>
+
+                    <div class="fixture-card" style="opacity: 0.9; border-left: 4px solid var(--accent-purple);">
+                        <div class="fixture-header">
+                            <span class="fixture-tier championship">Championship</span>
+                            <span class="fixture-round">Round 3</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Ice Breakers</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Globo Boomerangs</div>
+                            <div class="fixture-result fixture-scheduled">Scheduled</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Monday, 29 September 2025</strong></div>
+                            <div>PADEL24</div>
+                        </div>
+                    </div>
+
+                    <div class="fixture-card" style="opacity: 0.9; border-left: 4px solid var(--accent-purple);">
+                        <div class="fixture-header">
+                            <span class="fixture-tier championship">Championship</span>
+                            <span class="fixture-round">Round 3</span>
+                        </div>
+                        <div class="fixture-teams">
+                            <div class="fixture-team">Samurai Kicksmashers</div>
+                            <div class="fixture-vs">vs</div>
+                            <div class="fixture-team">Baltic Blades</div>
+                            <div class="fixture-result fixture-scheduled">Scheduled</div>
+                        </div>
+                        <div class="fixture-info">
+                            <div><strong>Monday, 29 September 2025</strong></div>
+                            <div>PADEL24</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--bg-light); border-radius: 1rem;">
+                    <h4 style="color: var(--text-dark); margin-bottom: 1rem;">Season Progress</h4>
+                    <p style="color: var(--text-gray); margin-bottom: 0.5rem;"><strong>13 fixtures completed</strong> • <strong>51 fixtures remaining</strong></p>
+                    <p style="color: var(--text-gray); font-size: 0.9rem;">Playoffs and finals to be scheduled based on regular season results</p>
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Globo Boomerangs</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">What goes around, comes around stronger</p>
-          </div>
-        </a>
+        </div>
+    </section>
 
-        <!-- Ice Breakers -->
-        <a href="franchise.html?team=ice-breakers"
-           class="franchise-card bg-gradient-to-br from-cyan-900/50 to-blue-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/ice-breakers.mp4"
-                     poster="assets/logos/ice-breakers.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/ice-breakers.jpeg" alt="Ice Breakers">
+    <!-- Live Scores Section -->
+    <section class="live-scores">
+        <div class="section-container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-broadcast-tower"></i>
+                    Live Scores
+                </h2>
+                <a href="#" class="view-all-btn">
+                    <i class="fas fa-eye"></i>
+                    View Live
+                </a>
             </div>
-            <h3 class="text-2xl font-extrabold text-cyan-300 mb-2">Ice Breakers</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Breaking through with cool precision</p>
-          </div>
-        </a>
 
-        <!-- Baltic Blades -->
-        <a href="franchise.html?team=baltic-blades"
-           class="franchise-card bg-gradient-to-br from-blue-900/50 to-purple-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/baltic-blades.mp4"
-                     poster="assets/logos/baltic-blades.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/baltic-blades.jpeg" alt="Baltic Blades">
+            <div class="live-score-card">
+                <div class="live-score-header">
+                    <div class="tournament-info">
+                        <h3>LOWVELD PREMIER DIVISION</h3>
+                        <div class="tournament-meta">Championship Final - Court 1</div>
+                    </div>
+                    <div class="live-indicator">
+                        <div class="live-dot"></div>
+                        LIVE
+                    </div>
+                </div>
+
+                <div class="courts-grid">
+                    <div class="court-match">
+                        <div class="court-header">
+                            <div class="court-name">Court 1</div>
+                            <div class="match-time">19:45</div>
+                        </div>
+                        <div class="match-players">
+                            <div class="player-team">
+                                <div class="player-flag">SV</div>
+                                <div class="player-names">A. Combrinck & H. Coomans</div>
+                            </div>
+                            <div class="match-score">2 - 1</div>
+                            <div class="player-team">
+                                <div class="player-flag">DF</div>
+                                <div class="player-names">S. Randera & A. Randera</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="court-match">
+                        <div class="court-header">
+                            <div class="court-name">Court 2</div>
+                            <div class="match-time">20:15</div>
+                        </div>
+                        <div class="match-players">
+                            <div class="player-team">
+                                <div class="player-flag">GB</div>
+                                <div class="player-names">A. Mamji & I. Mahomed</div>
+                            </div>
+                            <div class="match-score">3 - 0</div>
+                            <div class="player-team">
+                                <div class="player-flag">RA</div>
+                                <div class="player-names">A. Grote & W. Mohlen</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Baltic Blades</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Sharp, swift, and unstoppable</p>
-          </div>
-        </a>
+        </div>
+    </section>
 
-        <!-- Avalanche Aces -->
-        <a href="franchise.html?team=avalanche-aces"
-           class="franchise-card bg-gradient-to-br from-blue-900/50 to-orange-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/avalanche-aces.mp4"
-                     poster="assets/logos/avalanche-aces.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/avalanche-aces.jpeg" alt="Avalanche Aces">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Lowveld Padel League</h3>
+                <p>South Africa's premier padel competition featuring 176 players across 8 teams in Premier and Championship divisions.</p>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" class="footer-social-link"><i class="fab fa-linkedin"></i></a>
+                </div>
             </div>
-            <h3 class="text-2xl font-extrabold text-blue-300 mb-2">Avalanche Aces</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Unstoppable force of nature</p>
-          </div>
-        </a>
-
-        <!-- Rulo Apaches -->
-        <a href="franchise.html?team=rulo-apaches"
-           class="franchise-card bg-gradient-to-br from-red-900/50 to-orange-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/rulo-apaches.mp4"
-                     poster="assets/logos/rulo-apaches.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/rulo-apaches.jpeg" alt="Rulo Apaches">
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#standings">Standings</a></li>
+                    <li><a href="#fixtures">Fixtures</a></li>
+                    <li><a href="#">Players</a></li>
+                    <li><a href="#">News & Media</a></li>
+                </ul>
             </div>
-            <h3 class="text-2xl font-extrabold text-red-300 mb-2">Rulo Apaches</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Warriors of the court</p>
-          </div>
-        </a>
-
-        <!-- Samurai Kicksmashers -->
-        <a href="franchise.html?team=samurai-kicksmashers"
-           class="franchise-card bg-gradient-to-br from-orange-900/50 to-blue-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/samurai-kicksmashers.mp4"
-                     poster="assets/logos/samurai-kicksmashers.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/samurai-kicksmashers.jpeg" alt="Samurai Kicksmashers">
+            <div class="footer-section">
+                <h3>League Info</h3>
+                <ul>
+                    <li><a href="#">Premier Division</a></li>
+                    <li><a href="#">Championship Division</a></li>
+                    <li><a href="#">Tournament Rules</a></li>
+                    <li><a href="#">Player Registration</a></li>
+                    <li><a href="#">Match Schedule</a></li>
+                </ul>
             </div>
-            <h3 class="text-2xl font-extrabold text-orange-300 mb-2">Samurai Kicksmashers</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Honor, discipline, victory</p>
-          </div>
-        </a>
-
-        <!-- Sonic Viboras -->
-        <a href="franchise.html?team=sonic-viboras"
-           class="franchise-card bg-gradient-to-br from-purple-900/50 to-pink-900/50 rounded-xl p-6 hover:scale-105 transition-all cursor-pointer">
-          <div class="text-center">
-            <div class="franchise-media">
-              <video class="franchise-video"
-                     src="assets/sonic-viboras.mp4"
-                     poster="assets/logos/sonic-viboras.jpeg"
-                     muted playsinline loop preload="metadata"></video>
-              <img src="assets/logos/sonic-viboras.jpeg" alt="Sonic Viboras">
+            <div class="footer-section">
+                <h3>Contact Info</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Lowveld, South Africa</p>
+                <p><i class="fas fa-phone"></i> +27 (0) 123 456 789</p>
+                <p><i class="fas fa-envelope"></i> info@lowveldpadel.co.za</p>
+                <p><i class="fas fa-clock"></i> Mon-Sun: 6:00 AM - 10:00 PM</p>
             </div>
-            <h3 class="text-2xl font-extrabold text-purple-300 mb-2">Sonic Viboras</h3>
-            <p class="text-indigo-100/80 text-sm mb-6">Lightning fast, deadly accurate</p>
-          </div>
-        </a>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Lowveld Padel League. All rights reserved. | Designed with ❤️ for the padel community.</p>
+        </div>
+    </footer>
 
-      </div>
-    </div>
-  </section>
+    <script>
+        // Add smooth scrolling and interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
 
-  <!-- Marketplace -->
-  <section id="marketplace" class="py-20 bg-gradient-to-br from-gray-900 to-black">
-    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-green-300 to-emerald-300 bg-clip-text text-transparent">
-        Marketplace
-      </h2>
-      <p>Coming soon…</p>
-    </div>
-  </section>
+            // Add loading animations
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
 
-  <!-- Live Stream -->
-  <section id="live-stream" class="py-20 bg-gradient-to-br from-gray-900 to-black">
-    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-300 to-cyan-300 bg-clip-text text-transparent">
-        Live Stream
-      </h2>
-      <p>Coming soon…</p>
-    </div>
-  </section>
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
 
-  <!-- Fantasy League -->
-  <section id="fantasy" class="py-20 bg-gradient-to-br from-gray-900 to-black">
-    <div class="max-w-7xl mx-auto px-4 text-center text-gray-300">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-yellow-300 to-amber-400 bg-clip-text text-transparent">
-        Fantasy League
-      </h2>
-      <p>Coming soon…</p>
-    </div>
-  </section>
+            // Observe cards for animation
+            document.querySelectorAll('.fixture-card, .live-score-card, .division-standings').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
 
-  <!-- Footer -->
-  <footer class="bg-black py-12">
-    <div class="max-w-7xl mx-auto px-4 text-center text-gray-400">
-      © <span id="year"></span> Lowveld Padel Pro. All rights reserved.
-    </div>
-  </footer>
+            // Update navigation active states
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section[id]');
 
-  <!-- Scripts -->
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-    function toggleMobileMenu() {
-      const el = document.getElementById('mobileMenu');
-      if (!el) return;
-      el.classList.toggle('hidden');
-    }
-    // Autoplay videos when ready; fallback to logo if error
-    document.querySelectorAll('.franchise-video').forEach(v => {
-      const tryPlay = () => v.play().catch(() => {});
-      v.addEventListener('loadeddata', tryPlay, { once: true });
-      v.addEventListener('canplay', tryPlay, { once: true });
-      v.addEventListener('error', () => {
-        v.style.display = 'none';
-        const img = v.nextElementSibling;
-        if (img) img.style.display = 'block';
-      });
-    });
-  </script>
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${current}`) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>

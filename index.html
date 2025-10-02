@@ -241,7 +241,7 @@
 
         .hero-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 4rem;
             align-items: center;
         }
@@ -259,15 +259,43 @@
             backdrop-filter: blur(10px);
         }
 
+        /* Flashing Register Now Badge */
+        .register-flash {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--accent-purple);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            animation: flash 2s infinite;
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+        }
+
+        @keyframes flash {
+            0%, 100% {
+                background: var(--accent-purple);
+                box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+            }
+            50% {
+                background: #9a4cff;
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.9), 0 0 30px rgba(139, 92, 246, 0.6);
+            }
+        }
+
         .hero-title {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: 900;
             line-height: 1.1;
             margin-bottom: 1.5rem;
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             opacity: 0.9;
             margin-bottom: 2rem;
             line-height: 1.6;
@@ -277,6 +305,7 @@
             display: flex;
             gap: 2rem;
             margin-bottom: 2rem;
+            align-items: center;
         }
 
         .hero-meta span {
@@ -290,6 +319,7 @@
         .hero-actions {
             display: flex;
             gap: 1rem;
+            margin-top: 2rem;
         }
 
         .btn-primary {
@@ -330,6 +360,64 @@
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.2);
             transform: translateY(-2px);
+        }
+
+        /* Quick Actions Section */
+        .quick-actions {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .quick-actions-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .quick-actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .quick-action-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+        }
+
+        .quick-action-card:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .quick-action-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--secondary-cyan);
+        }
+
+        .quick-action-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .quick-action-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            color: white;
         }
 
         /* Standings Section */
@@ -610,7 +698,7 @@
             }
 
             .hero-title {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
 
             .standings-grid {
@@ -636,6 +724,16 @@
             .standings-table th,
             .standings-table td {
                 padding: 0.5rem 0.25rem;
+            }
+            
+            .quick-actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
             }
         }
     </style>
@@ -667,7 +765,6 @@
                 </div>
                 <div class="logo-text">
                     <div class="logo-main">LOWVELD PADEL</div>
-                    
                 </div>
             </a>
             <nav>
@@ -689,39 +786,55 @@
             <div class="hero-content">
                 <div class="hero-grid">
                     <div class="hero-column">
-                        <div class="hero-badge">
-                            <i class="fas fa-trophy"></i>
-                            SEASON 2024/25 LIVE
-                        </div>
-                        <h1 class="hero-title">Lowveld Padel<br>Franchise League: Season II...Bigger & Better!!!!</h1>
-                        <p class="hero-subtitle">Experience the excitement of South Africa's Premier Padel League with 176 players across 8 teams competing in Premier and Championship divisions.</p>
-                        <div class="hero-meta">
-                            <span><i class="fas fa-users"></i> 176 Players</span>
-                            <span><i class="fas fa-trophy"></i> 8 Teams</span>
-                            <span><i class="fas fa-calendar"></i> Season 2024/25</span>
-                        </div>
-                        <div class="hero-actions">
-                            <a href="#standings" class="btn-primary">
-                                <i class="fas fa-chart-line"></i>
-                                View Standings
-                            </a>
-                            <a href="#fixtures" class="btn-secondary">
-                                <i class="fas fa-calendar-alt"></i>
-                                Fixtures
-                            </a>
-                        </div>
-                    </div>
-                    <div class="hero-column">
                         <div class="hero-badge" style="background-color: var(--accent-purple);">
                             <i class="fas fa-shield-alt"></i>
-                            LATEST UPDATE
+                            BREAKING NEWS
                         </div>
-                        <h1 class="hero-title">Sonic Viboras vs<br>Rulo Apaches</h1>
-                        <p class="hero-subtitle">Top-of-the-table fireworks: Sonics (10 pts) vs Rulo Apaches for Premier supremacy; Globo Boomerangs still ruling the Championship on 11 pts</p>
+                        <h1 class="hero-title">Queens of the Court! Lowveld Padel Unveils Mpumalanga's FIRST-EVER All-Ladies Franchise League!</h1>
+                        <p class="hero-subtitle">A new era for women's sport is dawning in Mpumalanga. Lowveld Padel is thrilled to announce a groundbreaking initiative designed to showcase the incredible talent, passion, and competitive fire of the province's female athletes: Mpumalanga's 1st Official All-Ladies Padel Franchise League!</p>
+                        <p class="hero-subtitle">This is more than just a tournament; it's a movement. Prepare for fierce rivalries, exceptional skill and a platform where the best female padel players in the Lowveld will battle for the ultimate crown.</p>
                         <div class="hero-meta">
-                            <span><i class="fas fa-calendar"></i> 13 of 64 fixtures completed</span>
-                            <span><i class="fas fa-map-marker-alt"></i> PADEL24 & Play360</span>
+                            <a href="https://forms.gle/zvxKjqLqCNS2Vm538" target="_blank" class="register-flash">
+                                <i class="fas fa-calendar"></i>
+                                Register Now
+                            </a>
+                            
                         </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions Section -->
+                <div class="quick-actions">
+                    <h3 class="quick-actions-title">League Information</h3>
+                    <div class="quick-actions-grid">
+                        <a href="#standings" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="quick-action-title">View Standings</div>
+                            <div class="quick-action-desc">Check current league rankings</div>
+                        </a>
+                        <a href="#fixtures" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="quick-action-title">Fixtures</div>
+                            <div class="quick-action-desc">Upcoming matches & results</div>
+                        </a>
+                        <a href="#" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="quick-action-title">Players</div>
+                            <div class="quick-action-desc">Meet the athletes</div>
+                        </a>
+                        <a href="#" class="quick-action-card">
+                            <div class="quick-action-icon">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <div class="quick-action-title">News</div>
+                            <div class="quick-action-desc">Latest updates</div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -1345,7 +1458,7 @@
             }, observerOptions);
 
             // Observe cards for animation
-            document.querySelectorAll('.fixture-card, .division-standings').forEach(el => {
+            document.querySelectorAll('.fixture-card, .division-standings, .quick-action-card').forEach(el => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(30px)';
                 el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';

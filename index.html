@@ -36,6 +36,13 @@
             --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
         }
 
+        /* Prevent horizontal scrolling on mobile */
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+            position: relative;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             line-height: 1.6;
@@ -274,14 +281,15 @@
             gap: 0.5rem;
             background: var(--accent-purple);
             color: white;
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border-radius: 2rem;
-            font-size: 0.875rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             text-decoration: none;
             backdrop-filter: blur(10px);
             animation: flash 2s infinite;
             box-shadow: 0 0 10px rgba(139, 92, 246, 0.7);
+            justify-content: center;
         }
 
         @keyframes flash {
@@ -311,9 +319,10 @@
 
         .hero-meta {
             display: flex;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            flex-direction: column;
             align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .hero-meta span {
@@ -445,6 +454,30 @@
             color: white;
         }
 
+        /* Sponsors Section */
+        .sponsors {
+            padding: 4rem 0;
+            background: white;
+            text-align: center;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .sponsors-container {
+            max-width: 500px;
+            margin: 2rem auto 0;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 2px solid var(--border-light);
+        }
+
+        .sponsor-video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         /* Standings Section */
         .standings {
             padding: 4rem 0;
@@ -488,6 +521,8 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8rem;
+            overflow-x: auto;
+            display: block;
         }
 
         .standings-table th {
@@ -732,6 +767,8 @@
 
             .fixtures-grid {
                 grid-template-columns: 1fr;
+                margin: 0 -1rem;
+                padding: 0 1rem;
             }
 
             .nav-menu {
@@ -744,11 +781,15 @@
 
             .standings-table {
                 font-size: 0.7rem;
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
             }
 
             .standings-table th,
             .standings-table td {
                 padding: 0.5rem 0.25rem;
+                min-width: 40px;
             }
             
             .quick-actions-grid {
@@ -757,7 +798,7 @@
             
             .hero-meta {
                 flex-direction: column;
-                align-items: flex-start;
+                align-items: center;
                 gap: 1rem;
             }
             
@@ -773,6 +814,11 @@
             .franchise-logo-container {
                 width: 250px;
                 height: 125px;
+            }
+            
+            .sponsors-container {
+                max-width: 90%;
+                margin: 1rem auto 0;
             }
         }
         
@@ -795,7 +841,7 @@
             </div>
             <div class="social-links">
                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.threads.com/@lowveld_padel?xmt=AQF02Qj-eBS1ph16LuY2Jb_gDqcFoQweWE0eAfW8HI9_ty8" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
             </div>
@@ -841,13 +887,13 @@
                         </div>
                         <h1 class="hero-title">Queens of the Court! Lowveld Padel Unveils Mpumalanga's FIRST-EVER All-Ladies Franchise League!</h1>
                         <p class="hero-subtitle">A new era for women's sport is dawning in Mpumalanga. Lowveld Padel is thrilled to announce a groundbreaking initiative designed to showcase the incredible talent, passion, and competitive fire of the province's female athletes: Mpumalanga's 1st Official All-Ladies Padel Franchise League!</p>
-                        
+                        <p class="hero-subtitle">This is more than just a tournament; it's a movement. Prepare for fierce rivalries, exceptional skill and a platform where the best female padel players in the Lowveld will battle for the ultimate crown.</p>
                         <div class="hero-meta">
                             <a href="https://forms.gle/zvxKjqLqCNS2Vm538" target="_blank" class="register-flash">
                                 <i class="fas fa-calendar"></i>
                                 Register Now
                             </a>
-                            
+                            <span><i class="fas fa-map-marker-alt"></i> PADEL24 & Play360</span>
                         </div>
                     </div>
                 </div>
@@ -860,7 +906,7 @@
                             Your browser does not support the video tag.
                         </video>
                     </div>
-      
+                    <h3 class="quick-actions-title">League Information</h3>
                     <div class="quick-actions-grid">
                         <a href="#standings" class="quick-action-card">
                             <div class="quick-action-icon">
@@ -1432,6 +1478,22 @@
         </div>
     </section>
 
+    <!-- Sponsors Section -->
+    <section class="sponsors">
+        <div class="section-container">
+            <h2 class="section-title">
+                <i class="fas fa-handshake"></i>
+                Official Sponsors
+            </h2>
+            <div class="sponsors-container">
+                <video class="sponsor-video" autoplay muted loop playsinline>
+                    <source src="Rhandzo Projects.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-content">
@@ -1440,7 +1502,7 @@
                 <p>South Africa's premier padel competition featuring 176 players across 8 teams in Premier and Championship divisions.</p>
                 <div class="footer-social">
                     <a href="#" class="footer-social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="footer-social-link"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.threads.com/@lowveld_padel?xmt=AQF02Qj-eBS1ph16LuY2Jb_gDqcFoQweWE0eAfW8HI9_ty8" target="_blank" class="footer-social-link"><i class="fab fa-instagram"></i></a>
                     <a href="#" class="footer-social-link"><i class="fab fa-twitter"></i></a>
                     <a href="#" class="footer-social-link"><i class="fab fa-youtube"></i></a>
                     <a href="#" class="footer-social-link"><i class="fab fa-tiktok"></i></a>

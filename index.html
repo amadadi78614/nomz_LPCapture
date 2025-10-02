@@ -114,16 +114,23 @@
             text-decoration: none;
         }
 
-        .logo-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, var(--secondary-cyan), var(--accent-green));
+        .logo-video-container {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--secondary-cyan);
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
-            color: white;
+            background: var(--primary-dark);
+        }
+
+        .logo-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .logo-text {
@@ -132,9 +139,10 @@
         }
 
         .logo-main {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 800;
             line-height: 1;
+            letter-spacing: 0.5px;
         }
 
         .logo-sub {
@@ -370,13 +378,30 @@
             padding: 2rem;
             margin-top: 3rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .franchise-logo-container {
+            width: 300px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .franchise-logo-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .quick-actions-title {
             font-size: 1.5rem;
             font-weight: 700;
             margin-bottom: 1.5rem;
-            text-align: center;
             color: white;
         }
 
@@ -735,6 +760,27 @@
                 align-items: flex-start;
                 gap: 1rem;
             }
+            
+            .logo-video-container {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .logo-main {
+                font-size: 1.5rem;
+            }
+            
+            .franchise-logo-container {
+                width: 250px;
+                height: 125px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .franchise-logo-container {
+                width: 200px;
+                height: 100px;
+            }
         }
     </style>
 </head>
@@ -760,8 +806,11 @@
     <header class="main-header">
         <div class="header-content">
             <a href="#" class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-table-tennis"></i>
+                <div class="logo-video-container">
+                    <video class="logo-video" autoplay muted loop playsinline>
+                        <source src="lplogo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
                 <div class="logo-text">
                     <div class="logo-main">LOWVELD PADEL</div>
@@ -792,7 +841,7 @@
                         </div>
                         <h1 class="hero-title">Queens of the Court! Lowveld Padel Unveils Mpumalanga's FIRST-EVER All-Ladies Franchise League!</h1>
                         <p class="hero-subtitle">A new era for women's sport is dawning in Mpumalanga. Lowveld Padel is thrilled to announce a groundbreaking initiative designed to showcase the incredible talent, passion, and competitive fire of the province's female athletes: Mpumalanga's 1st Official All-Ladies Padel Franchise League!</p>
-                        <p class="hero-subtitle">This is more than just a league.... it's a movement. Prepare for fierce rivalries, exceptional skill and a platform where the best female padel players in the Lowveld will battle for the ultimate crown.</p>
+                        <p class="hero-subtitle">This is more than just a tournament; it's a movement. Prepare for fierce rivalries, exceptional skill and a platform where the best female padel players in the Lowveld will battle for the ultimate crown.</p>
                         <div class="hero-meta">
                             <a href="https://forms.gle/zvxKjqLqCNS2Vm538" target="_blank" class="register-flash">
                                 <i class="fas fa-calendar"></i>
@@ -805,7 +854,13 @@
                 
                 <!-- Quick Actions Section -->
                 <div class="quick-actions">
-                    <h3 class="quick-actions-title">MENS FRANCHISE LEAGUE INFORMATION SEASON II</h3>
+                    <div class="franchise-logo-container">
+                        <video class="franchise-logo-video" autoplay muted loop playsinline>
+                            <source src="franchise league logo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+      
                     <div class="quick-actions-grid">
                         <a href="#standings" class="quick-action-card">
                             <div class="quick-action-icon">

@@ -211,11 +211,26 @@ export const FIXTURES = [
         homeIds: ids('sonic-viboras', 'Stefan de Villiers', 'Saliem Mahomed'), awayIds: ids('samurai-kicksmashers', 'Ismail Karodia', 'Imraan Khan'), games: [0, 4], winner: 'away' },
     ] } },
   // MD4 · Thu 18 Jun — pairings confirmed, result pending
-  { id: 'fx-w2-3', round: 2, league: 'mens', home: 'globo-boomerangs', away: 'desert-falcons', start: T('2026-06-18'), status: 'scheduled', court: 'Padel 24',
-    pairs: { slots: [
-      { slot: '18:00', rubbers: [['P1', 'Jojo / Joseph', 'Uwaiz / Yusuf'], ['P2', 'Ryan / Nabz', 'Fahad / Ryan']] },
-      { slot: '19:15', rubbers: [['P2', 'Momo / Bevan', 'Warno / Morne'], ['P3', 'Shaffique / Suhail', 'Danie / Zaeem']] },
-      { slot: '20:30', rubbers: [['P1', 'Ahmed / Lima', 'Reinhardt / Scalk'], ['P3', 'Kieran / Stefan', 'Jacques / Reino']] },
+  { id: 'fx-w2-3', round: 2, league: 'mens', home: 'globo-boomerangs', away: 'desert-falcons', start: T('2026-06-18'), status: 'final', court: 'Padel 24', tossWonBy: 'desert-falcons',
+    score: { winner: 'away', totals: [3, 19], rubberWins: [1, 5], rubbers: [
+      { slot: '18:00', court: 'P1', home: 'Jojo / Joseph', away: 'Uwaiz / Yusuf',
+        homeIds: ids('globo-boomerangs', 'Yusuf Asvat', 'Joseph van der Merwe'), awayIds: ids('desert-falcons', 'Uwaiz Patel', 'Yusuf Patel'),
+        games: [0, 4], winner: 'away', sets: [[1, 6], [4, 6], [6, 10]] },
+      { slot: '18:00', court: 'P2', home: 'Ryan / Nabz', away: 'Fahad / Ryan Wicht',
+        homeIds: ids('globo-boomerangs', 'Ryan Kennett', 'Nabeel Meer'), awayIds: ids('desert-falcons', 'Fahad Patel', 'Ryan Wicht'),
+        games: [3, 0], winner: 'home', sets: [[6, 3], [6, 2], [5, 10]] },
+      { slot: '19:15', court: 'P2', home: 'Momo / Bevan', away: 'Warno / Morne',
+        homeIds: ids('globo-boomerangs', 'M Shehzad Meer', 'Bevin Francis'), awayIds: ids('desert-falcons', 'Warno Smit', 'Morne Steenekamp'),
+        games: [0, 3], winner: 'away', sets: [[6, 4], [6, 7], [8, 10]] },
+      { slot: '19:15', court: 'P3', home: 'Shaffique / Suhail', away: 'Danie / Zaeem',
+        homeIds: ids('globo-boomerangs', 'Shaffique Jeewa', 'Suhail Patel'), awayIds: ids('desert-falcons', 'Danie Rautenbach', 'Zaeem Sadiq'),
+        games: [0, 4], winner: 'away', sets: [[6, 7], [5, 7], [6, 10]] },
+      { slot: '20:30', court: 'P1', home: 'Ahmed / Lima', away: 'Reinhardt / Schalk',
+        homeIds: ids('globo-boomerangs', 'Ahmed Mungalee', 'Liam Morgan'), awayIds: ids('desert-falcons', 'Reinhardt Trollip', 'Schalk Schutte'),
+        games: [0, 4], winner: 'away', sets: [[3, 6], [4, 6], [8, 10]] },
+      { slot: '20:30', court: 'P3', home: 'Kieran / Stefan', away: 'Jacques / Reino',
+        homeIds: ids('globo-boomerangs', 'Kiran Hansraj', 'Stefan Erasmus'), awayIds: ids('desert-falcons', 'Jacques Burger', 'Reino Grobler'),
+        games: [0, 4], winner: 'away', sets: [[4, 6], [4, 6], [7, 10]] },
     ] } },
 
   // WEEK 3 · 22–24 Jun · DH: Sonic Viboras
@@ -310,7 +325,8 @@ FIXTURES.filter((f) => f.status === 'final' && f.score?.rubbers).forEach((f) => 
 });
 
 export const NEWS = [
-  { id: 'n0', kicker: 'Match Day 3', title: 'Ice Breakers stun the Aces 16-7 for a first win; Viboras down the Smashers 15-7', date: T('2026-06-17', 22), tag: 'mens', body: 'Week 2 belonged to the Ice Breakers — Imaad/Salmaan, Swart/Herbst and Correia/Enslin all posting 4-0 bonus wins to sink Avalanche Aces 16-7 at Padel 24. At Play 360, Sonic Viboras took four rubbers to beat Samurai Kick Smashers 15-7 and keep pace at the top.' },
+  { id: 'nm4', kicker: 'Match Day 4', title: 'Falcons stay perfect: 19-3 demolition of the Boomerangs at Padel 24', date: T('2026-06-18', 22), tag: 'mens', body: 'Desert Falcons made it twelve rubbers unbeaten, taking five of six against Global Boomerangs. Only Ryan Kennett and Nabeel Meer interrupted the procession, edging their P2 rubber 6-3, 6-2 before the Falcons closed out the night.' },
+  { id: 'n0', kicker: 'Match Day 3', title: 'Ice Breakers stun the Aces 16-7 for a first win; Viboras down the Smashers 15-7', date: T('2026-06-17', 22), tag: 'mens', body: 'Week 2 belonged to the Ice Breakers \u2014 Imaad/Salmaan, Swart/Herbst and Correia/Enslin all posting clean wins to sink Avalanche Aces 16-7 at Padel 24. At Play 360, Sonic Viboras took four rubbers to beat Samurai Kick Smashers 15-7.' },
   { id: 'n1', kicker: 'Log tables', title: 'Falcons lead on 21 after the opening rounds; P3 drama as they sit bottom on -2', date: T('2026-06-11', 11), tag: 'mens', body: 'The Astron Energy P1, Vawda\'s Tyre Torque P2 and Omar\'s Motor Den P3 logs are live. Desert Falcons lead the franchise log — but a league adjustment leaves their P3 pairs bottom.' },
   { id: 'n2', kicker: 'Match Day 2', title: 'Statement night: Falcons blank the Aces 21-0 at Padel 24', date: T('2026-06-10', 22), tag: 'mens', body: 'Desert Falcons won all six rubbers without dropping a game — four bonus-point performances in one night and an emphatic answer to anyone writing early power rankings.' },
   { id: 'n3', kicker: 'Match Day 2', title: 'Lions roar back from 0-8 down to take the Boomerangs 15-8', date: T('2026-06-10', 22, 30), tag: 'mens', body: 'Global Boomerangs swept the 18:00 slot with two 4-0 bonus-point wins, then Sahara Lions won the last four rubbers 15-0 — Packery/Badenhorst and Morgan/Asvat flipping the night at Play 360.' },

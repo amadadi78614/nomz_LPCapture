@@ -17,7 +17,7 @@ function ScrollTop() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <ScrollTop />
       <div className="shell">
         <LiveTicker />

@@ -21,7 +21,7 @@ export function Home() {
   return (
     <div className="page">
       <div className="hero">
-        <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Week 2 · Next: Thu 18 Jun · Boomerangs v Falcons</span>
+        <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Week 2 complete · Next: Mon 22 Jun</span>
         <h1 className="display" style={{ margin: '6px 0 8px' }}>Every point. Live from the Lowveld.</h1>
         <p className="muted" style={{ maxWidth: 560 }}>
           Rubber-by-rubber scoring from Padel 24 and Play 360, live aggregate standings, the LP Rating and the race for MVP — the franchise league, broadcast-style.
@@ -172,21 +172,32 @@ export function MatchPage() {
                     const hw2 = r.winner === 'home';
                     const bp = r.games && ((hw2 && r.games[0] === 4 && r.games[1] === 0) || (!hw2 && r.games[1] === 4 && r.games[0] === 0));
                     return (
-                      <div key={i} className="card row spread">
-                        <span style={{ opacity: hw2 ? 1 : 0.65 }}><b className="chip" style={{ marginRight: 8 }}>{r.court}</b>{r.home}</span>
-                        <b className="num" style={{ whiteSpace: 'nowrap' }}>
-                          {r.games ? (
-                            <>
-                              <span style={{ color: hw2 ? 'var(--win)' : 'var(--muted)' }}>{r.games[0]}</span>
-                              <span className="muted"> – </span>
-                              <span style={{ color: !hw2 ? 'var(--win)' : 'var(--muted)' }}>{r.games[1]}</span>
-                            </>
-                          ) : (
-                            <span className="muted" style={{ fontSize: 12 }}>{hw2 ? 'W – L' : 'L – W'}</span>
-                          )}
-                          {bp && <span className="chip" style={{ marginLeft: 8, color: 'var(--gold)' }}>BP</span>}
-                        </b>
-                        <span style={{ opacity: !hw2 ? 1 : 0.65, textAlign: 'right' }}>{r.away}</span>
+                      <div key={i} className="card">
+                        <div className="row spread">
+                          <span style={{ opacity: hw2 ? 1 : 0.65 }}><b className="chip" style={{ marginRight: 8 }}>{r.court}</b>{r.home}</span>
+                          <b className="num" style={{ whiteSpace: 'nowrap' }}>
+                            {r.games ? (
+                              <>
+                                <span style={{ color: hw2 ? 'var(--win)' : 'var(--muted)' }}>{r.games[0]}</span>
+                                <span className="muted"> – </span>
+                                <span style={{ color: !hw2 ? 'var(--win)' : 'var(--muted)' }}>{r.games[1]}</span>
+                              </>
+                            ) : (
+                              <span className="muted" style={{ fontSize: 12 }}>{hw2 ? 'W – L' : 'L – W'}</span>
+                            )}
+                            {bp && <span className="chip" style={{ marginLeft: 8, color: 'var(--gold)' }}>BP</span>}
+                          </b>
+                          <span style={{ opacity: !hw2 ? 1 : 0.65, textAlign: 'right' }}>{r.away}</span>
+                        </div>
+                        {r.sets && (
+                          <div className="row" style={{ gap: 8, marginTop: 6, justifyContent: 'center', fontFamily: 'var(--data)' }}>
+                            {r.sets.map((st, j) => (
+                              <span key={j} className="muted" style={{ fontSize: 12 }}>
+                                {st[0]}-{st[1]}{j < r.sets.length - 1 ? ' ·' : ''}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     );
                   })}

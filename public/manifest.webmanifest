@@ -1,0 +1,13 @@
+{
+  "name": "Lowveld Padel",
+  "short_name": "LP Live",
+  "description": "Live scores, standings and stats from the Lowveld Padel Franchise League.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B0F1C",
+  "theme_color": "#0B0F1C",
+  "icons": [
+    { "src": "/favicon.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/favicon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

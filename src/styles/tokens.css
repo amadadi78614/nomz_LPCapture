@@ -1,0 +1,59 @@
+/* ============================================================
+   LOWVELD PADEL — DESIGN TOKENS
+   Direction: broadcast-dark. F1 livery stripes, PL table
+   discipline, ESPN density, LIV boldness — grounded in the
+   Lowveld: night-court navy + sunset-live orange + court blue.
+   ============================================================ */
+:root {
+  /* Surfaces */
+  --ink: #0b0f1c;          /* page background — night court */
+  --surface: #131a2e;      /* card */
+  --surface-2: #1b2440;    /* raised card / hover */
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+
+  /* Text */
+  --text: #edf0f7;
+  --muted: #8a93ac;
+  --faint: #5b6480;
+
+  /* Brand */
+  --live: #ff4d2e;         /* lowveld sunset — LIVE state only */
+  --court: #2f7df6;        /* padel court blue — links, actions */
+  --gold: #e8b84b;         /* MVP / auction gold */
+  --win: #2ecc8f;
+  --loss: #ff5d6c;
+
+  /* Type */
+  --display: 'Saira Condensed', 'Arial Narrow', sans-serif;
+  --data: 'Saira', 'Inter', sans-serif;
+  --body: 'Inter', system-ui, sans-serif;
+
+  /* Rhythm */
+  --r: 12px;
+  --r-sm: 8px;
+  --pad: 16px;
+  --ticker-h: 44px;
+  --nav-h: 60px;
+  --maxw: 1180px;
+}
+
+/* Franchise liveries (F1-style) — single source of truth */
+:root {
+  --fr-avalanche-aces: #6ec6ff;
+  --fr-desert-falcons: #d98e2b;
+  --fr-globo-boomerangs: #29b573;
+  --fr-ice-breakers: #9fd8e8;
+  --fr-rulo-apaches: #c0392b;
+  --fr-samurai-kicksmashers: #8e44ad;
+  --fr-sonic-viboras: #18c47f;
+  --fr-baltic-blades: #3a6ea5;
+  --fr-arctic-angels: #bfe3ff;
+  --fr-backhand-blossoms: #ff8fb1;
+  --fr-desert-roses: #e76d6d;
+  --fr-lunar-lillies: #c9b6ff;
+  --fr-net-novas: #ffd166;
+  --fr-phoenix-flames: #ff6b2c;
+  --fr-sahara-lions: #d4a017;
+  --fr-avalanche-aces-ladies: #8fd0ff;
+}

@@ -587,8 +587,9 @@ export function Rankings() {
   const [tierFilter, setTierFilter] = useState('all');
   const [courtFilter, setCourtFilter] = useState('all');
   const [minMatches, setMinMatches] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
-  const active = PLAYERS.filter((p) => p.stats.played > 0 && p.league === pLeague);
+  const active = PLAYERS.filter((p) => (showAll ? true : p.stats.played > 0) && p.league === pLeague);
   const sorters = {
     lp: (a, b) => b.lp_rating - a.lp_rating,
     win: (a, b) => winPct(b.stats) - winPct(a.stats) || b.stats.wins - a.stats.wins || b.lp_rating - a.lp_rating,
@@ -649,6 +650,10 @@ export function Rankings() {
               Require 2+ matches (fair win %)
             </label>
           )}
+          <label className="muted row" style={{ fontSize: 12, marginTop: 8, gap: 6, cursor: 'pointer' }}>
+            <input type="checkbox" checked={showAll} onChange={(e) => setShowAll(e.target.checked)} />
+            Show full roster (include players yet to play)
+          </label>
           <p className="muted mt" style={{ fontSize: 12 }}>
             {sortBy === 'lp' && 'LP Rating — doubles Elo from real results; everyone starts at 1400, beating stronger pairs moves you more.'}
             {sortBy === 'win' && 'Win % — share of rubbers won.'}
@@ -678,12 +683,18 @@ export function Rankings() {
                       <span className={`num ${sortBy === 'lp' ? 'gold' : ''}`} style={{ fontSize: 17 }}>{val}</span>
                     </div>
                     <div className="row" style={{ gap: 12, marginTop: 8, fontSize: 11 }}>
-                      <span className="muted">{p.stats.played} P</span>
-                      <span style={{ color: 'var(--win)' }}>{p.stats.wins} W</span>
-                      <span style={{ color: 'var(--loss)' }}>{p.stats.losses} L</span>
-                      <span className="muted">{winPct(p.stats)}% win</span>
-                      <span className="muted">{p.stats.games_won} games</span>
-                      {p.stats.bonus_points > 0 && <span className="gold">{p.stats.bonus_points} BP</span>}
+                      {p.stats.played === 0 ? (
+                        <span className="muted">Yet to play this season</span>
+                      ) : (
+                        <>
+                          <span className="muted">{p.stats.played} P</span>
+                          <span style={{ color: 'var(--win)' }}>{p.stats.wins} W</span>
+                          <span style={{ color: 'var(--loss)' }}>{p.stats.losses} L</span>
+                          <span className="muted">{winPct(p.stats)}% win</span>
+                          <span className="muted">{p.stats.games_won} games</span>
+                          {p.stats.bonus_points > 0 && <span className="gold">{p.stats.bonus_points} BP</span>}
+                        </>
+                      )}
                     </div>
                   </Link>
                 );

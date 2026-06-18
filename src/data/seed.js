@@ -51,7 +51,7 @@ const SQUADS = {
   'desert-falcons': {
     P1: ['Uwaiz Patel', 'Yusuf Patel', 'Ahmed Ismail', 'Faheem Nomani', 'Reinhardt Trollip', 'Schalk Schutte'],
     P2: ['Warno Smit', 'Morne Steenekamp', 'Ryan Wicht', 'Fahad Patel', 'Rayhaan Dinath', 'Ibrahim Mungalee'],
-    P3: ['Jacques Burger', 'Reino Grobler', 'M Mangerah', 'Zaeem Sadiq', 'Danie Rautenbach', 'Jude van den Berg'],
+    P3: ['Jacques Burger', 'Reino Grobler', 'Muhammad Mangerah', 'Zaeem Sadiq', 'Danie Rautenbach', 'Jude van den Berg'],
   },
   'sahara-lions': {
     P1: ['Cameron Jacobsz', 'Cian Maritz', 'Yusuf Packery', 'Pieter Badenhorst', 'Justin van Staaden', 'Suhayl Packery'],
@@ -60,23 +60,23 @@ const SQUADS = {
   },
   'globo-boomerangs': {
     P1: ['Yusuf Asvat', 'Joseph van der Merwe', 'Ahmed Mungalee', 'Liam Morgan', 'Lefa Mogamedi', 'Adil Ahmed'],
-    P2: ['Bevin Francis', 'M Shehzad Meer', 'Ryan Kennett', 'Diego Sebastian', 'Duran Greever', 'Nabeel Meer'],
+    P2: ['Bevin Francis', 'Muhammed Shehzad Meer', 'Ryan Kennett', 'Diego Sebastian', 'Duran Greever', 'Nabeel Meer'],
     P3: ['Kiran Hansraj', 'Stefan Erasmus', 'Taahir Mungalee', 'Suhail Patel', 'Shaffique Jeewa', 'Farhaan Shaik'],
   },
   'samurai-kicksmashers': {
-    P1: ['Durell Pillay', 'Bryan Theron', 'Burger Bester', 'M Azhar Sujee', 'Siraaj Shaik', 'Danyaal Nomani'],
-    P2: ['M Jina', 'Muneer Shaik', 'Armand Esterhuizen', 'Shaun Moropa', 'Tim Forssman', 'Sikander Cassim'],
+    P1: ['Durell Pillay', 'Bryan Theron', 'Burger Bester', 'Muhammad Azhar Sujee', 'Siraaj Shaik', 'Danyaal Nomani'],
+    P2: ['Muhammed Jina', 'Muneer Shaik', 'Armand Esterhuizen', 'Shaun Moropa', 'Tim Forssman', 'Sikander Cassim'],
     P3: ['Riaz Ahmed Bellim', 'Brent Grix', 'Dillon Francis', 'Imraan Khan', 'Ismail Karodia', 'Nuaym Shaik'],
   },
   'ice-breakers': {
     P1: ['Duhan Swart', 'JD Herbst', 'Imaad Arabi', 'Maaz Randera', 'Zaheer Methar', 'Salmaan Methar'],
     P2: ['Jacques van Zyl', 'Phil-Mar van Rensburg', 'Zayd Methar', 'Nicky Joubert', 'Zahid Methar', 'Chaz Taylor'],
-    P3: ['Wayne Enslin', 'Sergio Correia', 'Waldo van Tonder', 'Irshaad Moola', 'S Coramba', 'Aadam Nomani'],
+    P3: ['Wayne Enslin', 'Sergio Correia', 'Waldo van Tonder', 'Irshaad Moola', 'Shaun Caromba', 'Aadam Nomani'],
   },
   'sonic-viboras': {
     P1: ['Heinrich Coomans', 'Anton Grote', 'Yusuf Moola', 'Pieter Boshoff', 'Ridhwaan Sujee', 'Erlo Olivier'],
     P2: ['Warwick Morgan', 'Joshua Hoffman', 'Marius Loock', 'Khalid Jeewa', 'Ismail Fakir', 'Jacques Henning'],
-    P3: ['George du Toit', 'Dewald Meyer', 'Gerrit Smith', 'Stefan de Villiers', 'M Dadamia', 'Saliem Mahomed'],
+    P3: ['George du Toit', 'Dewald Meyer', 'Gerrit Smith', 'Stefan de Villiers', 'Mohamed Dadamia', 'Saliem Mahomed'],
   },
 };
 
@@ -136,8 +136,8 @@ export const FIXTURES = [
       { slot: '20:05', court: 'P2', home: 'Zayd / Nicky', away: 'Marius / Khalid',
         homeIds: ids('ice-breakers', 'Zayd Methar', 'Nicky Joubert'), awayIds: ids('sonic-viboras', 'Marius Loock', 'Khalid Jeewa'),
         games: [0, 4], winner: 'away', sets: [[4, 6], [3, 6], [4, 12]] },
-      { slot: '18:00', court: 'P3', home: 'Waldo / Irshaad', away: 'Stefan / M Dadamia',
-        homeIds: ids('ice-breakers', 'Waldo van Tonder', 'Irshaad Moola'), awayIds: ids('sonic-viboras', 'Stefan de Villiers', 'M Dadamia'),
+      { slot: '18:00', court: 'P3', home: 'Waldo / Irshaad', away: 'Stefan / Mohamed Dadamia',
+        homeIds: ids('ice-breakers', 'Waldo van Tonder', 'Irshaad Moola'), awayIds: ids('sonic-viboras', 'Stefan de Villiers', 'Mohamed Dadamia'),
         games: [0, 3], winner: 'away', sets: [[6, 4], [2, 6], [6, 10]] },
       { slot: '19:15', court: 'P3', home: 'Wayne / Sergio', away: 'Dewald / Gerrit',
         homeIds: ids('ice-breakers', 'Wayne Enslin', 'Sergio Correia'), awayIds: ids('sonic-viboras', 'Dewald Meyer', 'Gerrit Smith'),
@@ -153,18 +153,18 @@ export const FIXTURES = [
         homeIds: ids('samurai-kicksmashers', 'Durell Pillay', 'Bryan Theron'), awayIds: ids('avalanche-aces', 'Patrick Leyden', 'Hoffman Maritz'), games: [4, 0], winner: 'home' },
       { slot: '19:15', court: 'P3', home: 'Dillon Francis / Ismail Karodia', away: 'Gerco van Rooyen / Piotr Latusek',
         homeIds: ids('samurai-kicksmashers', 'Dillon Francis', 'Ismail Karodia'), awayIds: ids('avalanche-aces', 'Gerco van Rooyen', 'Piotr Latusek'), games: [0, 3], winner: 'away' },
-      { slot: '20:30', court: 'P1', home: 'Siraaj Shaik / M Azhar Sujee', away: 'Ryan Tate / Steven Pinker',
-        homeIds: ids('samurai-kicksmashers', 'Siraaj Shaik', 'M Azhar Sujee'), awayIds: ids('avalanche-aces', 'Ryan Tate', 'Steven Pinker'), games: [4, 0], winner: 'home' },
-      { slot: '20:30', court: 'P2', home: 'M Jina / Armand Esterhuizen', away: 'Etienne Grobler / Frik de Beer',
-        homeIds: ids('samurai-kicksmashers', 'M Jina', 'Armand Esterhuizen'), awayIds: ids('avalanche-aces', 'Etienne Grobler', 'Frik de Beer'), games: [0, 3], winner: 'away' },
+      { slot: '20:30', court: 'P1', home: 'Siraaj Shaik / Muhammad Azhar Sujee', away: 'Ryan Tate / Steven Pinker',
+        homeIds: ids('samurai-kicksmashers', 'Siraaj Shaik', 'Muhammad Azhar Sujee'), awayIds: ids('avalanche-aces', 'Ryan Tate', 'Steven Pinker'), games: [4, 0], winner: 'home' },
+      { slot: '20:30', court: 'P2', home: 'Muhammed Jina / Armand Esterhuizen', away: 'Etienne Grobler / Frik de Beer',
+        homeIds: ids('samurai-kicksmashers', 'Muhammed Jina', 'Armand Esterhuizen'), awayIds: ids('avalanche-aces', 'Etienne Grobler', 'Frik de Beer'), games: [0, 3], winner: 'away' },
     ] } },
   // MD2 · Wed 10 Jun
   { id: 'fx-w1-3', round: 1, league: 'mens', home: 'desert-falcons', away: 'avalanche-aces', start: T('2026-06-10'), status: 'final', court: 'Padel 24', dh: true,
     score: { winner: 'home', totals: [21, 0], rubberWins: [6, 0], rubbers: [
       { slot: '18:00', court: 'P2', home: 'Rayhaan Dinath / Boms', away: 'Felix Lombard / Luqmaan Hoosen',
         homeIds: ids('desert-falcons', 'Rayhaan Dinath'), awayIds: ids('avalanche-aces', 'Felix Lombard', 'Luqmaan Hoosen'), games: [3, 0], winner: 'home' },
-      { slot: '18:00', court: 'P3', home: 'M Mangerah / Jude van den Berg', away: 'Gerco van Rooyen / Prashil Nagar',
-        homeIds: ids('desert-falcons', 'M Mangerah', 'Jude van den Berg'), awayIds: ids('avalanche-aces', 'Gerco van Rooyen', 'Prashil Nagar'), games: [3, 0], winner: 'home' },
+      { slot: '18:00', court: 'P3', home: 'Muhammad Mangerah / Jude van den Berg', away: 'Gerco van Rooyen / Prashil Nagar',
+        homeIds: ids('desert-falcons', 'Muhammad Mangerah', 'Jude van den Berg'), awayIds: ids('avalanche-aces', 'Gerco van Rooyen', 'Prashil Nagar'), games: [3, 0], winner: 'home' },
       { slot: '19:15', court: 'P1', home: 'Ahmed Ismail / Faheem Nomani', away: 'Donovan Taylor / Ryan Tate',
         homeIds: ids('desert-falcons', 'Ahmed Ismail', 'Faheem Nomani'), awayIds: ids('avalanche-aces', 'Donovan Taylor', 'Ryan Tate'), games: [4, 0], winner: 'home' },
       { slot: '19:15', court: 'P3', home: 'Jacques Burger / Reino Grobler', away: 'Anas Mungalee / Kobus van Rensburg',
@@ -211,8 +211,8 @@ export const FIXTURES = [
     score: { winner: 'home', totals: [15, 7], rubberWins: [4, 2], rubbers: [
       { slot: '18:00', court: 'P1', home: 'Heinrich Coomans / Anton Grote', away: 'Bryan Theron / Durell Pillay',
         homeIds: ids('sonic-viboras', 'Heinrich Coomans', 'Anton Grote'), awayIds: ids('samurai-kicksmashers', 'Bryan Theron', 'Durell Pillay'), games: [4, 0], winner: 'home' },
-      { slot: '18:00', court: 'P2', home: 'Warwick Morgan / Marius Loock', away: 'M Jina / Muneer Shaik',
-        homeIds: ids('sonic-viboras', 'Warwick Morgan', 'Marius Loock'), awayIds: ids('samurai-kicksmashers', 'M Jina', 'Muneer Shaik'), games: [4, 0], winner: 'home' },
+      { slot: '18:00', court: 'P2', home: 'Warwick Morgan / Marius Loock', away: 'Muhammed Jina / Muneer Shaik',
+        homeIds: ids('sonic-viboras', 'Warwick Morgan', 'Marius Loock'), awayIds: ids('samurai-kicksmashers', 'Muhammed Jina', 'Muneer Shaik'), games: [4, 0], winner: 'home' },
       { slot: '19:15', court: 'P2', home: 'Ismail Fakir / Jacques Henning', away: 'Tim Forssman / Sikander Cassim',
         homeIds: ids('sonic-viboras', 'Ismail Fakir', 'Jacques Henning'), awayIds: ids('samurai-kicksmashers', 'Tim Forssman', 'Sikander Cassim'), games: [0, 3], winner: 'away' },
       { slot: '19:15', court: 'P3', home: 'George du Toit / Dewald Meyer', away: 'Brent Grix / Dillon Francis',
@@ -232,7 +232,7 @@ export const FIXTURES = [
         homeIds: ids('globo-boomerangs', 'Ryan Kennett', 'Nabeel Meer'), awayIds: ids('desert-falcons', 'Fahad Patel', 'Ryan Wicht'),
         games: [3, 0], winner: 'home', sets: [[6, 3], [6, 2], [5, 10]] },
       { slot: '19:15', court: 'P2', home: 'Momo / Bevan', away: 'Warno / Morne',
-        homeIds: ids('globo-boomerangs', 'M Shehzad Meer', 'Bevin Francis'), awayIds: ids('desert-falcons', 'Warno Smit', 'Morne Steenekamp'),
+        homeIds: ids('globo-boomerangs', 'Muhammed Shehzad Meer', 'Bevin Francis'), awayIds: ids('desert-falcons', 'Warno Smit', 'Morne Steenekamp'),
         games: [0, 3], winner: 'away', sets: [[6, 4], [6, 7], [8, 10]] },
       { slot: '19:15', court: 'P3', home: 'Shaffique / Suhail', away: 'Danie / Zaeem',
         homeIds: ids('globo-boomerangs', 'Shaffique Jeewa', 'Suhail Patel'), awayIds: ids('desert-falcons', 'Danie Rautenbach', 'Zaeem Sadiq'),
@@ -307,14 +307,44 @@ function deriveLog(league, tier) {
   return Object.values(rows).sort((x, y) => y.points - x.points || y.won - x.won || x.played - y.played);
 }
 
+// ---- OFFICIAL LOG TABLES (as published by the league) ----------
+// Source of truth = the league's official Franchise + P1/P2/P3 log
+// graphics. Entered verbatim so the site mirrors the published
+// record exactly (the official tables don't fully reconcile with
+// each other, so we display them as issued rather than recomputing).
+// Row order = published ranking. Cols: [id, P, W, L, D, BP, Pts].
+const NM = {
+  Falcons: 'desert-falcons', Sonics: 'sonic-viboras', Kicksmashers: 'samurai-kicksmashers',
+  IceBreakers: 'ice-breakers', Aces: 'avalanche-aces', Lions: 'sahara-lions', Globo: 'globo-boomerangs',
+};
+const mkRow = ([name, P, W, L, D, BP, pts], adj) => ({
+  franchise_id: NM[name], played: P, won: W, lost: L, drawn: D, bp: BP, points: pts, adj: adj || 0,
+});
+const OFFICIAL = {
+  franchise: [
+    ['Falcons', 12, 11, 1, 0, 7, 40], ['Sonics', 12, 9, 2, 0, 5, 32],
+    ['Kicksmashers', 12, 5, 7, 0, 4, 19], ['IceBreakers', 12, 5, 7, 0, 4, 19],
+    ['Aces', 18, 5, 13, 0, 1, 16], ['Lions', 6, 4, 2, 0, 3, 15], ['Globo', 12, 3, 9, 0, 2, 11],
+  ].map((r) => mkRow(r)),
+  P1: [
+    ['Falcons', 4, 4, 0, 0, 4, 16], ['Sonics', 4, 3, 1, 0, 2, 11], ['IceBreakers', 4, 3, 1, 0, 2, 11],
+    ['Kicksmashers', 4, 2, 2, 0, 2, 8], ['Lions', 2, 2, 0, 0, 1, 7], ['Aces', 6, 0, 6, 0, 0, 0], ['Globo', 4, 0, 4, 0, 0, 0],
+  ].map((r) => mkRow(r)),
+  P2: [
+    ['Sonics', 4, 3, 1, 0, 2, 11], ['Falcons', 4, 3, 1, 0, 1, 10], ['Kicksmashers', 4, 2, 2, 0, 1, 7],
+    ['Globo', 4, 2, 2, 0, 1, 7], ['Aces', 6, 2, 4, 0, 0, 6], ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4],
+  ].map((r) => mkRow(r)),
+  P3: [
+    ['Sonics', 4, 3, 1, 0, 1, 10], ['Aces', 6, 3, 3, 0, 1, 10], ['Falcons', 4, 4, 0, 0, 2, 6],
+    ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 4, 1, 3, 0, 0, 3],
+  ].map((r) => mkRow(r, 0)),
+};
+// Falcons' P3 carries a published league deduction (4 wins shown as 6 pts).
+OFFICIAL.P3.find((r) => r.franchise_id === 'desert-falcons').adj = -8;
+
 export const STANDINGS = {
-  mens: {
-    franchise: deriveLog('mens', null),
-    P1: deriveLog('mens', 'P1'),
-    P2: deriveLog('mens', 'P2'),
-    P3: deriveLog('mens', 'P3'),
-  },
-  ladies: { franchise: deriveLog('ladies', null), P1: [], P2: [], P3: [] },
+  mens: OFFICIAL,
+  ladies: { franchise: [], P1: [], P2: [], P3: [] },
 };
 
 // ---- Player stats + partnerships derived from rubbers ----------

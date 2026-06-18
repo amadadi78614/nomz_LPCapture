@@ -47,7 +47,7 @@ export function LiveTicker() {
 /* ---------------- Top bar + bottom nav ---------------- */
 const NAV = [
   { to: '/', label: 'Home', ico: '⌂' },
-  { to: '/live', label: 'Live', ico: '●' },
+  { to: '/live', label: 'Matches', ico: '●' },
   { to: '/standings', label: 'Tables', ico: '≡' },
   { to: '/players', label: 'Players', ico: '✦' },
   { to: '/more', label: 'More', ico: '⋯' },

@@ -582,11 +582,13 @@ export function FranchiseHub() {
 export function Rankings() {
   const [tab, setTab] = useState('players');
   const [league, setLeague] = useState('mens');
+  const [pLeague, setPLeague] = useState('mens');
   const [sortBy, setSortBy] = useState('lp');
   const [tierFilter, setTierFilter] = useState('all');
+  const [courtFilter, setCourtFilter] = useState('all');
   const [minMatches, setMinMatches] = useState(true);
 
-  const active = PLAYERS.filter((p) => p.stats.played > 0 && p.league === 'mens');
+  const active = PLAYERS.filter((p) => p.stats.played > 0 && p.league === pLeague);
   const sorters = {
     lp: (a, b) => b.lp_rating - a.lp_rating,
     win: (a, b) => winPct(b.stats) - winPct(a.stats) || b.stats.wins - a.stats.wins || b.lp_rating - a.lp_rating,
@@ -594,10 +596,10 @@ export function Rankings() {
     wins: (a, b) => b.stats.wins - a.stats.wins || winPct(b.stats) - winPct(a.stats),
   };
   let players = active
+    .filter((p) => courtFilter === 'all' || p.tier === courtFilter)
     .filter((p) => tierFilter === 'all' || tier(p.lp_rating).label === tierFilter)
     .filter((p) => (sortBy === 'win' && minMatches ? p.stats.played >= 2 : true))
-    .sort(sorters[sortBy])
-    .slice(0, 40);
+    .sort(sorters[sortBy]);
 
   const TIERS = ['Rising', 'Contender', 'Advanced', 'Pro', 'Elite'];
 
@@ -611,15 +613,32 @@ export function Rankings() {
 
       {tab === 'players' && (
         <>
+          {/* league toggle */}
+          <div className="tabbar mt">
+            <button className={pLeague === 'mens' ? 'on' : ''} onClick={() => setPLeague('mens')}>Men's</button>
+            <button className={pLeague === 'ladies' ? 'on' : ''} onClick={() => setPLeague('ladies')}>Ladies</button>
+          </div>
+          {pLeague === 'ladies' ? (
+            <div className="mt"><ComingSoon note="Ladies player rankings go live with the Season 3 launch." /></div>
+          ) : (
+          <>
           {/* sort toggle */}
           <div className="tabbar mt">
             {[['lp', 'LP Rating'], ['win', 'Win %'], ['wins', 'Wins'], ['mvp', 'MVP']].map(([k, lbl]) => (
               <button key={k} className={sortBy === k ? 'on' : ''} onClick={() => setSortBy(k)}>{lbl}</button>
             ))}
           </div>
-          {/* tier filter */}
-          <div className="row mt" style={{ gap: 6, flexWrap: 'wrap' }}>
-            <button className={`chip ${tierFilter === 'all' ? 'on' : ''}`} onClick={() => setTierFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All tiers</button>
+          {/* court division filter */}
+          <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="muted" style={{ fontSize: 11 }}>Court</span>
+            {['all', 'P1', 'P2', 'P3'].map((c) => (
+              <button key={c} className={`chip ${courtFilter === c ? 'on' : ''}`} onClick={() => setCourtFilter(c)} style={{ cursor: 'pointer', border: 'none' }}>{c === 'all' ? 'All' : c}</button>
+            ))}
+          </div>
+          {/* rating tier filter */}
+          <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="muted" style={{ fontSize: 11 }}>Tier</span>
+            <button className={`chip ${tierFilter === 'all' ? 'on' : ''}`} onClick={() => setTierFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
             {TIERS.map((t) => (
               <button key={t} className={`chip ${tierFilter === t ? 'on' : ''}`} onClick={() => setTierFilter(t)} style={{ cursor: 'pointer', border: 'none' }}>{t}</button>
             ))}
@@ -670,6 +689,8 @@ export function Rankings() {
                 );
               })}
             </div>
+          )}
+          </>
           )}
         </>
       )}

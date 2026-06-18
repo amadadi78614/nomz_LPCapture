@@ -95,7 +95,7 @@ for (const [frId, tiers] of Object.entries(SQUADS)) {
         role: tierName === 'P1' && i === 0 ? 'captain' : 'player',
         lp_rating: Math.round(1400 + (tierName === 'P1' ? 120 : tierName === 'P2' ? 0 : -120) + Math.sin(pid * 1.7) * 60),
         auction_price: 1000 + ((pid * 137) % 9) * 250,
-        stats: { played: 0, wins: 0, losses: 0, rubbers_won: 0, games_won: 0, bonus_points: 0, mvp_points: 0 },
+        stats: { played: 0, wins: 0, losses: 0, rubbers_won: 0, games_won: 0, sets_won: 0, sets_lost: 0, bonus_points: 0, mvp_points: 0 },
       });
     });
   }
@@ -123,13 +123,25 @@ export const FIXTURES = [
   // MD1 · Mon 8 Jun — rubber outcomes per official P1/P2/P3 logs;
   // pair names & exact games for IB v SV not yet published.
   { id: 'fx-w1-1', round: 1, league: 'mens', home: 'ice-breakers', away: 'sonic-viboras', start: T('2026-06-08'), status: 'final', court: 'Padel 24',
-    score: { winner: 'away', totals: null, rubberWins: [1, 5], rubbers: [
-      { slot: 'TBC', court: 'P1', home: 'Ice Breakers P1', away: 'Sonic Viboras P1', homeIds: [], awayIds: [], games: [0, 4], winner: 'away' },
-      { slot: 'TBC', court: 'P1', home: 'Ice Breakers P1', away: 'Sonic Viboras P1', homeIds: [], awayIds: [], games: null, winner: 'home' },
-      { slot: 'TBC', court: 'P2', home: 'Ice Breakers P2', away: 'Sonic Viboras P2', homeIds: [], awayIds: [], games: [0, 4], winner: 'away' },
-      { slot: 'TBC', court: 'P2', home: 'Ice Breakers P2', away: 'Sonic Viboras P2', homeIds: [], awayIds: [], games: null, winner: 'away' },
-      { slot: 'TBC', court: 'P3', home: 'Ice Breakers P3', away: 'Sonic Viboras P3', homeIds: [], awayIds: [], games: null, winner: 'away' },
-      { slot: 'TBC', court: 'P3', home: 'Ice Breakers P3', away: 'Sonic Viboras P3', homeIds: [], awayIds: [], games: null, winner: 'away' },
+    score: { winner: 'away', totals: [3, 17], rubberWins: [1, 5], rubbers: [
+      { slot: '18:00', court: 'P1', home: 'Duhan / JD', away: 'Heinrich / Anton',
+        homeIds: ids('ice-breakers', 'Duhan Swart', 'JD Herbst'), awayIds: ids('sonic-viboras', 'Heinrich Coomans', 'Anton Grote'),
+        games: [0, 4], winner: 'away', sets: [[1, 6], [4, 6], [7, 10]] },
+      { slot: '19:15', court: 'P1', home: 'Zaheer / Maaz', away: 'Yusuf Moola / Ridhwaan Sujee',
+        homeIds: ids('ice-breakers', 'Zaheer Methar', 'Maaz Randera'), awayIds: ids('sonic-viboras', 'Yusuf Moola', 'Ridhwaan Sujee'),
+        games: [3, 0], winner: 'home', sets: [[6, 4], [4, 6], [10, 8]] },
+      { slot: '18:00', court: 'P2', home: 'Jacques / Phil-Mar', away: 'Warwick / Joshua',
+        homeIds: ids('ice-breakers', 'Jacques van Zyl', 'Phil-Mar van Rensburg'), awayIds: ids('sonic-viboras', 'Warwick Morgan', 'Joshua Hoffman'),
+        games: [0, 3], winner: 'away', sets: [[1, 6], [7, 6], [7, 10]] },
+      { slot: '20:05', court: 'P2', home: 'Zayd / Nicky', away: 'Marius / Khalid',
+        homeIds: ids('ice-breakers', 'Zayd Methar', 'Nicky Joubert'), awayIds: ids('sonic-viboras', 'Marius Loock', 'Khalid Jeewa'),
+        games: [0, 4], winner: 'away', sets: [[4, 6], [3, 6], [4, 12]] },
+      { slot: '18:00', court: 'P3', home: 'Waldo / Irshaad', away: 'Stefan / M Dadamia',
+        homeIds: ids('ice-breakers', 'Waldo van Tonder', 'Irshaad Moola'), awayIds: ids('sonic-viboras', 'Stefan de Villiers', 'M Dadamia'),
+        games: [0, 3], winner: 'away', sets: [[6, 4], [2, 6], [6, 10]] },
+      { slot: '19:15', court: 'P3', home: 'Wayne / Sergio', away: 'Dewald / Gerrit',
+        homeIds: ids('ice-breakers', 'Wayne Enslin', 'Sergio Correia'), awayIds: ids('sonic-viboras', 'Dewald Meyer', 'Gerrit Smith'),
+        games: [0, 3], winner: 'away', sets: [[5, 6], [7, 6], [10, 7]] },
     ] } },
   { id: 'fx-w1-2', round: 1, league: 'mens', home: 'samurai-kicksmashers', away: 'avalanche-aces', start: T('2026-06-08'), status: 'final', court: 'Play 360', dh: true,
     score: { winner: 'home', totals: [12, 9], rubberWins: [3, 3], rubbers: [
@@ -305,21 +317,71 @@ export const STANDINGS = {
   ladies: { franchise: deriveLog('ladies', null), P1: [], P2: [], P3: [] },
 };
 
-// ---- Player stats derived from rubbers -------------------------
-FIXTURES.filter((f) => f.status === 'final' && f.score?.rubbers).forEach((f) => {
-  f.score.rubbers.forEach((r) => {
-    [['home', 'homeIds', 0], ['away', 'awayIds', 1]].forEach(([side, key, idx]) => {
-      (r[key] || []).filter(Boolean).forEach((pidX) => {
-        const p = PLAYERS.find((x) => x.id === pidX);
-        if (!p) return;
-        p.stats.played += 1;
-        if (r.games) p.stats.games_won += r.games[idx];
-        if (r.winner === side) {
-          p.stats.wins += 1; p.stats.rubbers_won += 1;
-          if (isBonus(r.games, side)) p.stats.bonus_points += 1;
-        } else if (r.winner !== 'draw') p.stats.losses += 1;
-        p.stats.mvp_points = p.stats.rubbers_won * 3 + p.stats.bonus_points;
+// ---- Player stats + partnerships derived from rubbers ----------
+// Process fixtures in chronological order so LP Rating (Elo) is
+// computed match-by-match as the season actually unfolded.
+const ratedRubbers = [];
+[...FIXTURES]
+  .filter((f) => f.status === 'final' && f.score?.rubbers)
+  .sort((a, b) => new Date(a.start) - new Date(b.start))
+  .forEach((f) => {
+    f.score.rubbers.forEach((r) => {
+      const homeP = (r.homeIds || []).filter(Boolean);
+      const awayP = (r.awayIds || []).filter(Boolean);
+      // per-player counting stats + sets won
+      let homeSets = 0; let awaySets = 0;
+      if (r.sets) r.sets.forEach(([h, a]) => { if (h > a) homeSets += 1; else awaySets += 1; });
+      [['home', 'homeIds', 0, homeSets, awaySets], ['away', 'awayIds', 1, awaySets, homeSets]].forEach(([side, key, idx, setsFor, setsAg]) => {
+        (r[key] || []).filter(Boolean).forEach((pidX) => {
+          const p = PLAYERS.find((x) => x.id === pidX);
+          if (!p) return;
+          p.stats.played += 1;
+          if (r.games) p.stats.games_won += r.games[idx];
+          p.stats.sets_won += setsFor; p.stats.sets_lost += setsAg;
+          if (r.winner === side) {
+            p.stats.wins += 1; p.stats.rubbers_won += 1;
+            if (isBonus(r.games, side)) p.stats.bonus_points += 1;
+          } else if (r.winner !== 'draw') p.stats.losses += 1;
+          p.stats.mvp_points = p.stats.rubbers_won * 3 + p.stats.bonus_points;
+        });
       });
+      // partnerships (same-side pairs)
+      [[homeP, r.winner === 'home'], [awayP, r.winner === 'away']].forEach(([pair, won]) => {
+        if (pair.length === 2) {
+          [[pair[0], pair[1]], [pair[1], pair[0]]].forEach(([a, b]) => {
+            const p = PLAYERS.find((x) => x.id === a);
+            if (!p.partners) p.partners = {};
+            if (!p.partners[b]) p.partners[b] = { played: 0, won: 0 };
+            p.partners[b].played += 1;
+            if (won) p.partners[b].won += 1;
+          });
+        }
+      });
+      if (homeP.length && awayP.length && r.winner !== 'draw') {
+        ratedRubbers.push({ homeP, awayP, winner: r.winner, games: r.games });
+      }
+    });
+  });
+
+// ---- LP Rating: doubles Elo computed from real results ---------
+// Pair rating = mean of the two; K=32 (×2 provisional first 5
+// rubbers per player); margin bonus ×1.15 for a clean (4-0) win.
+PLAYERS.forEach((p) => { p.lp_rating = 1400; p._rated = 0; });
+const expected = (a, b) => 1 / (1 + 10 ** ((b - a) / 400));
+ratedRubbers.forEach((rb) => {
+  const hp = rb.homeP.map((id) => PLAYERS.find((x) => x.id === id)).filter(Boolean);
+  const ap = rb.awayP.map((id) => PLAYERS.find((x) => x.id === id)).filter(Boolean);
+  if (hp.length !== 2 || ap.length !== 2) return;
+  const hr = (hp[0].lp_rating + hp[1].lp_rating) / 2;
+  const ar = (ap[0].lp_rating + ap[1].lp_rating) / 2;
+  const homeWon = rb.winner === 'home';
+  const margin = isBonus(rb.games, rb.winner) ? 1.15 : 1;
+  const eh = expected(hr, ar);
+  [[hp, 1 - 0, homeWon ? 1 : 0, eh], [ap, 0, homeWon ? 0 : 1, 1 - eh]].forEach(([pair, , actual, exp]) => {
+    pair.forEach((pl) => {
+      const k = (pl._rated < 5 ? 64 : 32) * margin;
+      pl.lp_rating = Math.round(pl.lp_rating + k * (actual - exp));
+      pl._rated += 1;
     });
   });
 });
@@ -343,3 +405,15 @@ export const POWER_RANKINGS = {
 export const franchiseById = (id) => FRANCHISES.find((f) => f.id === id) || { name: id, logo: '/logos/lp-logo.webp', id };
 export const playerById = (id) => PLAYERS.find((p) => p.id === id);
 export const stripeVar = (id) => `var(--fr-${id})`;
+
+// Best partnership for a player (min 1 together), by win then win%
+export const bestPartner = (playerId) => {
+  const p = playerById(playerId);
+  if (!p?.partners) return null;
+  const rows = Object.entries(p.partners).map(([pid, rec]) => ({
+    player: playerById(pid), ...rec, pct: rec.played ? rec.won / rec.played : 0,
+  })).filter((r) => r.player);
+  rows.sort((a, b) => b.won - a.won || b.pct - a.pct || b.played - a.played);
+  return rows[0] || null;
+};
+export const winPct = (st) => (st.played ? Math.round((st.wins / st.played) * 100) : 0);

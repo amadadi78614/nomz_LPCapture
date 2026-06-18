@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   FIXTURES, PLAYERS, NEWS, STANDINGS, POWER_RANKINGS, SPONSORS, TIER_SPONSORS,
-  franchiseById, playerById, stripeVar,
+  franchiseById, playerById, stripeVar, bestPartner, winPct,
 } from '../data/seed';
 import { useLiveMatch } from '../hooks/useLiveMatch';
 import { displayPoints } from '../lib/scoringEngine';
@@ -427,7 +427,8 @@ export function PlayerProfile() {
   if (!p) return <div className="page"><p className="muted">Player not found.</p></div>;
   const fr = franchiseById(p.franchise_id);
   const t = tier(p.lp_rating);
-  const winPct = Math.round((p.stats.wins / p.stats.played) * 100);
+  const wpct = winPct(p.stats);
+  const partner = bestPartner(p.id);
   return (
     <div className="page">
       <div className="hero" style={{ '--stripe': stripeVar(fr.id) }}>
@@ -436,26 +437,38 @@ export function PlayerProfile() {
             {p.name.split(' ').map((w) => w[0]).join('')}
           </span>
           <div>
-            <span className="eyebrow">{fr.name} · {p.role === 'captain' ? 'Captain' : 'Player'}</span>
+            <span className="eyebrow">{fr.name} · {p.tier} · {p.role === 'captain' ? 'Captain' : 'Player'}</span>
             <h1 className="display">{p.name}</h1>
             <div className="row mt" style={{ gap: 8 }}>
               <span className="lp-badge">LP {p.lp_rating}</span>
               <span className="chip" style={{ color: t.color }}>{t.label}</span>
-              <span className="chip">Auction R{p.auction_price.toLocaleString('en-ZA')}</span>
+              <span className="chip">{p.stats.wins}-{p.stats.losses}</span>
             </div>
           </div>
         </div>
       </div>
       <div className="kpis mt">
         <div className="kpi"><div className="v">{p.stats.played}</div><div className="l">Matches</div></div>
-        <div className="kpi"><div className="v">{winPct}%</div><div className="l">Win rate</div></div>
+        <div className="kpi"><div className="v">{wpct}%</div><div className="l">Win rate</div></div>
         <div className="kpi"><div className="v">{p.stats.rubbers_won}</div><div className="l">Rubbers won</div></div>
         <div className="kpi"><div className="v">{p.stats.bonus_points}</div><div className="l">Bonus points</div></div>
       </div>
+      {partner && (
+        <Link to={`/player/${partner.player.id}`} className="card stripe mt" style={{ '--stripe': stripeVar(fr.id), display: 'block' }}>
+          <p className="eyebrow" style={{ marginBottom: 6 }}>Best partnership</p>
+          <div className="row spread">
+            <span className="row" style={{ gap: 10 }}>
+              <span className="avatar" style={{ width: 32, height: 32, fontSize: 11 }}>{partner.player.name.split(' ').map((w) => w[0]).join('')}</span>
+              <b>{partner.player.name}</b>
+            </span>
+            <span className="num"><b style={{ color: 'var(--win)' }}>{partner.won}</b><span className="muted">/{partner.played} · {Math.round(partner.pct * 100)}%</span></span>
+          </div>
+        </Link>
+      )}
       <div className="grid cols-2 mt">
         <div className="card">
           <p className="eyebrow" style={{ marginBottom: 10 }}>Season form</p>
-          {[['Games won', p.stats.games_won, 25], ['MVP points', p.stats.mvp_points, 35], ['Rubbers won', p.stats.rubbers_won, 6]].map(([l, v, max]) => (
+          {[['Games won', p.stats.games_won, 25], ['Sets won', p.stats.sets_won, 12], ['MVP points', p.stats.mvp_points, 35], ['Rubbers won', p.stats.rubbers_won, 6]].map(([l, v, max]) => (
             <div className="statline" key={l}>
               <span style={{ fontSize: 13 }}>{l}</span><b className="num">{v}</b>
               <div className="bar"><i style={{ width: `${Math.min(100, (v / max) * 100)}%` }} /></div>
@@ -567,18 +580,99 @@ export function FranchiseHub() {
 
 /* ====================== RANKINGS / MVP / LP ===================== */
 export function Rankings() {
-  const [tab, setTab] = useState('power');
+  const [tab, setTab] = useState('players');
   const [league, setLeague] = useState('mens');
-  const mvps = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points || b.stats.rubbers_won - a.stats.rubbers_won || b.stats.games_won - a.stats.games_won).slice(0, 20);
-  const lp = [...PLAYERS].sort((a, b) => b.lp_rating - a.lp_rating).slice(0, 15);
+  const [sortBy, setSortBy] = useState('lp');
+  const [tierFilter, setTierFilter] = useState('all');
+  const [minMatches, setMinMatches] = useState(true);
+
+  const active = PLAYERS.filter((p) => p.stats.played > 0 && p.league === 'mens');
+  const sorters = {
+    lp: (a, b) => b.lp_rating - a.lp_rating,
+    win: (a, b) => winPct(b.stats) - winPct(a.stats) || b.stats.wins - a.stats.wins || b.lp_rating - a.lp_rating,
+    mvp: (a, b) => b.stats.mvp_points - a.stats.mvp_points || b.stats.rubbers_won - a.stats.rubbers_won,
+    wins: (a, b) => b.stats.wins - a.stats.wins || winPct(b.stats) - winPct(a.stats),
+  };
+  let players = active
+    .filter((p) => tierFilter === 'all' || tier(p.lp_rating).label === tierFilter)
+    .filter((p) => (sortBy === 'win' && minMatches ? p.stats.played >= 2 : true))
+    .sort(sorters[sortBy])
+    .slice(0, 40);
+
+  const TIERS = ['Rising', 'Contender', 'Advanced', 'Pro', 'Elite'];
+
   return (
     <div className="page">
       <h1 className="display">Rankings</h1>
       <div className="tabbar mt">
+        <button className={tab === 'players' ? 'on' : ''} onClick={() => setTab('players')}>Players</button>
         <button className={tab === 'power' ? 'on' : ''} onClick={() => setTab('power')}>Power Rankings</button>
-        <button className={tab === 'mvp' ? 'on' : ''} onClick={() => setTab('mvp')}>MVP Leaderboard</button>
-        <button className={tab === 'lp' ? 'on' : ''} onClick={() => setTab('lp')}>LP Rating</button>
       </div>
+
+      {tab === 'players' && (
+        <>
+          {/* sort toggle */}
+          <div className="tabbar mt">
+            {[['lp', 'LP Rating'], ['win', 'Win %'], ['wins', 'Wins'], ['mvp', 'MVP']].map(([k, lbl]) => (
+              <button key={k} className={sortBy === k ? 'on' : ''} onClick={() => setSortBy(k)}>{lbl}</button>
+            ))}
+          </div>
+          {/* tier filter */}
+          <div className="row mt" style={{ gap: 6, flexWrap: 'wrap' }}>
+            <button className={`chip ${tierFilter === 'all' ? 'on' : ''}`} onClick={() => setTierFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All tiers</button>
+            {TIERS.map((t) => (
+              <button key={t} className={`chip ${tierFilter === t ? 'on' : ''}`} onClick={() => setTierFilter(t)} style={{ cursor: 'pointer', border: 'none' }}>{t}</button>
+            ))}
+          </div>
+          {sortBy === 'win' && (
+            <label className="muted row" style={{ fontSize: 12, marginTop: 8, gap: 6, cursor: 'pointer' }}>
+              <input type="checkbox" checked={minMatches} onChange={(e) => setMinMatches(e.target.checked)} />
+              Require 2+ matches (fair win %)
+            </label>
+          )}
+          <p className="muted mt" style={{ fontSize: 12 }}>
+            {sortBy === 'lp' && 'LP Rating — doubles Elo from real results; everyone starts at 1400, beating stronger pairs moves you more.'}
+            {sortBy === 'win' && 'Win % — share of rubbers won.'}
+            {sortBy === 'wins' && 'Total rubbers won this season.'}
+            {sortBy === 'mvp' && 'MVP points — 3 per rubber won, +1 for a clean 4-0.'}
+          </p>
+
+          {players.length === 0 ? (
+            <div className="card mt"><p className="muted" style={{ margin: 0 }}>No players in this tier yet.</p></div>
+          ) : (
+            <div className="grid mt">
+              {players.map((p, i) => {
+                const fr = franchiseById(p.franchise_id);
+                const t = tier(p.lp_rating);
+                const val = sortBy === 'win' ? `${winPct(p.stats)}%` : sortBy === 'mvp' ? `★ ${p.stats.mvp_points}` : sortBy === 'wins' ? p.stats.wins : p.lp_rating;
+                return (
+                  <Link key={p.id} to={`/player/${p.id}`} className="card stripe" style={{ '--stripe': stripeVar(fr.id), padding: 12 }}>
+                    <div className="row spread">
+                      <span className="row">
+                        <b className="num muted" style={{ width: 26 }}>{i + 1}</b>
+                        <span className="avatar" style={{ width: 34, height: 34, fontSize: 12 }}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
+                        <span>
+                          <b style={{ fontSize: 14 }}>{p.name} <span className="chip" style={{ padding: '0 6px', fontSize: 10 }}>{p.tier}</span></b>
+                          <div className="muted" style={{ fontSize: 11 }}>{fr.name} · <span style={{ color: t.color }}>{t.label}</span></div>
+                        </span>
+                      </span>
+                      <span className={`num ${sortBy === 'lp' ? 'gold' : ''}`} style={{ fontSize: 17 }}>{val}</span>
+                    </div>
+                    <div className="row" style={{ gap: 12, marginTop: 8, fontSize: 11 }}>
+                      <span className="muted">{p.stats.played} P</span>
+                      <span style={{ color: 'var(--win)' }}>{p.stats.wins} W</span>
+                      <span style={{ color: 'var(--loss)' }}>{p.stats.losses} L</span>
+                      <span className="muted">{winPct(p.stats)}% win</span>
+                      <span className="muted">{p.stats.games_won} games</span>
+                      {p.stats.bonus_points > 0 && <span className="gold">{p.stats.bonus_points} BP</span>}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+        </>
+      )}
 
       {tab === 'power' && (
         <>
@@ -606,44 +700,6 @@ export function Rankings() {
           </div>
         </>
       )}
-
-      {tab === 'mvp' && (
-        <>
-          <p className="muted mt" style={{ fontSize: 13 }}>MVP points: 3 per rubber won, +1 bonus for a 4-0 rubber. Updated as each match night finishes.</p>
-          <Board list={mvps} value={(p) => `★ ${p.stats.mvp_points}`} />
-        </>
-      )}
-
-      {tab === 'lp' && (
-        <>
-          <p className="muted mt" style={{ fontSize: 13 }}>
-            The LP Rating is a doubles Elo. Pairs are rated as a unit, the swing scales with set margin, and every player starts at 1400. Win as underdogs and your number jumps.
-          </p>
-          <Board list={lp} value={(p) => p.lp_rating} gold />
-        </>
-      )}
-    </div>
-  );
-}
-function Board({ list, value, gold }) {
-  return (
-    <div className="grid mt">
-      {list.map((p, i) => {
-        const fr = franchiseById(p.franchise_id);
-        return (
-          <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fr.id), padding: 12 }}>
-            <span className="row">
-              <b className="num muted" style={{ width: 26 }}>{i + 1}</b>
-              <span className="avatar" style={{ width: 34, height: 34, fontSize: 12 }}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
-              <span>
-                <b style={{ fontSize: 14 }}>{p.name}</b>
-                <div className="muted" style={{ fontSize: 11 }}>{fr.name}</div>
-              </span>
-            </span>
-            <span className={`num ${gold ? 'gold' : ''}`} style={{ fontSize: 17 }}>{value(p)}</span>
-          </Link>
-        );
-      })}
     </div>
   );
 }

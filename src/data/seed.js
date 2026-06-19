@@ -50,7 +50,7 @@ const SQUADS = {
   },
   'desert-falcons': {
     P1: ['Uwaiz Patel', 'Yusuf Patel', 'Ahmed Ismail', 'Faheem Nomani', 'Reinhardt Trollip', 'Schalk Schutte'],
-    P2: ['Warno Smit', 'Morne Steenekamp', 'Ryan Wicht', 'Fahad Patel', 'Rayhaan Dinath', 'Ibrahim Mungalee'],
+    P2: ['Warno Smit', 'Morne Steenekamp', 'Ryan Wicht', 'Fahad Patel', 'Rayhaan Dinath', 'Ebrahim Mungalee'],
     P3: ['Jacques Burger', 'Reino Grobler', 'Muhammad Mangerah', 'Zaeem Sadiq', 'Danie Rautenbach', 'Jude van den Berg'],
   },
   'sahara-lions': {
@@ -162,7 +162,7 @@ export const FIXTURES = [
   { id: 'fx-w1-3', round: 1, league: 'mens', home: 'desert-falcons', away: 'avalanche-aces', start: T('2026-06-10'), status: 'final', court: 'Padel 24', dh: true,
     score: { winner: 'home', totals: [21, 0], rubberWins: [6, 0], rubbers: [
       { slot: '18:00', court: 'P2', home: 'Rayhaan Dinath / Boms', away: 'Felix Lombard / Luqmaan Hoosen',
-        homeIds: ids('desert-falcons', 'Rayhaan Dinath'), awayIds: ids('avalanche-aces', 'Felix Lombard', 'Luqmaan Hoosen'), games: [3, 0], winner: 'home' },
+        homeIds: ids('desert-falcons', 'Rayhaan Dinath', 'Ebrahim Mungalee'), awayIds: ids('avalanche-aces', 'Felix Lombard', 'Luqmaan Hoosen'), games: [3, 0], winner: 'home' },
       { slot: '18:00', court: 'P3', home: 'Muhammad Mangerah / Jude van den Berg', away: 'Gerco van Rooyen / Prashil Nagar',
         homeIds: ids('desert-falcons', 'Muhammad Mangerah', 'Jude van den Berg'), awayIds: ids('avalanche-aces', 'Gerco van Rooyen', 'Prashil Nagar'), games: [3, 0], winner: 'home' },
       { slot: '19:15', court: 'P1', home: 'Ahmed Ismail / Faheem Nomani', away: 'Donovan Taylor / Ryan Tate',
@@ -177,11 +177,11 @@ export const FIXTURES = [
   { id: 'fx-w1-4', round: 1, league: 'mens', home: 'globo-boomerangs', away: 'sahara-lions', start: T('2026-06-10'), status: 'final', court: 'Play 360',
     score: { winner: 'away', totals: [8, 15], rubberWins: [2, 4], rubbers: [
       { slot: '18:00', court: 'P2', home: 'Momo / Bevin Francis', away: 'Naeem Omar / Alfaiz Mamji',
-        homeIds: ids('globo-boomerangs', 'Bevin Francis'), awayIds: ids('sahara-lions', 'Naeem Omar', 'Alfaiz Mamji'), games: [4, 0], winner: 'home' },
+        homeIds: ids('globo-boomerangs', 'Muhammed Shehzad Meer', 'Bevin Francis'), awayIds: ids('sahara-lions', 'Naeem Omar', 'Alfaiz Mamji'), games: [4, 0], winner: 'home' },
       { slot: '18:00', court: 'P3', home: 'Shaffique Jeewa / Suhail Patel', away: 'Imtiaz Mohamed / Majid Bapu',
         homeIds: ids('globo-boomerangs', 'Shaffique Jeewa', 'Suhail Patel'), awayIds: ids('sahara-lions', 'Imtiaz Mohamed', 'Majid Bapu'), games: [4, 0], winner: 'home' },
       { slot: '19:15', court: 'P1', home: 'Jojo / Joseph van der Merwe', away: 'Yusuf Packery / Pieter Badenhorst',
-        homeIds: ids('globo-boomerangs', 'Joseph van der Merwe'), awayIds: ids('sahara-lions', 'Yusuf Packery', 'Pieter Badenhorst'), games: [0, 4], winner: 'away' },
+        homeIds: ids('globo-boomerangs', 'Yusuf Asvat', 'Joseph van der Merwe'), awayIds: ids('sahara-lions', 'Yusuf Packery', 'Pieter Badenhorst'), games: [0, 4], winner: 'away' },
       { slot: '19:15', court: 'P3', home: 'Taahir Mungalee / Stefan Erasmus', away: 'Warren Morgan / Aadil Asvat',
         homeIds: ids('globo-boomerangs', 'Taahir Mungalee', 'Stefan Erasmus'), awayIds: ids('sahara-lions', 'Warren Morgan', 'Aadil Asvat'), games: [0, 4], winner: 'away' },
       { slot: '20:30', court: 'P1', home: 'Ahmed Mungalee / Adil Ahmed', away: 'Justin van Staaden / Suhayl Packery',
@@ -193,15 +193,15 @@ export const FIXTURES = [
   // WEEK 2 · 17–18 Jun · BYE: Sahara Lions
   // MD3 · Tue 17 Jun
   { id: 'fx-w2-1', round: 2, league: 'mens', home: 'avalanche-aces', away: 'ice-breakers', start: T('2026-06-17'), status: 'final', court: 'Padel 24',
-    score: { winner: 'away', totals: [7, 16], rubberWins: [1, 5], rubbers: [
+    score: { winner: 'away', totals: [7, 16], rubberWins: [2, 4], rubbers: [
       { slot: '18:00', court: 'P1', home: 'Steven Pinker / Donovan Taylor', away: 'Imaad Arabi / Salmaan Methar',
         homeIds: ids('avalanche-aces', 'Steven Pinker', 'Donovan Taylor'), awayIds: ids('ice-breakers', 'Imaad Arabi', 'Salmaan Methar'), games: [0, 4], winner: 'away' },
       { slot: '18:00', court: 'P2', home: 'Pierre de Villiers / Luqmaan Hoosen', away: 'Zahid Methar / Chaz Taylor',
         homeIds: ids('avalanche-aces', 'Pierre de Villiers', 'Luqmaan Hoosen'), awayIds: ids('ice-breakers', 'Zahid Methar', 'Chaz Taylor'), games: [0, 4], winner: 'away' },
       { slot: '19:15', court: 'P2', home: 'Etienne Grobler / Frik de Beer', away: 'Jacques van Zyl / Zayd Methar',
         homeIds: ids('avalanche-aces', 'Etienne Grobler', 'Frik de Beer'), awayIds: ids('ice-breakers', 'Jacques van Zyl', 'Zayd Methar'), games: [3, 0], winner: 'home' },
-      { slot: '19:15', court: 'P3', home: 'Rishaad Shaik / Prashil Nagar', away: 'Aadam Nomani / Shaun',
-        homeIds: ids('avalanche-aces', 'Rishaad Shaik', 'Prashil Nagar'), awayIds: ids('ice-breakers', 'Aadam Nomani'), games: [4, 0], winner: 'home' },
+      { slot: '19:15', court: 'P3', home: 'Rishaad Shaik / Prashil Nagar', away: 'Aadam Nomani / Shaun Caromba',
+        homeIds: ids('avalanche-aces', 'Rishaad Shaik', 'Prashil Nagar'), awayIds: ids('ice-breakers', 'Aadam Nomani', 'Shaun Caromba'), games: [4, 0], winner: 'home' },
       { slot: '20:30', court: 'P1', home: 'Wiehann Mohlen / Patrick Leyden', away: 'Duhan Swart / JD Herbst',
         homeIds: ids('avalanche-aces', 'Wiehann Mohlen', 'Patrick Leyden'), awayIds: ids('ice-breakers', 'Duhan Swart', 'JD Herbst'), games: [0, 4], winner: 'away' },
       { slot: '20:30', court: 'P3', home: 'Kobus van Rensburg / Gerco van Rooyen', away: 'Sergio Correia / Wayne Enslin',
@@ -220,7 +220,7 @@ export const FIXTURES = [
       { slot: '20:30', court: 'P1', home: 'Ridhwaan Sujee / Erlo Olivier', away: 'Burger Bester / Danyaal Nomani',
         homeIds: ids('sonic-viboras', 'Ridhwaan Sujee', 'Erlo Olivier'), awayIds: ids('samurai-kicksmashers', 'Burger Bester', 'Danyaal Nomani'), games: [3, 0], winner: 'home' },
       { slot: '20:30', court: 'P3', home: 'Stefan de Villiers / Saliem Mahomed', away: 'Ismail Karodia / Imraan Khan',
-        homeIds: ids('sonic-viboras', 'Stefan de Villiers', 'Saliem Mahomed'), awayIds: ids('samurai-kicksmashers', 'Ismail Karodia', 'Imraan Khan'), games: [0, 3], winner: 'away' },
+        homeIds: ids('sonic-viboras', 'Stefan de Villiers', 'Saliem Mahomed'), awayIds: ids('samurai-kicksmashers', 'Ismail Karodia', 'Imraan Khan'), games: [0, 4], winner: 'away' },
     ] } },
   // MD4 · Thu 18 Jun — pairings confirmed, result pending
   { id: 'fx-w2-3', round: 2, league: 'mens', home: 'globo-boomerangs', away: 'desert-falcons', start: T('2026-06-18'), status: 'final', court: 'Padel 24', tossWonBy: 'desert-falcons',

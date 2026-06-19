@@ -336,7 +336,7 @@ const OFFICIAL = {
   ].map((r) => mkRow(r)),
   P3: [
     ['Sonics', 4, 3, 1, 0, 1, 10], ['Aces', 6, 3, 3, 0, 1, 10], ['Falcons', 4, 4, 0, 0, 2, 6],
-    ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 4, 1, 3, 0, 0, 3],
+    ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 4, 1, 3, 0, 1, 4],
   ].map((r) => mkRow(r, 0)),
 };
 // Falcons' P3 carries a published league deduction (4 wins shown as 6 pts).

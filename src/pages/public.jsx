@@ -568,9 +568,11 @@ export function Standings() {
 export function Players() {
   const [league, setLeague] = useState('all');
   const [q, setQ] = useState('');
+  const [fFilter, setFFilter] = useState('all');
   const list = useMemo(() => PLAYERS
-    .filter((p) => p.league === 'mens' && (league === 'all' || p.league === league) && p.name.toLowerCase().includes(q.toLowerCase()))
-    .sort((a, b) => b.lp_rating - a.lp_rating), [league, q]);
+    .filter((p) => p.league === 'mens' && (league === 'all' || p.league === league) && (fFilter === 'all' || p.franchise_id === fFilter) && p.name.toLowerCase().includes(q.toLowerCase()))
+    .sort((a, b) => b.lp_rating - a.lp_rating), [league, q, fFilter]);
+  const mensFranchises = FRANCHISES.filter((f) => f.league === 'mens');
   return (
     <div className="page">
       <h1 className="display">Players</h1>
@@ -585,7 +587,19 @@ export function Players() {
         value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search players"
         style={{ width: '100%', marginTop: 12, padding: '12px 14px', borderRadius: 10, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)', font: 'inherit' }}
       />
+      {/* franchise filter */}
+      <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+        <span className="muted" style={{ fontSize: 11 }}>Franchise</span>
+        <button className={`chip ${fFilter === 'all' ? 'on' : ''}`} onClick={() => setFFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
+        {mensFranchises.map((fr) => (
+          <button key={fr.id} className={`chip ${fFilter === fr.id ? 'on' : ''}`} onClick={() => setFFilter(fr.id)}
+            style={{ cursor: 'pointer', border: 'none', borderLeft: `3px solid ${stripeVar(fr.id)}` }}>
+            {fr.short || fr.name}
+          </button>
+        ))}
+      </div>
       {league === 'ladies' && <div className="mt"><ComingSoon note="Ladies League player profiles go live with the Season 3 launch." /></div>}
+      <p className="muted mt" style={{ fontSize: 12 }}>{list.length} player{list.length === 1 ? '' : 's'}</p>
       <div className="grid cols-3 mt">
         {list.map((p, i) => {
           const fr = franchiseById(p.franchise_id);
@@ -789,6 +803,7 @@ export function Rankings() {
   const [sortBy, setSortBy] = useState('lp');
   const [tierFilter, setTierFilter] = useState('all');
   const [courtFilter, setCourtFilter] = useState('all');
+  const [franchiseFilter, setFranchiseFilter] = useState('all');
   const [minMatches, setMinMatches] = useState(true);
   const [showAll, setShowAll] = useState(false);
 
@@ -800,10 +815,13 @@ export function Rankings() {
     wins: (a, b) => b.stats.wins - a.stats.wins || winPct(b.stats) - winPct(a.stats),
   };
   let players = active
+    .filter((p) => franchiseFilter === 'all' || p.franchise_id === franchiseFilter)
     .filter((p) => courtFilter === 'all' || p.tier === courtFilter)
     .filter((p) => tierFilter === 'all' || tier(p.lp_rating).label === tierFilter)
     .filter((p) => (sortBy === 'win' && minMatches ? p.stats.played >= 2 : true))
     .sort(sorters[sortBy]);
+
+  const mensFranchises = FRANCHISES.filter((f) => f.league === 'mens');
 
   const TIERS = ['Rising', 'Contender', 'Advanced', 'Pro', 'Elite'];
 
@@ -837,6 +855,17 @@ export function Rankings() {
             <span className="muted" style={{ fontSize: 11 }}>Court</span>
             {['all', 'P1', 'P2', 'P3'].map((c) => (
               <button key={c} className={`chip ${courtFilter === c ? 'on' : ''}`} onClick={() => setCourtFilter(c)} style={{ cursor: 'pointer', border: 'none' }}>{c === 'all' ? 'All' : c}</button>
+            ))}
+          </div>
+          {/* franchise filter */}
+          <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="muted" style={{ fontSize: 11 }}>Franchise</span>
+            <button className={`chip ${franchiseFilter === 'all' ? 'on' : ''}`} onClick={() => setFranchiseFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
+            {mensFranchises.map((fr) => (
+              <button key={fr.id} className={`chip ${franchiseFilter === fr.id ? 'on' : ''}`} onClick={() => setFranchiseFilter(fr.id)}
+                style={{ cursor: 'pointer', border: 'none', borderLeft: `3px solid ${stripeVar(fr.id)}` }}>
+                {fr.short || fr.name}
+              </button>
             ))}
           </div>
           {/* rating tier filter */}

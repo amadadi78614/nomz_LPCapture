@@ -19,13 +19,13 @@ export const SEASON = { id: 's3', name: 'Season 3', year: 2026, status: 'active'
 export const LADIES_SEASON_STATUS = 'pre';
 
 export const FRANCHISES = [
-  { id: 'avalanche-aces', name: 'Avalanche Aces', league: 'mens', logo: '/logos/avalanche-aces.webp', owner: 'Frik de Beer', ownerBrand: 'Ryan Tate', venue: 'Padel 24', founded: 2024 },
-  { id: 'desert-falcons', name: 'Desert Falcons', league: 'mens', logo: '/logos/desert-falcons.webp', owner: 'Ahmed Ismail & Muhammad Mangerah', venue: 'Padel 24', founded: 2024 },
-  { id: 'globo-boomerangs', name: 'Global Boomerangs', league: 'mens', logo: '/logos/globo-boomerangs.webp', owner: 'Nabeel Meer', venue: 'Play 360', founded: 2024 },
-  { id: 'ice-breakers', name: 'Ice Breakers', league: 'mens', logo: '/logos/ice-breakers.webp', owner: 'Zaheer Methar & Irshaad Moola', venue: 'Padel 24', founded: 2024 },
-  { id: 'samurai-kicksmashers', name: 'Samurai Kick Smashers', league: 'mens', logo: '/logos/samurai-kicksmashers.webp', owner: 'Siraaj Shaik & Shaun Marope', ownerBrand: 'Patels Hardware', venue: 'Play 360', founded: 2024 },
-  { id: 'sonic-viboras', name: 'Sonic Viboras', league: 'mens', logo: '/logos/sonic-viboras.webp', owner: 'Wayne Wagner', venue: 'Padel 24', founded: 2024 },
-  { id: 'sahara-lions', name: 'Sahara Lions', league: 'mens', logo: '/logos/sahara-lions.webp', owner: 'Majid Bapu', venue: 'Play 360', founded: 2024 },
+  { id: 'avalanche-aces', name: 'Avalanche Aces', league: 'mens', short: 'Aces', logo: '/logos/avalanche-aces.webp', owner: 'Frik de Beer', ownerBrand: 'Ryan Tate', venue: 'Padel 24', founded: 2024 },
+  { id: 'desert-falcons', name: 'Desert Falcons', league: 'mens', short: 'Falcons', logo: '/logos/desert-falcons.webp', owner: 'Ahmed Ismail & Muhammad Mangerah', venue: 'Padel 24', founded: 2024 },
+  { id: 'globo-boomerangs', name: 'Global Boomerangs', league: 'mens', short: 'Boomerangs', logo: '/logos/globo-boomerangs.webp', owner: 'Nabeel Meer', venue: 'Play 360', founded: 2024 },
+  { id: 'ice-breakers', name: 'Ice Breakers', league: 'mens', short: 'Ice Breakers', logo: '/logos/ice-breakers.webp', owner: 'Zaheer Methar & Irshaad Moola', venue: 'Padel 24', founded: 2024 },
+  { id: 'samurai-kicksmashers', name: 'Samurai Kick Smashers', league: 'mens', short: 'Kick Smashers', logo: '/logos/samurai-kicksmashers.webp', owner: 'Siraaj Shaik & Shaun Marope', ownerBrand: 'Patels Hardware', venue: 'Play 360', founded: 2024 },
+  { id: 'sonic-viboras', name: 'Sonic Viboras', league: 'mens', short: 'Viboras', logo: '/logos/sonic-viboras.webp', owner: 'Wayne Wagner', venue: 'Padel 24', founded: 2024 },
+  { id: 'sahara-lions', name: 'Sahara Lions', league: 'mens', short: 'Lions', logo: '/logos/sahara-lions.webp', owner: 'Majid Bapu', venue: 'Play 360', founded: 2024 },
   { id: 'arctic-angels', name: 'Arctic Angels', league: 'ladies', logo: '/logos/arctic-angels.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2025 },
   { id: 'backhand-blossoms', name: 'Backhand Blossoms', league: 'ladies', logo: '/logos/backhand-blossoms.webp', owner: 'Franchise Owner', venue: 'Play 360', founded: 2025 },
   { id: 'desert-roses', name: 'Desert Roses', league: 'ladies', logo: '/logos/desert-roses.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2025 },

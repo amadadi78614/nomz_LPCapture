@@ -249,11 +249,11 @@ export const FIXTURES = [
   { id: 'fx-w3-1', round: 3, league: 'mens', home: 'avalanche-aces', away: 'sonic-viboras', start: T('2026-06-22'), status: 'scheduled', court: 'Play 360', dh: true,
     pairs: { slots: [
       { slot: '18:00', rubbers: [
-        ['P1', 'Wiehaan / Hoffies', 'Coomans / Anton'],
+        ['P1', 'Wiehann / Hoffman Maritz', 'Heinrich Coomans / Anton Grote'],
         ['P3', 'Anas / Gerco', 'Gerrit / Dewald'],
       ] },
       { slot: '19:15', rubbers: [
-        ['P1', 'Patrick / Donavan', 'Dr Moola / Bossie'],
+        ['P1', 'Patrick / Donavan', 'Dr Moola / Pieter Boshoff'],
         ['P2', 'Ettiene / Ruiaan', 'Warick / Joshua'],
       ] },
       { slot: '20:30', rubbers: [
@@ -264,12 +264,12 @@ export const FIXTURES = [
   { id: 'fx-w3-2', round: 3, league: 'mens', home: 'samurai-kicksmashers', away: 'desert-falcons', start: T('2026-06-22'), status: 'scheduled', court: 'Padel 24',
     pairs: { slots: [
       { slot: '18:00', rubbers: [
-        ['P1', 'Bryan / Burger', 'Uwaiz / Yusuf'],
-        ['P3', 'Imraan / Nuaym', 'Danie / Jude'],
+        ['P1', 'Bryan Theron / Burger Bester', 'Uwaiz Patel / Yusuf Patel'],
+        ['P3', 'Imraan / Nuaym', 'Danie Rautenbach / Jude'],
       ] },
       { slot: '19:15', rubbers: [
         ['P1', 'Siraaj / Sujee', 'Ahmed / Faheem'],
-        ['P2', 'Tim / Siki', 'Rayaan / Fahad'],
+        ['P2', 'Tim / Sikander Cassim', 'Rayaan / Fahad'],
       ] },
       { slot: '20:30', rubbers: [
         ['P2', 'Armand / Shaun', 'Warno / Morne'],

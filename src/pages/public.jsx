@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
-  FIXTURES, PLAYERS, NEWS, STANDINGS, POWER_RANKINGS, SPONSORS, TIER_SPONSORS,
+  FIXTURES, PLAYERS, NEWS, STANDINGS, POWER_RANKINGS, SPONSORS, TIER_SPONSORS, FRANCHISES,
   franchiseById, playerById, stripeVar, bestPartner, winPct,
   RIVALRIES, headToHead, DYNASTY, TV_VIDEOS, TV_LIVE, getYouTubeId, ytThumb, mvpLeader,
   ROAD_TO_360, LEGACY_FRANCHISES, matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY,

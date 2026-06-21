@@ -246,8 +246,36 @@ export const FIXTURES = [
     ] } },
 
   // WEEK 3 · 22–24 Jun · DH: Sonic Viboras
-  { id: 'fx-w3-1', round: 3, league: 'mens', home: 'avalanche-aces', away: 'sonic-viboras', start: T('2026-06-22'), status: 'scheduled', court: 'Play 360', dh: true },
-  { id: 'fx-w3-2', round: 3, league: 'mens', home: 'samurai-kicksmashers', away: 'desert-falcons', start: T('2026-06-22'), status: 'scheduled', court: 'Padel 24' },
+  { id: 'fx-w3-1', round: 3, league: 'mens', home: 'avalanche-aces', away: 'sonic-viboras', start: T('2026-06-22'), status: 'scheduled', court: 'Play 360', dh: true,
+    pairs: { slots: [
+      { slot: '18:00', rubbers: [
+        ['P1', 'Wiehaan / Hoffies', 'Coomans / Anton'],
+        ['P3', 'Anas / Gerco', 'Gerrit / Dewald'],
+      ] },
+      { slot: '19:15', rubbers: [
+        ['P1', 'Patrick / Donavan', 'Dr Moola / Bossie'],
+        ['P2', 'Ettiene / Ruiaan', 'Warick / Joshua'],
+      ] },
+      { slot: '20:30', rubbers: [
+        ['P2', 'Frik / Pierre', 'Ismail / Jaques'],
+        ['P3', 'Rishad / Piotr', 'Muhamed / Saliem'],
+      ] },
+    ] } },
+  { id: 'fx-w3-2', round: 3, league: 'mens', home: 'samurai-kicksmashers', away: 'desert-falcons', start: T('2026-06-22'), status: 'scheduled', court: 'Padel 24',
+    pairs: { slots: [
+      { slot: '18:00', rubbers: [
+        ['P1', 'Bryan / Burger', 'Uwaiz / Yusuf'],
+        ['P3', 'Imraan / Nuaym', 'Danie / Jude'],
+      ] },
+      { slot: '19:15', rubbers: [
+        ['P1', 'Siraaj / Sujee', 'Ahmed / Faheem'],
+        ['P2', 'Tim / Siki', 'Rayaan / Fahad'],
+      ] },
+      { slot: '20:30', rubbers: [
+        ['P2', 'Armand / Shaun', 'Warno / Morne'],
+        ['P3', 'Riyaz Ahmed / Dillon', 'Jaques / Reino'],
+      ] },
+    ] } },
   { id: 'fx-w3-3', round: 3, league: 'mens', home: 'globo-boomerangs', away: 'sonic-viboras', start: T('2026-06-24'), status: 'scheduled', court: 'Padel 24', dh: true },
   { id: 'fx-w3-4', round: 3, league: 'mens', home: 'sahara-lions', away: 'ice-breakers', start: T('2026-06-24'), status: 'scheduled', court: 'Play 360' },
 

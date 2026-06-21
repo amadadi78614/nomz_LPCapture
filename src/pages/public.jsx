@@ -3,7 +3,11 @@ import { Link, useParams } from 'react-router-dom';
 import {
   FIXTURES, PLAYERS, NEWS, STANDINGS, POWER_RANKINGS, SPONSORS, TIER_SPONSORS,
   franchiseById, playerById, stripeVar, bestPartner, winPct,
+  RIVALRIES, headToHead, DYNASTY, TV_VIDEOS, TV_LIVE, getYouTubeId, ytThumb, mvpLeader,
+  ROAD_TO_360, LEGACY_FRANCHISES, matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY,
+  teamForm,
 } from '../data/seed';
+import { communityLinks } from '../config/communityLinks';
 import { useLiveMatch } from '../hooks/useLiveMatch';
 import { displayPoints } from '../lib/scoringEngine';
 import { tier } from '../lib/lpRating';
@@ -14,69 +18,164 @@ import {
 /* ============================ HOME ============================ */
 export function Home() {
   const live = FIXTURES.filter((f) => f.status === 'live');
-  const results = FIXTURES.filter((f) => f.status === 'final').slice(-2).reverse();
-  const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 3);
+  const results = FIXTURES.filter((f) => f.status === 'final').slice(-3).reverse();
+  const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 2);
   const hero = NEWS[0];
-  const mvp = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points || b.stats.rubbers_won - a.stats.rubbers_won)[0];
+  const mvp = mvpLeader('mens');
+  const sFr = STANDINGS.mens.franchise;
+  const leader = sFr[0];
+  const power = POWER_RANKINGS.mens.slice(0, 5);
+  const dynSpot = franchiseById(DYNASTY.spotlight);
+  const dynRow = sFr.find((x) => x.franchise_id === DYNASTY.spotlight);
+  // Rivalry of the week: prefer one whose teams have actually met, else first
+  const rotw = RIVALRIES.find((r) => headToHead(r.a, r.b).played > 0) || RIVALRIES[0];
+  const rA = franchiseById(rotw.a); const rB = franchiseById(rotw.b); const rH = headToHead(rotw.a, rotw.b);
+  const tvFeatured = ['highlights', 'interview', 'show'].map((c) => TV_VIDEOS.find((v) => v.category === c)).filter(Boolean);
+
   return (
     <div className="page">
+      <HomeStyles />
+      {/* ============ HERO STORY ============ */}
       <div className="hero">
         <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Week 2 complete · Next: Mon 22 Jun</span>
-        <h1 className="display" style={{ margin: '6px 0 8px' }}>Every point. Live from the Lowveld.</h1>
-        <p className="muted" style={{ maxWidth: 560 }}>
-          Rubber-by-rubber scoring from Padel 24 and Play 360, live aggregate standings, the LP Rating and the race for MVP — the franchise league, broadcast-style.
-        </p>
+        <h1 className="display" style={{ margin: '6px 0 8px' }}>{hero.title}</h1>
+        <p className="muted" style={{ maxWidth: 580 }}>{hero.body}</p>
         <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>
-          <Link to="/live" className="btn live">● Watch Match Centre</Link>
+          <Link to="/live" className="btn live">● Match Centre</Link>
+          <Link to="/tv" className="btn ghost">Lowveld TV</Link>
           <Link to="/standings" className="btn ghost">Standings</Link>
-          <Link to="/rankings" className="btn ghost">Power Rankings</Link>
         </div>
       </div>
 
-      {live.length > 0 && (
+      {/* ============ LIVE CENTRE ============ */}
+      {live.length > 0 ? (
         <>
           <SectionHead title="Live now" to="/live" cta="Match Centre" />
-          <div className="grid cols-2">
-            {live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}
+          <div className="grid cols-2">{live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}</div>
+        </>
+      ) : (
+        <>
+          <SectionHead title="Match Centre" to="/live" cta="All results" />
+          <div className="grid cols-3">
+            {results.map((f) => <ResultCard key={f.id} fixture={f} />)}
+            {upcoming.slice(0, 1).map((f) => <FixtureRow key={f.id} fixture={f} />)}
           </div>
         </>
       )}
 
-      <SectionHead title="Latest" to="/news" />
-      <div className="grid cols-2">
-        <Link to="/news" className="card news-card stripe" style={{ '--stripe': 'var(--live)' }}>
-          <span className="kicker">{hero.kicker}</span>
-          <h3>{hero.title}</h3>
-          <p className="muted" style={{ fontSize: 13.5 }}>{hero.body}</p>
+      {/* ============ CURRENT LEADERS strip ============ */}
+      <SectionHead title="Current leaders" to="/standings" />
+      <div className="lead-strip">
+        <Link to="/standings" className="lead-card stripe" style={{ '--stripe': stripeVar(leader.franchise_id) }}>
+          <span className="eyebrow">League leader</span>
+          <span className="row" style={{ gap: 8, marginTop: 6 }}>
+            <img src={franchiseById(leader.franchise_id).logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
+            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{franchiseById(leader.franchise_id).name}</b>
+          </span>
+          <span className="num gold" style={{ fontSize: 20 }}>{leader.points} pts</span>
         </Link>
-        <div className="grid" style={{ gap: 10 }}>
-          {NEWS.slice(1, 4).map((n) => (
-            <Link key={n.id} to="/news" className="card news-card" style={{ padding: 12 }}>
-              <span className="kicker" style={{ color: 'var(--court)' }}>{n.kicker}</span>
-              <h3 style={{ fontSize: 16 }}>{n.title}</h3>
+        <Link to={`/player/${mvp.id}`} className="lead-card stripe" style={{ '--stripe': 'var(--gold)' }}>
+          <span className="eyebrow">MVP race leader</span>
+          <span className="row" style={{ gap: 8, marginTop: 6 }}>
+            <span className="avatar" style={{ width: 30, height: 30, fontSize: 11 }}>{mvp.name.split(' ').map((w) => w[0]).join('')}</span>
+            <b style={{ fontSize: 14 }}>{mvp.name}</b>
+          </span>
+          <span className="num gold" style={{ fontSize: 20 }}>★ {mvp.stats.mvp_points}</span>
+        </Link>
+        <Link to="/rankings" className="lead-card stripe" style={{ '--stripe': 'var(--court)' }}>
+          <span className="eyebrow">Top LP Rating</span>
+          {(() => {
+            const top = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.lp_rating - a.lp_rating)[0];
+            return (
+              <>
+                <span className="row" style={{ gap: 8, marginTop: 6 }}>
+                  <span className="avatar" style={{ width: 30, height: 30, fontSize: 11 }}>{top.name.split(' ').map((w) => w[0]).join('')}</span>
+                  <b style={{ fontSize: 14 }}>{top.name}</b>
+                </span>
+                <span className="num" style={{ fontSize: 20, color: 'var(--court)' }}>{top.lp_rating}</span>
+              </>
+            );
+          })()}
+        </Link>
+      </div>
+
+      {/* ============ RIVALRY OF THE WEEK ============ */}
+      <SectionHead title="Rivalry of the week" to="/rivalries" cta="All rivalries" />
+      <Link to={`/rivalry/${rotw.id}`} className="rotw">
+        <div className="rotw-side" style={{ '--c': stripeVar(rotw.a) }}><img src={rA.logo} alt="" /><b>{rA.name}</b></div>
+        <div className="rotw-mid">
+          <span className="eyebrow" style={{ color: 'var(--gold)' }}>{rotw.tag}</span>
+          <div className="rotw-score">{rH.played ? `${rH.aWins}–${rH.bWins}` : 'VS'}</div>
+          <span className="muted" style={{ fontSize: 11 }}>{rH.played ? 'head-to-head' : 'first meeting looms'}</span>
+        </div>
+        <div className="rotw-side" style={{ '--c': stripeVar(rotw.b) }}><img src={rB.logo} alt="" /><b>{rB.name}</b></div>
+      </Link>
+
+      {/* ============ POWER RANKINGS ============ */}
+      <SectionHead title="Power rankings" to="/rankings" cta="Full board" />
+      <div className="grid">
+        {power.map((fid, i) => {
+          const fr = franchiseById(fid);
+          return (
+            <Link key={fid} to={`/franchise/${fid}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fid), padding: 11 }}>
+              <span className="row" style={{ gap: 10 }}>
+                <b className="num" style={{ width: 24, fontSize: 18 }}>{i + 1}</b>
+                <img src={fr.logo} alt="" style={{ width: 26, height: 26, objectFit: 'contain' }} />
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{fr.name}</b>
+              </span>
+              <span className="muted" style={{ fontSize: 12 }}>{i === 0 ? '▲' : i % 2 ? '▬' : '▲'}</span>
             </Link>
+          );
+        })}
+      </div>
+
+      {/* ============ ROAD TO 360 ============ */}
+      <Link to="/road-to-360" className="card stripe r360-home" style={{ '--stripe': 'var(--gold)', display: 'block' }}>
+        <div className="row spread">
+          <span className="row" style={{ gap: 12 }}>
+            <span style={{ fontSize: 30 }}>🇿🇦</span>
+            <span>
+              <span className="eyebrow" style={{ color: 'var(--gold)' }}>Road to 360</span>
+              <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>Road to the 360 Super Cup</b>
+            </span>
+          </span>
+          <span className="muted" style={{ fontSize: 12 }}>{ROAD_TO_360.dates} →</span>
+        </div>
+        <p className="muted" style={{ fontSize: 13, margin: '10px 0 0' }}>Follow Lowveld's journey to national competition.</p>
+      </Link>
+
+      {/* ============ LEGACY LEAGUE ============ */}
+      <SectionHead title="Legacy League" to="/legacy-league" cta="Enter" />
+      <Link to="/legacy-league" className="card" style={{ display: 'block' }}>
+        <p className="muted" style={{ fontStyle: 'italic', margin: 0 }}>Building Legacies. Creating Opportunities. One Match At A Time.</p>
+        <div className="row" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+          {LEGACY_FRANCHISES.map((fr) => (
+            <span key={fr.id} className="chip" style={{ fontSize: 10 }}>{fr.name}</span>
           ))}
         </div>
-      </div>
+      </Link>
 
-      <SectionHead title="Tables" to="/standings" />
-      <div className="grid cols-2">
-        <div>
-          <p className="eyebrow" style={{ marginBottom: 8 }}>Men's franchise league</p>
-          <StandingsTable league="mens" limit={4} />
-        </div>
-        <div>
-          <p className="eyebrow" style={{ marginBottom: 8 }}>Ladies franchise league</p>
-          <StandingsTable league="ladies" limit={4} />
-        </div>
-      </div>
+      {/* ============ MATCH OF THE WEEK / PREDICTION ============ */}
+      {(() => {
+        const fx = matchOfTheWeek();
+        if (!fx) return null;
+        const a = franchiseById(fx.home); const b = franchiseById(fx.away);
+        return (
+          <>
+            <SectionHead title="Match of the Week" to="/predictor" cta="Predict" />
+            <Link to="/predictor" className="card stripe" style={{ '--stripe': 'var(--live)', display: 'block' }}>
+              <div className="row spread">
+                <span className="row" style={{ gap: 8 }}><img src={a.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{a.name}</b></span>
+                <span className="muted">v</span>
+                <span className="row" style={{ gap: 8 }}><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{b.name}</b><img src={b.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /></span>
+              </div>
+              <p className="gold" style={{ fontSize: 12, margin: '10px 0 0', textAlign: 'center' }}>Predict the result →</p>
+            </Link>
+          </>
+        );
+      })()}
 
-      <SectionHead title="Results & fixtures" to="/live" cta="Full schedule" />
-      <div className="grid cols-3">
-        {results.map((f) => <ResultCard key={f.id} fixture={f} />)}
-        {upcoming.slice(0, 1).map((f) => <FixtureRow key={f.id} fixture={f} />)}
-      </div>
-
+      {/* ============ MVP RACE ============ */}
       <SectionHead title="MVP race" to="/rankings" cta="Leaderboard" />
       <Link to={`/player/${mvp.id}`} className="card stripe row spread" style={{ '--stripe': 'var(--gold)' }}>
         <div className="row">
@@ -89,8 +188,100 @@ export function Home() {
         <span className="lp-badge">★ {mvp.stats.mvp_points} MVP pts</span>
       </Link>
 
+      {/* ============ DYNASTY TRACKER ============ */}
+      <SectionHead title="Dynasty tracker" to="/dynasty" cta="Full tracker" />
+      <Link to="/dynasty" className="card stripe" style={{ '--stripe': stripeVar(dynSpot.id), display: 'block' }}>
+        <div className="row spread">
+          <span className="row" style={{ gap: 12 }}>
+            <img src={dynSpot.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+            <span>
+              <span className="eyebrow">Title chase</span>
+              <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{dynSpot.name}</b>
+            </span>
+          </span>
+          {dynRow && <span className="num gold" style={{ fontSize: 18 }}>{dynRow.points} pts</span>}
+        </div>
+        <p className="muted" style={{ fontSize: 13, margin: '10px 0 0' }}>{DYNASTY.spotlightStory}</p>
+      </Link>
+
+      {/* ============ LOWVELD TV ============ */}
+      <SectionHead title="Lowveld TV" to="/tv" cta="Watch" />
+      <div className="grid cols-3">
+        {tvFeatured.map((v) => {
+          const id = getYouTubeId(v.youtube_url);
+          const thumb = v.thumbnail || ytThumb(v.youtube_url);
+          return (
+            <Link key={v.id} to="/tv" className="card" style={{ padding: 0, overflow: 'hidden' }}>
+              <div className="tvhome-thumb">
+                {thumb ? <img src={thumb} alt="" /> : <img src="/brand/lp-mark.png" alt="" className="tvhome-mark" />}
+                <span className="tvhome-play">{id ? '►' : '◷'}</span>
+              </div>
+              <div style={{ padding: '8px 10px' }}>
+                <span className="kicker" style={{ color: 'var(--live)' }}>{v.category}</span>
+                <p style={{ fontSize: 13, fontWeight: 600, margin: '2px 0 0', lineHeight: 1.25 }}>{v.title}</p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+
+      {/* ============ TABLES ============ */}
+      <SectionHead title="Tables" to="/standings" />
+      <div className="grid cols-2">
+        <div>
+          <p className="eyebrow" style={{ marginBottom: 8 }}>Men's franchise league</p>
+          <StandingsTable league="mens" limit={4} />
+        </div>
+        <div>
+          <p className="eyebrow" style={{ marginBottom: 8 }}>Ladies franchise league</p>
+          <StandingsTable league="ladies" limit={4} />
+        </div>
+      </div>
+
+      {/* ============ SPORTS HUB ============ */}
+      <SectionHead title="Sports Hub" to="/sports-hub" cta="Open" />
+      <Link to="/sports-hub" className="card row spread" style={{ display: 'flex' }}>
+        <span><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase' }}>Beyond the Lowveld</b><div className="muted" style={{ fontSize: 12 }}>Springboks · F1 · World Cup · Wimbledon</div></span>
+        <span className="muted">→</span>
+      </Link>
+
+      {/* ============ WHATSAPP COMMUNITY ============ */}
+      <Link to="/community" className="card stripe" style={{ '--stripe': '#25D366', display: 'block' }}>
+        <div className="row spread">
+          <span className="row" style={{ gap: 12 }}>
+            <span style={{ fontSize: 24 }}>✆</span>
+            <span><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Join the Community</b><div className="muted" style={{ fontSize: 12 }}>Match-night chat, results & banter on WhatsApp</div></span>
+          </span>
+          <span className="muted">→</span>
+        </div>
+      </Link>
+
+      {/* ============ SPONSOR STRIP ============ */}
       <div className="mt"><SponsorRail placement="home" /></div>
     </div>
+  );
+}
+
+function HomeStyles() {
+  return (
+    <style>{`
+      .lead-strip { display:grid; grid-template-columns:1fr; gap:10px; }
+      .lead-card { display:flex; flex-direction:column; gap:2px; padding-left:18px; }
+      .rotw { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line);
+        border-radius:var(--r); padding:16px 10px; }
+      .rotw-side { display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center;
+        padding:8px; border-radius:var(--r-sm); background:linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, transparent), transparent); }
+      .rotw-side img { width:46px; height:46px; object-fit:contain; }
+      .rotw-side b { font-family:var(--display); text-transform:uppercase; font-size:13px; }
+      .rotw-mid { text-align:center; }
+      .rotw-score { font-family:var(--display); font-weight:800; font-size:30px; line-height:1; }
+      .tvhome-thumb { position:relative; width:100%; padding-top:56.25%; background:#0a0f1c; display:flex; align-items:center; justify-content:center; }
+      .tvhome-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+      .tvhome-mark { position:absolute; width:38px !important; height:38px !important; inset:auto !important; opacity:.5; object-fit:contain; }
+      .tvhome-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%;
+        background:rgba(0,0,0,.55); border:1.5px solid rgba(255,255,255,.7); display:flex; align-items:center; justify-content:center; color:#fff; }
+      @media (min-width:760px){ .lead-strip { grid-template-columns:repeat(3,1fr); } }
+    `}</style>
   );
 }
 
@@ -444,6 +635,11 @@ export function PlayerProfile() {
               <span className="chip" style={{ color: t.color }}>{t.label}</span>
               <span className="chip">{p.stats.wins}-{p.stats.losses}</span>
             </div>
+            <a className="wa-share" target="_blank" rel="noreferrer"
+              href={`https://wa.me/?text=${encodeURIComponent(`${p.name} — LP Rating ${p.lp_rating}, ${p.stats.wins}-${p.stats.losses}, ${p.stats.mvp_points} MVP pts on Lowveld Padel. ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}>
+              ✆ Share to WhatsApp
+            </a>
+            <style>{`.wa-share{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:#25D366;color:#06270f;font-weight:700;font-size:12px;padding:5px 12px;border-radius:999px;}`}</style>
           </div>
         </div>
       </div>
@@ -468,7 +664,7 @@ export function PlayerProfile() {
       <div className="grid cols-2 mt">
         <div className="card">
           <p className="eyebrow" style={{ marginBottom: 10 }}>Season form</p>
-          {[['Games won', p.stats.games_won, 25], ['Sets won', p.stats.sets_won, 12], ['MVP points', p.stats.mvp_points, 35], ['Rubbers won', p.stats.rubbers_won, 6]].map(([l, v, max]) => (
+          {[['Rubbers won', p.stats.rubbers_won, 6], ['Sets won', p.stats.sets_won, 12], ['MVP points', p.stats.mvp_points, 35], ['Bonus points (4-0 wins)', p.stats.bonus_points, 4]].map(([l, v, max]) => (
             <div className="statline" key={l}>
               <span style={{ fontSize: 13 }}>{l}</span><b className="num">{v}</b>
               <div className="bar"><i style={{ width: `${Math.min(100, (v / max) * 100)}%` }} /></div>
@@ -531,6 +727,7 @@ export function FranchiseHub() {
   const row = STANDINGS[fr.league]?.franchise?.find((r) => r.franchise_id === id);
   const pos = (STANDINGS[fr.league]?.franchise?.findIndex((r) => r.franchise_id === id) ?? -1) + 1;
   const fixtures = FIXTURES.filter((f) => f.home === id || f.away === id);
+  const form = teamForm(id);
   return (
     <div className="page">
       <div className="hero" style={{ borderLeft: `4px solid`, borderLeftColor: `var(--fr-${id})` }}>
@@ -539,12 +736,18 @@ export function FranchiseHub() {
           <div>
             <span className="eyebrow">{fr.league === 'mens' ? "Men's" : 'Ladies'} League · {fr.venue}</span>
             <h1 className="display">{fr.name}</h1>
+            {fr.owner && fr.owner !== 'Franchise Owner' && (
+              <p className="muted" style={{ margin: '2px 0 0', fontSize: 13 }}>
+                Owner: <b style={{ color: 'var(--text)' }}>{fr.owner}</b>
+                {fr.ownerBrand && <span> · {fr.ownerBrand}</span>}
+              </p>
+            )}
             {row && (
               <div className="row mt" style={{ gap: 8, flexWrap: 'wrap' }}>
                 <span className="chip">#{pos} on the table</span>
                 <span className="chip">{row.won}W – {row.lost}L</span>
                 <span className="chip">{row.points} pts</span>
-                <span className="form">{row.form.map((f, k) => <i key={k} className={f === 'W' ? 'w' : 'l'}>{f}</i>)}</span>
+                {form.length > 0 && <span className="form">{form.map((f, k) => <i key={k} className={f === 'W' ? 'w' : 'l'}>{f}</i>)}</span>}
               </div>
             )}
           </div>
@@ -691,7 +894,7 @@ export function Rankings() {
                           <span style={{ color: 'var(--win)' }}>{p.stats.wins} W</span>
                           <span style={{ color: 'var(--loss)' }}>{p.stats.losses} L</span>
                           <span className="muted">{winPct(p.stats)}% win</span>
-                          <span className="muted">{p.stats.games_won} games</span>
+                          <span className="muted">{p.stats.sets_won} sets</span>
                           {p.stats.bonus_points > 0 && <span className="gold">{p.stats.bonus_points} BP</span>}
                         </>
                       )}
@@ -812,7 +1015,10 @@ export function SponsorCentre() {
 /* =========================== MORE ============================= */
 export function More() {
   const items = [
-    ['Rankings', '/rankings'], ['Franchises', '/franchises'], ['News Centre', '/news'], ['Sponsors', '/sponsors'],
+    ['Road to 360', '/road-to-360'], ['Legacy League', '/legacy-league'], ['Predictor', '/predictor'], ['Lowveld TV', '/tv'],
+    ['Rivalries', '/rivalries'], ['Hall of Fame', '/hall-of-fame'], ['Draft & Auction', '/draft'], ['Dynasty Tracker', '/dynasty'],
+    ['Fan Zone', '/fan-zone'], ['Community', '/community'], ['Sports Hub', '/sports-hub'], ['Rankings', '/rankings'],
+    ['Franchises', '/franchises'], ['News Centre', '/news'], ['Sponsors', '/sponsors'],
     ['Captain Dashboard', '/captain'], ['Commissioner', '/commissioner'], ['Umpire Console', '/admin'], ['Sponsor Analytics', '/sponsor-analytics'],
   ];
   return (

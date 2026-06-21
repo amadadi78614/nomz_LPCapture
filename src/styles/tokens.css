@@ -47,6 +47,13 @@
   --fr-rulo-apaches: #c0392b;
   --fr-samurai-kicksmashers: #8e44ad;
   --fr-sonic-viboras: #18c47f;
+  /* Legacy League — colours sampled from official crests */
+  --fr-lp-leopards: #b8860b;
+  --fr-lp-rhinos: #9a9ba0;
+  --fr-lp-cheetahs: #d2691e;
+  --fr-lp-honey-badgers: #9aa823;
+  --fr-lp-eagles: #2f7fa6;
+  --fr-lp-jackals: #c79a3e;
   --fr-baltic-blades: #3a6ea5;
   --fr-arctic-angels: #bfe3ff;
   --fr-backhand-blossoms: #ff8fb1;

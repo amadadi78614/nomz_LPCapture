@@ -8,6 +8,13 @@ import {
 import {
   AdminDashboard, CaptainDashboard, CommissionerDashboard, SponsorAnalytics,
 } from './pages/dashboards';
+import LowveldTV from './pages/tv';
+import {
+  Rivalries, RivalryPage, HallOfFame, DraftHistory, Dynasty, FanZone,
+} from './pages/community';
+import {
+  RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
+} from './pages/leagues';
 
 function ScrollTop() {
   const { pathname } = useLocation();
@@ -32,6 +39,20 @@ export default function App() {
           <Route path="/franchises" element={<Franchises />} />
           <Route path="/franchise/:id" element={<FranchiseHub />} />
           <Route path="/rankings" element={<Rankings />} />
+          <Route path="/tv" element={<LowveldTV />} />
+          <Route path="/rivalries" element={<Rivalries />} />
+          <Route path="/rivalry/:id" element={<RivalryPage />} />
+          <Route path="/hall-of-fame" element={<HallOfFame />} />
+          <Route path="/draft" element={<DraftHistory />} />
+          <Route path="/dynasty" element={<Dynasty />} />
+          <Route path="/fan-zone" element={<FanZone />} />
+          <Route path="/road-to-360" element={<RoadTo360 />} />
+          <Route path="/road-to-360-super-cup" element={<RoadTo360 />} />
+          <Route path="/legacy-league" element={<LegacyLeague />} />
+          <Route path="/legacy-franchise/:id" element={<LegacyFranchise />} />
+          <Route path="/predictor" element={<Predictor />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/sports-hub" element={<SportsHub />} />
           <Route path="/news" element={<NewsCentre />} />
           <Route path="/sponsors" element={<SponsorCentre />} />
           <Route path="/more" element={<More />} />

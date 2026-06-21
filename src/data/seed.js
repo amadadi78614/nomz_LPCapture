@@ -19,13 +19,13 @@ export const SEASON = { id: 's3', name: 'Season 3', year: 2026, status: 'active'
 export const LADIES_SEASON_STATUS = 'pre';
 
 export const FRANCHISES = [
-  { id: 'avalanche-aces', name: 'Avalanche Aces', league: 'mens', logo: '/logos/avalanche-aces.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2024 },
-  { id: 'desert-falcons', name: 'Desert Falcons', league: 'mens', logo: '/logos/desert-falcons.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2024 },
-  { id: 'globo-boomerangs', name: 'Global Boomerangs', league: 'mens', logo: '/logos/globo-boomerangs.webp', owner: 'Franchise Owner', venue: 'Play 360', founded: 2024 },
-  { id: 'ice-breakers', name: 'Ice Breakers', league: 'mens', logo: '/logos/ice-breakers.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2024 },
-  { id: 'samurai-kicksmashers', name: 'Samurai Kick Smashers', league: 'mens', logo: '/logos/samurai-kicksmashers.webp', owner: 'Franchise Owner', venue: 'Play 360', founded: 2024 },
-  { id: 'sonic-viboras', name: 'Sonic Viboras', league: 'mens', logo: '/logos/sonic-viboras.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2024 },
-  { id: 'sahara-lions', name: 'Sahara Lions', league: 'mens', logo: '/logos/sahara-lions.webp', owner: 'Franchise Owner', venue: 'Play 360', founded: 2024 },
+  { id: 'avalanche-aces', name: 'Avalanche Aces', league: 'mens', logo: '/logos/avalanche-aces.webp', owner: 'Frik de Beer', ownerBrand: 'Ryan Tate', venue: 'Padel 24', founded: 2024 },
+  { id: 'desert-falcons', name: 'Desert Falcons', league: 'mens', logo: '/logos/desert-falcons.webp', owner: 'Ahmed Ismail & Muhammad Mangerah', venue: 'Padel 24', founded: 2024 },
+  { id: 'globo-boomerangs', name: 'Global Boomerangs', league: 'mens', logo: '/logos/globo-boomerangs.webp', owner: 'Nabeel Meer', venue: 'Play 360', founded: 2024 },
+  { id: 'ice-breakers', name: 'Ice Breakers', league: 'mens', logo: '/logos/ice-breakers.webp', owner: 'Zaheer Methar & Irshaad Moola', venue: 'Padel 24', founded: 2024 },
+  { id: 'samurai-kicksmashers', name: 'Samurai Kick Smashers', league: 'mens', logo: '/logos/samurai-kicksmashers.webp', owner: 'Siraaj Shaik & Shaun Marope', ownerBrand: 'Patels Hardware', venue: 'Play 360', founded: 2024 },
+  { id: 'sonic-viboras', name: 'Sonic Viboras', league: 'mens', logo: '/logos/sonic-viboras.webp', owner: 'Wayne Wagner', venue: 'Padel 24', founded: 2024 },
+  { id: 'sahara-lions', name: 'Sahara Lions', league: 'mens', logo: '/logos/sahara-lions.webp', owner: 'Majid Bapu', venue: 'Play 360', founded: 2024 },
   { id: 'arctic-angels', name: 'Arctic Angels', league: 'ladies', logo: '/logos/arctic-angels.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2025 },
   { id: 'backhand-blossoms', name: 'Backhand Blossoms', league: 'ladies', logo: '/logos/backhand-blossoms.webp', owner: 'Franchise Owner', venue: 'Play 360', founded: 2025 },
   { id: 'desert-roses', name: 'Desert Roses', league: 'ladies', logo: '/logos/desert-roses.webp', owner: 'Franchise Owner', venue: 'Padel 24', founded: 2025 },
@@ -358,15 +358,26 @@ const ratedRubbers = [];
     f.score.rubbers.forEach((r) => {
       const homeP = (r.homeIds || []).filter(Boolean);
       const awayP = (r.awayIds || []).filter(Boolean);
-      // per-player counting stats + sets won
+      // Sets won/lost per side. Every rubber is best-of-3 (two game
+      // sets + a 10-pt champions tiebreak), and the rubber points
+      // encode the set result: a 4-pt win = 3-0 in sets, a 3-pt win
+      // = 2-1. Use explicit set scores when present, else derive from
+      // the points so sets are correct for every match.
       let homeSets = 0; let awaySets = 0;
-      if (r.sets) r.sets.forEach(([h, a]) => { if (h > a) homeSets += 1; else awaySets += 1; });
+      if (r.sets) {
+        r.sets.forEach(([h, a]) => { if (h > a) homeSets += 1; else awaySets += 1; });
+      } else if (r.games) {
+        const hp = r.games[0]; const ap = r.games[1];
+        if (r.winner === 'home') { homeSets = hp === 4 ? 3 : 2; awaySets = hp === 4 ? 0 : 1; }
+        else if (r.winner === 'away') { awaySets = ap === 4 ? 3 : 2; homeSets = ap === 4 ? 0 : 1; }
+      }
       [['home', 'homeIds', 0, homeSets, awaySets], ['away', 'awayIds', 1, awaySets, homeSets]].forEach(([side, key, idx, setsFor, setsAg]) => {
         (r[key] || []).filter(Boolean).forEach((pidX) => {
           const p = PLAYERS.find((x) => x.id === pidX);
           if (!p) return;
           p.stats.played += 1;
-          if (r.games) p.stats.games_won += r.games[idx];
+          // games_won only from real set scores (champions TB excluded); incomplete by design
+          if (r.sets) r.sets.slice(0, 2).forEach((st) => { p.stats.games_won += st[idx]; });
           p.stats.sets_won += setsFor; p.stats.sets_lost += setsAg;
           if (r.winner === side) {
             p.stats.wins += 1; p.stats.rubbers_won += 1;
@@ -447,3 +458,373 @@ export const bestPartner = (playerId) => {
   return rows[0] || null;
 };
 export const winPct = (st) => (st.played ? Math.round((st.wins / st.played) * 100) : 0);
+
+// Head-to-head record between two franchises, from final fixtures.
+export const headToHead = (aId, bId) => {
+  const meetings = [];
+  let aWins = 0; let bWins = 0; let aPtsTotal = 0; let bPtsTotal = 0;
+  FIXTURES.filter((f) => f.status === 'final' && f.score?.totals)
+    .filter((f) => [f.home, f.away].includes(aId) && [f.home, f.away].includes(bId))
+    .sort((x, y) => new Date(x.start) - new Date(y.start))
+    .forEach((f) => {
+      const [hp, ap] = f.score.totals;
+      const aPts = f.home === aId ? hp : ap;
+      const bPts = f.home === aId ? ap : hp;
+      aPtsTotal += aPts; bPtsTotal += bPts;
+      if (aPts > bPts) aWins += 1; else bWins += 1;
+      meetings.push({ id: f.id, date: f.start, aPts, bPts, round: f.round, court: f.court });
+    });
+  const last = meetings[meetings.length - 1] || null;
+  const biggest = meetings.slice().sort((m, n) => Math.abs(n.aPts - n.bPts) - Math.abs(m.aPts - m.bPts))[0] || null;
+  return { aWins, bWins, played: meetings.length, aPtsTotal, bPtsTotal, meetings, last, biggest };
+};
+
+// Top players for a franchise by MVP points (for rivalry key players).
+export const topPlayers = (franchiseId, n = 2) => PLAYERS
+  .filter((p) => p.franchise_id === franchiseId && p.stats.played > 0)
+  .sort((a, b) => b.stats.mvp_points - a.stats.mvp_points || b.lp_rating - a.lp_rating)
+  .slice(0, n);
+
+// Recent form (last N results) for a franchise, newest last → ['W','L',...]
+export const teamForm = (franchiseId, n = 5) => FIXTURES
+  .filter((f) => f.status === 'final' && (f.home === franchiseId || f.away === franchiseId) && f.score)
+  .sort((a, b) => new Date(a.start) - new Date(b.start))
+  .map((f) => (f.score.winner === (f.home === franchiseId ? 'home' : 'away') ? 'W' : 'L'))
+  .slice(-n);
+
+// Season MVP leader (computed) — used by Hall of Fame / homepage.
+export const mvpLeader = (league = 'mens') => [...PLAYERS]
+  .filter((p) => p.stats.played > 0 && p.league === league)
+  .sort((a, b) => b.stats.mvp_points - a.stats.mvp_points || b.stats.rubbers_won - a.stats.rubbers_won)[0] || null;
+
+/* ======================= LOWVELD TV ===========================
+ * Video content for the Lowveld TV page. Every item is a slot that
+ * renders fully even when empty — drop a real `youtube_url` (watch,
+ * youtu.be, embed or live link) in later and the card goes live.
+ *
+ * Shape: {
+ *   id            unique key
+ *   title         headline shown on the card
+ *   subtitle      optional one-liner / context
+ *   thumbnail     optional image path (else a branded placeholder shows)
+ *   youtube_url   '' until you have it; '' renders the "coming soon" state
+ *   category      'live' | 'highlights' | 'replay' | 'interview' | 'show'
+ *   date          ISO date string (sorts newest-first)
+ *   duration      optional label e.g. '12:40' (omit for live)
+ *   sponsor       optional sponsor id from SPONSORS for a "presented by" tag
+ *   franchises    optional [id,...] tags for filtering later
+ * }
+ * Helper getYouTubeId() handles all URL shapes; empty url => null => slot.
+ */
+export const getYouTubeId = (url) => {
+  if (!url) return null;
+  const patterns = [
+    /youtu\.be\/([\w-]{11})/,
+    /youtube\.com\/watch\?v=([\w-]{11})/,
+    /youtube\.com\/embed\/([\w-]{11})/,
+    /youtube\.com\/live\/([\w-]{11})/,
+    /youtube\.com\/shorts\/([\w-]{11})/,
+  ];
+  for (const re of patterns) { const m = url.match(re); if (m) return m[1]; }
+  return null;
+};
+export const ytThumb = (url) => {
+  const id = getYouTubeId(url);
+  return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : null;
+};
+export const ytEmbed = (url) => {
+  const id = getYouTubeId(url);
+  return id ? `https://www.youtube.com/embed/${id}` : null;
+};
+
+// The single featured live stream (or next scheduled). url '' => offline state.
+export const TV_LIVE = {
+  id: 'tv-live',
+  title: 'Lowveld Padel — Live Match Centre',
+  subtitle: 'Match-night streams beam in here. Tap in when the lights go on.',
+  thumbnail: '',
+  youtube_url: '', // paste a YouTube live/watch URL to go live
+  category: 'live',
+  date: '2026-06-22',
+  sponsor: 'astron-energy',
+  franchises: [],
+};
+
+// All on-demand content. Empty slots are intentional — replace url later.
+export const TV_VIDEOS = [
+  // ---- Match Highlights ----
+  { id: 'hl-md4-falcons-globo', title: 'Match Day 4 Highlights — Falcons 19-3 Boomerangs', subtitle: 'Desert Falcons stay perfect', thumbnail: '', youtube_url: '', category: 'highlights', date: '2026-06-18', duration: '', sponsor: 'astron-energy', franchises: ['desert-falcons', 'globo-boomerangs'] },
+  { id: 'hl-md3-aces-ib', title: 'Match Day 3 Highlights — Ice Breakers 16-7 Aces', subtitle: 'Breakers land their first win', thumbnail: '', youtube_url: '', category: 'highlights', date: '2026-06-17', duration: '', sponsor: '', franchises: ['avalanche-aces', 'ice-breakers'] },
+  { id: 'hl-md3-sonics-ks', title: 'Match Day 3 Highlights — Viboras 15-7 Kick Smashers', subtitle: 'Sonics keep the pressure on', thumbnail: '', youtube_url: '', category: 'highlights', date: '2026-06-17', duration: '', sponsor: '', franchises: ['sonic-viboras', 'samurai-kicksmashers'] },
+  { id: 'hl-md1-sonics-ib', title: 'Match Day 1 Highlights — Viboras 17-3 Ice Breakers', subtitle: 'Opening-night statement', thumbnail: '', youtube_url: '', category: 'highlights', date: '2026-06-08', duration: '', sponsor: '', franchises: ['sonic-viboras', 'ice-breakers'] },
+
+  // ---- Full Match Replays ----
+  { id: 'rp-md4-falcons-globo', title: 'Full Replay — Falcons v Boomerangs (MD4)', subtitle: 'Every rubber, start to finish', thumbnail: '', youtube_url: '', category: 'replay', date: '2026-06-18', duration: '', sponsor: '', franchises: ['desert-falcons', 'globo-boomerangs'] },
+  { id: 'rp-md3-sonics-ks', title: 'Full Replay — Viboras v Kick Smashers (MD3)', subtitle: 'Play 360', thumbnail: '', youtube_url: '', category: 'replay', date: '2026-06-17', duration: '', sponsor: '', franchises: ['sonic-viboras', 'samurai-kicksmashers'] },
+  { id: 'rp-md1-sonics-ib', title: 'Full Replay — Viboras v Ice Breakers (MD1)', subtitle: 'Season 3 opener', thumbnail: '', youtube_url: '', category: 'replay', date: '2026-06-08', duration: '', sponsor: '', franchises: ['sonic-viboras', 'ice-breakers'] },
+
+  // ---- Player Interviews ----
+  { id: 'int-coomans', title: 'On the Mic — Heinrich Coomans', subtitle: 'The Viboras P1 anchor on a perfect start', thumbnail: '', youtube_url: '', category: 'interview', date: '2026-06-17', duration: '', sponsor: '', franchises: ['sonic-viboras'] },
+  { id: 'int-falcons-captain', title: 'On the Mic — Desert Falcons Captain', subtitle: 'Building an unbeaten run', thumbnail: '', youtube_url: '', category: 'interview', date: '2026-06-18', duration: '', sponsor: '', franchises: ['desert-falcons'] },
+  { id: 'int-rising-star', title: 'Rising Star Spotlight', subtitle: 'The breakout name of the season so far', thumbnail: '', youtube_url: '', category: 'interview', date: '2026-06-12', duration: '', sponsor: '', franchises: [] },
+
+  // ---- Weekly Show ----
+  { id: 'show-ep3', title: 'The Lowveld Padel Show — Episode 3', subtitle: 'Week 2 review, MVP race & power rankings', thumbnail: '', youtube_url: '', category: 'show', date: '2026-06-19', duration: '', sponsor: 'astron-energy', franchises: [] },
+  { id: 'show-ep2', title: 'The Lowveld Padel Show — Episode 2', subtitle: 'Falcons soar, Breakers strike back', thumbnail: '', youtube_url: '', category: 'show', date: '2026-06-12', duration: '', sponsor: 'astron-energy', franchises: [] },
+  { id: 'show-ep1', title: 'The Lowveld Padel Show — Episode 1', subtitle: 'Season 3 launch special', thumbnail: '', youtube_url: '', category: 'show', date: '2026-06-05', duration: '', sponsor: 'astron-energy', franchises: [] },
+];
+
+export const TV_CATEGORIES = [
+  { key: 'highlights', label: 'Match Highlights' },
+  { key: 'replay', label: 'Replays' },
+  { key: 'interview', label: 'Player Interviews' },
+  { key: 'show', label: 'Weekly Show' },
+];
+export const tvByCategory = (cat) => TV_VIDEOS
+  .filter((v) => v.category === cat)
+  .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+/* ===================== RIVALRIES ==============================
+ * Seeded rivalries. Head-to-head, last meeting and biggest win are
+ * computed live from FIXTURES via headToHead(); the story + intensity
+ * are editorial. Add more by appending {id, a, b, tag, story}.
+ */
+export const RIVALRIES = [
+  { id: 'aces-viboras', a: 'avalanche-aces', b: 'sonic-viboras', tag: 'The Velocity Derby',
+    story: 'Ice against sound. The Aces and Viboras have come to define the sharp end of the Lowveld grid — every meeting a referendum on who really owns centre court.' },
+  { id: 'falcons-kicksmashers', a: 'desert-falcons', b: 'samurai-kicksmashers', tag: 'Talons & Steel',
+    story: 'The league\'s unbeaten machine against its most explosive strikers. When the Falcons\' discipline meets the Kick Smashers\' firepower, something has to give.' },
+  { id: 'sonics-falcons', a: 'sonic-viboras', b: 'desert-falcons', tag: 'The Summit',
+    story: 'First versus second. The two pace-setters of Season 3, separated by a handful of points and a single rivalry that could decide the title.' },
+  { id: 'ib-aces', a: 'ice-breakers', b: 'avalanche-aces', tag: 'Cold Front',
+    story: 'The Ice Breakers found their season the night they sank the Aces. A young rivalry, already with an edge.' },
+];
+export const rivalryById = (id) => RIVALRIES.find((r) => r.id === id);
+
+/* ===================== HALL OF FAME ===========================
+ * Season honours. Season 3 is live, so its winners read "In progress"
+ * and pull the current leader. Prior seasons are placeholders ready
+ * for real history — fill names/franchises when you have them.
+ */
+export const HALL_OF_FAME = {
+  seasonChampions: [
+    { season: 'Season 3', year: 2026, franchise: null, note: 'In progress — Falcons & Viboras setting the pace' },
+    { season: 'Season 2', year: 2025, franchise: null, note: 'Add champion' },
+    { season: 'Season 1', year: 2024, franchise: null, note: 'Add champion' },
+  ],
+  mvps: [
+    { season: 'Season 3', year: 2026, playerId: null, note: 'Race live — see the MVP leaderboard' },
+    { season: 'Season 2', year: 2025, playerId: null, note: 'Add MVP' },
+    { season: 'Season 1', year: 2024, playerId: null, note: 'Add MVP' },
+  ],
+  // editorial slots — fill with real names/quotes when ready
+  allTimeGreats: [
+    { name: '', franchise: '', blurb: 'Reserved for a Lowveld legend.' },
+    { name: '', franchise: '', blurb: 'Reserved for a Lowveld legend.' },
+    { name: '', franchise: '', blurb: 'Reserved for a Lowveld legend.' },
+  ],
+  bestCaptains: [
+    { name: '', franchise: '', blurb: 'A captain who built something.' },
+    { name: '', franchise: '', blurb: 'A captain who built something.' },
+  ],
+  biggestMoments: [
+    { title: 'Desert Falcons go 21-0', date: '2026-06-10', blurb: 'The first whitewash of Season 3 — Falcons blank the Aces across all six rubbers.' },
+    { title: 'Ice Breakers\' first strike', date: '2026-06-17', blurb: '16-7 over the Aces for a maiden win that lit up Week 2.' },
+    { title: 'Viboras\' 17-3 opener', date: '2026-06-08', blurb: 'A statement on opening night that set the season\'s tempo.' },
+  ],
+};
+
+/* ================== DRAFT / AUCTION HISTORY ===================
+ * Season 3 auction board. Reuses each PLAYER's auction_price.
+ * Top spends & steals are computed; the story is editorial.
+ */
+export const AUCTION = {
+  season: 'Season 3',
+  totalSpendLabel: 'R8.61M',
+  story: 'Season 3\'s auction reshaped the Lowveld order. Franchises spent big on proven match-winners while a handful of shrewd picks delivered the season\'s best value.',
+};
+// Full board: every player with their price + franchise, priciest first.
+export const auctionBoard = () => [...PLAYERS]
+  .filter((p) => p.league === 'mens')
+  .sort((a, b) => b.auction_price - a.auction_price);
+// Biggest steals = best MVP-points-per-R among players who've featured.
+export const auctionSteals = (n = 6) => [...PLAYERS]
+  .filter((p) => p.league === 'mens' && p.stats.played > 0 && p.auction_price > 0)
+  .map((p) => ({ ...p, valueScore: p.stats.mvp_points / (p.auction_price / 1000) }))
+  .sort((a, b) => b.valueScore - a.valueScore)
+  .slice(0, n);
+export const auctionTopSpends = (n = 6) => auctionBoard().slice(0, n);
+
+/* ===================== DYNASTY TRACKER ========================
+ * Franchise legacy. titles/finals are seeded (no real history yet —
+ * all start at 0/your data); current S3 form is computed live.
+ */
+export const DYNASTY = {
+  spotlight: 'sonic-viboras',
+  spotlightStory: 'Sonic Viboras arrived in Season 3 chasing a maiden crown. Heinrich Coomans and Anton Grote have driven a relentless start — the title chase is real.',
+  legacy: [
+    { franchise: 'desert-falcons', titles: 0, finals: 0, note: 'Unbeaten and top of the table.' },
+    { franchise: 'sonic-viboras', titles: 0, finals: 0, note: 'Title chasers — second and climbing.' },
+    { franchise: 'samurai-kicksmashers', titles: 0, finals: 0, note: 'Explosive but inconsistent.' },
+    { franchise: 'ice-breakers', titles: 0, finals: 0, note: 'Found their feet in Week 2.' },
+    { franchise: 'avalanche-aces', titles: 0, finals: 0, note: 'Rebuilding after a tough start.' },
+    { franchise: 'sahara-lions', titles: 0, finals: 0, note: 'A game in hand and ambition.' },
+    { franchise: 'globo-boomerangs', titles: 0, finals: 0, note: 'Fighting for momentum.' },
+  ],
+};
+
+/* ===================== FAN ZONE ==============================
+ * Interactive fan features. Votes/predictions are client-side only
+ * (no backend) — they persist in component state for the session.
+ * Player-of-the-week candidates = current top MVP performers.
+ */
+export const fanPotwCandidates = (n = 4) => [...PLAYERS]
+  .filter((p) => p.league === 'mens' && p.stats.played > 0)
+  .sort((a, b) => b.stats.mvp_points - a.stats.mvp_points || b.lp_rating - a.lp_rating)
+  .slice(0, n);
+// Upcoming fixtures fans can predict (scheduled men's matches).
+export const fanPredictionFixtures = () => FIXTURES
+  .filter((f) => f.status === 'scheduled' && f.league === 'mens')
+  .slice(0, 4);
+export const FAN_POLLS = [
+  { id: 'poll-title', q: 'Who lifts the Season 3 title?', options: ['desert-falcons', 'sonic-viboras', 'samurai-kicksmashers', 'ice-breakers'] },
+  { id: 'poll-mvp', q: 'Season 3 MVP comes from…', options: ['sonic-viboras', 'desert-falcons', 'samurai-kicksmashers', 'avalanche-aces'] },
+];
+
+/* =================================================================
+ * LEGACY LEAGUE  —  an official Lowveld Padel competition.
+ * Same structure & visual quality as the Franchise League.
+ * Squads/results are seeded placeholders ready to be replaced.
+ * ================================================================= */
+export const LEGACY_FRANCHISES = [
+  { id: 'lp-leopards', name: 'LP Leopards', short: 'Leopards', league: 'legacy',
+    motto: 'Silent. Smart. Deadly.', primary: '#b8860b', secondary: '#3a1d5c', accent: '#f5c542' },
+  { id: 'lp-rhinos', name: 'LP Rhinos', short: 'Rhinos', league: 'legacy',
+    motto: 'Tough. Solid. Unstoppable.', primary: '#9a9ba0', secondary: '#2b2b2e', accent: '#c79a3e' },
+  { id: 'lp-cheetahs', name: 'LP Cheetahs', short: 'Cheetahs', league: 'legacy',
+    motto: 'Speed. Agility. Precision.', primary: '#d2691e', secondary: '#1a1a1a', accent: '#e8853a' },
+  { id: 'lp-honey-badgers', name: 'LP Honey Badgers', short: 'Honey Badgers', league: 'legacy',
+    motto: 'Fearless. Relentless. Never Back Down.', primary: '#9aa823', secondary: '#15160d', accent: '#c4d22e' },
+  { id: 'lp-eagles', name: 'LP Eagles', short: 'Eagles', league: 'legacy',
+    motto: 'Rise. Focus. Dominate.', primary: '#2f7fa6', secondary: '#cfd6dc', accent: '#4aa8d4' },
+  { id: 'lp-jackals', name: 'LP Jackals', short: 'Jackals', league: 'legacy',
+    motto: 'Clever. Adaptive. Strategic.', primary: '#c79a3e', secondary: '#1c1408', accent: '#e0bc6a' },
+].map((f) => ({ ...f, logo: `/legacy/${f.id}.jpeg` }));
+export const legacyFranchiseById = (id) => LEGACY_FRANCHISES.find((f) => f.id === id);
+
+// No fake players — squads confirmed after the LP Legacy League Draft.
+export const LEGACY_PLAYERS = [];
+export const LEGACY_SQUAD_NOTE = 'Squads to be confirmed following the LP Legacy League Draft.';
+
+// Standings start level — fill as results come in.
+export const LEGACY_STANDINGS = LEGACY_FRANCHISES.map((fr) => ({
+  franchise_id: fr.id, played: 0, won: 0, lost: 0, drawn: 0, bp: 0, points: 0, adj: 0,
+}));
+
+export const LEGACY_FIXTURES = []; // add scheduled/final fixtures here, same shape as FIXTURES
+export const LEGACY_POWER = LEGACY_FRANCHISES.map((f) => f.id); // weekly order, seed = registration order
+export const LEGACY_STATUS = 'pre'; // 'pre' until first ball is struck
+
+/* =================================================================
+ * ROAD TO THE 360 SUPER CUP  —  Lowveld's national journey.
+ * 28–30 August 2026. Lowveld Padel has been invited to compete.
+ * ================================================================= */
+export const ROAD_TO_360 = {
+  title: 'Road to the 360 Super Cup',
+  subtitle: 'Lowveld Padel has been invited to compete on the national stage.',
+  location: 'Johannesburg',
+  dates: '28–30 August 2026',
+  startDate: '2026-08-28',
+  finalsDate: '2026-08-30',
+  timeline: [
+    { id: 't1', label: 'Invitation Received', date: '', status: 'done' },
+    { id: 't2', label: 'Squad Announcement', date: '', status: 'pending' },
+    { id: 't3', label: 'Training Camp', date: '', status: 'pending' },
+    { id: 't4', label: 'Travel Day', date: '', status: 'pending' },
+    { id: 't5', label: 'Day 1', date: '2026-08-28', status: 'pending' },
+    { id: 't6', label: 'Day 2', date: '2026-08-29', status: 'pending' },
+    { id: 't7', label: 'Finals Day', date: '2026-08-30', status: 'pending' },
+  ],
+  squad: [],        // [{ playerId }] once announced
+  fixtures: [],     // tournament fixtures
+  results: [],      // tournament results
+  standings: [],    // tournament group/standings
+  matchReports: [], // [{ title, date, body }]
+  updates: [],      // [{ date, text }] daily updates
+};
+
+/* =================================================================
+ * COMMUNITY PREDICTION LEAGUE  +  LP AI
+ * Predictions persist client-side (session) — wire to Supabase later.
+ * ================================================================= */
+export const PREDICTION_OPTIONS = [
+  { key: 'a40', label: '4-0', side: 'a' },
+  { key: 'a31', label: '3-1', side: 'a' },
+  { key: 'draw', label: '2-2', side: 'draw' },
+  { key: 'b31', label: '3-1', side: 'b' },
+  { key: 'b40', label: '4-0', side: 'b' },
+];
+export const PREDICTION_SCORING = { exact: 5, correctDraw: 4, correctWinner: 3, wrong: 0 };
+export const PREDICTOR_BADGES = [
+  { name: 'Rookie', min: 0 }, { name: 'Analyst', min: 15 }, { name: 'Expert', min: 35 },
+  { name: 'Guru', min: 60 }, { name: 'Legend', min: 100 },
+];
+export const badgeFor = (pts) => [...PREDICTOR_BADGES].reverse().find((b) => pts >= b.min) || PREDICTOR_BADGES[0];
+// Leaderboard seed (empty — fills as the community plays).
+export const PREDICTION_LEADERBOARD = [];
+
+// Match of the Week = next scheduled men's fixture (fallback: most recent final).
+export const matchOfTheWeek = () =>
+  FIXTURES.find((f) => f.status === 'scheduled' && f.league === 'mens')
+  || [...FIXTURES].reverse().find((f) => f.status === 'final' && f.league === 'mens')
+  || null;
+
+// LP AI prediction: blends standings strength, LP ratings, form & H2H.
+export const lpAiPredict = (fixture) => {
+  if (!fixture) return null;
+  const sFr = STANDINGS.mens.franchise;
+  const row = (id) => sFr.find((r) => r.franchise_id === id) || { points: 0, played: 1, won: 0 };
+  const rate = (id) => {
+    const ps = PLAYERS.filter((p) => p.franchise_id === id && p.stats.played > 0);
+    return ps.length ? ps.reduce((s, p) => s + p.lp_rating, 0) / ps.length : 1400;
+  };
+  const a = fixture.home; const b = fixture.away;
+  const ra = row(a); const rb = row(b);
+  const ppgA = ra.points / Math.max(1, ra.played); const ppgB = rb.points / Math.max(1, rb.played);
+  const eloA = rate(a); const eloB = rate(b);
+  const h2h = headToHead(a, b);
+  // weighted score
+  let scoreA = ppgA * 2 + (eloA - 1400) / 50 + h2h.aWins;
+  let scoreB = ppgB * 2 + (eloB - 1400) / 50 + h2h.bWins;
+  const total = scoreA + scoreB || 1;
+  const pA = scoreA / total;
+  const winner = pA >= 0.5 ? a : b;
+  const conf = Math.round(50 + Math.abs(pA - 0.5) * 100);
+  // map confidence → predicted margin
+  const margin = conf >= 75 ? '4-0' : conf >= 60 ? '3-1' : '3-1';
+  return { winner, loser: winner === a ? b : a, confidence: Math.min(95, conf), margin };
+};
+
+/* =================================================================
+ * PLAYER OF THE WEEK  (nominees = current top MVP performers)
+ * ================================================================= */
+export const playerOfWeek = {
+  current: null,                 // set a playerId to crown a winner
+  nominees: () => fanPotwCandidates(5),
+  previous: [],                  // [{ week, playerId }]
+};
+
+/* =================================================================
+ * WEEKLY POWER RANKINGS with movement + commentary
+ * ================================================================= */
+export const POWER_RANKINGS_WEEKLY = {
+  mens: [
+    { franchise: 'sonic-viboras', move: 'up', note: 'Two from two and rising — Coomans & Grote setting the standard.' },
+    { franchise: 'desert-falcons', move: 'same', note: 'Still unbeaten and top on points; the team to beat.' },
+    { franchise: 'sahara-lions', move: 'up', note: 'A game in hand and quietly building.' },
+    { franchise: 'ice-breakers', move: 'up', note: 'First win lit a fire under their season.' },
+    { franchise: 'samurai-kicksmashers', move: 'down', note: 'Firepower there, consistency the question.' },
+    { franchise: 'globo-boomerangs', move: 'same', note: 'Fighting for a foothold.' },
+    { franchise: 'avalanche-aces', move: 'down', note: 'A tough start; the rebuild is on.' },
+  ],
+};

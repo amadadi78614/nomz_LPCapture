@@ -246,35 +246,35 @@ export const FIXTURES = [
     ] } },
 
   // WEEK 3 · 22–24 Jun · DH: Sonic Viboras
-  { id: 'fx-w3-1', round: 3, league: 'mens', home: 'avalanche-aces', away: 'sonic-viboras', start: T('2026-06-22'), status: 'scheduled', court: 'Play 360', dh: true,
-    pairs: { slots: [
-      { slot: '18:00', rubbers: [
-        ['P1', 'Wiehann / Hoffman Maritz', 'Heinrich Coomans / Anton Grote'],
-        ['P3', 'Anas / Gerco', 'Gerrit / Dewald'],
-      ] },
-      { slot: '19:15', rubbers: [
-        ['P1', 'Patrick / Donavan', 'Dr Moola / Pieter Boshoff'],
-        ['P2', 'Ettiene / Ruiaan', 'Warick / Joshua'],
-      ] },
-      { slot: '20:30', rubbers: [
-        ['P2', 'Frik / Pierre', 'Ismail / Jaques'],
-        ['P3', 'Rishad / Piotr', 'Muhamed / Saliem'],
-      ] },
+  { id: 'fx-w3-1', round: 3, league: 'mens', home: 'avalanche-aces', away: 'sonic-viboras', start: T('2026-06-22'), status: 'final', court: 'Play 360', dh: true,
+    score: { winner: 'draw', totals: [10, 10], rubberWins: [3, 3], rubbers: [
+      { slot: '18:00', court: 'P1', home: 'Hoffman Maritz / Wiehann Mohlen', away: 'Heinrich Coomans / Anton Grote',
+        homeIds: ids('avalanche-aces', 'Hoffman Maritz', 'Wiehann Mohlen'), awayIds: ids('sonic-viboras', 'Heinrich Coomans', 'Anton Grote'), games: [0, 3], winner: 'away', sets: [[2, 6], [6, 1], [7, 10]] },
+      { slot: '18:00', court: 'P3', home: 'Anas Mungalee / Gerco van Rooyen', away: 'George du Toit / Dewald Meyer',
+        homeIds: ids('avalanche-aces', 'Anas Mungalee', 'Gerco van Rooyen'), awayIds: ids('sonic-viboras', 'George du Toit', 'Dewald Meyer'), games: [3, 0], winner: 'home', sets: [[3, 6], [6, 4], [10, 3]] },
+      { slot: '19:15', court: 'P1', home: 'Patrick Leyden / Donovan Taylor', away: 'Yusuf Moola / Pieter Boshoff',
+        homeIds: ids('avalanche-aces', 'Patrick Leyden', 'Donovan Taylor'), awayIds: ids('sonic-viboras', 'Yusuf Moola', 'Pieter Boshoff'), games: [0, 4], winner: 'away', sets: [[2, 6], [1, 6], [5, 10]] },
+      { slot: '19:15', court: 'P2', home: 'Etienne Grobler / Ruaan Naude', away: 'Warwick Morgan / Joshua Hoffman',
+        homeIds: ids('avalanche-aces', 'Etienne Grobler', 'Ruaan Naude'), awayIds: ids('sonic-viboras', 'Warwick Morgan', 'Joshua Hoffman'), games: [3, 0], winner: 'home', sets: [[3, 6], [7, 5], [10, 2]] },
+      { slot: '20:30', court: 'P2', home: 'Frik de Beer / Pierre de Villiers', away: 'Ismail Fakir / Jacques Henning',
+        homeIds: ids('avalanche-aces', 'Frik de Beer', 'Pierre de Villiers'), awayIds: ids('sonic-viboras', 'Ismail Fakir', 'Jacques Henning'), games: [4, 0], winner: 'home', sets: [[6, 2], [6, 2], [10, 2]] },
+      { slot: '20:30', court: 'P3', home: 'Rishaad Shaik / Piotr Latusek', away: 'Mohamed Dadamia / Saliem Mahomed',
+        homeIds: ids('avalanche-aces', 'Rishaad Shaik', 'Piotr Latusek'), awayIds: ids('sonic-viboras', 'Mohamed Dadamia', 'Saliem Mahomed'), games: [0, 3], winner: 'away', sets: [[1, 6], [6, 1], [0, 10]] },
     ] } },
-  { id: 'fx-w3-2', round: 3, league: 'mens', home: 'samurai-kicksmashers', away: 'desert-falcons', start: T('2026-06-22'), status: 'scheduled', court: 'Padel 24',
-    pairs: { slots: [
-      { slot: '18:00', rubbers: [
-        ['P1', 'Bryan Theron / Burger Bester', 'Uwaiz Patel / Yusuf Patel'],
-        ['P3', 'Imraan / Nuaym', 'Danie Rautenbach / Jude'],
-      ] },
-      { slot: '19:15', rubbers: [
-        ['P1', 'Siraaj / Sujee', 'Ahmed / Faheem'],
-        ['P2', 'Tim / Sikander Cassim', 'Rayaan / Fahad'],
-      ] },
-      { slot: '20:30', rubbers: [
-        ['P2', 'Armand / Shaun', 'Warno / Morne'],
-        ['P3', 'Riyaz Ahmed / Dillon', 'Jaques / Reino'],
-      ] },
+  { id: 'fx-w3-2', round: 3, league: 'mens', home: 'samurai-kicksmashers', away: 'desert-falcons', start: T('2026-06-22'), status: 'final', court: 'Padel 24',
+    score: { winner: 'away', totals: [3, 19], rubberWins: [1, 5], rubbers: [
+      { slot: '18:00', court: 'P3', home: 'Nuaym Shaik / Imraan Khan', away: 'Jude van den Berg / Danie Rautenbach',
+        homeIds: ids('samurai-kicksmashers', 'Nuaym Shaik', 'Imraan Khan'), awayIds: ids('desert-falcons', 'Jude van den Berg', 'Danie Rautenbach'), games: [0, 4], winner: 'away', sets: [[1, 6], [1, 6], [4, 10]] },
+      { slot: '18:00', court: 'P1', home: 'Bryan Theron / Burger Bester', away: 'Uwaiz Patel / Yusuf Patel',
+        homeIds: ids('samurai-kicksmashers', 'Bryan Theron', 'Burger Bester'), awayIds: ids('desert-falcons', 'Uwaiz Patel', 'Yusuf Patel'), games: [0, 4], winner: 'away', sets: [[1, 6], [3, 6], [5, 10]] },
+      { slot: '19:15', court: 'P2', home: 'Sikander Cassim / Tim Forssman', away: 'Rayhaan Dinath / Fahad Patel',
+        homeIds: ids('samurai-kicksmashers', 'Sikander Cassim', 'Tim Forssman'), awayIds: ids('desert-falcons', 'Rayhaan Dinath', 'Fahad Patel'), games: [0, 3], winner: 'away', sets: [[7, 5], [3, 6], [4, 10]] },
+      { slot: '19:15', court: 'P1', home: 'Siraaj Shaik / Muhammad Azhar Sujee', away: 'Ahmed Ismail / Faheem Nomani',
+        homeIds: ids('samurai-kicksmashers', 'Siraaj Shaik', 'Muhammad Azhar Sujee'), awayIds: ids('desert-falcons', 'Ahmed Ismail', 'Faheem Nomani'), games: [3, 0], winner: 'home', sets: [[3, 6], [7, 5], [13, 11]] },
+      { slot: '20:30', court: 'P2', home: 'Armand Esterhuizen / Shaun Moropa', away: 'Warno Smit / Morne Steenekamp',
+        homeIds: ids('samurai-kicksmashers', 'Armand Esterhuizen', 'Shaun Moropa'), awayIds: ids('desert-falcons', 'Warno Smit', 'Morne Steenekamp'), games: [0, 4], winner: 'away', sets: [[1, 6], [4, 6], [2, 10]] },
+      { slot: '20:30', court: 'P3', home: 'Riyaz Ahmed Bellim / Dillon Francis', away: 'Jacques Burger / Reino Grobler',
+        homeIds: ids('samurai-kicksmashers', 'Riyaz Ahmed Bellim', 'Dillon Francis'), awayIds: ids('desert-falcons', 'Jacques Burger', 'Reino Grobler'), games: [0, 4], winner: 'away', sets: [[3, 6], [5, 7], [6, 10]] },
     ] } },
   { id: 'fx-w3-3', round: 3, league: 'mens', home: 'globo-boomerangs', away: 'sonic-viboras', start: T('2026-06-24'), status: 'scheduled', court: 'Padel 24', dh: true },
   { id: 'fx-w3-4', round: 3, league: 'mens', home: 'sahara-lions', away: 'ice-breakers', start: T('2026-06-24'), status: 'scheduled', court: 'Play 360' },
@@ -350,24 +350,24 @@ const mkRow = ([name, P, W, L, D, BP, pts], adj) => ({
 });
 const OFFICIAL = {
   franchise: [
-    ['Falcons', 12, 11, 1, 0, 7, 40], ['Sonics', 12, 9, 2, 0, 5, 32],
-    ['Kicksmashers', 12, 5, 7, 0, 4, 19], ['IceBreakers', 12, 5, 7, 0, 4, 19],
-    ['Aces', 18, 5, 13, 0, 1, 16], ['Lions', 6, 4, 2, 0, 3, 15], ['Globo', 12, 3, 9, 0, 2, 11],
+    ['Falcons', 18, 16, 2, 0, 11, 59], ['Sonics', 18, 12, 6, 0, 6, 42],
+    ['Aces', 24, 8, 16, 0, 2, 26], ['Kicksmashers', 18, 6, 12, 0, 4, 22],
+    ['IceBreakers', 12, 5, 7, 0, 4, 19], ['Lions', 6, 4, 2, 0, 3, 15], ['Globo', 12, 3, 9, 0, 2, 11],
   ].map((r) => mkRow(r)),
   P1: [
-    ['Falcons', 4, 4, 0, 0, 4, 16], ['Sonics', 4, 3, 1, 0, 2, 11], ['IceBreakers', 4, 3, 1, 0, 2, 11],
-    ['Kicksmashers', 4, 2, 2, 0, 2, 8], ['Lions', 2, 2, 0, 0, 1, 7], ['Aces', 6, 0, 6, 0, 0, 0], ['Globo', 4, 0, 4, 0, 0, 0],
+    ['Falcons', 6, 5, 1, 0, 5, 20], ['Sonics', 6, 5, 1, 0, 3, 18], ['IceBreakers', 4, 3, 1, 0, 2, 11],
+    ['Kicksmashers', 6, 3, 3, 0, 2, 11], ['Lions', 2, 2, 0, 0, 1, 7], ['Aces', 8, 0, 8, 0, 0, 0], ['Globo', 4, 0, 4, 0, 0, 0],
   ].map((r) => mkRow(r)),
   P2: [
-    ['Sonics', 4, 3, 1, 0, 2, 11], ['Falcons', 4, 3, 1, 0, 1, 10], ['Kicksmashers', 4, 2, 2, 0, 1, 7],
-    ['Globo', 4, 2, 2, 0, 1, 7], ['Aces', 6, 2, 4, 0, 0, 6], ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4],
+    ['Falcons', 6, 5, 1, 0, 2, 17], ['Aces', 8, 4, 4, 0, 1, 13], ['Sonics', 6, 3, 3, 0, 2, 11],
+    ['Kicksmashers', 6, 2, 4, 0, 1, 7], ['Globo', 4, 2, 2, 0, 1, 7], ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4],
   ].map((r) => mkRow(r)),
   P3: [
-    ['Sonics', 4, 3, 1, 0, 1, 10], ['Aces', 6, 3, 3, 0, 1, 10], ['Falcons', 4, 4, 0, 0, 2, 6],
-    ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 4, 1, 3, 0, 1, 4],
+    ['Sonics', 6, 4, 2, 0, 1, 13], ['Aces', 8, 4, 4, 0, 1, 13], ['Falcons', 6, 6, 0, 0, 4, 6],
+    ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 6, 1, 5, 0, 1, 4],
   ].map((r) => mkRow(r, 0)),
 };
-// Falcons' P3 carries a published league deduction (4 wins shown as 6 pts).
+// Falcons' P3 carries a published league deduction (6 wins shown as 6 pts; raw 14 − 8).
 OFFICIAL.P3.find((r) => r.franchise_id === 'desert-falcons').adj = -8;
 
 export const STANDINGS = {

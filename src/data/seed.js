@@ -367,8 +367,14 @@ const OFFICIAL = {
     ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 6, 1, 5, 0, 1, 4],
   ].map((r) => mkRow(r, 0)),
 };
-// Falcons' P3 carries a published league deduction (6 wins shown as 6 pts; raw 14 − 8).
+// Falcons' P3 carries a published league deduction (raw 22 − 8 = 14).
 OFFICIAL.P3.find((r) => r.franchise_id === 'desert-falcons').adj = -8;
+
+// Sort every table by points, then wins, then bonus points, so the
+// displayed order always matches the points (no manual re-ordering).
+const sortTable = (rows) => [...rows].sort((a, b) =>
+  b.points - a.points || b.won - a.won || b.bp - a.bp || a.lost - b.lost);
+['franchise', 'P1', 'P2', 'P3'].forEach((t) => { OFFICIAL[t] = sortTable(OFFICIAL[t]); });
 
 export const STANDINGS = {
   mens: OFFICIAL,

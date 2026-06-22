@@ -37,7 +37,7 @@ export function Home() {
       <HomeStyles />
       {/* ============ HERO STORY ============ */}
       <div className="hero">
-        <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Week 2 complete · Next: Mon 22 Jun</span>
+        <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Match Day 5 complete · Falcons go 16-2</span>
         <h1 className="display" style={{ margin: '6px 0 8px' }}>{hero.title}</h1>
         <p className="muted" style={{ maxWidth: 580 }}>{hero.body}</p>
         <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>

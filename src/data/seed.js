@@ -456,6 +456,8 @@ ratedRubbers.forEach((rb) => {
 });
 
 export const NEWS = [
+  { id: 'nm5a', kicker: 'Match Day 5', title: 'Falcons march on: 19-3 over the Kick Smashers as the lead stretches to 17', date: T('2026-06-22', 22), tag: 'mens', body: 'Desert Falcons took five of six rubbers at Padel 24 — Uwaiz and Yusuf Patel and the Warno/Morne pair both sweeping 3-0 — to move clear at the top on 59 points. Only Siraaj Shaik and Azhar Sujee struck back for the Smashers, edging an 11-13 champions-tiebreak thriller.' },
+  { id: 'nm5b', kicker: 'Match Day 5', title: 'Honours even: Sonic Viboras and Avalanche Aces share the spoils 10-10', date: T('2026-06-22', 22, 30), tag: 'mens', body: 'A genuine tie at Play 360 — three rubbers each. Coomans and Grote stayed perfect with a P1 win, Dr Moola and Boshoff swept their rubber, but the Aces hit back through Frik de Beer and Pierre de Villiers and a battling P2 from Grobler and Naude to split the night.' },
   { id: 'nm4', kicker: 'Match Day 4', title: 'Falcons stay perfect: 19-3 demolition of the Boomerangs at Padel 24', date: T('2026-06-18', 22), tag: 'mens', body: 'Desert Falcons made it twelve rubbers unbeaten, taking five of six against Global Boomerangs. Only Ryan Kennett and Nabeel Meer interrupted the procession, edging their P2 rubber 6-3, 6-2 before the Falcons closed out the night.' },
   { id: 'n0', kicker: 'Match Day 3', title: 'Ice Breakers stun the Aces 16-7 for a first win; Viboras down the Smashers 15-7', date: T('2026-06-17', 22), tag: 'mens', body: 'Week 2 belonged to the Ice Breakers \u2014 Imaad/Salmaan, Swart/Herbst and Correia/Enslin all posting clean wins to sink Avalanche Aces 16-7 at Padel 24. At Play 360, Sonic Viboras took four rubbers to beat Samurai Kick Smashers 15-7.' },
   { id: 'n1', kicker: 'Log tables', title: 'Falcons lead on 21 after the opening rounds; P3 drama as they sit bottom on -2', date: T('2026-06-11', 11), tag: 'mens', body: 'The Astron Energy P1, Vawda\'s Tyre Torque P2 and Omar\'s Motor Den P3 logs are live. Desert Falcons lead the franchise log — but a league adjustment leaves their P3 pairs bottom.' },
@@ -847,12 +849,12 @@ export const playerOfWeek = {
  * ================================================================= */
 export const POWER_RANKINGS_WEEKLY = {
   mens: [
-    { franchise: 'sonic-viboras', move: 'up', note: 'Two from two and rising — Coomans & Grote setting the standard.' },
-    { franchise: 'desert-falcons', move: 'same', note: 'Still unbeaten and top on points; the team to beat.' },
-    { franchise: 'sahara-lions', move: 'up', note: 'A game in hand and quietly building.' },
-    { franchise: 'ice-breakers', move: 'up', note: 'First win lit a fire under their season.' },
-    { franchise: 'samurai-kicksmashers', move: 'down', note: 'Firepower there, consistency the question.' },
-    { franchise: 'globo-boomerangs', move: 'same', note: 'Fighting for a foothold.' },
-    { franchise: 'avalanche-aces', move: 'down', note: 'A tough start; the rebuild is on.' },
+    { franchise: 'desert-falcons', move: 'same', note: 'Untouchable. 16-2 and a 17-point cushion at the summit.' },
+    { franchise: 'sonic-viboras', move: 'same', note: 'Held the Aces to a draw and stayed second — Coomans & Grote still perfect.' },
+    { franchise: 'avalanche-aces', move: 'up', note: 'A 10-10 share with the Viboras: signs of life after a rough start.' },
+    { franchise: 'samurai-kicksmashers', move: 'down', note: 'Outgunned 19-3 by the Falcons; the inconsistency bites again.' },
+    { franchise: 'ice-breakers', move: 'down', note: 'Idle this round and slip a place as others play.' },
+    { franchise: 'sahara-lions', move: 'same', note: 'Still a game in hand and lurking.' },
+    { franchise: 'globo-boomerangs', move: 'same', note: 'Up next against the Viboras — a chance to make noise.' },
   ],
 };

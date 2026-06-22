@@ -363,7 +363,7 @@ const OFFICIAL = {
     ['Kicksmashers', 6, 2, 4, 0, 1, 7], ['Globo', 4, 2, 2, 0, 1, 7], ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4],
   ].map((r) => mkRow(r)),
   P3: [
-    ['Sonics', 6, 4, 2, 0, 1, 13], ['Aces', 8, 4, 4, 0, 1, 13], ['Falcons', 6, 6, 0, 0, 4, 6],
+    ['Sonics', 6, 4, 2, 0, 1, 13], ['Aces', 8, 4, 4, 0, 1, 13], ['Falcons', 6, 6, 0, 0, 4, 14],
     ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 6, 1, 5, 0, 1, 4],
   ].map((r) => mkRow(r, 0)),
 };

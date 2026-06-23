@@ -781,28 +781,28 @@ export const legacyFranchiseById = (id) => LEGACY_FRANCHISES.find((f) => f.id ==
 // Youth carry their draft round (R#). Stats start at zero for Season 4.
 const LEGACY_DRAFT = {
   'lp-leopards': {
-    adults: ['Oz', 'Jovan Erasmus', 'Ridhwaan Sujee', 'Adil Amod', 'Muhammad Mangerah'],
-    youth: [['Huzaifah Sujee', 11], ['Mohammed Rohaan Sheikh', 16], ['Ebrahim Mangerah', 12]],
+    adults: ['Ozayr Sheikh', 'Jovan Erasmus', 'Ridhwaan Sujee', 'Adil Amod', 'Muhammad Mangerah'],
+    youth: [['Huzaifah Sujee', 11], ['Muhammed Ruhaan Sheikh', 16], ['Ebrahim Mangerah', 12]],
   },
   'lp-rhinos': {
     adults: ['Rafiq Mohamed', 'Christiaan van Aardt', 'Irshaad Moola', 'Zinidine Morgan', 'Yusuf Amod'],
-    youth: [['Ayaan Mohamed', 10], ['Mohamed Moola', 6], ['Isa Moola', 15]],
+    youth: [['Ayaan Mohamed', 10], ['Muhammed Moola', 6], ['Eesa Moola', 15]],
   },
   'lp-cheetahs': {
-    adults: ['Shoaib Nomani', 'Sandeep Daya', 'Mauritz van der Mescht', 'Michael Smit', 'Nomz'],
+    adults: ['Shoaib Nomani', 'Sandeep Daya', 'Mauritz van der Mescht', 'Michael Smit', 'Mohamed Nomani'],
     youth: [['Abdurahmaan Jogee', 8], ['Mikel Pillay', 13], ['Aadam Nomani', 2]],
   },
   'lp-honey-badgers': {
-    adults: ['Jameel Valley', 'Faheem Seedat', 'Scharl', 'Sailesh Nagar', 'Zandre de Kok'],
-    youth: [['Jude', 1], ['Reyhaan Seedat', 16], ['Seth van den Berg', 4]],
+    adults: ['Jameel Valley', 'Faheem Seedat', 'Scharl van den Berg', 'Sailesh Nagar', 'Zandre de Kok'],
+    youth: [['Jude van den Berg', 1], ['Reyhaan Seedat', 16], ['Seth van den Berg', 4]],
   },
   'lp-eagles': {
-    adults: ['Fiaz Bhikoo', 'Sahal Yunus', 'Dian Erasmus', 'Akmeer Amod', 'Azhar Sujee'],
+    adults: ['Fiaz Bhikoo', 'Sahal Yunus', 'Dian Erasmus', 'Akmeer Amod', 'Mohamed Azhar Sujee'],
     youth: [['Nathan Mckenzie', 3], ['Arman Bhikoo', 5], ['Yahya Sujee', 14]],
   },
   'lp-jackals': {
-    adults: ['Fahad', 'Zunaid Ganchi', 'Stiaan Duvenhage', 'Yusuf Ismail', 'Spanner Mescht'],
-    youth: [['Zuhayr Ismail', 9], ['Dewan Duvenhage', 17], ['Hoosein Patel', 7]],
+    adults: ['Fahad Patel', 'Zunaid Ganchi', 'Stiaan Duvenhage', 'Yusuf Ismail', 'Spanner Mescht'],
+    youth: [['Zuhayr Ismail', 9], ['Dewan Duvenhage', 17], ['Mohamed Hoosein Patel', 7]],
   },
 };
 const blankStats = () => ({ played: 0, wins: 0, losses: 0, rubbers_won: 0, sets_won: 0, sets_lost: 0, bonus_points: 0, mvp_points: 0 });

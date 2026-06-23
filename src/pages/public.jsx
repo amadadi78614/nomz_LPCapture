@@ -4,7 +4,8 @@ import {
   FIXTURES, PLAYERS, NEWS, STANDINGS, POWER_RANKINGS, SPONSORS, TIER_SPONSORS, FRANCHISES,
   franchiseById, playerById, stripeVar, bestPartner, winPct,
   RIVALRIES, headToHead, DYNASTY, TV_VIDEOS, TV_LIVE, getYouTubeId, ytThumb, mvpLeader,
-  ROAD_TO_360, LEGACY_FRANCHISES, matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY,
+  ROAD_TO_360, LEGACY_FRANCHISES, LEGACY_STANDINGS, LEGACY_PLAYERS, LEGACY_POWER,
+  legacyFranchiseById, matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY,
   teamForm,
 } from '../data/seed';
 import { communityLinks } from '../config/communityLinks';
@@ -37,7 +38,7 @@ export function Home() {
       <HomeStyles />
       {/* ============ HERO STORY ============ */}
       <div className="hero">
-        <span className="eyebrow" style={{ color: 'var(--gold)' }}>Historic first · The LP Legacy Franchise League is here</span>
+        <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Match Day 5 complete · Falcons go 16-2</span>
         <h1 className="display" style={{ margin: '6px 0 8px' }}>{hero.title}</h1>
         <p className="muted" style={{ maxWidth: 580 }}>{hero.body}</p>
         <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>
@@ -542,13 +543,15 @@ function FragmentRow({ side, fr, st, pts }) {
 export function Standings() {
   const [league, setLeague] = useState('mens');
   const [tier, setTier] = useState('franchise');
+  const ranked = [...LEGACY_STANDINGS].sort((a, b) => b.points - a.points);
   return (
     <div className="page">
       <h1 className="display">Log Tables</h1>
       <p className="muted" style={{ fontSize: 13 }}>Rubber win = 3 pts · draw = 1 pt · bonus point for a 4-0 win. Franchise log counts every rubber; P1–P3 logs track each court tier.</p>
       <div className="tabbar mt">
-        <button className={league === 'mens' ? 'on' : ''} onClick={() => setLeague('mens')}>Men's League</button>
-        <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies League</button>
+        <button className={league === 'mens' ? 'on' : ''} onClick={() => { setLeague('mens'); setTier('franchise'); }}>Men's</button>
+        <button className={league === 'ladies' ? 'on' : ''} onClick={() => { setLeague('ladies'); setTier('franchise'); }}>Ladies</button>
+        <button className={league === 'legacy' ? 'on' : ''} onClick={() => setLeague('legacy')}>LP Legacy</button>
       </div>
       {league === 'mens' && (
         <div className="tabbar mt">
@@ -563,72 +566,139 @@ export function Standings() {
           <span className="muted" style={{ fontSize: 12 }}>{tier} Log Table · presented by {TIER_SPONSORS[tier].name}</span>
         </div>
       )}
-      <div className="mt"><StandingsTable league={league} tier={tier} /></div>
+      {league !== 'legacy' && <div className="mt"><StandingsTable league={league} tier={tier} /></div>}
       {league === 'mens' && tier === 'franchise' && <p className="muted mt" style={{ fontSize: 12 }}>Top 4 qualify for Finals Night.</p>}
+      {league === 'legacy' && (
+        <div className="grid mt">
+          {ranked.length === 0 ? (
+            <div className="card"><p className="muted" style={{ margin: 0 }}>Standings go live once the first match is played.</p></div>
+          ) : ranked.map((row, i) => {
+            const fr = legacyFranchiseById(row.franchise_id);
+            if (!fr) return null;
+            return (
+              <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                <span className="row" style={{ gap: 10 }}>
+                  <b className="num muted" style={{ width: 22 }}>{i + 1}</b>
+                  <img src={fr.logo} alt="" style={{ width: 28, height: 28, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{fr.name}</b>
+                </span>
+                <span className="muted" style={{ fontSize: 13 }}>{row.played ? `${row.won}W–${row.lost}L` : '—'} · <b style={{ color: 'var(--text)' }}>{row.points} pts</b></span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
 
 /* ========================== PLAYERS =========================== */
 export function Players() {
-  const [league, setLeague] = useState('all');
+  const [league, setLeague] = useState('mens');
   const [q, setQ] = useState('');
   const [fFilter, setFFilter] = useState('all');
   const list = useMemo(() => PLAYERS
-    .filter((p) => p.league === 'mens' && (league === 'all' || p.league === league) && (fFilter === 'all' || p.franchise_id === fFilter) && p.name.toLowerCase().includes(q.toLowerCase()))
-    .sort((a, b) => b.lp_rating - a.lp_rating), [league, q, fFilter]);
+    .filter((p) => p.league === 'mens' && (fFilter === 'all' || p.franchise_id === fFilter) && p.name.toLowerCase().includes(q.toLowerCase()))
+    .sort((a, b) => b.lp_rating - a.lp_rating), [q, fFilter]);
+  const legacyList = useMemo(() => LEGACY_PLAYERS
+    .filter((p) => p.name.toLowerCase().includes(q.toLowerCase()))
+    .sort((a, b) => a.name.localeCompare(b.name)), [q]);
   const mensFranchises = FRANCHISES.filter((f) => f.league === 'mens');
   return (
     <div className="page">
       <h1 className="display">Players</h1>
       <div className="tabbar mt">
-        {['all', 'mens', 'ladies'].map((l) => (
-          <button key={l} className={league === l ? 'on' : ''} onClick={() => setLeague(l)}>
-            {l === 'all' ? 'All' : l === 'mens' ? "Men's" : 'Ladies'}
-          </button>
-        ))}
+        <button className={league === 'mens' ? 'on' : ''} onClick={() => { setLeague('mens'); setFFilter('all'); }}>Men's</button>
+        <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies</button>
+        <button className={league === 'legacy' ? 'on' : ''} onClick={() => { setLeague('legacy'); setFFilter('all'); }}>LP Legacy</button>
       </div>
       <input
         value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search players"
         style={{ width: '100%', marginTop: 12, padding: '12px 14px', borderRadius: 10, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)', font: 'inherit' }}
       />
-      {/* franchise filter */}
-      <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-        <span className="muted" style={{ fontSize: 11 }}>Franchise</span>
-        <button className={`chip ${fFilter === 'all' ? 'on' : ''}`} onClick={() => setFFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
-        {mensFranchises.map((fr) => (
-          <button key={fr.id} className={`chip ${fFilter === fr.id ? 'on' : ''}`} onClick={() => setFFilter(fr.id)}
-            style={{ cursor: 'pointer', border: 'none', borderLeft: `3px solid ${stripeVar(fr.id)}` }}>
-            {fr.short || fr.name}
-          </button>
-        ))}
-      </div>
+      {/* franchise filter — mens only */}
+      {league === 'mens' && (
+        <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+          <span className="muted" style={{ fontSize: 11 }}>Franchise</span>
+          <button className={`chip ${fFilter === 'all' ? 'on' : ''}`} onClick={() => setFFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
+          {mensFranchises.map((fr) => (
+            <button key={fr.id} className={`chip ${fFilter === fr.id ? 'on' : ''}`} onClick={() => setFFilter(fr.id)}
+              style={{ cursor: 'pointer', border: 'none', borderLeft: `3px solid ${stripeVar(fr.id)}` }}>
+              {fr.short || fr.name}
+            </button>
+          ))}
+        </div>
+      )}
+      {/* legacy franchise filter */}
+      {league === 'legacy' && (
+        <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+          <span className="muted" style={{ fontSize: 11 }}>Franchise</span>
+          <button className={`chip ${fFilter === 'all' ? 'on' : ''}`} onClick={() => setFFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
+          {LEGACY_FRANCHISES.map((fr) => (
+            <button key={fr.id} className={`chip ${fFilter === fr.id ? 'on' : ''}`} onClick={() => setFFilter(fr.id)}
+              style={{ cursor: 'pointer', border: 'none', borderLeft: `3px solid ${fr.primary}` }}>
+              {fr.short || fr.name}
+            </button>
+          ))}
+        </div>
+      )}
       {league === 'ladies' && <div className="mt"><ComingSoon note="Ladies League player profiles go live with the Season 3 launch." /></div>}
-      <p className="muted mt" style={{ fontSize: 12 }}>{list.length} player{list.length === 1 ? '' : 's'}</p>
-      <div className="grid cols-3 mt">
-        {list.map((p, i) => {
-          const fr = franchiseById(p.franchise_id);
-          const t = tier(p.lp_rating);
-          return (
-            <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fr.id) }}>
-              <div className="row">
-                <span className="avatar">{p.name.split(' ').map((w) => w[0]).join('')}</span>
-                <div>
-                  <b>{p.name}</b> <span className="chip" style={{ padding: '1px 7px', fontSize: 10 }}>{p.tier}</span>{p.role === 'captain' && <span className="chip" style={{ padding: '1px 7px', fontSize: 10, marginLeft: 4 }}>C</span>}
-                  <div className="muted" style={{ fontSize: 12 }}>{fr.name}</div>
-                </div>
-              </div>
-              <div className="center">
-                <div className="num" style={{ fontSize: 18 }}>{p.lp_rating}</div>
-                <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.08em', color: t.color, textTransform: 'uppercase' }}>{t.label}</div>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+      {league === 'mens' && (
+        <>
+          <p className="muted mt" style={{ fontSize: 12 }}>{list.length} player{list.length === 1 ? '' : 's'}</p>
+          <div className="grid cols-3 mt">
+            {list.map((p) => {
+              const fr = franchiseById(p.franchise_id);
+              const t = tier(p.lp_rating);
+              return (
+                <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fr.id) }}>
+                  <div className="row">
+                    <span className="avatar">{p.name.split(' ').map((w) => w[0]).join('')}</span>
+                    <div>
+                      <b>{p.name}</b> <span className="chip" style={{ padding: '1px 7px', fontSize: 10 }}>{p.tier}</span>{p.role === 'captain' && <span className="chip" style={{ padding: '1px 7px', fontSize: 10, marginLeft: 4 }}>C</span>}
+                      <div className="muted" style={{ fontSize: 12 }}>{fr.name}</div>
+                    </div>
+                  </div>
+                  <div className="center">
+                    <div className="num" style={{ fontSize: 18 }}>{p.lp_rating}</div>
+                    <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: '0.08em', color: t.color, textTransform: 'uppercase' }}>{t.label}</div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </>
+      )}
+      {league === 'legacy' && (() => {
+        const filtered = fFilter === 'all' ? legacyList : legacyList.filter((p) => p.franchise_id === fFilter);
+        return (
+          <>
+            <p className="muted mt" style={{ fontSize: 12 }}>{filtered.length} player{filtered.length === 1 ? '' : 's'}</p>
+            <div className="grid cols-3 mt">
+              {filtered.map((p) => {
+                const fr = legacyFranchiseById(p.franchise_id);
+                if (!fr) return null;
+                return (
+                  <Link key={p.id} to={`/legacy-franchise/${p.franchise_id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                    <div className="row">
+                      <span className="avatar" style={{ background: fr.primary + '33', color: fr.primary }}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
+                      <div>
+                        <b style={{ fontSize: 14 }}>{p.name}</b>
+                        <div className="muted" style={{ fontSize: 11 }}>{fr.name} · <span style={{ color: 'var(--gold)' }}>{p.kind === 'youth' ? 'Youth' : 'Adult'}</span></div>
+                      </div>
+                    </div>
+                    
+                  </Link>
+                );
+              })}
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }
+
 
 /* ======================= PLAYER PROFILE ======================== */
 export function PlayerProfile() {
@@ -708,32 +778,56 @@ export function PlayerProfile() {
 /* ========================= FRANCHISES ========================== */
 export function Franchises() {
   const [league, setLeague] = useState('mens');
-  const list = league === 'ladies' ? [] : STANDINGS[league].franchise;
+  const list = league === 'ladies' ? [] : league === 'mens' ? STANDINGS.mens.franchise : [];
   return (
     <div className="page">
       <h1 className="display">Franchises</h1>
       <div className="tabbar mt">
         <button className={league === 'mens' ? 'on' : ''} onClick={() => setLeague('mens')}>Men's</button>
         <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies</button>
+        <button className={league === 'legacy' ? 'on' : ''} onClick={() => setLeague('legacy')}>LP Legacy</button>
       </div>
       {league === 'ladies' && <div className="mt"><ComingSoon note="Ladies franchise hubs launch with the Season 3 announcement." /></div>}
-      <div className="grid cols-2 mt">
-        {list.map((r, i) => {
-          const fr = franchiseById(r.franchise_id);
-          return (
-            <Link key={fr.id} to={`/franchise/${fr.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fr.id) }}>
-              <div className="row">
-                <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
-                <div>
-                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17 }}>{fr.name}</b>
-                  <div className="muted" style={{ fontSize: 12 }}>P{r.played} · W{r.won} · {r.points} pts</div>
+      {league === 'mens' && (
+        <div className="grid cols-2 mt">
+          {list.map((r, i) => {
+            const fr = franchiseById(r.franchise_id);
+            return (
+              <Link key={fr.id} to={`/franchise/${fr.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fr.id) }}>
+                <div className="row">
+                  <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+                  <div>
+                    <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17 }}>{fr.name}</b>
+                    <div className="muted" style={{ fontSize: 12 }}>P{r.played} · W{r.won} · {r.points} pts</div>
+                  </div>
                 </div>
-              </div>
-              <span className={`pos-badge ${i < 4 ? 'q' : ''}`} style={{ width: 30, height: 30, fontSize: 14 }}>{i + 1}</span>
-            </Link>
-          );
-        })}
-      </div>
+                <span className={`pos-badge ${i < 4 ? 'q' : ''}`} style={{ width: 30, height: 30, fontSize: 14 }}>{i + 1}</span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+      {league === 'legacy' && (
+        <div className="grid cols-2 mt">
+          {LEGACY_FRANCHISES.map((fr) => {
+            const row = LEGACY_STANDINGS.find((r) => r.franchise_id === fr.id);
+            return (
+              <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                <div className="row">
+                  <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                  <div>
+                    <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17 }}>{fr.name}</b>
+                    <div className="muted" style={{ fontSize: 12, fontStyle: 'italic' }}>{fr.motto}</div>
+                    {row && row.played > 0 && (
+                      <div className="muted" style={{ fontSize: 12 }}>P{row.played} · W{row.won} · {row.points} pts</div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -827,8 +921,8 @@ export function Rankings() {
     .sort(sorters[sortBy]);
 
   const mensFranchises = FRANCHISES.filter((f) => f.league === 'mens');
-
   const TIERS = ['Rising', 'Contender', 'Advanced', 'Pro', 'Elite'];
+  const legacyPowerRanked = [...LEGACY_STANDINGS].sort((a, b) => b.points - a.points).map((r) => r.franchise_id);
 
   return (
     <div className="page">
@@ -840,29 +934,46 @@ export function Rankings() {
 
       {tab === 'players' && (
         <>
-          {/* league toggle */}
           <div className="tabbar mt">
             <button className={pLeague === 'mens' ? 'on' : ''} onClick={() => setPLeague('mens')}>Men's</button>
             <button className={pLeague === 'ladies' ? 'on' : ''} onClick={() => setPLeague('ladies')}>Ladies</button>
+            <button className={pLeague === 'legacy' ? 'on' : ''} onClick={() => setPLeague('legacy')}>LP Legacy</button>
           </div>
-          {pLeague === 'ladies' ? (
-            <div className="mt"><ComingSoon note="Ladies player rankings go live with the Season 3 launch." /></div>
-          ) : (
+          {pLeague === 'ladies' && <div className="mt"><ComingSoon note="Ladies player rankings go live with the Season 3 launch." /></div>}
+          {pLeague === 'legacy' && (
+            <div className="grid mt">
+              {LEGACY_PLAYERS.sort((a, b) => a.name.localeCompare(b.name)).map((p, i) => {
+                const fr = legacyFranchiseById(p.franchise_id);
+                if (!fr) return null;
+                return (
+                  <Link key={p.id} to={`/legacy-franchise/${p.franchise_id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                    <span className="row">
+                      <b className="num muted" style={{ width: 26 }}>{i + 1}</b>
+                      <span className="avatar" style={{ width: 34, height: 34, fontSize: 12, background: fr.primary + '33', color: fr.primary }}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
+                      <span>
+                        <b style={{ fontSize: 14 }}>{p.name}</b>
+                        <div className="muted" style={{ fontSize: 11 }}>{fr.name} · <span style={{ color: 'var(--gold)' }}>{p.kind === 'youth' ? 'Youth' : 'Adult'}</span></div>
+                      </span>
+                    </span>
+                    
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+          {pLeague === 'mens' && (
           <>
-          {/* sort toggle */}
           <div className="tabbar mt">
             {[['lp', 'LP Rating'], ['win', 'Win %'], ['wins', 'Wins'], ['mvp', 'MVP']].map(([k, lbl]) => (
               <button key={k} className={sortBy === k ? 'on' : ''} onClick={() => setSortBy(k)}>{lbl}</button>
             ))}
           </div>
-          {/* court division filter */}
           <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="muted" style={{ fontSize: 11 }}>Court</span>
             {['all', 'P1', 'P2', 'P3'].map((c) => (
               <button key={c} className={`chip ${courtFilter === c ? 'on' : ''}`} onClick={() => setCourtFilter(c)} style={{ cursor: 'pointer', border: 'none' }}>{c === 'all' ? 'All' : c}</button>
             ))}
           </div>
-          {/* franchise filter */}
           <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="muted" style={{ fontSize: 11 }}>Franchise</span>
             <button className={`chip ${franchiseFilter === 'all' ? 'on' : ''}`} onClick={() => setFranchiseFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
@@ -873,7 +984,6 @@ export function Rankings() {
               </button>
             ))}
           </div>
-          {/* rating tier filter */}
           <div className="row mt" style={{ gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
             <span className="muted" style={{ fontSize: 11 }}>Tier</span>
             <button className={`chip ${tierFilter === 'all' ? 'on' : ''}`} onClick={() => setTierFilter('all')} style={{ cursor: 'pointer', border: 'none' }}>All</button>
@@ -897,7 +1007,6 @@ export function Rankings() {
             {sortBy === 'wins' && 'Total rubbers won this season.'}
             {sortBy === 'mvp' && 'MVP points — 3 per rubber won, +1 for a clean 4-0.'}
           </p>
-
           {players.length === 0 ? (
             <div className="card mt"><p className="muted" style={{ margin: 0 }}>No players in this tier yet.</p></div>
           ) : (
@@ -948,30 +1057,54 @@ export function Rankings() {
           <div className="tabbar mt">
             <button className={league === 'mens' ? 'on' : ''} onClick={() => setLeague('mens')}>Men's</button>
             <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies</button>
+            <button className={league === 'legacy' ? 'on' : ''} onClick={() => setLeague('legacy')}>LP Legacy</button>
           </div>
           <p className="muted mt" style={{ fontSize: 13 }}>The committee's weekly board — results, strength of schedule and momentum, not just the table.</p>
           {league === 'ladies' && <div className="mt"><ComingSoon note="The ladies power rankings begin once Season 3 is underway." /></div>}
-          <div className="grid mt">
-            {(league === 'ladies' ? [] : POWER_RANKINGS[league]).map((fid, i) => {
-              const fr = franchiseById(fid);
-              const move = i % 3 === 0 ? '▲' : i % 3 === 1 ? '▬' : '▼';
-              return (
-                <Link key={fid} to={`/franchise/${fid}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fid) }}>
-                  <span className="row">
-                    <b className="num" style={{ fontSize: 22, width: 30 }}>{i + 1}</b>
-                    <img src={fr.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
-                    <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{fr.name}</b>
-                  </span>
-                  <span style={{ color: move === '▲' ? 'var(--win)' : move === '▼' ? 'var(--loss)' : 'var(--muted)' }}>{move}</span>
-                </Link>
-              );
-            })}
-          </div>
+          {league === 'legacy' && (
+            <div className="grid mt">
+              {legacyPowerRanked.length === 0 ? (
+                <div className="card"><p className="muted" style={{ margin: 0 }}>Power rankings go live once matches are played.</p></div>
+              ) : legacyPowerRanked.map((fid, i) => {
+                const fr = legacyFranchiseById(fid);
+                if (!fr) return null;
+                return (
+                  <Link key={fid} to={`/legacy-franchise/${fid}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                    <span className="row">
+                      <b className="num" style={{ fontSize: 22, width: 30 }}>{i + 1}</b>
+                      <img src={fr.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{fr.name}</b>
+                    </span>
+                    <span className="muted">▬</span>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
+          {(league === 'mens') && (
+            <div className="grid mt">
+              {POWER_RANKINGS[league].map((fid, i) => {
+                const fr = franchiseById(fid);
+                const move = i % 3 === 0 ? '▲' : i % 3 === 1 ? '▬' : '▼';
+                return (
+                  <Link key={fid} to={`/franchise/${fid}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fid) }}>
+                    <span className="row">
+                      <b className="num" style={{ fontSize: 22, width: 30 }}>{i + 1}</b>
+                      <img src={fr.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
+                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{fr.name}</b>
+                    </span>
+                    <span style={{ color: move === '▲' ? 'var(--win)' : move === '▼' ? 'var(--loss)' : 'var(--muted)' }}>{move}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          )}
         </>
       )}
     </div>
   );
 }
+
 
 /* =========================== NEWS ============================= */
 export function NewsCentre() {

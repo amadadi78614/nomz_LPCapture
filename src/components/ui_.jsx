@@ -49,7 +49,7 @@ const NAV = [
   { to: '/', label: 'Home', ico: '⌂' },
   { to: '/live', label: 'Matches', ico: '●' },
   { to: '/standings', label: 'Tables', ico: '≡' },
-  { to: '/rankings', label: 'Rankings', ico: '✦' },
+  { to: '/players', label: 'Players', ico: '✦' },
   { to: '/more', label: 'More', ico: '⋯' },
 ];
 export function TopBar() {
@@ -65,11 +65,11 @@ export function TopBar() {
           <NavLink to="/live">Match Centre</NavLink>
           <NavLink to="/standings">Standings</NavLink>
           <NavLink to="/rankings">Rankings</NavLink>
-          <NavLink to="/players">Players</NavLink>
-          <NavLink to="/franchises">Franchises</NavLink>
           <NavLink to="/tv">Lowveld TV</NavLink>
           <NavLink to="/legacy-league">Legacy</NavLink>
           <NavLink to="/road-to-360">Road to 360</NavLink>
+          <NavLink to="/players">Players</NavLink>
+          <NavLink to="/franchises">Franchises</NavLink>
           <NavLink to="/news">News</NavLink>
           <NavLink to="/sponsors">Sponsors</NavLink>
         </nav>

@@ -276,8 +276,36 @@ export const FIXTURES = [
       { slot: '20:30', court: 'P3', home: 'Riyaz Ahmed Bellim / Dillon Francis', away: 'Jacques Burger / Reino Grobler',
         homeIds: ids('samurai-kicksmashers', 'Riyaz Ahmed Bellim', 'Dillon Francis'), awayIds: ids('desert-falcons', 'Jacques Burger', 'Reino Grobler'), games: [0, 4], winner: 'away', sets: [[3, 6], [5, 7], [6, 10]] },
     ] } },
-  { id: 'fx-w3-3', round: 3, league: 'mens', home: 'globo-boomerangs', away: 'sonic-viboras', start: T('2026-06-24'), status: 'scheduled', court: 'Padel 24', dh: true },
-  { id: 'fx-w3-4', round: 3, league: 'mens', home: 'sahara-lions', away: 'ice-breakers', start: T('2026-06-24'), status: 'scheduled', court: 'Play 360' },
+  { id: 'fx-w3-3', round: 3, league: 'mens', home: 'globo-boomerangs', away: 'sonic-viboras', start: T('2026-06-24'), status: 'scheduled', court: 'Padel 24', dh: true,
+    pairs: { slots: [
+      { slot: '18:00', rubbers: [
+        ['P1', 'Ahmed Mungalee / Yusuf Asvat', 'Coomans / Anton'],
+        ['P3', 'Taahir Mungalee / Kiran Hansraj', 'George / Dewald'],
+      ] },
+      { slot: '19:15', rubbers: [
+        ['P1', 'Liam Morgan / Lefa Mogamedi', 'Dr Moola / Bossie'],
+        ['P2', 'Ryan Kennett / Diego Sebastian', 'Marius / Khalid'],
+      ] },
+      { slot: '20:30', rubbers: [
+        ['P2', 'Shehzad Meer / Bevin Francis', 'Warwick / Joshua'],
+        ['P3', 'Shaffique Jeewa / Farhaan Shaik', 'Stefan / Muhamed'],
+      ] },
+    ] } },
+  { id: 'fx-w3-4', round: 3, league: 'mens', home: 'sahara-lions', away: 'ice-breakers', start: T('2026-06-24'), status: 'scheduled', court: 'Play 360',
+    pairs: { slots: [
+      { slot: '18:00', rubbers: [
+        ['P1', 'Cameron Jacobsz / Yusuf Packery', 'Duhan Swart / JD Herbst'],
+        ['P3', 'Drikus Prins / Warren Morgan', 'Wayne Enslin / Sergio Correia'],
+      ] },
+      { slot: '19:15', rubbers: [
+        ['P1', 'Pieter Badenhorst / Justin van Staaden', 'Maaz Randera / Zaheer Methar'],
+        ['P2', 'Naeem Omar / Alfaiz Mamji', 'Jacques van Zyl / Nicky Joubert'],
+      ] },
+      { slot: '20:30', rubbers: [
+        ['P2', 'Suliman Patel / Irfaan Mamji', 'Zahid Methar / Chaz Taylor'],
+        ['P3', 'Imtiaz Mohamed / Irfaan Mahomed', 'Irshaad Moola / Waldo van Tonder'],
+      ] },
+    ] } },
 
   // SCHOOL HOLIDAY BREAK · 29 Jun – 20 Jul
 
@@ -463,6 +491,7 @@ ratedRubbers.forEach((rb) => {
 
 export const NEWS = [
   { id: 'nm5a', kicker: 'Match Day 5', title: 'Falcons march on: 19-3 over the Kick Smashers as the lead stretches to 17', date: T('2026-06-22', 22), tag: 'mens', body: 'Desert Falcons took five of six rubbers at Padel 24 — Uwaiz and Yusuf Patel and the Warno/Morne pair both sweeping 3-0 — to move clear at the top on 59 points. Only Siraaj Shaik and Azhar Sujee struck back for the Smashers, edging an 11-13 champions-tiebreak thriller.' },
+  { id: 'nlg', kicker: 'LP Legacy League', title: 'Draft complete: 48 players assigned across six Legacy franchises', date: T('2026-06-23', 20), tag: 'legacy', body: 'The LP Legacy League draft is done — all 48 players placed, five adults and three youth per team, across the Leopards, Rhinos, Cheetahs, Honey Badgers, Eagles and Jackals. Season 4 squads are locked and the build to first ball begins.' },
   { id: 'nm5b', kicker: 'Match Day 5', title: 'Honours even: Sonic Viboras and Avalanche Aces share the spoils 10-10', date: T('2026-06-22', 22, 30), tag: 'mens', body: 'A genuine tie at Play 360 — three rubbers each. Coomans and Grote stayed perfect with a P1 win, Dr Moola and Boshoff swept their rubber, but the Aces hit back through Frik de Beer and Pierre de Villiers and a battling P2 from Grobler and Naude to split the night.' },
   { id: 'nm4', kicker: 'Match Day 4', title: 'Falcons stay perfect: 19-3 demolition of the Boomerangs at Padel 24', date: T('2026-06-18', 22), tag: 'mens', body: 'Desert Falcons made it twelve rubbers unbeaten, taking five of six against Global Boomerangs. Only Ryan Kennett and Nabeel Meer interrupted the procession, edging their P2 rubber 6-3, 6-2 before the Falcons closed out the night.' },
   { id: 'n0', kicker: 'Match Day 3', title: 'Ice Breakers stun the Aces 16-7 for a first win; Viboras down the Smashers 15-7', date: T('2026-06-17', 22), tag: 'mens', body: 'Week 2 belonged to the Ice Breakers \u2014 Imaad/Salmaan, Swart/Herbst and Correia/Enslin all posting clean wins to sink Avalanche Aces 16-7 at Padel 24. At Play 360, Sonic Viboras took four rubbers to beat Samurai Kick Smashers 15-7.' },
@@ -748,9 +777,47 @@ export const LEGACY_FRANCHISES = [
 ].map((f) => ({ ...f, logo: `/legacy/${f.id}.jpeg` }));
 export const legacyFranchiseById = (id) => LEGACY_FRANCHISES.find((f) => f.id === id);
 
-// No fake players — squads confirmed after the LP Legacy League Draft.
-export const LEGACY_PLAYERS = [];
-export const LEGACY_SQUAD_NOTE = 'Squads to be confirmed following the LP Legacy League Draft.';
+// LP Legacy League Draft COMPLETE — 48 players, 6 teams (5 adults + 3 youth each).
+// Youth carry their draft round (R#). Stats start at zero for Season 4.
+const LEGACY_DRAFT = {
+  'lp-leopards': {
+    adults: ['Oz', 'Jovan Erasmus', 'Ridhwaan Sujee', 'Adil Amod', 'Muhammad Mangerah'],
+    youth: [['Huzaifah Sujee', 11], ['Mohammed Rohaan Sheikh', 16], ['Ebrahim Mangerah', 12]],
+  },
+  'lp-rhinos': {
+    adults: ['Rafiq Mohamed', 'Christiaan van Aardt', 'Irshaad Moola', 'Zinidine Morgan', 'Yusuf Amod'],
+    youth: [['Ayaan Mohamed', 10], ['Mohamed Moola', 6], ['Isa Moola', 15]],
+  },
+  'lp-cheetahs': {
+    adults: ['Shoaib Nomani', 'Sandeep Daya', 'Mauritz van der Mescht', 'Michael Smit', 'Nomz'],
+    youth: [['Abdurahmaan Jogee', 8], ['Mikel Pillay', 13], ['Aadam Nomani', 2]],
+  },
+  'lp-honey-badgers': {
+    adults: ['Jameel Valley', 'Faheem Seedat', 'Scharl', 'Sailesh Nagar', 'Zandre de Kok'],
+    youth: [['Jude', 1], ['Reyhaan Seedat', 16], ['Seth van den Berg', 4]],
+  },
+  'lp-eagles': {
+    adults: ['Fiaz Bhikoo', 'Sahal Yunus', 'Dian Erasmus', 'Akmeer Amod', 'Azhar Sujee'],
+    youth: [['Nathan Mckenzie', 3], ['Arman Bhikoo', 5], ['Yahya Sujee', 14]],
+  },
+  'lp-jackals': {
+    adults: ['Fahad', 'Zunaid Ganchi', 'Stiaan Duvenhage', 'Yusuf Ismail', 'Spanner Mescht'],
+    youth: [['Zuhayr Ismail', 9], ['Dewan Duvenhage', 17], ['Hoosein Patel', 7]],
+  },
+};
+const blankStats = () => ({ played: 0, wins: 0, losses: 0, rubbers_won: 0, sets_won: 0, sets_lost: 0, bonus_points: 0, mvp_points: 0 });
+export const LEGACY_PLAYERS = Object.entries(LEGACY_DRAFT).flatMap(([fid, sq], fi) => [
+  ...sq.adults.map((name, i) => ({
+    id: `lg-${fi}-a${i}`, name, franchise_id: fid, league: 'legacy', kind: 'adult', draftRound: null,
+    lp_rating: 1400, stats: blankStats(),
+  })),
+  ...sq.youth.map(([name, round], i) => ({
+    id: `lg-${fi}-y${i}`, name, franchise_id: fid, league: 'legacy', kind: 'youth', draftRound: round,
+    lp_rating: 1400, stats: blankStats(),
+  })),
+]);
+export const LEGACY_SQUAD_NOTE = 'Squads confirmed — the LP Legacy League draft is complete.';
+export const legacyPlayersByFranchise = (fid) => LEGACY_PLAYERS.filter((p) => p.franchise_id === fid);
 
 // Standings start level — fill as results come in.
 export const LEGACY_STANDINGS = LEGACY_FRANCHISES.map((fr) => ({
@@ -759,7 +826,7 @@ export const LEGACY_STANDINGS = LEGACY_FRANCHISES.map((fr) => ({
 
 export const LEGACY_FIXTURES = []; // add scheduled/final fixtures here, same shape as FIXTURES
 export const LEGACY_POWER = LEGACY_FRANCHISES.map((f) => f.id); // weekly order, seed = registration order
-export const LEGACY_STATUS = 'pre'; // 'pre' until first ball is struck
+export const LEGACY_STATUS = 'drafted'; // 'pre' → 'drafted' (squads set) → 'live' (results in)
 
 /* =================================================================
  * ROAD TO THE 360 SUPER CUP  —  Lowveld's national journey.

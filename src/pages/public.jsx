@@ -145,12 +145,17 @@ export function Home() {
       </Link>
 
       {/* ============ LEGACY LEAGUE ============ */}
-      <SectionHead title="Legacy League" to="/legacy-league" cta="Enter" />
-      <Link to="/legacy-league" className="card" style={{ display: 'block' }}>
-        <p className="muted" style={{ fontStyle: 'italic', margin: 0 }}>Building Legacies. Creating Opportunities. One Match At A Time.</p>
+      <SectionHead title="LP Legacy League" to="/legacy-league" cta="Enter" />
+      <Link to="/legacy-league" className="card stripe" style={{ '--stripe': 'var(--gold)', display: 'block' }}>
+        <div className="row spread">
+          <span><b className="gold" style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>🏆 Draft Complete</b>
+            <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>48 players · 6 teams · 5 adults + 3 youth each</div></span>
+          <span className="muted">→</span>
+        </div>
+        <p className="muted" style={{ fontStyle: 'italic', margin: '10px 0 0', fontSize: 13 }}>Building Legacies. One Match At A Time. — Season 4 squads are set.</p>
         <div className="row" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
           {LEGACY_FRANCHISES.map((fr) => (
-            <span key={fr.id} className="chip" style={{ fontSize: 10 }}>{fr.name}</span>
+            <span key={fr.id} className="chip" style={{ fontSize: 10, borderLeft: `3px solid ${fr.primary}` }}>{fr.name}</span>
           ))}
         </div>
       </Link>

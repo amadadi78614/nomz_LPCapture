@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ROAD_TO_360, LEGACY_FRANCHISES, legacyFranchiseById, LEGACY_STANDINGS, LEGACY_FIXTURES,
-  LEGACY_PLAYERS, LEGACY_POWER, LEGACY_STATUS, LEGACY_SQUAD_NOTE,
+  LEGACY_PLAYERS, LEGACY_POWER, LEGACY_STATUS, LEGACY_SQUAD_NOTE, legacyPlayersByFranchise,
   PREDICTION_OPTIONS, PREDICTION_SCORING, PREDICTOR_BADGES, PREDICTION_LEADERBOARD,
   matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY, playerOfWeek,
   franchiseById, playerById, stripeVar, fanPotwCandidates,
@@ -136,10 +136,16 @@ export function LegacyLeague() {
         ))}
       </div>
 
+      {LEGACY_STATUS === 'drafted' && (
+        <div className="card mt" style={{ borderColor: 'var(--gold)' }}>
+          <b className="gold">Draft complete — squads confirmed</b>
+          <p className="muted" style={{ margin: '4px 0 0', fontSize: 13 }}>All 48 players have been drafted across the six franchises (5 adults + 3 youth each). Fixtures, standings, the MVP race and power rankings go live here the moment the first ball is struck in Season 4.</p>
+        </div>
+      )}
       {LEGACY_STATUS === 'pre' && (
         <div className="card mt" style={{ borderColor: 'var(--gold)' }}>
           <b className="gold">Season launching soon</b>
-          <p className="muted" style={{ margin: '4px 0 0', fontSize: 13 }}>{LEGACY_SQUAD_NOTE} The full league — standings, MVP race, power rankings — goes live here the moment the draft is done and the first ball is struck.</p>
+          <p className="muted" style={{ margin: '4px 0 0', fontSize: 13 }}>{LEGACY_SQUAD_NOTE}</p>
         </div>
       )}
 
@@ -193,14 +199,33 @@ export function LegacyLeague() {
       {tab === 'draft' && (
         <div className="card mt">
           <p className="eyebrow" style={{ marginBottom: 6 }}>LP Legacy League Draft Centre</p>
-          <p className="muted" style={{ margin: 0, fontSize: 13 }}>{LEGACY_SQUAD_NOTE} The draft board, pick order and franchise selections will appear here as the draft unfolds.</p>
+          <p className="gold" style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>🏆 Draft Complete — all 48 players assigned</p>
+          <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>6 teams · 5 adults + 3 youth each · Season 4</p>
           <div className="lg-grid mt">
-            {LEGACY_FRANCHISES.map((fr) => (
-              <div key={fr.id} className="lg-card" style={{ '--p': fr.primary, '--s': fr.secondary, '--a': fr.accent }}>
-                <div className="lg-card-logo"><img src={fr.logo} alt={fr.name} /></div>
-                <div className="lg-card-body"><b>{fr.name}</b><span className="lg-motto">Awaiting picks</span></div>
-              </div>
-            ))}
+            {LEGACY_FRANCHISES.map((fr) => {
+              const sq = legacyPlayersByFranchise(fr.id);
+              return (
+                <div key={fr.id} className="lg-card" style={{ '--p': fr.primary, '--s': fr.secondary, '--a': fr.accent }}>
+                  <div className="lg-card-logo"><img src={fr.logo} alt={fr.name} /></div>
+                  <div className="lg-card-body" style={{ textAlign: 'left' }}>
+                    <b style={{ textAlign: 'center', display: 'block' }}>{fr.name}</b>
+                    <div style={{ marginTop: 8 }}>
+                      <span className="eyebrow" style={{ fontSize: 9 }}>Adults</span>
+                      {sq.filter((p) => p.kind === 'adult').map((p) => (
+                        <div key={p.id} style={{ fontSize: 12, padding: '1px 0' }}>{p.name}</div>
+                      ))}
+                      <span className="eyebrow" style={{ fontSize: 9, display: 'block', marginTop: 6 }}>Youth</span>
+                      {sq.filter((p) => p.kind === 'youth').map((p) => (
+                        <div key={p.id} className="row spread" style={{ fontSize: 12, padding: '1px 0' }}>
+                          <span>{p.name}</span>
+                          {p.draftRound && <span className="muted" style={{ fontSize: 10 }}>R{p.draftRound}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
@@ -242,13 +267,20 @@ export function LegacyFranchise() {
 
       <SectionHead title="Squad" />
       {squad.length ? (
-        <div className="grid cols-2">
-          {squad.map((p) => (
-            <div key={p.id} className="card row spread">
-              <b style={{ fontSize: 14 }}>{p.name}</b><span className="chip" style={{ fontSize: 10 }}>{p.tier}</span>
-            </div>
-          ))}
-        </div>
+        <>
+          <p className="eyebrow" style={{ margin: '0 0 8px' }}>Adults</p>
+          <div className="grid cols-2">
+            {squad.filter((p) => p.kind === 'adult').map((p) => (
+              <div key={p.id} className="card row spread"><b style={{ fontSize: 14 }}>{p.name}</b><span className="chip" style={{ fontSize: 10 }}>Adult</span></div>
+            ))}
+          </div>
+          <p className="eyebrow" style={{ margin: '14px 0 8px' }}>Youth</p>
+          <div className="grid cols-2">
+            {squad.filter((p) => p.kind === 'youth').map((p) => (
+              <div key={p.id} className="card row spread"><b style={{ fontSize: 14 }}>{p.name}</b>{p.draftRound && <span className="chip" style={{ fontSize: 10 }}>Pick R{p.draftRound}</span>}</div>
+            ))}
+          </div>
+        </>
       ) : (
         <div className="card" style={{ borderColor: fr.primary }}>
           <p className="muted" style={{ margin: 0 }}>{LEGACY_SQUAD_NOTE}</p>

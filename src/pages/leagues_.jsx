@@ -300,8 +300,8 @@ function LegacyStyles() {
       .lg-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
       .lg-card { display:flex; flex-direction:column; border-radius:var(--r); overflow:hidden; border:1px solid var(--line);
         background:linear-gradient(165deg, color-mix(in srgb, var(--p) 22%, #0a0f1c), #0a0f1c 70%); }
-      .lg-card-logo { display:flex; align-items:center; justify-content:center; padding:20px 8px 4px; background:transparent; }
-      .lg-card-logo img { width:84px; height:84px; object-fit:contain; filter:drop-shadow(0 4px 14px rgba(0,0,0,.6)); }
+      .lg-card-logo { display:flex; align-items:center; justify-content:center; padding:22px 8px 6px; background:transparent; }
+      .lg-card-logo img { width:90px; height:90px; object-fit:contain; mix-blend-mode:screen; filter:drop-shadow(0 2px 8px rgba(0,0,0,.4)); }
       .lg-card-body { padding:6px 12px 14px; text-align:center; }
       .lg-card-body b { font-family:var(--display); text-transform:uppercase; font-size:15px; display:block; }
       .lg-motto { font-size:11px; color:var(--muted); font-style:italic; }

@@ -306,7 +306,7 @@ function LegacyStyles() {
       .lg-card-body b { font-family:var(--display); text-transform:uppercase; font-size:15px; display:block; }
       .lg-motto { font-size:11px; color:var(--muted); font-style:italic; }
       .lg-row { border-left:3px solid var(--p); }
-      .lg-chip-logo { width:26px; height:26px; object-fit:contain; border-radius:4px; }
+      .lg-chip-logo { width:26px; height:26px; object-fit:contain; mix-blend-mode:screen; }
       .lg-hero { display:flex; align-items:center; gap:16px; margin-top:10px; padding:18px 16px; border-radius:var(--r); border:1px solid var(--line);
         background:linear-gradient(135deg, color-mix(in srgb, var(--p) 30%, #0a0f1c), #0a0f1c 75%); border-left:4px solid var(--p); }
       .lg-hero-logo { width:88px; height:88px; object-fit:contain; filter:drop-shadow(0 4px 12px rgba(0,0,0,.6)); }

@@ -231,7 +231,6 @@ export function LegacyLeague() {
       )}
       {tab === 'watch' && <PreState note="Players to Watch will be highlighted once squads are confirmed." />}
 
-      <div className="mt"><WaButton href={communityLinks.legacyLeague} label="Join LP Legacy League Community" /></div>
     </div>
   );
 }
@@ -301,9 +300,9 @@ function LegacyStyles() {
       .lg-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
       .lg-card { display:flex; flex-direction:column; border-radius:var(--r); overflow:hidden; border:1px solid var(--line);
         background:linear-gradient(165deg, color-mix(in srgb, var(--p) 22%, #0a0f1c), #0a0f1c 70%); }
-      .lg-card-logo { display:flex; align-items:center; justify-content:center; padding:16px 8px 6px; }
-      .lg-card-logo img { width:84px; height:84px; object-fit:contain; filter:drop-shadow(0 4px 10px rgba(0,0,0,.5)); }
-      .lg-card-body { padding:8px 12px 14px; text-align:center; border-top:2px solid var(--p); }
+      .lg-card-logo { display:flex; align-items:center; justify-content:center; padding:20px 8px 4px; background:transparent; }
+      .lg-card-logo img { width:84px; height:84px; object-fit:contain; filter:drop-shadow(0 4px 14px rgba(0,0,0,.6)); }
+      .lg-card-body { padding:6px 12px 14px; text-align:center; }
       .lg-card-body b { font-family:var(--display); text-transform:uppercase; font-size:15px; display:block; }
       .lg-motto { font-size:11px; color:var(--muted); font-style:italic; }
       .lg-row { border-left:3px solid var(--p); }

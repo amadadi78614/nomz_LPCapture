@@ -250,8 +250,8 @@ export const FIXTURES = [
     score: { winner: 'draw', totals: [10, 10], rubberWins: [3, 3], rubbers: [
       { slot: '18:00', court: 'P1', home: 'Hoffman Maritz / Wiehann Mohlen', away: 'Heinrich Coomans / Anton Grote',
         homeIds: ids('avalanche-aces', 'Hoffman Maritz', 'Wiehann Mohlen'), awayIds: ids('sonic-viboras', 'Heinrich Coomans', 'Anton Grote'), games: [0, 3], winner: 'away', sets: [[2, 6], [6, 1], [7, 10]] },
-      { slot: '18:00', court: 'P3', home: 'Anas Mungalee / Gerco van Rooyen', away: 'George du Toit / Dewald Meyer',
-        homeIds: ids('avalanche-aces', 'Anas Mungalee', 'Gerco van Rooyen'), awayIds: ids('sonic-viboras', 'George du Toit', 'Dewald Meyer'), games: [3, 0], winner: 'home', sets: [[3, 6], [6, 4], [10, 3]] },
+      { slot: '18:00', court: 'P3', home: 'Anas Mungalee / Gerco van Rooyen', away: 'Gerrit Smith / Dewald Meyer',
+        homeIds: ids('avalanche-aces', 'Anas Mungalee', 'Gerco van Rooyen'), awayIds: ids('sonic-viboras', 'Gerrit Smith', 'Dewald Meyer'), games: [3, 0], winner: 'home', sets: [[3, 6], [6, 4], [10, 3]] },
       { slot: '19:15', court: 'P1', home: 'Patrick Leyden / Donovan Taylor', away: 'Yusuf Moola / Pieter Boshoff',
         homeIds: ids('avalanche-aces', 'Patrick Leyden', 'Donovan Taylor'), awayIds: ids('sonic-viboras', 'Yusuf Moola', 'Pieter Boshoff'), games: [0, 4], winner: 'away', sets: [[2, 6], [1, 6], [5, 10]] },
       { slot: '19:15', court: 'P2', home: 'Etienne Grobler / Ruaan Naude', away: 'Warwick Morgan / Joshua Hoffman',

@@ -218,7 +218,7 @@ export function LegacyLeague() {
                       {sq.filter((p) => p.kind === 'youth').map((p) => (
                         <div key={p.id} className="row spread" style={{ fontSize: 12, padding: '1px 0' }}>
                           <span>{p.name}</span>
-                          {p.draftRound && <span className="muted" style={{ fontSize: 10 }}>R{p.draftRound}</span>}
+                          
                         </div>
                       ))}
                     </div>
@@ -258,10 +258,7 @@ export function LegacyFranchise() {
       </div>
 
       <div className="grid cols-2 mt">
-        <div className="card"><span className="eyebrow">Owner</span><b className="lg-meta">To be announced</b></div>
-        <div className="card"><span className="eyebrow">Captain</span><b className="lg-meta">To be announced</b></div>
-        <div className="card"><span className="eyebrow">Vice Captain</span><b className="lg-meta">To be announced</b></div>
-        <div className="card"><span className="eyebrow">Ambassador</span><b className="lg-meta">To be announced</b></div>
+        <div className="card"><span className="eyebrow">Owner</span><b className="lg-meta">Lowveld Padel</b></div>
       </div>
 
       <SectionHead title="Squad" />
@@ -276,7 +273,7 @@ export function LegacyFranchise() {
           <p className="eyebrow" style={{ margin: '14px 0 8px' }}>Youth</p>
           <div className="grid cols-2">
             {squad.filter((p) => p.kind === 'youth').map((p) => (
-              <div key={p.id} className="card row spread"><b style={{ fontSize: 14 }}>{p.name}</b>{p.draftRound && <span className="chip" style={{ fontSize: 10 }}>R{p.draftRound}</span>}</div>
+              <div key={p.id} className="card row spread"><b style={{ fontSize: 14 }}>{p.name}</b></div>
             ))}
           </div>
         </>

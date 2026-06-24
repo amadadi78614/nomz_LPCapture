@@ -781,8 +781,8 @@ export const legacyFranchiseById = (id) => LEGACY_FRANCHISES.find((f) => f.id ==
 // Youth carry their draft round (R#). Stats start at zero for Season 4.
 const LEGACY_DRAFT = {
   'lp-leopards': {
-    adults: ['Ozayr Sheikh', 'Jovan Erasmus', 'Ridhwaan Sujee', 'Adil Amod', 'Muhammad Mangerah'],
-    youth: [['Huzaifah Sujee', 11], ['Muhammed Ruhaan Sheikh', 16], ['Ebrahim Mangerah', 12]],
+    adults: ['Ozayr Shaik', 'Jovan Erasmus', 'Ridhwaan Sujee', 'Adil Amod', 'Muhammad Mangerah'],
+    youth: [['Huzaifah Sujee', 11], ['Muhammed Ruhaan Shaik', 16], ['Ebrahim Mangerah', 12]],
   },
   'lp-rhinos': {
     adults: ['Rafiq Mohamed', 'Christiaan van Aardt', 'Irshaad Moola', 'Zinidine Morgan', 'Yusuf Amod'],

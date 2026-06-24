@@ -797,8 +797,8 @@ const LEGACY_DRAFT = {
     youth: [['Jude van den Berg', 1], ['Reyhaan Seedat', 16], ['Seth van den Berg', 4]],
   },
   'lp-eagles': {
-    adults: ['Fiaz Bhikoo', 'Sahal Yunus', 'Dian Erasmus', 'Akmeer Amod', 'Mohamed Azhar Sujee'],
-    youth: [['Nathan Mckenzie', 3], ['Arman Bhikoo', 5], ['Yahya Sujee', 14]],
+    adults: ['Fiaz Bhikhoo', 'Sahal Yunus', 'Dian Erasmus', 'Akmeer Amod', 'Mohamed Azhar Sujee'],
+    youth: [['Nathan Mckenzie', 3], ['Armaan Bhikhoo', 5], ['Yahya Sujee', 14]],
   },
   'lp-jackals': {
     adults: ['Fahad Patel', 'Zunaid Ganchi', 'Stiaan Duvenhage', 'Yusuf Ismail', 'Spanner Mescht'],

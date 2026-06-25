@@ -277,7 +277,7 @@ export const FIXTURES = [
         homeIds: ids('samurai-kicksmashers', 'Riyaz Ahmed Bellim', 'Dillon Francis'), awayIds: ids('desert-falcons', 'Jacques Burger', 'Reino Grobler'), games: [0, 4], winner: 'away', sets: [[3, 6], [5, 7], [6, 10]] },
     ] } },
   { id: 'fx-w3-3', round: 3, league: 'mens', home: 'globo-boomerangs', away: 'sonic-viboras', start: T('2026-06-24'), status: 'final', court: 'Padel 24', dh: true,
-    score: { rubberWins: [2, 4], winner: 'away' },
+    score: { winner: 'away', totals: [6, 16], rubberWins: [2, 4] },
     rubbers: [
       { slot: '18:00', court: 'P1', sets: [{home:3,away:6},{home:5,away:7},{home:9,away:11}], games: [0, 4], winner: 'away',
         homeIds: ids('globo-boomerangs', 'Ahmed Mungalee', 'Yusuf Asvat'), awayIds: ids('sonic-viboras', 'Heinrich Coomans', 'Anton Grote') },
@@ -307,7 +307,7 @@ export const FIXTURES = [
       ] },
     ] } },
   { id: 'fx-w3-4', round: 3, league: 'mens', home: 'sahara-lions', away: 'ice-breakers', start: T('2026-06-24'), status: 'final', court: 'Play 360',
-    score: { rubberWins: [2, 4], winner: 'away' },
+    score: { winner: 'away', totals: [6, 15], rubberWins: [2, 4] },
     rubbers: [
       { slot: '18:00', court: 'P1', sets: [{home:6,away:1},{home:7,away:6},{home:7,away:10}], games: [3, 0], winner: 'home',
         homeIds: ids('sahara-lions', 'Cameron Jacobsz', 'Yusuf Packery'), awayIds: ids('ice-breakers', 'Duhan Swart', 'JD Herbst') },
@@ -407,22 +407,24 @@ const mkRow = ([name, P, W, L, D, BP, pts], adj) => ({
   franchise_id: NM[name], played: P, won: W, lost: L, drawn: D, bp: BP, points: pts, adj: adj || 0,
 });
 const OFFICIAL = {
+  // Updated through MD6 (24 Jun 2026)
   franchise: [
-    ['Falcons', 18, 16, 2, 0, 11, 59], ['Sonics', 18, 12, 6, 0, 6, 42],
+    ['Falcons', 18, 16, 2, 0, 11, 59], ['Sonics', 24, 16, 8, 0, 10, 58],
     ['Aces', 24, 8, 16, 0, 2, 26], ['Kicksmashers', 18, 6, 12, 0, 4, 22],
-    ['IceBreakers', 12, 5, 7, 0, 4, 19], ['Lions', 6, 4, 2, 0, 3, 15], ['Globo', 12, 3, 9, 0, 2, 11],
+    ['Lions', 12, 6, 6, 0, 3, 21], ['IceBreakers', 18, 9, 9, 0, 7, 34], ['Globo', 18, 5, 13, 0, 2, 17],
   ].map((r) => mkRow(r)),
   P1: [
-    ['Falcons', 6, 5, 1, 0, 5, 20], ['Sonics', 6, 5, 1, 0, 3, 18], ['IceBreakers', 4, 3, 1, 0, 2, 11],
-    ['Kicksmashers', 6, 3, 3, 0, 2, 11], ['Lions', 2, 2, 0, 0, 1, 7], ['Aces', 8, 0, 8, 0, 0, 0], ['Globo', 4, 0, 4, 0, 0, 0],
+    ['Sonics', 8, 7, 1, 0, 5, 26], ['Falcons', 6, 5, 1, 0, 5, 20], ['Lions', 4, 4, 0, 0, 1, 13],
+    ['IceBreakers', 6, 3, 3, 0, 2, 11], ['Kicksmashers', 6, 3, 3, 0, 2, 11], ['Aces', 8, 0, 8, 0, 0, 0], ['Globo', 6, 0, 6, 0, 0, 0],
   ].map((r) => mkRow(r)),
   P2: [
-    ['Falcons', 6, 5, 1, 0, 2, 17], ['Aces', 8, 4, 4, 0, 1, 13], ['Sonics', 6, 3, 3, 0, 2, 11],
-    ['Kicksmashers', 6, 2, 4, 0, 1, 7], ['Globo', 4, 2, 2, 0, 1, 7], ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4],
+    ['Falcons', 6, 5, 1, 0, 2, 17], ['Aces', 8, 4, 4, 0, 1, 13], ['Globo', 6, 4, 2, 0, 1, 13],
+    ['Sonics', 8, 3, 5, 0, 2, 11], ['IceBreakers', 6, 3, 3, 0, 2, 11], ['Kicksmashers', 6, 2, 4, 0, 1, 7], ['Lions', 4, 1, 3, 0, 1, 4],
   ].map((r) => mkRow(r)),
   P3: [
-    ['Sonics', 6, 4, 2, 0, 1, 13], ['Aces', 8, 4, 4, 0, 1, 13], ['Falcons', 6, 6, 0, 0, 4, 14],
-    ['IceBreakers', 4, 1, 3, 0, 1, 4], ['Lions', 2, 1, 1, 0, 1, 4], ['Globo', 4, 1, 3, 0, 1, 4], ['Kicksmashers', 6, 1, 5, 0, 1, 4],
+    ['Falcons', 6, 6, 0, 0, 4, 22], ['Sonics', 8, 6, 2, 0, 3, 21],
+    ['Aces', 8, 4, 4, 0, 1, 13], ['IceBreakers', 6, 3, 3, 0, 3, 12],
+    ['Lions', 4, 1, 3, 0, 1, 4], ['Globo', 6, 1, 5, 0, 1, 4], ['Kicksmashers', 6, 1, 5, 0, 1, 4],
   ].map((r) => mkRow(r, 0)),
 };
 // Falcons' P3 carries a published league deduction (raw 22 − 8 = 14).
@@ -520,6 +522,8 @@ ratedRubbers.forEach((rb) => {
 });
 
 export const NEWS = [
+  { id: 'nm6b', kicker: 'Match Day 6', title: 'Ice Breakers storm past Lions 15-6 — surge into top 3', date: T('2026-06-24', 23), tag: 'mens', body: 'Ice Breakers took four rubbers to Lions\' two at Play 360 — Wayne/Sergio, Nicky/Jacques and Irshaad/Waldo all posting bonus-point wins to jump to 34 points. Cameron Jacobsz and Pieter Badenhorst kept Lions\' P1 pride intact with two wins, but it wasn\'t enough.' },
+  { id: 'nm6a', kicker: 'Match Day 6', title: 'Sonics blow past Boomerangs 16-6 — close to within 1 point of Falcons', date: T('2026-06-24', 22, 30), tag: 'mens', body: 'Sonic Viboras were ruthless at Padel 24 — Heinrich/Anton, Yusuf/Pieter and Stefan/Mohamed all sweeping bonus points as the Sonics move to 58 points, just 1 behind the Falcons. Global Boomerangs took two P2 rubbers to avoid a whitewash. The title race is officially alive.' },
   { id: 'nlg', kicker: 'Historic First · LP Legacy League', title: 'And so it begins. A new chapter: the LP Legacy Franchise League launches', date: T('2026-06-23', 20), tag: 'legacy', body: 'Where youth and adults come together — a pathway for growth, mentorship, competition and community. Juniors and seniors building skills side by side and shaping the future champions of Lowveld Padel. The draft is complete: 48 players across six franchises, five adults and three youth per team. #LowveldPadel #Padel' },
   { id: 'nm5a', kicker: 'Match Day 5', title: 'Falcons march on: 19-3 over the Kick Smashers as the lead stretches to 17', date: T('2026-06-22', 22), tag: 'mens', body: 'Desert Falcons took five of six rubbers at Padel 24 — Uwaiz and Yusuf Patel and the Warno/Morne pair both sweeping 3-0 — to move clear at the top on 59 points. Only Siraaj Shaik and Azhar Sujee struck back for the Smashers, edging an 11-13 champions-tiebreak thriller.' },
   { id: 'nm5b', kicker: 'Match Day 5', title: 'Honours even: Sonic Viboras and Avalanche Aces share the spoils 10-10', date: T('2026-06-22', 22, 30), tag: 'mens', body: 'A genuine tie at Play 360 — three rubbers each. Coomans and Grote stayed perfect with a P1 win, Dr Moola and Boshoff swept their rubber, but the Aces hit back through Frik de Beer and Pierre de Villiers and a battling P2 from Grobler and Naude to split the night.' },
@@ -534,7 +538,7 @@ export const NEWS = [
 ];
 
 export const POWER_RANKINGS = {
-  mens: ['sonic-viboras', 'desert-falcons', 'sahara-lions', 'ice-breakers', 'samurai-kicksmashers', 'globo-boomerangs', 'avalanche-aces'],
+  mens: ['desert-falcons', 'sonic-viboras', 'ice-breakers', 'sahara-lions', 'samurai-kicksmashers', 'globo-boomerangs', 'avalanche-aces'],
   ladies: [],
 };
 
@@ -566,7 +570,7 @@ export const headToHead = (aId, bId) => {
       const aPts = f.home === aId ? hp : ap;
       const bPts = f.home === aId ? ap : hp;
       aPtsTotal += aPts; bPtsTotal += bPts;
-      if (aPts > bPts) aWins += 1; else bWins += 1;
+      if (aPts > bPts) aWins += 1; else if (bPts > aPts) bWins += 1;
       meetings.push({ id: f.id, date: f.start, aPts, bPts, round: f.round, court: f.court });
     });
   const last = meetings[meetings.length - 1] || null;
@@ -952,12 +956,12 @@ export const playerOfWeek = {
  * ================================================================= */
 export const POWER_RANKINGS_WEEKLY = {
   mens: [
-    { franchise: 'desert-falcons', move: 'same', note: 'Untouchable. 16-2 and a 17-point cushion at the summit.' },
-    { franchise: 'sonic-viboras', move: 'same', note: 'Held the Aces to a draw and stayed second — Coomans & Grote still perfect.' },
-    { franchise: 'avalanche-aces', move: 'up', note: 'A 10-10 share with the Viboras: signs of life after a rough start.' },
-    { franchise: 'samurai-kicksmashers', move: 'down', note: 'Outgunned 19-3 by the Falcons; the inconsistency bites again.' },
-    { franchise: 'ice-breakers', move: 'down', note: 'Idle this round and slip a place as others play.' },
-    { franchise: 'sahara-lions', move: 'same', note: 'Still a game in hand and lurking.' },
-    { franchise: 'globo-boomerangs', move: 'same', note: 'Up next against the Viboras — a chance to make noise.' },
+    { franchise: 'desert-falcons', move: 'same', note: 'Still top. Falcons on 59 — but Sonics are now just 1 point behind.' },
+    { franchise: 'sonic-viboras', move: 'up', note: '16-6 over the Boomerangs. Coomans, Grote, Moola/Boshoff all dominant — title race is on.' },
+    { franchise: 'ice-breakers', move: 'up', note: 'Huge night — 15-6 over the Lions. On 34 points and moving fast.' },
+    { franchise: 'sahara-lions', move: 'down', note: 'Dropped to 21 pts after the IB defeat. Still alive but need a response.' },
+    { franchise: 'samurai-kicksmashers', move: 'same', note: 'Idle this round. Watching from 22 pts.' },
+    { franchise: 'globo-boomerangs', move: 'up', note: 'Took 2 rubbers off the Sonics — showing some fight at 17 pts.' },
+    { franchise: 'avalanche-aces', move: 'down', note: 'Still searching for form. Break comes just in time.' },
   ],
 };

@@ -21,6 +21,15 @@ export default function BattleOfBorders() {
         <span className="bob-mandela">Nelson Mandela Day</span>
       </div>
 
+      {/* ── POSTER ── */}
+      <div style={{ margin: '16px 0', borderRadius: 'var(--r)', overflow: 'hidden', boxShadow: '0 8px 40px rgba(0,0,0,.6)' }}>
+        <img
+          src="/battle-of-borders-poster.jpg"
+          alt="Battle of Borders — Lowveld Padel International Nations Cup"
+          style={{ width: '100%', display: 'block' }}
+        />
+      </div>
+
       {/* ── MAIN TITLE ── */}
       <div className="bob-title-wrap">
         <h1 className="bob-title">

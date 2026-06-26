@@ -15,6 +15,7 @@ import {
 import {
   RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
 } from './pages/leagues';
+import BattleOfBorders from './pages/BattleOfBorders';
 
 function ScrollTop() {
   const { pathname } = useLocation();
@@ -60,6 +61,7 @@ export default function App() {
           <Route path="/captain" element={<CaptainDashboard />} />
           <Route path="/commissioner" element={<CommissionerDashboard />} />
           <Route path="/sponsor-analytics" element={<SponsorAnalytics />} />
+          <Route path="/battle-of-borders" element={<BattleOfBorders />} />
           <Route path="*" element={<Home />} />
         </Routes>
         <BottomNav />

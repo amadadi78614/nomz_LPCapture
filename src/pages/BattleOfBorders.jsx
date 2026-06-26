@@ -126,9 +126,11 @@ export default function BattleOfBorders() {
       <div className="bob-sponsors">
         <p className="bob-sponsors-label">Proudly Supported By</p>
         <div className="bob-sponsors-row">
-          {['Vodacom 4U · The Grove', 'Lowvelder', 'OSHEE Sport & Vitamin Drinks'].map((s) => (
-            <span key={s} className="chip" style={{ fontSize: 12 }}>{s}</span>
-          ))}
+          <span className="bob-sponsor-name">Vodacom 4U · The Grove</span>
+          <span className="bob-sponsor-dot">·</span>
+          <span className="bob-sponsor-name">Lowvelder</span>
+          <span className="bob-sponsor-dot">·</span>
+          <span className="bob-sponsor-name">OSHEE Sport &amp; Vitamin Drinks</span>
         </div>
       </div>
 
@@ -161,10 +163,10 @@ function BobStyles() {
         background:radial-gradient(ellipse at 50% 0%, rgba(154,168,35,.14), transparent 65%);
       }
       .bob-title {
-        font-family:var(--display); font-size:clamp(52px,14vw,96px); line-height:.85;
+        font-family:var(--display); font-size:clamp(32px,8vw,56px); line-height:.9;
         text-transform:uppercase; letter-spacing:.02em; margin:0;
       }
-      .bob-green { color:#9aa823; -webkit-text-stroke:2px #9aa823; }
+      .bob-green { color:#9aa823; }
       .bob-tagline { font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:12px 0 0; }
       .bob-gold { color:var(--gold); }
 
@@ -188,11 +190,11 @@ function BobStyles() {
         flex-shrink:0;
       }
 
-      .bob-team-name { font-family:var(--display); text-transform:uppercase; font-size:18px; letter-spacing:.04em; }
+      .bob-team-name { font-family:var(--display); text-transform:uppercase; font-size:15px; letter-spacing:.04em; }
       .bob-team-venue { font-size:11px; color:var(--muted); }
       .bob-vs-center { display:flex; align-items:center; justify-content:center; }
       .bob-vs {
-        font-family:var(--display); font-size:42px; color:#9aa823; font-weight:900;
+        font-family:var(--display); font-size:30px; color:#9aa823; font-weight:900;
         text-shadow:0 0 24px rgba(154,168,35,.6), 0 0 60px rgba(154,168,35,.25);
       }
 
@@ -237,7 +239,9 @@ function BobStyles() {
       /* ── SPONSORS ── */
       .bob-sponsors { text-align:center; margin:16px 0; }
       .bob-sponsors-label { font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-      .bob-sponsors-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
+      .bob-sponsors-row { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; align-items:center; }
+      .bob-sponsor-name { font-size:13px; font-weight:700; color:rgba(255,255,255,.7); letter-spacing:.04em; }
+      .bob-sponsor-dot { font-size:16px; color:var(--gold); line-height:1; }
 
       /* ── FOOTER ── */
       .bob-footer {

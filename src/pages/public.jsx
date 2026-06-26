@@ -36,68 +36,6 @@ export function Home() {
   return (
     <div className="page">
       <HomeStyles />
-      {/* ============ BATTLE OF BORDERS — HERO FEATURE ============ */}
-      <div style={{
-        background: 'linear-gradient(135deg, #050a05 0%, #0d1f0d 45%, #050a05 100%)',
-        border: '2px solid #9aa823',
-        borderRadius: 'var(--r)',
-        padding: '22px 18px',
-        position: 'relative',
-        overflow: 'hidden',
-        marginBottom: 4,
-      }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse at 50% -10%, rgba(154,168,35,.25), transparent 65%)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'linear-gradient(90deg, transparent, #9aa823, transparent)' }} />
-        <div className="row spread" style={{ marginBottom: 10, position: 'relative' }}>
-          <span style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.12em', textTransform: 'uppercase', color: '#9aa823' }}>⚡ Lowveld Padel Presents · International Series</span>
-          <span className="chip" style={{ fontSize: 10, color: '#9aa823', borderColor: '#9aa823', animation: 'tvpulse 2s infinite' }}>INAUGURAL 2026</span>
-        </div>
-        <h1 style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 'clamp(36px, 8vw, 64px)', lineHeight: .9, margin: '0 0 6px', position: 'relative' }}>
-          Battle of <span style={{ color: '#9aa823', WebkitTextStroke: '1px #9aa823' }}>Borders</span>
-        </h1>
-        <p style={{ color: 'var(--muted)', fontSize: 12, margin: '0 0 20px', letterSpacing: '.1em', textTransform: 'uppercase', position: 'relative' }}>
-          Two Nations. One Trophy. <span style={{ color: '#9aa823' }}>Eternal</span> Bragging Rights.
-        </p>
-        <div className="row spread" style={{ gap: 12, marginBottom: 20, position: 'relative' }}>
-          <div style={{ flex: 1, background: 'rgba(0,106,78,.2)', border: '1px solid rgba(0,106,78,.4)', borderRadius: 12, padding: '16px 12px', textAlign: 'center' }}>
-            <div style={{ fontSize: 32, marginBottom: 6 }}>🇿🇦</div>
-            <div style={{ fontSize: 10, color: 'var(--muted)', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 2 }}>Team</div>
-            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block' }}>South Africa</b>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>Padel 24 · Mbombela</div>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4 }}>
-            <b style={{ fontFamily: 'var(--display)', fontSize: 30, color: '#9aa823', lineHeight: 1 }}>VS</b>
-            <div style={{ width: 1, height: 30, background: 'rgba(154,168,35,.3)' }} />
-          </div>
-          <div style={{ flex: 1, background: 'rgba(59,89,152,.2)', border: '1px solid rgba(59,89,152,.4)', borderRadius: 12, padding: '16px 12px', textAlign: 'center' }}>
-            <div style={{ fontSize: 32, marginBottom: 6 }}>🇸🇿</div>
-            <div style={{ fontSize: 10, color: 'var(--muted)', letterSpacing: '.08em', textTransform: 'uppercase', marginBottom: 2 }}>Team</div>
-            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block' }}>Eswatini</b>
-            <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 4 }}>UVPadel · Everyone's Game</div>
-          </div>
-        </div>
-        <div className="row" style={{ gap: 8, flexWrap: 'wrap', marginBottom: 16, position: 'relative' }}>
-          <span className="chip" style={{ fontSize: 11 }}>📍 Padel 24, Mbombela</span>
-          <span className="chip" style={{ fontSize: 11 }}>📅 Date Coming Soon</span>
-          <span className="chip" style={{ fontSize: 11 }}>🏆 1 Champion · Eternal Rights</span>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 16, position: 'relative' }}>
-          <div style={{ textAlign: 'center', padding: '8px 0' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, fontStyle: 'italic', color: 'var(--muted)' }}>Pride. Passion.</div>
-            <div style={{ fontSize: 13, fontWeight: 800, fontStyle: 'italic', color: '#9aa823' }}>Legacy.</div>
-          </div>
-          <div style={{ textAlign: 'center', padding: '8px 0' }}>
-            <div style={{ fontSize: 12, fontWeight: 800, fontStyle: 'italic', color: 'var(--muted)' }}>Rivalry. Respect.</div>
-            <div style={{ fontSize: 13, fontWeight: 800, fontStyle: 'italic', color: '#9aa823' }}>Glory.</div>
-          </div>
-        </div>
-        <div style={{ borderTop: '1px solid rgba(154,168,35,.25)', paddingTop: 12, position: 'relative' }}>
-          <div style={{ fontSize: 10, color: 'var(--muted)', textAlign: 'center', letterSpacing: '.06em', marginBottom: 6 }}>PROUDLY SUPPORTED BY</div>
-          <div style={{ fontSize: 11, color: 'rgba(255,255,255,.5)', textAlign: 'center', letterSpacing: '.04em' }}>Wilson · Cupra · Bullpadel · Powerade · UVPadel</div>
-          <div style={{ fontSize: 10, color: '#9aa823', textAlign: 'center', marginTop: 8, letterSpacing: '.1em', textTransform: 'uppercase' }}>#BattleOfBorders · Where Nations Collide. Legends Rise.</div>
-        </div>
-      </div>
-
       {/* ============ HERO STORY ============ */}
       <div className="hero">
         <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Match Day 6 complete · Halfway through the season</span>

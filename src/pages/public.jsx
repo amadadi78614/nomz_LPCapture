@@ -39,12 +39,12 @@ export function Home() {
       {/* ============ HERO STORY ============ */}
       <div className="hero">
         <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Match Day 6 complete · Halfway through the season</span>
-        <h1 className="display" style={{ margin: '6px 0 8px' }}>Season 3 in full flight. Legacy ready to take off. Ladies — your time is now!</h1>
-        <p className="muted" style={{ maxWidth: 580 }}>Three match days down, three to go — Falcons lead on 59, Viboras hunt on 58, Ice Breakers surge to 34. The LP Legacy League inaugural season is on its way. And Ladies? Season 2 is coming — registration drops soon!</p>
-        <p className="muted" style={{ maxWidth: 580, marginTop: 8 }}>
-          And something new is brewing this July...{' '}
-          <Link to="/battle-of-borders" style={{ color: '#9aa823', fontWeight: 700 }}>find out what ⚡</Link>
+        <h1 className="display" style={{ margin: '6px 0 4px' }}>Season 3 in full flight. Legacy ready to take off. Ladies — your time is now!</h1>
+        <p style={{ maxWidth: 580, margin: '0 0 10px', fontSize: 14, color: 'var(--muted)', fontStyle: 'italic' }}>
+          And something exciting is happening this July — Unity Cup!...{' '}
+          <a href="https://www.lowveldpadel.co.za/unity-cup" style={{ color: '#c79a3e', fontWeight: 700, fontStyle: 'normal' }}>Unity Cup — find out more ⚡</a>
         </p>
+        <p className="muted" style={{ maxWidth: 580 }}>Three match days down, three to go — Falcons lead on 59, Viboras hunt on 58, Ice Breakers surge to 34. The LP Legacy League inaugural season is on its way. And Ladies? Season 2 is coming — registration drops soon!</p>
         <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>
           <Link to="/live" className="btn live">● Match Centre</Link>
           <Link to="/tv" className="btn ghost">Lowveld TV</Link>

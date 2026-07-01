@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  PLAYERS, franchiseById, stripeVar, winPct,
-} from '../data/seed';
-
+import { PLAYERS, franchiseById, stripeVar, winPct } from '../data/seed';
 
 const MENS_S2_PREMIER = [
   { rank: 1, name: 'Yusuf Packery', team: 'Desert Falcons', played: 6, won: 6, lost: 0, setsWon: 17, gamesWon: 128 },
@@ -240,27 +237,6 @@ const LADIES_S1 = [
 ];
 
 const TEAM_COLORS = {
-  'Desert Falcons': '#c79a3e',
-  'Ice Breakers': '#00C8E8',
-  'Avalanche Aces': '#0057E9',
-  'Sonic Viboras': '#9aa823',
-  'Samurai Kicksmashers': '#dc2626',
-  'Samurai Kick Smashers': '#dc2626',
-  'Globo Boomerangs': '#7c3aed',
-  'Sahara Lions': '#f59e0b',
-  'Rulo Apaches': '#6b7280',
-  'Baltic Blades': '#0891b2',
-  'Lunar Lillies': '#8b5cf6',
-  'Desert Roses': '#ec4899',
-  'Phoenix Flames': '#f97316',
-  'Backhand Blossoms': '#10b981',
-  'Net Novas': '#3b82f6',
-  'Arctic Angels': '#06b6d4',
-};
-
-function RankingsTable({ data, title, note }) {
-
-const TEAM_COLORS = {
   'Desert Falcons': '#c79a3e', 'Ice Breakers': '#00C8E8', 'Avalanche Aces': '#0057E9',
   'Sonic Viboras': '#9aa823', 'Samurai Kicksmashers': '#dc2626', 'Samurai Kick Smashers': '#dc2626',
   'Globo Boomerangs': '#7c3aed', 'Global Boomerangs': '#7c3aed', 'Sahara Lions': '#f59e0b',
@@ -331,12 +307,12 @@ function RankTable({ data, champion }) {
   );
 }
 
-function Season3MensRankings() {
+function Season3Rankings() {
   const [sortBy, setSortBy] = useState('lp');
   const players = PLAYERS.filter((p) => p.league === 'mens' && p.stats && p.stats.played > 0);
   const sorted = [...players].sort(
     sortBy === 'lp' ? (a, b) => b.lp_rating - a.lp_rating :
-    sortBy === 'win' ? (a, b) => winPct(b.stats) - winPct(a.stats) || b.stats.wins - a.stats.wins :
+    sortBy === 'win' ? (a, b) => winPct(b.stats) - winPct(a.stats) :
     sortBy === 'mvp' ? (a, b) => b.stats.mvp_points - a.stats.mvp_points :
     (a, b) => b.stats.wins - a.stats.wins
   );
@@ -355,7 +331,7 @@ function Season3MensRankings() {
       <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
         <table className="tbl">
           <thead>
-            <tr><th>#</th><th>Player</th><th>Franchise</th><th className="num">Ct</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">{sortBy === 'lp' ? 'LP' : sortBy === 'win' ? 'Win%' : sortBy === 'mvp' ? 'MVP' : 'W'}</th></tr>
+            <tr><th>#</th><th>Player</th><th>Franchise</th><th className="num">Tier</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">{sortBy === 'lp' ? 'LP' : sortBy === 'win' ? 'Win%' : sortBy === 'mvp' ? 'MVP' : 'W'}</th></tr>
           </thead>
           <tbody>
             {sorted.map((p, i) => {
@@ -367,7 +343,7 @@ function Season3MensRankings() {
                   <td><Link to={`/player/${p.id}`}><b style={{ fontSize: 13 }}>{p.name}</b></Link></td>
                   <td><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
                     <span style={{ width: 3, height: 14, borderRadius: 2, background: stripeVar(fr.id), display: 'inline-block' }} />
-                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>{fr.short || fr.name}</span>
+                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>{fr.name}</span>
                   </span></td>
                   <td className="muted" style={{ fontSize: 11, textAlign: 'center' }}>{p.tier}</td>
                   <td className="num">{p.stats.played}</td>
@@ -395,14 +371,12 @@ export function AllTimeRankings() {
       <h1 className="display">Historical Stats</h1>
       <p className="muted" style={{ fontSize: 13 }}>Player rankings and statistics across all Lowveld Padel seasons.</p>
 
-      {/* League tabs */}
       <div className="tabbar mt">
         <button className={league === 'mens' ? 'on' : ''} onClick={() => setLeague('mens')}>Men's</button>
         <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies</button>
         <button className={league === 'youth' ? 'on' : ''} onClick={() => setLeague('youth')}>Youth</button>
       </div>
 
-      {/* ── MEN'S ── */}
       {league === 'mens' && (
         <>
           <div className="tabbar mt">
@@ -410,7 +384,6 @@ export function AllTimeRankings() {
             <button className={mensSeason === 's2' ? 'on' : ''} onClick={() => { setMensSeason('s2'); setMensDiv('premier'); }}>Season 2</button>
             <button className={mensSeason === 's3' ? 'on' : ''} onClick={() => setMensSeason('s3')}>Season 3 · Live</button>
           </div>
-
           {mensSeason === 's1' && (
             <div className="mt">
               <div className="grid cols-2" style={{ gap: 10, marginBottom: 14 }}>
@@ -427,40 +400,25 @@ export function AllTimeRankings() {
               </div>
               <div className="card" style={{ textAlign: 'center', padding: '28px 20px' }}>
                 <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 18, marginBottom: 8 }}>Season 1 Player Stats</div>
-                <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Season 1 had Premier and Championship divisions. Full player stats will be published here.</p>
+                <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Season 1 had Premier and Championship divisions. Full player stats coming soon.</p>
                 <span className="chip">Data Coming Soon</span>
               </div>
             </div>
           )}
-
           {mensSeason === 's2' && (
             <div className="mt">
               <div className="tabbar" style={{ marginBottom: 14 }}>
                 <button className={mensDiv === 'premier' ? 'on' : ''} onClick={() => setMensDiv('premier')}>Premier Division</button>
                 <button className={mensDiv === 'champ' ? 'on' : ''} onClick={() => setMensDiv('champ')}>Championship Division</button>
               </div>
-              {mensDiv === 'premier' && (
-                <RankTable
-                  data={MENS_S2_PREMIER}
-                  champion={{ name: 'Sonic Viboras', logo: '/logos/sonic-viboras.webp' }}
-                />
-              )}
-              {mensDiv === 'champ' && (
-                <RankTable
-                  data={MENS_S2_CHAMP}
-                  champion={{ name: 'Global Boomerangs', logo: '/logos/globo-boomerangs.webp' }}
-                />
-              )}
+              {mensDiv === 'premier' && <RankTable data={MENS_S2_PREMIER} champion={{ name: 'Sonic Viboras', logo: '/logos/sonic-viboras.webp' }} />}
+              {mensDiv === 'champ' && <RankTable data={MENS_S2_CHAMP} champion={{ name: 'Global Boomerangs', logo: '/logos/globo-boomerangs.webp' }} />}
             </div>
           )}
-
-          {mensSeason === 's3' && (
-            <div className="mt"><Season3MensRankings /></div>
-          )}
+          {mensSeason === 's3' && <div className="mt"><Season3Rankings /></div>}
         </>
       )}
 
-      {/* ── LADIES ── */}
       {league === 'ladies' && (
         <>
           <div className="tabbar mt">
@@ -469,10 +427,7 @@ export function AllTimeRankings() {
           </div>
           {ladiesSeason === 's1' && (
             <div className="mt">
-              <RankTable
-                data={LADIES_S1}
-                champion={{ name: 'Lunar Lillies', logo: '/logos/lunar-lillies.webp' }}
-              />
+              <RankTable data={LADIES_S1} champion={{ name: 'Lunar Lillies', logo: '/logos/lunar-lillies.webp' }} />
             </div>
           )}
           {ladiesSeason === 's2' && (
@@ -480,14 +435,13 @@ export function AllTimeRankings() {
               <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>
                 <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20, marginBottom: 8 }}>Ladies Season 2</div>
                 <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Season 2 is upcoming — stats will appear here once play begins.</p>
-                <Link to="/register" className="btn gold">Register Now →</Link>
+                <Link to="/register" className="btn" style={{ background: 'var(--live)', color: '#fff', display: 'inline-block', padding: '10px 20px', borderRadius: 8, textDecoration: 'none', fontWeight: 700 }}>Register Now →</Link>
               </div>
             </div>
           )}
         </>
       )}
 
-      {/* ── YOUTH ── */}
       {league === 'youth' && (
         <div className="mt">
           <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>

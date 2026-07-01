@@ -6,7 +6,7 @@ import {
   RIVALRIES, headToHead, DYNASTY, TV_VIDEOS, TV_LIVE, getYouTubeId, ytThumb, mvpLeader,
   ROAD_TO_360, LEGACY_FRANCHISES, LEGACY_STANDINGS, LEGACY_PLAYERS, LEGACY_POWER,
   legacyFranchiseById, matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY,
-  teamForm, playerOfWeek, playerById,
+  teamForm, playerOfWeek,
 } from '../data/seed';
 import { communityLinks } from '../config/communityLinks';
 import { useLiveMatch } from '../hooks/useLiveMatch';

@@ -537,7 +537,261 @@ function MensLeague() {
 
       {/* S1 / S2 placeholders */}
       {season === 's1' && <div className="mt"><PlaceholderSeason season="Season 1" league="Men's Franchise League" /></div>}
-      {season === 's2' && <div className="mt"><PlaceholderSeason season="Season 2" league="Men's Franchise League" /></div>}
+      {season === 's2' && (() => {
+        const MENS_S2_PREMIER = [
+  { rank: 1, name: 'Yusuf Packery', team: 'Desert Falcons', played: 6, won: 6, lost: 0, setsWon: 17, gamesWon: 128 },
+  { rank: 2, name: 'Heinrich Coomans', team: 'Sonic Viboras', played: 7, won: 5, lost: 2, setsWon: 16, gamesWon: 141 },
+  { rank: 3, name: 'Uwaiz Patel', team: 'Desert Falcons', played: 7, won: 5, lost: 2, setsWon: 15, gamesWon: 140 },
+  { rank: 4, name: 'Yusuf Patel', team: 'Desert Falcons', played: 6, won: 5, lost: 1, setsWon: 14, gamesWon: 126 },
+  { rank: 5, name: 'Salmaan Methar', team: 'Desert Falcons', played: 6, won: 5, lost: 1, setsWon: 14, gamesWon: 119 },
+  { rank: 6, name: 'Ahmed Ismail', team: 'Ice Breakers', played: 6, won: 5, lost: 1, setsWon: 13, gamesWon: 127 },
+  { rank: 7, name: 'Maaz Randera', team: 'Ice Breakers', played: 7, won: 5, lost: 1, setsWon: 13, gamesWon: 119 },
+  { rank: 8, name: 'Anton Grote', team: 'Rulo Apaches', played: 6, won: 4, lost: 2, setsWon: 12, gamesWon: 122 },
+  { rank: 9, name: 'Wiehann Mohlen', team: 'Rulo Apaches', played: 6, won: 4, lost: 2, setsWon: 12, gamesWon: 121 },
+  { rank: 10, name: 'Duhan Swart', team: 'Ice Breakers', played: 8, won: 4, lost: 3, setsWon: 11, gamesWon: 118 },
+  { rank: 11, name: 'Rafiq Mohamed', team: 'Avalanche Aces', played: 6, won: 4, lost: 2, setsWon: 11, gamesWon: 111 },
+  { rank: 12, name: 'Bryan Theron', team: 'Samurai Kicksmashers', played: 6, won: 4, lost: 2, setsWon: 11, gamesWon: 106 },
+  { rank: 13, name: 'Ryan Tate', team: 'Avalanche Aces', played: 5, won: 4, lost: 1, setsWon: 9, gamesWon: 85 },
+  { rank: 14, name: 'Greg Beyers', team: 'Avalanche Aces', played: 4, won: 4, lost: 0, setsWon: 9, gamesWon: 76 },
+  { rank: 15, name: 'Yusuf Asvat', team: 'Baltic Blades', played: 5, won: 4, lost: 1, setsWon: 8, gamesWon: 72 },
+  { rank: 16, name: 'Peet Welthagen', team: 'Desert Falcons', played: 5, won: 3, lost: 2, setsWon: 10, gamesWon: 100 },
+  { rank: 17, name: 'Muhammad Azhar Sujee', team: 'Sonic Viboras', played: 5, won: 3, lost: 2, setsWon: 10, gamesWon: 97 },
+  { rank: 18, name: 'JD Herbst', team: 'Samurai Kicksmashers', played: 6, won: 3, lost: 3, setsWon: 9, gamesWon: 101 },
+  { rank: 19, name: 'Zaheer Methar', team: 'Ice Breakers', played: 5, won: 3, lost: 2, setsWon: 9, gamesWon: 97 },
+  { rank: 20, name: 'Bevan Francis', team: 'Samurai Kicksmashers', played: 5, won: 3, lost: 2, setsWon: 9, gamesWon: 90 },
+  { rank: 21, name: 'Ryan Kennett', team: 'Desert Falcons', played: 5, won: 3, lost: 1, setsWon: 9, gamesWon: 79 },
+  { rank: 22, name: 'Cian Maritz', team: 'Samurai Kicksmashers', played: 3, won: 3, lost: 0, setsWon: 9, gamesWon: 66 },
+  { rank: 23, name: 'Driaan Odendaal', team: 'Avalanche Aces', played: 6, won: 3, lost: 3, setsWon: 8, gamesWon: 88 },
+  { rank: 24, name: 'Armand Esterhuizen', team: 'Sonic Viboras', played: 5, won: 3, lost: 2, setsWon: 8, gamesWon: 85 },
+  { rank: 25, name: 'Cameron Jacobsz', team: 'Desert Falcons', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 82 },
+  { rank: 26, name: 'Warwick Morgan', team: 'Sonic Viboras', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 74 },
+  { rank: 27, name: 'Muhammed Jina', team: 'Ice Breakers', played: 5, won: 3, lost: 2, setsWon: 7, gamesWon: 82 },
+  { rank: 28, name: 'Muhammed Shehzad Meer', team: 'Globo Boomerangs', played: 5, won: 3, lost: 2, setsWon: 7, gamesWon: 81 },
+  { rank: 29, name: 'Ryan Wicht', team: 'Desert Falcons', played: 4, won: 3, lost: 1, setsWon: 7, gamesWon: 60 },
+  { rank: 30, name: 'Hoffmann Maritz', team: 'Avalanche Aces', played: 6, won: 3, lost: 3, setsWon: 6, gamesWon: 89 },
+  { rank: 31, name: 'Patrick Leyden', team: 'Avalanche Aces', played: 6, won: 3, lost: 3, setsWon: 6, gamesWon: 88 },
+  { rank: 32, name: 'Zaheer Naby', team: 'Baltic Blades', played: 6, won: 3, lost: 3, setsWon: 6, gamesWon: 77 },
+  { rank: 33, name: 'Zayd Methar', team: 'Desert Falcons', played: 4, won: 3, lost: 1, setsWon: 5, gamesWon: 55 },
+  { rank: 34, name: 'Ahmed Mungalee', team: 'Globo Boomerangs', played: 6, won: 2, lost: 4, setsWon: 8, gamesWon: 96 },
+  { rank: 35, name: 'Faeez Sebastian', team: 'Globo Boomerangs', played: 5, won: 2, lost: 3, setsWon: 8, gamesWon: 86 },
+  { rank: 36, name: 'Pieter Badenhorst', team: 'Sonic Viboras', played: 4, won: 2, lost: 2, setsWon: 8, gamesWon: 78 },
+  { rank: 37, name: 'Lefa Moganedi', team: 'Sonic Viboras', played: 4, won: 2, lost: 2, setsWon: 8, gamesWon: 76 },
+  { rank: 38, name: 'Pieter Boshoff', team: 'Globo Boomerangs', played: 5, won: 2, lost: 3, setsWon: 7, gamesWon: 84 },
+  { rank: 39, name: 'Yusuf Moola', team: 'Sonic Viboras', played: 6, won: 2, lost: 3, setsWon: 7, gamesWon: 82 },
+  { rank: 40, name: 'Fiaz Bhikhoo', team: 'Ice Breakers', played: 4, won: 2, lost: 2, setsWon: 7, gamesWon: 71 },
+  { rank: 41, name: 'Burger Bester', team: 'Rulo Apaches', played: 4, won: 2, lost: 2, setsWon: 7, gamesWon: 69 },
+  { rank: 42, name: 'Suhayl Packery', team: 'Rulo Apaches', played: 5, won: 2, lost: 2, setsWon: 7, gamesWon: 69 },
+  { rank: 43, name: 'Alexander Combrinck', team: 'Sonic Viboras', played: 4, won: 2, lost: 2, setsWon: 7, gamesWon: 69 },
+  { rank: 44, name: 'Joseph Van der merwe', team: 'Sonic Viboras', played: 5, won: 2, lost: 2, setsWon: 7, gamesWon: 69 },
+  { rank: 45, name: 'Ridhwaan Sujee', team: 'Sonic Viboras', played: 4, won: 2, lost: 1, setsWon: 7, gamesWon: 58 },
+  { rank: 46, name: 'Cassim Vawda', team: 'Globo Boomerangs', played: 5, won: 2, lost: 3, setsWon: 6, gamesWon: 84 },
+  { rank: 47, name: 'Faheem Nomani', team: 'Samurai Kicksmashers', played: 5, won: 2, lost: 3, setsWon: 6, gamesWon: 80 },
+  { rank: 48, name: 'Donavan Taylor', team: 'Baltic Blades', played: 5, won: 2, lost: 3, setsWon: 6, gamesWon: 74 },
+  { rank: 49, name: 'Morne Steenekamp', team: 'Samurai Kicksmashers', played: 4, won: 2, lost: 2, setsWon: 6, gamesWon: 72 },
+  { rank: 50, name: 'Adil Ahmed', team: 'Sonic Viboras', played: 4, won: 2, lost: 2, setsWon: 6, gamesWon: 71 },
+  { rank: 51, name: 'Sabelo Mathebula', team: 'Avalanche Aces', played: 4, won: 2, lost: 2, setsWon: 6, gamesWon: 70 },
+  { rank: 52, name: 'Danyaal Nomani', team: 'Samurai Kicksmashers', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 59 },
+  { rank: 53, name: 'Shakir Suleman', team: 'Samurai Kicksmashers', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 55 },
+  { rank: 54, name: 'Erlo Olivier', team: 'Ice Breakers', played: 6, won: 2, lost: 4, setsWon: 5, gamesWon: 74 },
+  { rank: 55, name: 'Nabeel Meer', team: 'Globo Boomerangs', played: 4, won: 2, lost: 2, setsWon: 5, gamesWon: 63 },
+  { rank: 56, name: 'George du Toit', team: 'Avalanche Aces', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 52 },
+  { rank: 57, name: 'Liam Morgan', team: 'Baltic Blades', played: 2, won: 2, lost: 0, setsWon: 5, gamesWon: 44 },
+  { rank: 58, name: 'Fanus Wilkens', team: 'Rulo Apaches', played: 3, won: 2, lost: 1, setsWon: 4, gamesWon: 51 },
+  { rank: 59, name: 'Jacques Hopkins', team: 'Rulo Apaches', played: 3, won: 2, lost: 1, setsWon: 4, gamesWon: 51 },
+  { rank: 60, name: 'Joshua Hoffman', team: 'Sonic Viboras', played: 4, won: 2, lost: 1, setsWon: 4, gamesWon: 48 },
+  { rank: 61, name: 'Chris Triegaardt', team: 'Ice Breakers', played: 3, won: 2, lost: 1, setsWon: 4, gamesWon: 46 },
+  { rank: 62, name: 'Etienne Swart', team: 'Rulo Apaches', played: 3, won: 2, lost: 0, setsWon: 4, gamesWon: 39 },
+  { rank: 63, name: 'Jacques Burger', team: 'Avalanche Aces', played: 4, won: 1, lost: 3, setsWon: 5, gamesWon: 69 },
+  { rank: 64, name: 'Justin van Staden', team: 'Rulo Apaches', played: 4, won: 1, lost: 2, setsWon: 5, gamesWon: 57 },
+  { rank: 65, name: 'Warren Morgan', team: 'Globo Boomerangs', played: 3, won: 1, lost: 2, setsWon: 5, gamesWon: 57 },
+  { rank: 66, name: 'Siraaj Shaik', team: 'Samurai Kicksmashers', played: 4, won: 1, lost: 3, setsWon: 4, gamesWon: 68 },
+  { rank: 67, name: 'Ebrahim Ismail', team: 'Ice Breakers', played: 4, won: 1, lost: 3, setsWon: 4, gamesWon: 63 },
+  { rank: 68, name: 'Andries van Niekerk', team: 'Desert Falcons', played: 4, won: 1, lost: 3, setsWon: 4, gamesWon: 61 },
+  { rank: 69, name: 'Yusuf Ismail', team: 'Rulo Apaches', played: 4, won: 1, lost: 3, setsWon: 4, gamesWon: 59 },
+  { rank: 70, name: 'Anas Mungalee', team: 'Globo Boomerangs', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 53 },
+  { rank: 71, name: 'Phil-Mar Van Rensburg', team: 'Avalanche Aces', played: 4, won: 1, lost: 3, setsWon: 4, gamesWon: 50 },
+  { rank: 72, name: 'Jacques Van Zyl', team: 'Desert Falcons', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 50 },
+  { rank: 73, name: 'Luan Walters', team: 'Globo Boomerangs', played: 5, won: 1, lost: 4, setsWon: 3, gamesWon: 75 },
+  { rank: 74, name: 'Ozayr Shaik', team: 'Baltic Blades', played: 6, won: 1, lost: 5, setsWon: 3, gamesWon: 72 },
+  { rank: 75, name: 'Hendrik Tryhou', team: 'Rulo Apaches', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 56 },
+  { rank: 76, name: 'Frik De Beer', team: 'Avalanche Aces', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 48 },
+  { rank: 77, name: 'Marius Loock', team: 'Baltic Blades', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 46 },
+  { rank: 78, name: 'Naeem Omar', team: 'Samurai Kicksmashers', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 45 },
+  { rank: 79, name: 'Muhammad Khalid Jeewa', team: 'Globo Boomerangs', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 45 },
+  { rank: 80, name: 'Muhammad Fakir', team: 'Samurai Kicksmashers', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 42 },
+  { rank: 81, name: 'Ebrahim Mungalee', team: 'Globo Boomerangs', played: 1, won: 1, lost: 0, setsWon: 3, gamesWon: 22 },
+  { rank: 82, name: 'Rayhaan Dinath', team: 'Ice Breakers', played: 4, won: 1, lost: 3, setsWon: 2, gamesWon: 56 },
+  { rank: 83, name: 'Bilal Cassim', team: 'Baltic Blades', played: 4, won: 1, lost: 3, setsWon: 2, gamesWon: 38 },
+  { rank: 84, name: 'Wayne Enslin', team: 'Rulo Apaches', played: 2, won: 1, lost: 1, setsWon: 2, gamesWon: 28 },
+  { rank: 85, name: 'Marvin Naidoo', team: 'Ice Breakers', played: 4, won: 0, lost: 4, setsWon: 3, gamesWon: 63 },
+  { rank: 86, name: 'Uzair Ismail', team: 'Rulo Apaches', played: 4, won: 0, lost: 3, setsWon: 2, gamesWon: 44 },
+  { rank: 87, name: 'Mohamed Nomani', team: 'Samurai Kicksmashers', played: 3, won: 0, lost: 3, setsWon: 2, gamesWon: 44 },
+  { rank: 88, name: 'Dewald Meyer', team: 'Baltic Blades', played: 3, won: 0, lost: 3, setsWon: 2, gamesWon: 41 },
+  { rank: 89, name: 'Feroz Guman', team: 'Baltic Blades', played: 4, won: 0, lost: 4, setsWon: 1, gamesWon: 40 },
+  { rank: 90, name: 'Imran Omar', team: 'Globo Boomerangs', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 40 },
+  { rank: 91, name: 'Tim Kaden', team: 'Baltic Blades', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 34 },
+  { rank: 92, name: 'Niel Pienaar', team: 'Baltic Blades', played: 2, won: 0, lost: 2, setsWon: 1, gamesWon: 27 },
+  { rank: 93, name: 'Kiran Hansraj', team: 'Desert Falcons', played: 2, won: 0, lost: 1, setsWon: 1, gamesWon: 14 },
+  { rank: 94, name: 'Ruaan Naude', team: 'Avalanche Aces', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 40 },
+  { rank: 95, name: 'Sikander Cassim', team: 'Baltic Blades', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 27 },
+];
+        const MENS_S2_CHAMP = [
+  { rank: 1, name: 'Felix Lombard', team: 'Avalanche Aces', played: 7, won: 6, lost: 1, setsWon: 16, gamesWon: 140 },
+  { rank: 2, name: 'Irshaad Mahomed', team: 'Sonic Viboras', played: 7, won: 6, lost: 1, setsWon: 16, gamesWon: 132 },
+  { rank: 3, name: 'Etienne Grobler', team: 'Desert Falcons', played: 7, won: 6, lost: 1, setsWon: 15, gamesWon: 137 },
+  { rank: 4, name: 'Alfaiz Mamji', team: 'Globo Boomerangs', played: 6, won: 5, lost: 1, setsWon: 15, gamesWon: 120 },
+  { rank: 5, name: 'Taahir Mungalee', team: 'Sonic Viboras', played: 7, won: 5, lost: 2, setsWon: 14, gamesWon: 122 },
+  { rank: 6, name: 'Fahad Patel', team: 'Globo Boomerangs', played: 7, won: 4, lost: 2, setsWon: 14, gamesWon: 128 },
+  { rank: 7, name: 'Irfaan Mahomed', team: 'Globo Boomerangs', played: 6, won: 4, lost: 2, setsWon: 13, gamesWon: 119 },
+  { rank: 8, name: 'Zahid Methar', team: 'Sonic Viboras', played: 6, won: 4, lost: 2, setsWon: 12, gamesWon: 106 },
+  { rank: 9, name: 'Reino Grobler', team: 'Desert Falcons', played: 5, won: 4, lost: 1, setsWon: 12, gamesWon: 104 },
+  { rank: 10, name: 'Uwais Guman', team: 'Ice Breakers', played: 6, won: 4, lost: 1, setsWon: 12, gamesWon: 103 },
+  { rank: 11, name: 'Irshaad Moola', team: 'Ice Breakers', played: 6, won: 4, lost: 1, setsWon: 11, gamesWon: 104 },
+  { rank: 12, name: 'Brent Grix', team: 'Sonic Viboras', played: 5, won: 4, lost: 1, setsWon: 11, gamesWon: 101 },
+  { rank: 13, name: 'Gerco van Rooyen', team: 'Avalanche Aces', played: 6, won: 4, lost: 2, setsWon: 11, gamesWon: 96 },
+  { rank: 14, name: 'Suliman Patel', team: 'Desert Falcons', played: 6, won: 4, lost: 1, setsWon: 10, gamesWon: 100 },
+  { rank: 15, name: 'Zainul Choohan', team: 'Baltic Blades', played: 6, won: 3, lost: 3, setsWon: 10, gamesWon: 107 },
+  { rank: 16, name: 'Kobus van Rensburg', team: 'Avalanche Aces', played: 4, won: 3, lost: 0, setsWon: 10, gamesWon: 78 },
+  { rank: 17, name: 'Gavin Moffett', team: 'Rulo Apaches', played: 6, won: 3, lost: 3, setsWon: 9, gamesWon: 97 },
+  { rank: 18, name: 'Stefan De Villiers', team: 'Rulo Apaches', played: 6, won: 3, lost: 2, setsWon: 9, gamesWon: 94 },
+  { rank: 19, name: 'Muhammed Minty', team: 'Ice Breakers', played: 4, won: 3, lost: 1, setsWon: 9, gamesWon: 83 },
+  { rank: 20, name: 'Drew Packman', team: 'Desert Falcons', played: 4, won: 3, lost: 1, setsWon: 9, gamesWon: 78 },
+  { rank: 21, name: 'Stefan Erasmus', team: 'Desert Falcons', played: 4, won: 3, lost: 1, setsWon: 9, gamesWon: 78 },
+  { rank: 22, name: 'Nicky Joubert', team: 'Avalanche Aces', played: 5, won: 3, lost: 1, setsWon: 8, gamesWon: 87 },
+  { rank: 23, name: 'Danie Rautenbach', team: 'Sonic Viboras', played: 5, won: 3, lost: 2, setsWon: 8, gamesWon: 82 },
+  { rank: 24, name: 'Mickal Bakker', team: 'Rulo Apaches', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 78 },
+  { rank: 25, name: 'Soyab maxi Patel', team: 'Globo Boomerangs', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 69 },
+  { rank: 26, name: 'Muhammed Shaffique Jeewa', team: 'Globo Boomerangs', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 69 },
+  { rank: 27, name: 'Pierre De Villiers', team: 'Avalanche Aces', played: 4, won: 3, lost: 1, setsWon: 7, gamesWon: 62 },
+  { rank: 28, name: 'Zaeem Sadiq', team: 'Avalanche Aces', played: 3, won: 3, lost: 0, setsWon: 7, gamesWon: 60 },
+  { rank: 29, name: 'Shaun Moropa', team: 'Samurai Kicksmashers', played: 7, won: 2, lost: 4, setsWon: 8, gamesWon: 95 },
+  { rank: 30, name: 'Dillon Francis', team: 'Baltic Blades', played: 6, won: 2, lost: 4, setsWon: 8, gamesWon: 95 },
+  { rank: 31, name: 'Tim Forssman', team: 'Samurai Kicksmashers', played: 6, won: 2, lost: 3, setsWon: 8, gamesWon: 83 },
+  { rank: 32, name: 'Waldo van Tonder', team: 'Rulo Apaches', played: 5, won: 2, lost: 3, setsWon: 7, gamesWon: 85 },
+  { rank: 33, name: 'Aadil Asvat', team: 'Globo Boomerangs', played: 5, won: 2, lost: 2, setsWon: 7, gamesWon: 70 },
+  { rank: 34, name: 'Muhammed Cachalia', team: 'Rulo Apaches', played: 3, won: 2, lost: 1, setsWon: 7, gamesWon: 59 },
+  { rank: 35, name: 'Ismail Karodia', team: 'Rulo Apaches', played: 5, won: 2, lost: 2, setsWon: 6, gamesWon: 76 },
+  { rank: 36, name: 'Drikus Prins', team: 'Rulo Apaches', played: 4, won: 2, lost: 2, setsWon: 6, gamesWon: 70 },
+  { rank: 37, name: 'Ian Roberts', team: 'Ice Breakers', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 60 },
+  { rank: 38, name: 'Devlin Grix', team: 'Desert Falcons', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 56 },
+  { rank: 39, name: 'Duran Greaver', team: 'Globo Boomerangs', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 56 },
+  { rank: 40, name: 'Ismail Fakir', team: 'Globo Boomerangs', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 56 },
+  { rank: 41, name: 'Nathan Treherne', team: 'Desert Falcons', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 54 },
+  { rank: 42, name: 'Zahraan Jassat', team: 'Baltic Blades', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 45 },
+  { rank: 43, name: 'Adil Patel', team: 'Baltic Blades', played: 5, won: 2, lost: 3, setsWon: 5, gamesWon: 77 },
+  { rank: 44, name: 'Ali Choohan', team: 'Baltic Blades', played: 4, won: 2, lost: 2, setsWon: 5, gamesWon: 69 },
+  { rank: 45, name: 'Irfan Mamji', team: 'Baltic Blades', played: 4, won: 2, lost: 2, setsWon: 5, gamesWon: 65 },
+  { rank: 46, name: 'Imtiaz Mohamed', team: 'Desert Falcons', played: 4, won: 2, lost: 1, setsWon: 5, gamesWon: 64 },
+  { rank: 47, name: 'Mohammed Patel', team: 'Desert Falcons', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 58 },
+  { rank: 48, name: 'Rishad Shaik', team: 'Desert Falcons', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 53 },
+  { rank: 49, name: 'Mohammed Seedat', team: 'Avalanche Aces', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 51 },
+  { rank: 50, name: 'Mohamed Dadamia', team: 'Baltic Blades', played: 5, won: 1, lost: 4, setsWon: 5, gamesWon: 77 },
+  { rank: 51, name: 'Zunaid Ganchi', team: 'Avalanche Aces', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 49 },
+  { rank: 52, name: 'Mohammed Mungalee', team: 'Rulo Apaches', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 47 },
+  { rank: 53, name: 'Suhail Patel', team: 'Ice Breakers', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 46 },
+  { rank: 54, name: 'Muhammed Suliman', team: 'Samurai Kicksmashers', played: 5, won: 1, lost: 4, setsWon: 3, gamesWon: 60 },
+  { rank: 55, name: 'Jaco Nel', team: 'Ice Breakers', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 57 },
+  { rank: 56, name: 'Shoaib Nomani', team: 'Samurai Kicksmashers', played: 5, won: 1, lost: 4, setsWon: 3, gamesWon: 55 },
+  { rank: 57, name: 'Dc Francis', team: 'Baltic Blades', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 49 },
+  { rank: 58, name: 'Adnaan Abderoof', team: 'Baltic Blades', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 48 },
+  { rank: 59, name: 'Mohammed Malek', team: 'Avalanche Aces', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 45 },
+  { rank: 60, name: 'Imraan Khan', team: 'Globo Boomerangs', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 36 },
+  { rank: 61, name: 'Umar Yunus', team: 'Sonic Viboras', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 27 },
+  { rank: 62, name: 'Estiaan Maritz', team: 'Ice Breakers', played: 4, won: 1, lost: 3, setsWon: 2, gamesWon: 47 },
+  { rank: 63, name: 'Francois Eloff', team: 'Sonic Viboras', played: 4, won: 1, lost: 3, setsWon: 2, gamesWon: 37 },
+  { rank: 64, name: 'Luqman Hoosen', team: 'Ice Breakers', played: 4, won: 0, lost: 4, setsWon: 3, gamesWon: 59 },
+  { rank: 65, name: 'Saliem Mahomed', team: 'Ice Breakers', played: 4, won: 0, lost: 4, setsWon: 2, gamesWon: 51 },
+  { rank: 66, name: 'Martin Swart', team: 'Samurai Kicksmashers', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 41 },
+  { rank: 67, name: 'Sailesh Nagar', team: 'Samurai Kicksmashers', played: 4, won: 0, lost: 4, setsWon: 1, gamesWon: 35 },
+  { rank: 68, name: 'Dian Erasmus', team: 'Avalanche Aces', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 32 },
+  { rank: 69, name: 'Muhammad Zakariyya Akoojee', team: 'Rulo Apaches', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 31 },
+  { rank: 70, name: 'Sandeep Daya', team: 'Rulo Apaches', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 29 },
+  { rank: 71, name: 'Sergio Correia', team: 'Samurai Kicksmashers', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 44 },
+  { rank: 72, name: 'Muhammad Mangerah', team: 'Ice Breakers', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 38 },
+  { rank: 73, name: 'Akmeer Amod', team: 'Samurai Kicksmashers', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 31 },
+  { rank: 74, name: 'Rayman Vinesh', team: 'Samurai Kicksmashers', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 26 },
+  { rank: 75, name: 'Safeer Jamadar', team: 'Baltic Blades', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 26 },
+  { rank: 76, name: 'Mohammed Mayet', team: 'Sonic Viboras', played: 2, won: 0, lost: 2, setsWon: 0, gamesWon: 13 },
+  { rank: 77, name: 'Heinrich van Staden', team: 'Sonic Viboras', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 8 },
+  { rank: 78, name: 'Jay Nagar', team: 'Globo Boomerangs', played: 1, won: 0, lost: 1, setsWon: 0, gamesWon: 7 },
+  { rank: 79, name: 'Noah Snell', team: 'Samurai Kicksmashers', played: 1, won: 0, lost: 1, setsWon: 0, gamesWon: 0 },
+];
+        const [s2div, setS2div] = useState('premier');
+        return (
+          <>
+            <div className="tabbar mt">
+              {[['standings','Standings'],['franchises','Franchises'],['rankings','Rankings']].map(([k,lbl]) => (
+                <button key={k} className={subTab === k ? 'on' : ''} onClick={() => setSubTab(k)}>{lbl}</button>
+              ))}
+            </div>
+            {(subTab === 'standings' || subTab === 'franchises') && (
+              <div className="mt"><PlaceholderSeason season="Season 2" league="Men's Franchise League" /></div>
+            )}
+            {subTab === 'rankings' && (
+              <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div className="tabbar">
+                  <button className={s2div === 'premier' ? 'on' : ''} onClick={() => setS2div('premier')}>Premier Division</button>
+                  <button className={s2div === 'champ' ? 'on' : ''} onClick={() => setS2div('champ')}>Championship Division</button>
+                </div>
+                {s2div === 'premier' && (
+                  <>
+                    <div className="card" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14 }}>
+                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Premier Division · Season 2</b>
+                      <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>95 players</p>
+                    </div>
+                    <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+                      <table className="tbl">
+                        <thead><tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Sets</th><th className="num">Games</th></tr></thead>
+                        <tbody>
+                          {MENS_S2_PREMIER.map((p) => (
+                            <tr key={p.rank}>
+                              <td><span className="pos-badge">{p.rank}</span></td>
+                              <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
+                              <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
+                              <td className="num">{p.played}</td>
+                              <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
+                              <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
+                              <td className="num">{p.setsWon}</td>
+                              <td className="num">{p.gamesWon}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+                {s2div === 'champ' && (
+                  <>
+                    <div className="card" style={{ borderLeft: '3px solid var(--court)', paddingLeft: 14 }}>
+                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Championship Division · Season 2</b>
+                      <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>79 players</p>
+                    </div>
+                    <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+                      <table className="tbl">
+                        <thead><tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Sets</th><th className="num">Games</th></tr></thead>
+                        <tbody>
+                          {MENS_S2_CHAMP.map((p) => (
+                            <tr key={p.rank}>
+                              <td><span className="pos-badge">{p.rank}</span></td>
+                              <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
+                              <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
+                              <td className="num">{p.played}</td>
+                              <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
+                              <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
+                              <td className="num">{p.setsWon}</td>
+                              <td className="num">{p.gamesWon}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
+          </>
+        );
+      })()}
 
       {/* S3 live */}
       {season === 's3' && (
@@ -625,18 +879,10 @@ function MensLeague() {
 ══════════════════════════════════════════════ */
 function LadiesLeague() {
   const [season, setSeason] = useState('s2');
+  const [subTab, setSubTab] = useState('overview');
   const ladiesFranchises = FRANCHISES.filter((f) => f.league === 'ladies');
 
-  return (
-    <>
-      <div className="tabbar mt">
-        {[['s1', 'Season 1'], ['s2', 'Season 2']].map(([k, lbl]) => (
-          <button key={k} className={season === k ? 'on' : ''} onClick={() => setSeason(k)}>{lbl}</button>
-        ))}
-      </div>
-
-      {season === 's1' && (() => {
-        const LADIES_S1_PLAYERS = [
+  const LADIES_S1_PLAYERS = [
   { rank: 1, name: 'Jeanetha Boshoff', team: 'Lunar Lillies', played: 5, won: 5, lost: 0, setsWon: 15, gamesWon: 111 },
   { rank: 2, name: 'Imaan Packery', team: 'Lunar Lillies', played: 5, won: 4, lost: 1, setsWon: 13, gamesWon: 101 },
   { rank: 3, name: 'Sunel Grote', team: 'Backhand Blossoms', played: 5, won: 4, lost: 1, setsWon: 11, gamesWon: 88 },
@@ -692,43 +938,72 @@ function LadiesLeague() {
   { rank: 53, name: 'Shaheda Sujee', team: 'Backhand Blossoms', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 14 },
 ];
 
-        const teams = [...new Set(LADIES_S1_PLAYERS.map((p) => p.team))];
-        return (
-          <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div className="card" style={{ borderLeft: '3px solid #db2777', paddingLeft: 14 }}>
-              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Season 1 — Final Rankings</b>
-              <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>Lowveld Padel Franchise Ladies League · 2024/25</p>
-            </div>
-            <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
-              <table className="tbl">
-                <thead>
-                  <tr>
-                    <th>#</th><th>Player</th><th>Team</th>
-                    <th className="num">P</th><th className="num">W</th><th className="num">L</th>
-                    <th className="num">Sets</th><th className="num">Games</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {LADIES_S1_PLAYERS.map((p) => (
-                    <tr key={p.rank}>
-                      <td><span className="pos-badge">{p.rank}</span></td>
-                      <td><b>{p.name}</b></td>
-                      <td className="muted" style={{ fontSize: 12 }}>{p.team}</td>
-                      <td className="num">{p.played}</td>
-                      <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
-                      <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
-                      <td className="num">{p.setsWon}</td>
-                      <td className="num">{p.gamesWon}</td>
+
+  return (
+    <>
+      <div className="tabbar mt">
+        {[['s1', 'Season 1'], ['s2', 'Season 2']].map(([k, lbl]) => (
+          <button key={k} className={season === k ? 'on' : ''} onClick={() => { setSeason(k); setSubTab(k === 's1' ? 'rankings' : 'overview'); }}>{lbl}</button>
+        ))}
+      </div>
+
+      {/* Sub-tabs */}
+      <div className="tabbar mt">
+        {season === 's1' && [['standings','Standings'],['franchises','Franchises'],['rankings','Rankings']].map(([k,lbl]) => (
+          <button key={k} className={subTab === k ? 'on' : ''} onClick={() => setSubTab(k)}>{lbl}</button>
+        ))}
+        {season === 's2' && [['overview','Overview'],['franchises','Franchises'],['standings','Standings'],['rankings','Rankings']].map(([k,lbl]) => (
+          <button key={k} className={subTab === k ? 'on' : ''} onClick={() => setSubTab(k)}>{lbl}</button>
+        ))}
+      </div>
+
+      {season === 's1' && (
+        <>
+          {(subTab === 'standings' || subTab === 'franchises') && (
+            <div className="mt"><PlaceholderSeason season="Season 1" league="Ladies Franchise League" /></div>
+          )}
+          {subTab === 'rankings' && (
+            <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div className="card" style={{ borderLeft: '3px solid #db2777', paddingLeft: 14 }}>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Season 1 — Final Rankings</b>
+                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>53 players · Lowveld Padel Franchise Ladies League</p>
+              </div>
+              <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+                <table className="tbl">
+                  <thead>
+                    <tr>
+                      <th>#</th><th>Player</th><th>Team</th>
+                      <th className="num">P</th><th className="num">W</th><th className="num">L</th>
+                      <th className="num">Sets</th><th className="num">Games</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {LADIES_S1_PLAYERS.map((p) => (
+                      <tr key={p.rank}>
+                        <td><span className="pos-badge">{p.rank}</span></td>
+                        <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
+                        <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
+                        <td className="num">{p.played}</td>
+                        <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
+                        <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
+                        <td className="num">{p.setsWon}</td>
+                        <td className="num">{p.gamesWon}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
-          </div>
-        );
-      })()}
+          )}
+        </>
+      )}
 
       {season === 's2' && (
+        <>
+          {(subTab === 'standings' || subTab === 'rankings') && (
+            <div className="mt"><PlaceholderSeason season="Season 2" league="Ladies Franchise League" /></div>
+          )}
+          {(subTab === 'overview' || subTab === 'franchises') && (
         <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
 
           {/* Poster */}
@@ -782,6 +1057,95 @@ function LadiesLeague() {
             <p className="muted" style={{ margin: 0, fontSize: 13, fontStyle: 'italic' }}>Your Talent. Your Team. Your Time. Let's Make History!</p>
           </div>
         </div>
+          )}
+        </>
+      )}
+    </>
+  );
+}
+
+
+/* ══════════════════════════════════════════════
+   LP LEGACY LEAGUE TAB
+══════════════════════════════════════════════ */
+function LegacyLeagueTab() {
+  const [subTab, setSubTab] = useState('franchises');
+
+  return (
+    <>
+      <div className="tabbar mt">
+        {[['franchises','Franchises'],['standings','Standings'],['players','Players']].map(([k,lbl]) => (
+          <button key={k} className={subTab === k ? 'on' : ''} onClick={() => setSubTab(k)}>{lbl}</button>
+        ))}
+      </div>
+
+      {subTab === 'franchises' && (
+        <div className="grid cols-2 mt">
+          {LEGACY_FRANCHISES.map((fr) => {
+            const row = LEGACY_STANDINGS.find((r) => r.franchise_id === fr.id);
+            return (
+              <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                <div className="row">
+                  <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                  <div>
+                    <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{fr.name}</b>
+                    <div className="muted" style={{ fontSize: 11, fontStyle: 'italic' }}>{fr.motto}</div>
+                    {row && row.played > 0 && (
+                      <div className="muted" style={{ fontSize: 11 }}>P{row.played} · W{row.won} · {row.points} pts</div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {subTab === 'standings' && (
+        <div className="grid mt">
+          {[...LEGACY_STANDINGS].sort((a,b) => b.points - a.points).length === 0 || LEGACY_STANDINGS.every(r => r.played === 0) ? (
+            <div className="card" style={{ textAlign: 'center', padding: '28px' }}>
+              <p className="muted" style={{ margin: 0 }}>Standings go live once the first match is played.</p>
+            </div>
+          ) : [...LEGACY_STANDINGS].sort((a,b) => b.points - a.points).map((row, i) => {
+            const fr = legacyFranchiseById(row.franchise_id);
+            if (!fr) return null;
+            return (
+              <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                <span className="row" style={{ gap: 10 }}>
+                  <b className="num muted" style={{ width: 22 }}>{i + 1}</b>
+                  <img src={fr.logo} alt="" style={{ width: 28, height: 28, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{fr.name}</b>
+                </span>
+                <span className="muted" style={{ fontSize: 13 }}>
+                  {row.played ? `${row.won}W–${row.lost}L` : '—'} · <b style={{ color: 'var(--text)' }}>{row.points} pts</b>
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+      )}
+
+      {subTab === 'players' && (
+        <div className="grid mt">
+          {LEGACY_PLAYERS.sort((a,b) => a.name.localeCompare(b.name)).map((p) => {
+            const fr = legacyFranchiseById(p.franchise_id);
+            if (!fr) return null;
+            return (
+              <Link key={p.id} to={`/legacy-franchise/${p.franchise_id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
+                <div className="row">
+                  <span className="avatar" style={{ background: fr.primary + '33', color: fr.primary, width: 34, height: 34, fontSize: 12 }}>
+                    {p.name.split(' ').map(w => w[0]).join('')}
+                  </span>
+                  <div>
+                    <b style={{ fontSize: 14 }}>{p.name}</b>
+                    <div className="muted" style={{ fontSize: 11 }}>{fr.name} · <span style={{ color: 'var(--gold)' }}>{p.kind === 'youth' ? 'Youth' : 'Adult'}</span></div>
+                  </div>
+                </div>
+              </Link>
+            );
+          })}
+        </div>
       )}
     </>
   );
@@ -804,10 +1168,14 @@ export function Leagues() {
         <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>
           Ladies Franchise League
         </button>
+        <button className={league === 'legacy' ? 'on' : ''} onClick={() => setLeague('legacy')}>
+          LP Legacy League
+        </button>
       </div>
 
       {league === 'mens' && <MensLeague />}
       {league === 'ladies' && <LadiesLeague />}
+      {league === 'legacy' && <LegacyLeagueTab />}
 
       <div className="mt"><SponsorRail placement="leagues" /></div>
     </div>

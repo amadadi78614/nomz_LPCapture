@@ -18,6 +18,7 @@ import {
 } from './pages/leagues';
 import UnityCup from './pages/UnityCup';
 import { Leagues } from './pages/leagues';
+import { AllTimeRankings } from './pages/AllTimeRankings';
 import { Cups } from './pages/Cups';
 
 function ScrollTop() {
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="/sponsor-analytics" element={<SponsorAnalytics />} />
           <Route path="/unity-cup" element={<UnityCup />} />
           <Route path="/leagues" element={<Leagues />} />
+          <Route path="/all-time-rankings" element={<AllTimeRankings />} />
           <Route path="/cups" element={<Cups />} />
           <Route path="/register" element={<Registration />} />
           <Route path="*" element={<Home />} />

@@ -16,7 +16,7 @@ const TABS = [
   { id: 'lpcup', label: "LP Cup" },
 ];
 
-const LADIES_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+const LADIES_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwF4Oj6sv4TePs4lvlPlQbbm3HcTw8_2ThkrU1Y1Y20jTw4iF5Y7DcNy51asFTtLg/exec';
 
 function LadiesForm() {
   const [form, setForm] = useState({

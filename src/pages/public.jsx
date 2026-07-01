@@ -48,7 +48,7 @@ export function Home() {
         <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>
           <Link to="/live" className="btn live">● Match Centre</Link>
           <Link to="/tv" className="btn ghost">Lowveld TV</Link>
-          <Link to="/standings" className="btn ghost">Standings</Link>
+          <Link to="/leagues" className="btn ghost">Standings</Link>
         </div>
       </div>
 
@@ -100,9 +100,9 @@ export function Home() {
       )}
 
       {/* ============ CURRENT LEADERS strip ============ */}
-      <SectionHead title="Current leaders" to="/standings" />
+      <SectionHead title="Current leaders" to="/leagues" />
       <div className="lead-strip">
-        <Link to="/standings" className="lead-card stripe" style={{ '--stripe': stripeVar(leader.franchise_id) }}>
+        <Link to="/leagues" className="lead-card stripe" style={{ '--stripe': stripeVar(leader.franchise_id) }}>
           <span className="eyebrow">League leader</span>
           <span className="row" style={{ gap: 8, marginTop: 6 }}>
             <img src={franchiseById(leader.franchise_id).logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
@@ -267,7 +267,7 @@ export function Home() {
       </div>
 
       {/* ============ TABLES ============ */}
-      <SectionHead title="Tables" to="/standings" />
+      <SectionHead title="Tables" to="/leagues" />
       <div className="grid cols-2">
         <div>
           <p className="eyebrow" style={{ marginBottom: 8 }}>Men's franchise league</p>

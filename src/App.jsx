@@ -17,6 +17,8 @@ import {
   RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
 } from './pages/leagues';
 import UnityCup from './pages/UnityCup';
+import { Leagues } from './pages/Leagues';
+import { Cups } from './pages/Cups';
 
 function ScrollTop() {
   const { pathname } = useLocation();
@@ -63,6 +65,8 @@ export default function App() {
           <Route path="/commissioner" element={<CommissionerDashboard />} />
           <Route path="/sponsor-analytics" element={<SponsorAnalytics />} />
           <Route path="/unity-cup" element={<UnityCup />} />
+          <Route path="/leagues" element={<Leagues />} />
+          <Route path="/cups" element={<Cups />} />
           <Route path="/register" element={<Registration />} />
           <Route path="*" element={<Home />} />
         </Routes>

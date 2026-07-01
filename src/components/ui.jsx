@@ -48,8 +48,8 @@ export function LiveTicker() {
 const NAV = [
   { to: '/', label: 'Home', ico: '⌂' },
   { to: '/live', label: 'Matches', ico: '●' },
-  { to: '/standings', label: 'Tables', ico: '≡' },
-  { to: '/rankings', label: 'Rankings', ico: '✦' },
+  { to: '/leagues', label: 'Leagues', ico: '≡' },
+  { to: '/cups', label: 'Cups', ico: '🏆' },
   { to: '/more', label: 'More', ico: '⋯' },
 ];
 export function TopBar() {
@@ -63,10 +63,9 @@ export function TopBar() {
         <nav>
           <NavLink to="/" end>Home</NavLink>
           <NavLink to="/live">Match Centre</NavLink>
-          <NavLink to="/standings">Standings</NavLink>
-          <NavLink to="/rankings">Rankings</NavLink>
+          <NavLink to="/leagues">Leagues</NavLink>
+          <NavLink to="/cups">Cups</NavLink>
           <NavLink to="/players">Players</NavLink>
-          <NavLink to="/franchises">Franchises</NavLink>
           <NavLink to="/tv">Lowveld TV</NavLink>
           <NavLink to="/news">News</NavLink>
           <NavLink to="/sponsors">Sponsors</NavLink>

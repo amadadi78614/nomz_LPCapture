@@ -6,7 +6,7 @@ import {
   RIVALRIES, headToHead, DYNASTY, TV_VIDEOS, TV_LIVE, getYouTubeId, ytThumb, mvpLeader,
   ROAD_TO_360, LEGACY_FRANCHISES, LEGACY_STANDINGS, LEGACY_PLAYERS, LEGACY_POWER,
   legacyFranchiseById, matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY,
-  teamForm,
+  teamForm, playerOfWeek, playerById,
 } from '../data/seed';
 import { communityLinks } from '../config/communityLinks';
 import { useLiveMatch } from '../hooks/useLiveMatch';
@@ -20,261 +20,379 @@ import {
 export function Home() {
   const live = FIXTURES.filter((f) => f.status === 'live');
   const results = FIXTURES.filter((f) => f.status === 'final').slice(-3).reverse();
-  const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 2);
-  const hero = NEWS[0];
+  const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 3);
   const mvp = mvpLeader('mens');
   const sFr = STANDINGS.mens.franchise;
   const leader = sFr[0];
-  const power = POWER_RANKINGS.mens.slice(0, 5);
-  const dynSpot = franchiseById(DYNASTY.spotlight);
-  const dynRow = sFr.find((x) => x.franchise_id === DYNASTY.spotlight);
-  // Rivalry of the week: prefer one whose teams have actually met, else first
+  const power = POWER_RANKINGS_WEEKLY.mens.slice(0, 5);
   const rotw = RIVALRIES.find((r) => headToHead(r.a, r.b).played > 0) || RIVALRIES[0];
   const rA = franchiseById(rotw.a); const rB = franchiseById(rotw.b); const rH = headToHead(rotw.a, rotw.b);
-  const tvFeatured = ['highlights', 'interview', 'show'].map((c) => TV_VIDEOS.find((v) => v.category === c)).filter(Boolean);
+  const motw = matchOfTheWeek();
+  const potwId = playerOfWeek.current;
+  const potw = potwId ? playerById(potwId) : null;
+  const topRated = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.lp_rating - a.lp_rating)[0];
 
   return (
     <div className="page">
       <HomeStyles />
-      {/* ============ HERO STORY ============ */}
-      <div className="hero">
-        <span className="eyebrow" style={{ color: 'var(--live)' }}>Season 3 · Match Day 6 complete · Halfway through the season</span>
-        <h1 className="display" style={{ margin: '6px 0 4px' }}>Season 3 in full flight. Legacy ready to take off. Ladies — your time is now!</h1>
-        <p style={{ maxWidth: 580, margin: '0 0 10px', fontSize: 14, color: 'var(--muted)', fontStyle: 'italic' }}>
-          And something exciting is happening this July — Unity Cup!...{' '}
-          <a href="https://www.lowveldpadel.co.za/unity-cup" style={{ color: '#c79a3e', fontWeight: 700, fontStyle: 'normal' }}>Unity Cup — find out more ⚡</a>
+
+      {/* ── 1. HERO ── */}
+      <div className="home-hero">
+        <span className="eyebrow" style={{ color: 'var(--live)', fontSize: 11 }}>Season 3 · Match Day 6 complete · 3 match days remaining</span>
+        <h1 className="display" style={{ fontSize: 'clamp(22px,5vw,32px)', margin: '6px 0 4px', lineHeight: 1.1 }}>
+          Season 3 in full flight. Legacy ready to take off. Ladies — your time is now!
+        </h1>
+        <p style={{ fontSize: 13, color: 'var(--muted)', fontStyle: 'italic', margin: '0 0 4px' }}>
+          And something exciting is happening this July —{' '}
+          <a href="/unity-cup" style={{ color: 'var(--gold)', fontWeight: 700, fontStyle: 'normal' }}>Unity Cup ⚡</a>
         </p>
-        <p className="muted" style={{ maxWidth: 580 }}>Three match days down, three to go — Falcons lead on 59, Viboras hunt on 58, Ice Breakers surge to 34. The LP Legacy League inaugural season is on its way. And Ladies? Season 2 is coming — registration drops soon!</p>
-        <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>
-          <Link to="/live" className="btn live">● Match Centre</Link>
-          <Link to="/tv" className="btn ghost">Lowveld TV</Link>
-          <Link to="/leagues" className="btn ghost">Leagues</Link>
+        <div className="home-hero-stats">
+          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--gold)' }}>{leader.points}</span><span className="muted">pts lead</span></div>
+          <div className="home-hero-stat-div" />
+          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--win)' }}>{mvp ? mvp.stats.mvp_points : '—'}</span><span className="muted">MVP pts</span></div>
+          <div className="home-hero-stat-div" />
+          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--court)' }}>6</span><span className="muted">of 9 MDs</span></div>
+        </div>
+        <div className="row mt" style={{ gap: 8, flexWrap: 'wrap' }}>
+          <Link to="/live" className="btn live" style={{ fontSize: 13 }}>● Match Centre</Link>
+          <Link to="/leagues" className="btn ghost" style={{ fontSize: 13 }}>Leagues</Link>
+          <Link to="/register" className="btn ghost" style={{ fontSize: 13, borderColor: '#db2777', color: '#db2777' }}>Ladies Register</Link>
         </div>
       </div>
 
-      {/* ============ LADIES REGISTRATION CTA ============ */}
-      <Link to="/register" style={{ display: 'block', textDecoration: 'none' }}>
-        <div style={{
-          background: 'linear-gradient(135deg, rgba(220,38,38,.15), rgba(220,38,38,.05))',
-          border: '2px solid var(--live)',
-          borderRadius: 'var(--r)',
-          padding: '16px 18px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: 12,
-        }}>
-          <div>
-            <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17, marginBottom: 3 }}>
-              Ladies League Season 2
+      {/* ── 2. LIVE / LATEST RESULT / NEXT FIXTURE ── */}
+      <div className="home-section">
+        {live.length > 0 ? (
+          <>
+            <SectionHead title="Live now" to="/live" cta="Match Centre" />
+            <div className="grid cols-2">{live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}</div>
+          </>
+        ) : (
+          <>
+            <SectionHead title="Match Centre" to="/live" cta="All results →" />
+            <div className="home-match-grid">
+              {/* Latest results */}
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 8 }}>Latest Results</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {results.slice(0, 2).map((f) => <ResultCard key={f.id} fixture={f} />)}
+                </div>
+              </div>
+              {/* Next fixtures */}
+              <div>
+                <p className="eyebrow" style={{ marginBottom: 8 }}>Next Fixtures</p>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {upcoming.slice(0, 2).map((f) => <FixtureRow key={f.id} fixture={f} />)}
+                  {upcoming.length === 0 && (
+                    <div className="card" style={{ textAlign: 'center', padding: '20px', color: 'var(--muted)', fontSize: 13 }}>
+                      Schedule to be announced
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
-            <div style={{ color: 'var(--muted)', fontSize: 13 }}>
-              Registration is open — secure your spot now before it fills up.
-            </div>
-          </div>
-          <div style={{
-            background: 'var(--live)', color: '#fff', fontWeight: 800,
-            fontSize: 13, padding: '10px 16px', borderRadius: 8,
-            whiteSpace: 'nowrap', letterSpacing: '.04em',
-            flexShrink: 0,
-          }}>
-            Register →
+          </>
+        )}
+      </div>
+
+      {/* ── 3. LEAGUE TABLE (top 4 only) ── */}
+      <div className="home-section">
+        <SectionHead title="League Table" to="/leagues" cta="Full table →" />
+        <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+          <table className="tbl">
+            <thead>
+              <tr>
+                <th>#</th><th>Franchise</th>
+                <th className="num">P</th><th className="num">W</th><th className="num">L</th>
+                <th className="num">BP</th><th className="num">Pts</th>
+                <th className="num" style={{ minWidth: 60 }}>Form</th>
+              </tr>
+            </thead>
+            <tbody>
+              {sFr.slice(0, 7).map((r, i) => {
+                const fr = franchiseById(r.franchise_id);
+                const form = teamForm(r.franchise_id, 5);
+                return (
+                  <tr key={r.franchise_id} style={{ borderLeft: i === 3 ? '2px solid var(--line)' : 'none' }}>
+                    <td><span className={`pos-badge ${i < 4 ? 'q' : ''}`}>{i + 1}</span></td>
+                    <td>
+                      <Link to={`/franchise/${fr.id}`} className="row" style={{ gap: 8 }}>
+                        <img src={fr.logo} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
+                        <b style={{ fontSize: 13 }}>{fr.name}</b>
+                      </Link>
+                    </td>
+                    <td className="num">{r.played}</td>
+                    <td className="num">{r.won}</td>
+                    <td className="num">{r.lost}</td>
+                    <td className="num">{r.bp}</td>
+                    <td className="num"><b style={{ color: 'var(--gold)' }}>{r.points}</b></td>
+                    <td className="num">
+                      <span className="form-row">
+                        {form.map((res, fi) => (
+                          <span key={fi} className={`form-dot ${res}`} title={res === 'W' ? 'Win' : res === 'L' ? 'Loss' : 'Draw'} />
+                        ))}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+          <div className="muted" style={{ padding: '6px 12px', fontSize: 11, borderTop: '1px solid var(--line)' }}>
+            🟢 Top 4 qualify for Finals Night
           </div>
         </div>
-      </Link>
+      </div>
 
-      {/* ============ LIVE CENTRE ============ */}
-      {live.length > 0 ? (
-        <>
-          <SectionHead title="Live now" to="/live" cta="Match Centre" />
-          <div className="grid cols-2">{live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}</div>
-        </>
-      ) : (
-        <>
-          <SectionHead title="Match Centre" to="/live" cta="All results" />
-          <div className="grid cols-3">
-            {results.map((f) => <ResultCard key={f.id} fixture={f} />)}
-            {upcoming.slice(0, 1).map((f) => <FixtureRow key={f.id} fixture={f} />)}
+      {/* ── 4. MVP RACE ── */}
+      {mvp && (
+        <div className="home-section">
+          <SectionHead title="MVP Race" to="/rankings" cta="Leaderboard →" />
+          <Link to={`/player/${mvp.id}`} className="card stripe row spread" style={{ '--stripe': 'var(--gold)' }}>
+            <div className="row" style={{ gap: 12 }}>
+              <span className="avatar" style={{ width: 40, height: 40, fontSize: 13 }}>{mvp.name.split(' ').map((w) => w[0]).join('')}</span>
+              <div>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{mvp.name}</b>
+                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(mvp.franchise_id).name} · {mvp.tier}</div>
+                <div style={{ fontSize: 12, marginTop: 2 }}>
+                  <span style={{ color: 'var(--win)' }}>{mvp.stats.wins}W</span>
+                  <span className="muted"> · </span>
+                  <span>{mvp.stats.rubbers_won} rubbers</span>
+                  <span className="muted"> · </span>
+                  <span style={{ color: 'var(--gold)' }}>{mvp.stats.bonus_points} BP</span>
+                </div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: 'var(--display)', fontSize: 28, color: 'var(--gold)', lineHeight: 1 }}>★ {mvp.stats.mvp_points}</div>
+              <div className="muted" style={{ fontSize: 11 }}>MVP pts</div>
+            </div>
+          </Link>
+          {/* Top 5 quick view */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
+            {[...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points).slice(1, 5).map((p, i) => (
+              <Link key={p.id} to={`/player/${p.id}`} className="card row spread" style={{ padding: '8px 12px' }}>
+                <span className="row" style={{ gap: 10 }}>
+                  <b className="muted" style={{ width: 16, fontSize: 12 }}>{i + 2}</b>
+                  <span style={{ fontSize: 13 }}>{p.name}</span>
+                  <span className="muted" style={{ fontSize: 11 }}>{franchiseById(p.franchise_id).name}</span>
+                </span>
+                <b style={{ color: 'var(--gold)', fontSize: 13 }}>★ {p.stats.mvp_points}</b>
+              </Link>
+            ))}
           </div>
-        </>
+        </div>
       )}
 
-      {/* ============ CURRENT LEADERS strip ============ */}
-      <SectionHead title="Current leaders" to="/leagues" />
-      <div className="lead-strip">
-        <Link to="/leagues" className="lead-card stripe" style={{ '--stripe': stripeVar(leader.franchise_id) }}>
-          <span className="eyebrow">League leader</span>
-          <span className="row" style={{ gap: 8, marginTop: 6 }}>
-            <img src={franchiseById(leader.franchise_id).logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} />
-            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{franchiseById(leader.franchise_id).name}</b>
-          </span>
-          <span className="num gold" style={{ fontSize: 20 }}>{leader.points} pts</span>
-        </Link>
-        <Link to={`/player/${mvp.id}`} className="lead-card stripe" style={{ '--stripe': 'var(--gold)' }}>
-          <span className="eyebrow">MVP race leader</span>
-          <span className="row" style={{ gap: 8, marginTop: 6 }}>
-            <span className="avatar" style={{ width: 30, height: 30, fontSize: 11 }}>{mvp.name.split(' ').map((w) => w[0]).join('')}</span>
-            <b style={{ fontSize: 14 }}>{mvp.name}</b>
-          </span>
-          <span className="num gold" style={{ fontSize: 20 }}>★ {mvp.stats.mvp_points}</span>
-        </Link>
-        <Link to="/rankings" className="lead-card stripe" style={{ '--stripe': 'var(--court)' }}>
-          <span className="eyebrow">Top LP Rating</span>
-          {(() => {
-            const top = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.lp_rating - a.lp_rating)[0];
+      {/* ── 5. POWER RANKINGS ── */}
+      <div className="home-section">
+        <SectionHead title="Power Rankings" to="/rankings" cta="Full board →" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {power.map((entry, i) => {
+            const fr = franchiseById(entry.franchise);
+            const row = sFr.find((r) => r.franchise_id === entry.franchise);
+            const moveColor = entry.move === 'up' ? 'var(--win)' : entry.move === 'down' ? 'var(--loss)' : 'var(--muted)';
+            const moveIcon = entry.move === 'up' ? '▲' : entry.move === 'down' ? '▼' : '▬';
             return (
-              <>
-                <span className="row" style={{ gap: 8, marginTop: 6 }}>
-                  <span className="avatar" style={{ width: 30, height: 30, fontSize: 11 }}>{top.name.split(' ').map((w) => w[0]).join('')}</span>
-                  <b style={{ fontSize: 14 }}>{top.name}</b>
+              <Link key={entry.franchise} to={`/franchise/${entry.franchise}`} className="card stripe row spread" style={{ '--stripe': stripeVar(entry.franchise), padding: '10px 12px' }}>
+                <span className="row" style={{ gap: 10 }}>
+                  <b style={{ width: 20, fontSize: 18, fontFamily: 'var(--display)' }}>{i + 1}</b>
+                  <img src={fr.logo} alt="" style={{ width: 28, height: 28, objectFit: 'contain' }} />
+                  <span>
+                    <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14, display: 'block' }}>{fr.name}</b>
+                    <span className="muted" style={{ fontSize: 11 }}>{entry.note}</span>
+                  </span>
                 </span>
-                <span className="num" style={{ fontSize: 20, color: 'var(--court)' }}>{top.lp_rating}</span>
-              </>
+                <span className="row" style={{ gap: 8 }}>
+                  {row && <span className="muted" style={{ fontSize: 12 }}>{row.points} pts</span>}
+                  <b style={{ color: moveColor, fontSize: 12 }}>{moveIcon}</b>
+                </span>
+              </Link>
             );
-          })()}
+          })}
+        </div>
+      </div>
+
+      {/* ── 6. PLAYER OF THE WEEK ── */}
+      {potw ? (
+        <div className="home-section">
+          <SectionHead title="Player of the Week" to={`/player/${potw.id}`} />
+          <Link to={`/player/${potw.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(potw.franchise_id) }}>
+            <div className="row" style={{ gap: 12 }}>
+              <span className="avatar" style={{ width: 44, height: 44, fontSize: 14, background: stripeVar(potw.franchise_id) + '33' }}>
+                {potw.name.split(' ').map((w) => w[0]).join('')}
+              </span>
+              <div>
+                <span className="eyebrow">Player of the Week</span>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 18, display: 'block' }}>{potw.name}</b>
+                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(potw.franchise_id).name} · {potw.tier}</div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: 28 }}>🏅</div>
+            </div>
+          </Link>
+        </div>
+      ) : topRated && (
+        <div className="home-section">
+          <SectionHead title="Top LP Rating" to="/rankings" cta="Full rankings →" />
+          <Link to={`/player/${topRated.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(topRated.franchise_id) }}>
+            <div className="row" style={{ gap: 12 }}>
+              <span className="avatar" style={{ width: 40, height: 40, fontSize: 13 }}>{topRated.name.split(' ').map((w) => w[0]).join('')}</span>
+              <div>
+                <span className="eyebrow">Top LP Rating</span>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block' }}>{topRated.name}</b>
+                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(topRated.franchise_id).name}</div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontFamily: 'var(--display)', fontSize: 28, color: 'var(--court)', lineHeight: 1 }}>{topRated.lp_rating}</div>
+              <div className="muted" style={{ fontSize: 11 }}>LP Rating</div>
+            </div>
+          </Link>
+        </div>
+      )}
+
+      {/* ── 7. ROAD TO 360 ── */}
+      <div className="home-section">
+        <Link to="/road-to-360" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(199,154,62,.12), rgba(199,154,62,.03))', border: '1px solid rgba(199,154,62,.3)' }}>
+          <div className="row spread">
+            <div className="row" style={{ gap: 12 }}>
+              <span style={{ fontSize: 28 }}>🇿🇦</span>
+              <div>
+                <span className="eyebrow" style={{ color: 'var(--gold)' }}>Road to 360</span>
+                <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Road to the 360 Super Cup</b>
+                <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{ROAD_TO_360.location} · {ROAD_TO_360.dates}</div>
+              </div>
+            </div>
+            <span className="chip" style={{ color: 'var(--gold)', borderColor: 'var(--gold)' }}>Johannesburg</span>
+          </div>
         </Link>
       </div>
 
-      {/* ============ RIVALRY OF THE WEEK ============ */}
-      <SectionHead title="Rivalry of the week" to="/rivalries" cta="All rivalries" />
-      <Link to={`/rivalry/${rotw.id}`} className="rotw">
-        <div className="rotw-side" style={{ '--c': stripeVar(rotw.a) }}><img src={rA.logo} alt="" /><b>{rA.name}</b></div>
-        <div className="rotw-mid">
-          <span className="eyebrow" style={{ color: 'var(--gold)' }}>{rotw.tag}</span>
-          <div className="rotw-score">{rH.played ? `${rH.aWins}–${rH.bWins}` : 'VS'}</div>
-          <span className="muted" style={{ fontSize: 11 }}>{rH.played ? 'head-to-head' : 'first meeting looms'}</span>
-        </div>
-        <div className="rotw-side" style={{ '--c': stripeVar(rotw.b) }}><img src={rB.logo} alt="" /><b>{rB.name}</b></div>
-      </Link>
-
-      {/* ============ POWER RANKINGS ============ */}
-      <SectionHead title="Power rankings" to="/rankings" cta="Full board" />
-      <div className="grid">
-        {power.map((fid, i) => {
-          const fr = franchiseById(fid);
-          return (
-            <Link key={fid} to={`/franchise/${fid}`} className="card stripe row spread" style={{ '--stripe': stripeVar(fid), padding: 11 }}>
-              <span className="row" style={{ gap: 10 }}>
-                <b className="num" style={{ width: 24, fontSize: 18 }}>{i + 1}</b>
-                <img src={fr.logo} alt="" style={{ width: 26, height: 26, objectFit: 'contain' }} />
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{fr.name}</b>
-              </span>
-              <span className="muted" style={{ fontSize: 12 }}>{i === 0 ? '▲' : i % 2 ? '▬' : '▲'}</span>
-            </Link>
-          );
-        })}
+      {/* ── 8. LP LEGACY LEAGUE ── */}
+      <div className="home-section">
+        <SectionHead title="LP Legacy League" to="/legacy-league" cta="Enter →" />
+        <Link to="/legacy-league" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(199,154,62,.08), transparent)', border: '1px solid rgba(199,154,62,.2)' }}>
+          <div className="row spread" style={{ marginBottom: 10 }}>
+            <div>
+              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Inaugural Season</b>
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>48 players · 6 franchises · 5 adults + 3 youth each</div>
+            </div>
+            <span className="chip" style={{ color: 'var(--gold)' }}>Draft Complete</span>
+          </div>
+          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+            {LEGACY_FRANCHISES.map((fr) => (
+              <span key={fr.id} className="chip" style={{ fontSize: 10, borderLeft: `3px solid ${fr.primary}` }}>{fr.name}</span>
+            ))}
+          </div>
+        </Link>
       </div>
 
-      {/* ============ ROAD TO 360 ============ */}
-      <Link to="/road-to-360" className="card stripe r360-home" style={{ '--stripe': 'var(--gold)', display: 'block' }}>
-        <div className="row spread">
-          <span className="row" style={{ gap: 12 }}>
-            <span style={{ fontSize: 30 }}>🇿🇦</span>
-            <span>
-              <span className="eyebrow" style={{ color: 'var(--gold)' }}>Road to 360</span>
-              <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>Road to the 360 Super Cup</b>
-            </span>
-          </span>
-          <span className="muted" style={{ fontSize: 12 }}>{ROAD_TO_360.dates} →</span>
-        </div>
-        <p className="muted" style={{ fontSize: 13, margin: '10px 0 0' }}>Follow Lowveld's journey to national competition.</p>
-      </Link>
+      {/* ── 9. UNITY CUP ── */}
+      <div className="home-section">
+        <Link to="/unity-cup" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(154,168,35,.1), transparent)', border: '1px solid rgba(154,168,35,.25)' }}>
+          <div className="row spread">
+            <div>
+              <span className="eyebrow" style={{ color: '#9aa823' }}>★ International Nations Cup · 18 July 2026</span>
+              <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, marginTop: 4 }}>Unity Cup</b>
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>🇿🇦 South Africa vs 🇸🇿 Eswatini · Vodacom 4U The Grove</div>
+            </div>
+            <span style={{ fontSize: 28 }}>⚡</span>
+          </div>
+        </Link>
+      </div>
 
-      {/* ============ LEGACY LEAGUE ============ */}
-      <SectionHead title="LP Legacy League" to="/legacy-league" cta="Enter" />
-      <Link to="/legacy-league" className="card stripe" style={{ '--stripe': 'var(--gold)', display: 'block' }}>
-        <div className="row spread">
-          <span><b className="gold" style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>🏆 Draft Complete</b>
-            <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>48 players · 6 teams · 5 adults + 3 youth each</div></span>
-          <span className="muted">→</span>
-        </div>
-        <p className="muted" style={{ fontStyle: 'italic', margin: '10px 0 0', fontSize: 13 }}>Building Legacies. One Match At A Time. — Season 4 squads are set.</p>
-        <div className="row" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
-          {LEGACY_FRANCHISES.map((fr) => (
-            <span key={fr.id} className="chip" style={{ fontSize: 10, borderLeft: `3px solid ${fr.primary}` }}>{fr.name}</span>
-          ))}
-        </div>
-      </Link>
+      {/* ── 10. LADIES LEAGUE ── */}
+      <div className="home-section">
+        <SectionHead title="Ladies Franchise League" to="/leagues" cta="Season 2 →" />
+        <Link to="/register" style={{ display: 'block', textDecoration: 'none' }}>
+          <div style={{ background: 'linear-gradient(135deg, rgba(219,39,119,.12), rgba(219,39,119,.02))', border: '2px solid #db2777', borderRadius: 'var(--r)', padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <div>
+              <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, color: '#db2777', marginBottom: 2 }}>Season 2 — Registration Open</div>
+              <div style={{ color: 'var(--muted)', fontSize: 12 }}>Registration closes 18 July 2026 · Secure your spot now</div>
+            </div>
+            <div style={{ background: '#db2777', color: '#fff', fontWeight: 800, fontSize: 12, padding: '8px 14px', borderRadius: 8, whiteSpace: 'nowrap', flexShrink: 0 }}>Register →</div>
+          </div>
+        </Link>
+      </div>
 
-      {/* ============ MATCH OF THE WEEK / PREDICTION ============ */}
-      {(() => {
-        const fx = matchOfTheWeek();
-        if (!fx) return null;
-        const a = franchiseById(fx.home); const b = franchiseById(fx.away);
+      {/* ── 11. MATCH OF THE WEEK / PREDICTION ── */}
+      {motw && (() => {
+        const a = franchiseById(motw.home); const b = franchiseById(motw.away);
         return (
-          <>
-            <SectionHead title="Match of the Week" to="/predictor" cta="Predict" />
+          <div className="home-section">
+            <SectionHead title="Match of the Week" to="/predictor" cta="Predict →" />
             <Link to="/predictor" className="card stripe" style={{ '--stripe': 'var(--live)', display: 'block' }}>
-              <div className="row spread">
-                <span className="row" style={{ gap: 8 }}><img src={a.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{a.name}</b></span>
-                <span className="muted">v</span>
-                <span className="row" style={{ gap: 8 }}><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{b.name}</b><img src={b.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /></span>
+              <span className="eyebrow" style={{ color: 'var(--live)' }}>Can you predict the result?</span>
+              <div className="row spread" style={{ marginTop: 12 }}>
+                <div className="row" style={{ gap: 8 }}><img src={a.logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain' }} /><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{a.name}</b></div>
+                <b className="muted" style={{ fontSize: 18 }}>v</b>
+                <div className="row" style={{ gap: 8 }}><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{b.name}</b><img src={b.logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain' }} /></div>
               </div>
-              <p className="gold" style={{ fontSize: 12, margin: '10px 0 0', textAlign: 'center' }}>Predict the result →</p>
+              <div style={{ textAlign: 'center', marginTop: 10, fontSize: 12, color: 'var(--live)' }}>Tap to predict →</div>
             </Link>
-          </>
+          </div>
         );
       })()}
 
-      {/* ============ MVP RACE ============ */}
-      <SectionHead title="MVP race" to="/rankings" cta="Leaderboard" />
-      <Link to={`/player/${mvp.id}`} className="card stripe row spread" style={{ '--stripe': 'var(--gold)' }}>
-        <div className="row">
-          <span className="avatar">{mvp.name.split(' ').map((w) => w[0]).join('')}</span>
-          <div>
-            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17 }}>{mvp.name}</b>
-            <div className="muted" style={{ fontSize: 12 }}>{franchiseById(mvp.franchise_id).name}</div>
-          </div>
-        </div>
-        <span className="lp-badge">★ {mvp.stats.mvp_points} MVP pts</span>
-      </Link>
-      {/* ============ LOWVELD TV ============ */}
-      <SectionHead title="Lowveld TV" to="/tv" cta="Watch" />
-      <div className="grid cols-3">
-        {tvFeatured.map((v) => {
-          const id = getYouTubeId(v.youtube_url);
-          const thumb = v.thumbnail || ytThumb(v.youtube_url);
-          return (
-            <Link key={v.id} to="/tv" className="card" style={{ padding: 0, overflow: 'hidden' }}>
-              <div className="tvhome-thumb">
-                {thumb ? <img src={thumb} alt="" /> : <img src="/brand/lp-mark.png" alt="" className="tvhome-mark" />}
-                <span className="tvhome-play">{id ? '►' : '◷'}</span>
-              </div>
-              <div style={{ padding: '8px 10px' }}>
-                <span className="kicker" style={{ color: 'var(--live)' }}>{v.category}</span>
-                <p style={{ fontSize: 13, fontWeight: 600, margin: '2px 0 0', lineHeight: 1.25 }}>{v.title}</p>
+      {/* ── 12. LATEST NEWS ── */}
+      <div className="home-section">
+        <SectionHead title="Latest News" to="/news" cta="All news →" />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+          {NEWS.slice(0, 3).map((n) => (
+            <Link key={n.id} to="/news" className="card row spread" style={{ gap: 12, alignItems: 'flex-start' }}>
+              <div style={{ flex: 1 }}>
+                <span className="kicker" style={{ color: n.tag === 'mens' ? 'var(--court)' : n.tag === 'ladies' ? '#db2777' : 'var(--gold)' }}>{n.kicker}</span>
+                <p style={{ margin: '3px 0 0', fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{n.title}</p>
+                <span className="muted" style={{ fontSize: 11 }}>{new Date(n.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })}</span>
               </div>
             </Link>
-          );
-        })}
-      </div>
-
-      {/* ============ TABLES ============ */}
-      <SectionHead title="Tables" to="/leagues" />
-      <div className="grid cols-2">
-        <div>
-          <p className="eyebrow" style={{ marginBottom: 8 }}>Men's franchise league</p>
-          <StandingsTable league="mens" limit={4} />
-        </div>
-        <div>
-          <p className="eyebrow" style={{ marginBottom: 8 }}>Ladies franchise league</p>
-          <StandingsTable league="ladies" limit={4} />
+          ))}
         </div>
       </div>
 
-      {/* ============ WHATSAPP COMMUNITY ============ */}
-      <Link to="/community" className="card stripe" style={{ '--stripe': '#25D366', display: 'block' }}>
-        <div className="row spread">
-          <span className="row" style={{ gap: 12 }}>
-            <span style={{ fontSize: 24 }}>✆</span>
-            <span><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Join the Community</b><div className="muted" style={{ fontSize: 12 }}>Match-night chat, results & banter on WhatsApp</div></span>
-          </span>
-          <span className="muted">→</span>
+      {/* ── 13. LOWVELD TV ── */}
+      {TV_VIDEOS.length > 0 && (
+        <div className="home-section">
+          <SectionHead title="Lowveld TV" to="/tv" cta="Watch →" />
+          <div className="grid cols-3">
+            {TV_VIDEOS.slice(0, 3).map((v) => {
+              const thumb = v.thumbnail || ytThumb(v.youtube_url);
+              return (
+                <Link key={v.id} to="/tv" className="card" style={{ padding: 0, overflow: 'hidden' }}>
+                  <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#0a0f1c' }}>
+                    {thumb ? <img src={thumb} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} /> : <img src="/brand/lp-mark.png" alt="" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 38, opacity: .4 }} />}
+                    <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 34, height: 34, borderRadius: '50%', background: 'rgba(0,0,0,.6)', border: '1.5px solid rgba(255,255,255,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14 }}>►</span>
+                  </div>
+                  <div style={{ padding: '8px 10px' }}>
+                    <span className="kicker" style={{ color: 'var(--live)', fontSize: 10 }}>{v.category}</span>
+                    <p style={{ fontSize: 12, fontWeight: 600, margin: '2px 0 0', lineHeight: 1.25 }}>{v.title}</p>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
         </div>
-      </Link>
+      )}
 
-      {/* ============ SPONSOR STRIP ============ */}
-      <div className="mt"><SponsorRail placement="home" /></div>
+      {/* ── 14. SPONSORS ── */}
+      <div className="home-section">
+        <SponsorRail placement="home" />
+      </div>
+
+      {/* ── 15. COMMUNITY ── */}
+      <div className="home-section">
+        <Link to="/community" className="card" style={{ display: 'block', borderLeft: '3px solid #25D366', paddingLeft: 16 }}>
+          <div className="row spread">
+            <div>
+              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Join the Community</b>
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Match-night chat, results & banter on WhatsApp</div>
+            </div>
+            <span style={{ fontSize: 22, color: '#25D366' }}>✆</span>
+          </div>
+        </Link>
+      </div>
     </div>
   );
 }
@@ -282,22 +400,20 @@ export function Home() {
 function HomeStyles() {
   return (
     <style>{`
-      .lead-strip { display:grid; grid-template-columns:1fr; gap:10px; }
-      .lead-card { display:flex; flex-direction:column; gap:2px; padding-left:18px; }
-      .rotw { display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--line);
-        border-radius:var(--r); padding:16px 10px; }
-      .rotw-side { display:flex; flex-direction:column; align-items:center; gap:5px; text-align:center;
-        padding:8px; border-radius:var(--r-sm); background:linear-gradient(160deg, color-mix(in srgb, var(--c) 16%, transparent), transparent); }
-      .rotw-side img { width:46px; height:46px; object-fit:contain; }
-      .rotw-side b { font-family:var(--display); text-transform:uppercase; font-size:13px; }
-      .rotw-mid { text-align:center; }
-      .rotw-score { font-family:var(--display); font-weight:800; font-size:30px; line-height:1; }
-      .tvhome-thumb { position:relative; width:100%; padding-top:56.25%; background:#0a0f1c; display:flex; align-items:center; justify-content:center; }
-      .tvhome-thumb img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
-      .tvhome-mark { position:absolute; width:38px !important; height:38px !important; inset:auto !important; opacity:.5; object-fit:contain; }
-      .tvhome-play { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:38px; height:38px; border-radius:50%;
-        background:rgba(0,0,0,.55); border:1.5px solid rgba(255,255,255,.7); display:flex; align-items:center; justify-content:center; color:#fff; }
-      @media (min-width:760px){ .lead-strip { grid-template-columns:repeat(3,1fr); } }
+      .home-hero { padding: 4px 0 16px; }
+      .home-hero-stats { display: flex; align-items: center; gap: 0; margin: 12px 0 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+      .home-hero-stat { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 8px; gap: 2px; }
+      .home-hero-stat .num { font-family: var(--display); font-size: 22px; line-height: 1; }
+      .home-hero-stat .muted { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+      .home-hero-stat-div { width: 1px; align-self: stretch; background: var(--line); margin: 8px 0; }
+      .home-section { margin-top: 24px; }
+      .home-match-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+      .form-row { display: flex; gap: 3px; justify-content: flex-end; }
+      .form-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
+      .form-dot.W { background: var(--win); }
+      .form-dot.L { background: var(--loss); }
+      .form-dot.D { background: var(--gold); }
+      @media (min-width: 600px) { .home-match-grid { grid-template-columns: 1fr 1fr; } }
     `}</style>
   );
 }

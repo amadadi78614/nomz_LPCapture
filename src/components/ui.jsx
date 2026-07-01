@@ -66,6 +66,7 @@ export function TopBar() {
           <NavLink to="/leagues">Leagues</NavLink>
           <NavLink to="/cups">Cups</NavLink>
           <NavLink to="/players">Players</NavLink>
+          <NavLink to="/all-time-rankings">All-Time</NavLink>
           <NavLink to="/tv">Lowveld TV</NavLink>
           <NavLink to="/news">News</NavLink>
           <NavLink to="/sponsors">Sponsors</NavLink>

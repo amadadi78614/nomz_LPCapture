@@ -717,9 +717,13 @@ function MensS2({ subTab, setSubTab }) {
           </div>
           {s2div === 'premier' && (
             <>
-              <div className="card" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14 }}>
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Premier Division · Season 2</b>
-                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>95 players</p>
+              <div className="card row spread" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14, background: 'linear-gradient(135deg, rgba(199,154,62,.1), transparent)' }}>
+                <div>
+                  <span className="eyebrow">Season 2 Champions · Premier Division</span>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block', marginTop: 2 }}>Sonic Viboras</b>
+                  <p className="muted" style={{ margin: '2px 0 0', fontSize: 12 }}>95 players</p>
+                </div>
+                <img src="/logos/sonic-viboras.webp" alt="" style={{ width: 52, height: 52, objectFit: 'contain' }} />
               </div>
               <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
                 <table className="tbl">
@@ -744,9 +748,13 @@ function MensS2({ subTab, setSubTab }) {
           )}
           {s2div === 'champ' && (
             <>
-              <div className="card" style={{ borderLeft: '3px solid var(--court)', paddingLeft: 14 }}>
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Championship Division · Season 2</b>
-                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>79 players</p>
+              <div className="card row spread" style={{ borderLeft: '3px solid var(--court)', paddingLeft: 14, background: 'linear-gradient(135deg, rgba(0,200,232,.08), transparent)' }}>
+                <div>
+                  <span className="eyebrow">Season 2 Champions · Championship Division</span>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block', marginTop: 2 }}>Global Boomerangs</b>
+                  <p className="muted" style={{ margin: '2px 0 0', fontSize: 12 }}>79 players</p>
+                </div>
+                <img src="/logos/globo-boomerangs.webp" alt="" style={{ width: 52, height: 52, objectFit: 'contain' }} />
               </div>
               <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
                 <table className="tbl">
@@ -988,9 +996,13 @@ function LadiesLeague() {
           )}
           {subTab === 'rankings' && (
             <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-              <div className="card" style={{ borderLeft: '3px solid #db2777', paddingLeft: 14 }}>
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Season 1 — Final Rankings</b>
-                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>53 players · Lowveld Padel Franchise Ladies League</p>
+              <div className="card row spread" style={{ borderLeft: '3px solid #db2777', paddingLeft: 14, background: 'linear-gradient(135deg, rgba(219,39,119,.1), transparent)' }}>
+                <div>
+                  <span className="eyebrow">Season 1 Champions</span>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block', marginTop: 2, color: '#db2777' }}>Lunar Lillies</b>
+                  <p className="muted" style={{ margin: '2px 0 0', fontSize: 12 }}>53 players · Final Rankings</p>
+                </div>
+                <img src="/logos/lunar-lillies.webp" alt="" style={{ width: 52, height: 52, objectFit: 'contain' }} />
               </div>
               <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
                 <table className="tbl">

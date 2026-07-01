@@ -365,15 +365,15 @@ export function AllTimeRankings() {
             {mensDiv === 's2p' && (
               <RankingsTable
                 data={MENS_S2_PREMIER}
-                title="Men's Premier Division · Season 2"
-                note="95 players · Lowveld Padel Franchise Mens Premier League"
+                title="Men's Premier Division · Season 2 — Champions: Sonic Viboras"
+                note="95 players · Sonic Viboras won the Season 2 Premier Division"
               />
             )}
             {mensDiv === 's2c' && (
               <RankingsTable
                 data={MENS_S2_CHAMP}
-                title="Men's Championship Division · Season 2"
-                note="79 players · Lowveld Padel Franchise Mens Championship Division"
+                title="Men's Championship Division · Season 2 — Champions: Global Boomerangs"
+                note="79 players · Global Boomerangs won the Season 2 Championship Division"
               />
             )}
           </div>
@@ -384,8 +384,8 @@ export function AllTimeRankings() {
         <div className="mt">
           <RankingsTable
             data={LADIES_S1}
-            title="Ladies Franchise League · Season 1"
-            note="53 players · Lowveld Padel Franchise Ladies League"
+            title="Ladies Franchise League · Season 1 — Champions: Lunar Lillies"
+            note="53 players · Lunar Lillies won Season 1"
           />
         </div>
       )}

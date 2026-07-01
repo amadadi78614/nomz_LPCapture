@@ -822,7 +822,21 @@ export function Franchises() {
         <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies</button>
         <button className={league === 'legacy' ? 'on' : ''} onClick={() => setLeague('legacy')}>LP Legacy</button>
       </div>
-      {league === 'ladies' && <div className="mt"><ComingSoon note="Ladies franchise hubs launch with the Season 3 announcement." /></div>}
+      {league === 'ladies' && (
+        <div className="grid cols-2 mt">
+          {FRANCHISES.filter((f) => f.league === 'ladies').map((fr) => (
+            <div key={fr.id} className="card row spread">
+              <div className="row">
+                <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+                <div>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17 }}>{fr.name}</b>
+                  <div className="muted" style={{ fontSize: 12 }}>Ladies League · Season 2</div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
       {league === 'mens' && (
         <div className="grid cols-2 mt">
           {list.map((r, i) => {

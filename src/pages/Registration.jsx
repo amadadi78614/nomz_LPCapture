@@ -30,7 +30,9 @@ function LadiesForm() {
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
   const handleSubmit = async () => {
-    if (!form.email || !form.firstName || !form.surname || !form.mobile) {
+    if (!form.email || !form.firstName || !form.surname || !form.mobile ||
+        !form.dob || !form.season1Team || !form.playtomicName || !form.playtomicRating ||
+        !form.handed || !form.preferredSide || !form.shirtSize) {
       alert('Please fill in all required fields.');
       return;
     }
@@ -93,7 +95,7 @@ function LadiesForm() {
       </div>
 
       <div className="reg-field" style={{ maxWidth: 220 }}>
-        <label className="reg-label">Date of Birth</label>
+        <label className="reg-label">Date of Birth <span className="reg-req">*</span></label>
         <input className="reg-input" type="date" value={form.dob} onChange={(e) => set('dob', e.target.value)} />
       </div>
 
@@ -101,25 +103,25 @@ function LadiesForm() {
 
       <div className="reg-row">
         <div className="reg-field">
-          <label className="reg-label">Playtomic Name</label>
+          <label className="reg-label">Playtomic Name <span className="reg-req">*</span></label>
           <input className="reg-input" value={form.playtomicName} onChange={(e) => set('playtomicName', e.target.value)} placeholder="Playtomic username" />
         </div>
         <div className="reg-field">
-          <label className="reg-label">Playtomic Rating</label>
+          <label className="reg-label">Playtomic Rating <span className="reg-req">*</span></label>
           <input className="reg-input" value={form.playtomicRating} onChange={(e) => set('playtomicRating', e.target.value)} placeholder="e.g. 4.5" />
         </div>
       </div>
 
       <div className="reg-row">
         <div className="reg-field">
-          <label className="reg-label">Handed</label>
+          <label className="reg-label">Handed <span className="reg-req">*</span></label>
           <select className="reg-input" value={form.handed} onChange={(e) => set('handed', e.target.value)}>
             <option value="">Select...</option>
             {HANDED.map((h) => <option key={h}>{h}</option>)}
           </select>
         </div>
         <div className="reg-field">
-          <label className="reg-label">Preferred Side</label>
+          <label className="reg-label">Preferred Side <span className="reg-req">*</span></label>
           <select className="reg-input" value={form.preferredSide} onChange={(e) => set('preferredSide', e.target.value)}>
             <option value="">Select...</option>
             {PREFERRED_SIDE.map((s) => <option key={s}>{s}</option>)}
@@ -129,14 +131,14 @@ function LadiesForm() {
 
       <div className="reg-row">
         <div className="reg-field">
-          <label className="reg-label">Season 1 Team</label>
+          <label className="reg-label">Season 1 Team <span className="reg-req">*</span></label>
           <select className="reg-input" value={form.season1Team} onChange={(e) => set('season1Team', e.target.value)}>
             <option value="">Select team...</option>
             {LADIES_TEAMS.map((t) => <option key={t}>{t}</option>)}
           </select>
         </div>
         <div className="reg-field">
-          <label className="reg-label">Shirt Size</label>
+          <label className="reg-label">Shirt Size <span className="reg-req">*</span></label>
           <select className="reg-input" value={form.shirtSize} onChange={(e) => set('shirtSize', e.target.value)}>
             <option value="">Select size...</option>
             {SHIRT_SIZES.map((s) => <option key={s}>{s}</option>)}

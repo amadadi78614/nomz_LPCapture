@@ -635,7 +635,98 @@ function LadiesLeague() {
         ))}
       </div>
 
-      {season === 's1' && <div className="mt"><PlaceholderSeason season="Season 1" league="Ladies Franchise League" /></div>}
+      {season === 's1' && (() => {
+        const LADIES_S1_PLAYERS = [
+  { rank: 1, name: 'Jeanetha Boshoff', team: 'Lunar Lillies', played: 5, won: 5, lost: 0, setsWon: 15, gamesWon: 111 },
+  { rank: 2, name: 'Imaan Packery', team: 'Lunar Lillies', played: 5, won: 4, lost: 1, setsWon: 13, gamesWon: 101 },
+  { rank: 3, name: 'Sunel Grote', team: 'Backhand Blossoms', played: 5, won: 4, lost: 1, setsWon: 11, gamesWon: 88 },
+  { rank: 4, name: 'Heleen Van Der Mescht', team: 'Lunar Lillies', played: 3, won: 3, lost: 0, setsWon: 9, gamesWon: 66 },
+  { rank: 5, name: 'Lia Odendaal', team: 'Desert Roses', played: 5, won: 3, lost: 2, setsWon: 8, gamesWon: 78 },
+  { rank: 6, name: 'Michelle Du preez', team: 'Desert Roses', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 74 },
+  { rank: 7, name: 'Marise Schutte', team: 'Desert Roses', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 68 },
+  { rank: 8, name: 'Berna Claassens', team: 'Phoenix Flames', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 68 },
+  { rank: 9, name: 'Anneri Duvenage', team: 'Lunar Lillies', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 66 },
+  { rank: 10, name: 'Tanija de Villiers', team: 'Net Novas', played: 4, won: 3, lost: 1, setsWon: 8, gamesWon: 66 },
+  { rank: 11, name: 'Ayesha Jogi', team: 'Desert Roses', played: 3, won: 3, lost: 0, setsWon: 8, gamesWon: 57 },
+  { rank: 12, name: 'Hunaynah Mungalee', team: 'Arctic Angels', played: 4, won: 3, lost: 1, setsWon: 7, gamesWon: 64 },
+  { rank: 13, name: 'Dalene Minnaar', team: 'Phoenix Flames', played: 3, won: 3, lost: 0, setsWon: 7, gamesWon: 64 },
+  { rank: 14, name: 'Karlien Janse van Rensburg', team: 'Phoenix Flames', played: 4, won: 3, lost: 1, setsWon: 5, gamesWon: 66 },
+  { rank: 15, name: 'Khadija Badat', team: 'Arctic Angels', played: 5, won: 2, lost: 3, setsWon: 7, gamesWon: 80 },
+  { rank: 16, name: 'Samantha de Araujo', team: 'Backhand Blossoms', played: 4, won: 2, lost: 1, setsWon: 7, gamesWon: 56 },
+  { rank: 17, name: 'Mieke Swart', team: 'Net Novas', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 60 },
+  { rank: 18, name: 'Carien Vos', team: 'Net Novas', played: 4, won: 2, lost: 2, setsWon: 6, gamesWon: 54 },
+  { rank: 19, name: 'Mufeedah Hoosen', team: 'Desert Roses', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 51 },
+  { rank: 20, name: 'Faeeza Patel', team: 'Desert Roses', played: 3, won: 2, lost: 1, setsWon: 6, gamesWon: 51 },
+  { rank: 21, name: 'Zantelle Hopkins', team: 'Arctic Angels', played: 4, won: 2, lost: 2, setsWon: 5, gamesWon: 61 },
+  { rank: 22, name: 'Firdaus Hoosen', team: 'Desert Roses', played: 4, won: 2, lost: 2, setsWon: 5, gamesWon: 61 },
+  { rank: 23, name: 'Dhiya Ismail', team: 'Net Novas', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 55 },
+  { rank: 24, name: 'Dirkie Coomans', team: 'Backhand Blossoms', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 54 },
+  { rank: 25, name: 'Muneera Jina', team: 'Backhand Blossoms', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 52 },
+  { rank: 26, name: 'Diyaana Nomani', team: 'Arctic Angels', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 48 },
+  { rank: 27, name: 'Teresa Kempen', team: 'Lunar Lillies', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 47 },
+  { rank: 28, name: 'Aletia van Rooyen', team: 'Lunar Lillies', played: 3, won: 2, lost: 1, setsWon: 5, gamesWon: 44 },
+  { rank: 29, name: 'Amani M Nomani', team: 'Phoenix Flames', played: 4, won: 1, lost: 3, setsWon: 5, gamesWon: 74 },
+  { rank: 30, name: 'Noerien Moolla', team: 'Arctic Angels', played: 5, won: 1, lost: 4, setsWon: 4, gamesWon: 68 },
+  { rank: 31, name: 'Suhana Mohamed', team: 'Phoenix Flames', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 50 },
+  { rank: 32, name: 'Zahra Jogi', team: 'Phoenix Flames', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 48 },
+  { rank: 33, name: 'Martinette Meyer', team: 'Phoenix Flames', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 43 },
+  { rank: 34, name: 'Anita Smith', team: 'Phoenix Flames', played: 3, won: 1, lost: 2, setsWon: 4, gamesWon: 41 },
+  { rank: 35, name: 'Liz Bartie', team: 'Net Novas', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 53 },
+  { rank: 36, name: 'Marz Asvat', team: 'Arctic Angels', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 42 },
+  { rank: 37, name: 'Lana Nel', team: 'Backhand Blossoms', played: 3, won: 1, lost: 2, setsWon: 3, gamesWon: 41 },
+  { rank: 38, name: 'Nasreen Omar', team: 'Arctic Angels', played: 2, won: 1, lost: 1, setsWon: 3, gamesWon: 38 },
+  { rank: 39, name: 'Erica Van Jaarsveld', team: 'Net Novas', played: 2, won: 1, lost: 1, setsWon: 3, gamesWon: 36 },
+  { rank: 40, name: 'Simone Maritz', team: 'Net Novas', played: 4, won: 1, lost: 3, setsWon: 3, gamesWon: 36 },
+  { rank: 41, name: 'Farzahna Nomani', team: 'Lunar Lillies', played: 3, won: 1, lost: 2, setsWon: 2, gamesWon: 30 },
+  { rank: 42, name: 'Fazila Hafesji', team: 'Backhand Blossoms', played: 3, won: 1, lost: 2, setsWon: 2, gamesWon: 25 },
+  { rank: 43, name: 'Stephanie Steenekamp', team: 'Desert Roses', played: 3, won: 0, lost: 3, setsWon: 2, gamesWon: 44 },
+  { rank: 44, name: 'Nasreen Methar', team: 'Backhand Blossoms', played: 3, won: 0, lost: 3, setsWon: 2, gamesWon: 31 },
+  { rank: 45, name: 'Sabena Omar', team: 'Arctic Angels', played: 3, won: 0, lost: 2, setsWon: 1, gamesWon: 37 },
+  { rank: 46, name: 'Icem Wilken', team: 'Lunar Lillies', played: 4, won: 0, lost: 4, setsWon: 1, gamesWon: 31 },
+  { rank: 47, name: 'Imaan Shaik', team: 'Backhand Blossoms', played: 3, won: 0, lost: 2, setsWon: 1, gamesWon: 25 },
+  { rank: 48, name: 'Tasneem Sheikh', team: 'Phoenix Flames', played: 3, won: 0, lost: 3, setsWon: 1, gamesWon: 24 },
+  { rank: 49, name: 'Simonne Herbst', team: 'Desert Roses', played: 1, won: 0, lost: 1, setsWon: 1, gamesWon: 16 },
+  { rank: 50, name: 'Tasneem Moolla', team: 'Arctic Angels', played: 1, won: 0, lost: 0, setsWon: 1, gamesWon: 12 },
+  { rank: 51, name: 'Joshna Nagar', team: 'Net Novas', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 36 },
+  { rank: 52, name: 'Radhia Mungalee', team: 'Net Novas', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 34 },
+  { rank: 53, name: 'Shaheda Sujee', team: 'Backhand Blossoms', played: 3, won: 0, lost: 3, setsWon: 0, gamesWon: 14 },
+];
+
+        const teams = [...new Set(LADIES_S1_PLAYERS.map((p) => p.team))];
+        return (
+          <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <div className="card" style={{ borderLeft: '3px solid #db2777', paddingLeft: 14 }}>
+              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Season 1 — Final Rankings</b>
+              <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>Lowveld Padel Franchise Ladies League · 2024/25</p>
+            </div>
+            <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+              <table className="tbl">
+                <thead>
+                  <tr>
+                    <th>#</th><th>Player</th><th>Team</th>
+                    <th className="num">P</th><th className="num">W</th><th className="num">L</th>
+                    <th className="num">Sets</th><th className="num">Games</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {LADIES_S1_PLAYERS.map((p) => (
+                    <tr key={p.rank}>
+                      <td><span className="pos-badge">{p.rank}</span></td>
+                      <td><b>{p.name}</b></td>
+                      <td className="muted" style={{ fontSize: 12 }}>{p.team}</td>
+                      <td className="num">{p.played}</td>
+                      <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
+                      <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
+                      <td className="num">{p.setsWon}</td>
+                      <td className="num">{p.gamesWon}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      })()}
 
       {season === 's2' && (
         <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

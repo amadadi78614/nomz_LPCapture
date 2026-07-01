@@ -48,7 +48,7 @@ export function Home() {
         <div className="row mt" style={{ gap: 10, flexWrap: 'wrap' }}>
           <Link to="/live" className="btn live">● Match Centre</Link>
           <Link to="/tv" className="btn ghost">Lowveld TV</Link>
-          <Link to="/leagues" className="btn ghost">Standings</Link>
+          <Link to="/leagues" className="btn ghost">Leagues</Link>
         </div>
       </div>
 
@@ -228,23 +228,6 @@ export function Home() {
         </div>
         <span className="lp-badge">★ {mvp.stats.mvp_points} MVP pts</span>
       </Link>
-
-      {/* ============ DYNASTY TRACKER ============ */}
-      <SectionHead title="Dynasty tracker" to="/dynasty" cta="Full tracker" />
-      <Link to="/dynasty" className="card stripe" style={{ '--stripe': stripeVar(dynSpot.id), display: 'block' }}>
-        <div className="row spread">
-          <span className="row" style={{ gap: 12 }}>
-            <img src={dynSpot.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
-            <span>
-              <span className="eyebrow">Title chase</span>
-              <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{dynSpot.name}</b>
-            </span>
-          </span>
-          {dynRow && <span className="num gold" style={{ fontSize: 18 }}>{dynRow.points} pts</span>}
-        </div>
-        <p className="muted" style={{ fontSize: 13, margin: '10px 0 0' }}>{DYNASTY.spotlightStory}</p>
-      </Link>
-
       {/* ============ LOWVELD TV ============ */}
       <SectionHead title="Lowveld TV" to="/tv" cta="Watch" />
       <div className="grid cols-3">
@@ -278,13 +261,6 @@ export function Home() {
           <StandingsTable league="ladies" limit={4} />
         </div>
       </div>
-
-      {/* ============ SPORTS HUB ============ */}
-      <SectionHead title="Sports Hub" to="/sports-hub" cta="Open" />
-      <Link to="/sports-hub" className="card row spread" style={{ display: 'flex' }}>
-        <span><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase' }}>Beyond the Lowveld</b><div className="muted" style={{ fontSize: 12 }}>Springboks · F1 · World Cup · Wimbledon</div></span>
-        <span className="muted">→</span>
-      </Link>
 
       {/* ============ WHATSAPP COMMUNITY ============ */}
       <Link to="/community" className="card stripe" style={{ '--stripe': '#25D366', display: 'block' }}>

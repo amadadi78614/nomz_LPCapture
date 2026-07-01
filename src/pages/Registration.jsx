@@ -44,7 +44,7 @@ function LadiesForm() {
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, submittedAt: new Date().toISOString() }),
+        body: JSON.stringify({ ...form, photoFile: form.photoFile || '', photoUrl: '', submittedAt: new Date().toISOString() }),
       });
       setStatus('success');
     } catch {
@@ -59,7 +59,7 @@ function LadiesForm() {
       <p className="muted" style={{ margin: '8px 0 20px' }}>
         Thank you {form.firstName} — we'll be in touch soon with Ladies League details.
       </p>
-      <button className="btn gold" onClick={() => { setStatus('idle'); setForm({ email:'',firstName:'',surname:'',dob:'',mobile:'',season1Team:'',playtomicName:'',playtomicRating:'',handed:'',preferredSide:'',shirtSize:'',acceptedTerms:false,popiaConsent:false,photoUrl:'' }); }}>
+      <button className="btn gold" onClick={() => { setStatus('idle'); setForm({ email:'',firstName:'',surname:'',dob:'',mobile:'',season1Team:'',playtomicName:'',playtomicRating:'',handed:'',preferredSide:'',shirtSize:'',acceptedTerms:false,popiaConsent:false,photoFile:null,photoFileName:'' }); }}>
         Register Another
       </button>
     </div>
@@ -145,8 +145,20 @@ function LadiesForm() {
       </div>
 
       <div className="reg-field">
-        <label className="reg-label">Photo URL <span className="reg-hint">(optional — link to a profile photo)</span></label>
-        <input className="reg-input" value={form.photoUrl} onChange={(e) => set('photoUrl', e.target.value)} placeholder="https://..." />
+        <label className="reg-label">Profile Photo <span className="reg-hint">(optional — JPG or PNG)</span></label>
+        <input
+          type="file" accept="image/jpeg,image/png,image/webp"
+          className="reg-input" style={{ padding: '8px 13px', cursor: 'pointer' }}
+          onChange={(e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            set('photoFileName', file.name);
+            const reader = new FileReader();
+            reader.onload = () => set('photoFile', reader.result);
+            reader.readAsDataURL(file);
+          }}
+        />
+        {form.photoFileName && <span className="reg-hint" style={{ marginTop: 2 }}>Selected: {form.photoFileName}</span>}
       </div>
 
       <div className="reg-section-label" style={{ marginTop: 6 }}>Consent</div>

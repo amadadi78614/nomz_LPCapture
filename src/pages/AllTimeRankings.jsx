@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import {
+  PLAYERS, franchiseById, stripeVar, winPct,
+} from '../data/seed';
+
 
 const MENS_S2_PREMIER = [
   { rank: 1, name: 'Yusuf Packery', team: 'Desert Falcons', played: 6, won: 6, lost: 0, setsWon: 17, gamesWon: 128 },
@@ -255,6 +259,17 @@ const TEAM_COLORS = {
 };
 
 function RankingsTable({ data, title, note }) {
+
+const TEAM_COLORS = {
+  'Desert Falcons': '#c79a3e', 'Ice Breakers': '#00C8E8', 'Avalanche Aces': '#0057E9',
+  'Sonic Viboras': '#9aa823', 'Samurai Kicksmashers': '#dc2626', 'Samurai Kick Smashers': '#dc2626',
+  'Globo Boomerangs': '#7c3aed', 'Global Boomerangs': '#7c3aed', 'Sahara Lions': '#f59e0b',
+  'Rulo Apaches': '#6b7280', 'Baltic Blades': '#0891b2',
+  'Lunar Lillies': '#8b5cf6', 'Desert Roses': '#ec4899', 'Phoenix Flames': '#f97316',
+  'Backhand Blossoms': '#10b981', 'Net Novas': '#3b82f6', 'Arctic Angels': '#06b6d4',
+};
+
+function RankTable({ data, champion }) {
   const [search, setSearch] = useState('');
   const [teamFilter, setTeamFilter] = useState('all');
   const teams = [...new Set(data.map((p) => p.team))].sort();
@@ -263,43 +278,30 @@ function RankingsTable({ data, title, note }) {
     .filter((p) => teamFilter === 'all' || p.team === teamFilter);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-      <div className="card" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14 }}>
-        <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{title}</b>
-        {note && <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>{note}</p>}
-      </div>
-
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      {champion && (
+        <div className="card row spread" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14, background: 'linear-gradient(135deg,rgba(199,154,62,.12),transparent)' }}>
+          <div>
+            <span className="eyebrow">Season Champions</span>
+            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block', marginTop: 2 }}>{champion.name}</b>
+          </div>
+          <img src={champion.logo} alt="" style={{ width: 48, height: 48, objectFit: 'contain' }} />
+        </div>
+      )}
       <div className="row" style={{ gap: 10, flexWrap: 'wrap' }}>
-        <input
-          value={search} onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search player..."
-          style={{ flex: 1, minWidth: 160, padding: '10px 13px', borderRadius: 8, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)', font: 'inherit', fontSize: 13 }}
-        />
-        <select
-          value={teamFilter} onChange={(e) => setTeamFilter(e.target.value)}
-          style={{ padding: '10px 13px', borderRadius: 8, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)', font: 'inherit', fontSize: 13 }}
-        >
+        <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search player..."
+          style={{ flex: 1, minWidth: 150, padding: '10px 13px', borderRadius: 8, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)', font: 'inherit', fontSize: 13 }} />
+        <select value={teamFilter} onChange={(e) => setTeamFilter(e.target.value)}
+          style={{ padding: '10px 13px', borderRadius: 8, border: '1px solid var(--line)', background: 'var(--surface)', color: 'var(--text)', font: 'inherit', fontSize: 13 }}>
           <option value="all">All Teams</option>
           {teams.map((t) => <option key={t}>{t}</option>)}
         </select>
       </div>
-
       <p className="muted" style={{ fontSize: 12 }}>{filtered.length} player{filtered.length !== 1 ? 's' : ''}</p>
-
       <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
         <table className="tbl">
           <thead>
-            <tr>
-              <th>#</th>
-              <th>Player</th>
-              <th>Team</th>
-              <th className="num">P</th>
-              <th className="num">W</th>
-              <th className="num">L</th>
-              <th className="num">Win%</th>
-              <th className="num">Sets</th>
-              <th className="num">Games</th>
-            </tr>
+            <tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Win%</th><th className="num">Sets</th><th className="num">Games</th></tr>
           </thead>
           <tbody>
             {filtered.map((p) => {
@@ -309,16 +311,14 @@ function RankingsTable({ data, title, note }) {
                 <tr key={p.rank}>
                   <td><span className="pos-badge">{p.rank}</span></td>
                   <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
-                  <td>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                      <span style={{ width: 3, height: 14, borderRadius: 2, background: color, display: 'inline-block' }} />
-                      <span style={{ fontSize: 11, color: 'var(--muted)' }}>{p.team}</span>
-                    </span>
-                  </td>
+                  <td><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ width: 3, height: 14, borderRadius: 2, background: color, display: 'inline-block' }} />
+                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>{p.team}</span>
+                  </span></td>
                   <td className="num">{p.played}</td>
                   <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
                   <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
-                  <td className="num"><b style={{ color: pct >= 60 ? 'var(--win)' : pct >= 40 ? 'var(--text)' : 'var(--muted)' }}>{pct}%</b></td>
+                  <td className="num"><b style={{ color: pct >= 60 ? 'var(--win)' : pct < 40 ? 'var(--muted)' : 'var(--text)' }}>{pct}%</b></td>
                   <td className="num">{p.setsWon}</td>
                   <td className="num">{p.gamesWon}</td>
                 </tr>
@@ -331,70 +331,168 @@ function RankingsTable({ data, title, note }) {
   );
 }
 
+function Season3MensRankings() {
+  const [sortBy, setSortBy] = useState('lp');
+  const players = PLAYERS.filter((p) => p.league === 'mens' && p.stats && p.stats.played > 0);
+  const sorted = [...players].sort(
+    sortBy === 'lp' ? (a, b) => b.lp_rating - a.lp_rating :
+    sortBy === 'win' ? (a, b) => winPct(b.stats) - winPct(a.stats) || b.stats.wins - a.stats.wins :
+    sortBy === 'mvp' ? (a, b) => b.stats.mvp_points - a.stats.mvp_points :
+    (a, b) => b.stats.wins - a.stats.wins
+  );
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div className="card" style={{ borderLeft: '3px solid var(--live)', paddingLeft: 14 }}>
+        <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Season 3 · Live Rankings</b>
+        <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>P1/P2/P3 format · {sorted.length} players with match time</p>
+      </div>
+      <div className="tabbar">
+        {[['lp','LP Rating'],['win','Win %'],['wins','Wins'],['mvp','MVP Pts']].map(([k,lbl]) => (
+          <button key={k} className={sortBy === k ? 'on' : ''} onClick={() => setSortBy(k)}>{lbl}</button>
+        ))}
+      </div>
+      <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+        <table className="tbl">
+          <thead>
+            <tr><th>#</th><th>Player</th><th>Franchise</th><th className="num">Ct</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">{sortBy === 'lp' ? 'LP' : sortBy === 'win' ? 'Win%' : sortBy === 'mvp' ? 'MVP' : 'W'}</th></tr>
+          </thead>
+          <tbody>
+            {sorted.map((p, i) => {
+              const fr = franchiseById(p.franchise_id);
+              const val = sortBy === 'lp' ? p.lp_rating : sortBy === 'win' ? `${winPct(p.stats)}%` : sortBy === 'mvp' ? p.stats.mvp_points : p.stats.wins;
+              return (
+                <tr key={p.id}>
+                  <td><span className="pos-badge">{i + 1}</span></td>
+                  <td><Link to={`/player/${p.id}`}><b style={{ fontSize: 13 }}>{p.name}</b></Link></td>
+                  <td><span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ width: 3, height: 14, borderRadius: 2, background: stripeVar(fr.id), display: 'inline-block' }} />
+                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>{fr.short || fr.name}</span>
+                  </span></td>
+                  <td className="muted" style={{ fontSize: 11, textAlign: 'center' }}>{p.tier}</td>
+                  <td className="num">{p.stats.played}</td>
+                  <td className="num" style={{ color: 'var(--win)' }}>{p.stats.wins}</td>
+                  <td className="num" style={{ color: 'var(--loss)' }}>{p.stats.losses}</td>
+                  <td className="num"><b style={{ color: sortBy === 'lp' ? 'var(--gold)' : 'var(--text)' }}>{val}</b></td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export function AllTimeRankings() {
-  const [tab, setTab] = useState('mens');
-  const [mensDiv, setMensDiv] = useState('s2p');
+  const [league, setLeague] = useState('mens');
+  const [mensSeason, setMensSeason] = useState('s3');
+  const [ladiesSeason, setLadiesSeason] = useState('s1');
+  const [mensDiv, setMensDiv] = useState('premier');
 
   return (
     <div className="page">
-      <h1 className="display">All-Time Rankings</h1>
-      <p className="muted" style={{ fontSize: 13 }}>Historical player rankings across all Lowveld Padel competitions.</p>
+      <h1 className="display">Historical Stats</h1>
+      <p className="muted" style={{ fontSize: 13 }}>Player rankings and statistics across all Lowveld Padel seasons.</p>
 
+      {/* League tabs */}
       <div className="tabbar mt">
-        <button className={tab === 'mens' ? 'on' : ''} onClick={() => setTab('mens')}>Men's</button>
-        <button className={tab === 'ladies' ? 'on' : ''} onClick={() => setTab('ladies')}>Ladies</button>
-        <button className={tab === 'youth' ? 'on' : ''} onClick={() => setTab('youth')}>Youth</button>
+        <button className={league === 'mens' ? 'on' : ''} onClick={() => setLeague('mens')}>Men's</button>
+        <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies</button>
+        <button className={league === 'youth' ? 'on' : ''} onClick={() => setLeague('youth')}>Youth</button>
       </div>
 
-      {tab === 'mens' && (
+      {/* ── MEN'S ── */}
+      {league === 'mens' && (
         <>
           <div className="tabbar mt">
-            <button className={mensDiv === 's1' ? 'on' : ''} onClick={() => setMensDiv('s1')}>Season 1</button>
-            <button className={mensDiv === 's2p' ? 'on' : ''} onClick={() => setMensDiv('s2p')}>Season 2 · Premier</button>
-            <button className={mensDiv === 's2c' ? 'on' : ''} onClick={() => setMensDiv('s2c')}>Season 2 · Championship</button>
+            <button className={mensSeason === 's1' ? 'on' : ''} onClick={() => { setMensSeason('s1'); setMensDiv('premier'); }}>Season 1</button>
+            <button className={mensSeason === 's2' ? 'on' : ''} onClick={() => { setMensSeason('s2'); setMensDiv('premier'); }}>Season 2</button>
+            <button className={mensSeason === 's3' ? 'on' : ''} onClick={() => setMensSeason('s3')}>Season 3 · Live</button>
           </div>
-          <div className="mt">
-            {mensDiv === 's1' && (
-              <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>
-                <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20, marginBottom: 8 }}>Men's Season 1</div>
-                <p className="muted" style={{ margin: '0 0 6px', fontSize: 13 }}>Season 1 had Premier and Championship divisions.</p>
-                <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Historical player stats will be added once available.</p>
+
+          {mensSeason === 's1' && (
+            <div className="mt">
+              <div className="grid cols-2" style={{ gap: 10, marginBottom: 14 }}>
+                <div className="card" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14, background: 'linear-gradient(135deg,rgba(199,154,62,.1),transparent)' }}>
+                  <span className="eyebrow">Premier Division Champion</span>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15, display: 'block', marginTop: 4 }}>Sonic Viboras</b>
+                  <img src="/logos/sonic-viboras.webp" alt="" style={{ width: 40, height: 40, objectFit: 'contain', marginTop: 8 }} />
+                </div>
+                <div className="card" style={{ borderLeft: '3px solid var(--court)', paddingLeft: 14, background: 'linear-gradient(135deg,rgba(0,200,232,.08),transparent)' }}>
+                  <span className="eyebrow">Championship Champion</span>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15, display: 'block', marginTop: 4 }}>Desert Falcons</b>
+                  <img src="/logos/desert-falcons.webp" alt="" style={{ width: 40, height: 40, objectFit: 'contain', marginTop: 8 }} />
+                </div>
+              </div>
+              <div className="card" style={{ textAlign: 'center', padding: '28px 20px' }}>
+                <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 18, marginBottom: 8 }}>Season 1 Player Stats</div>
+                <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Season 1 had Premier and Championship divisions. Full player stats will be published here.</p>
                 <span className="chip">Data Coming Soon</span>
               </div>
-            )}
-            {mensDiv === 's2p' && (
-              <RankingsTable
-                data={MENS_S2_PREMIER}
-                title="Men's Premier Division · Season 2 — Champions: Sonic Viboras"
-                note="95 players · Sonic Viboras won the Season 2 Premier Division"
-              />
-            )}
-            {mensDiv === 's2c' && (
-              <RankingsTable
-                data={MENS_S2_CHAMP}
-                title="Men's Championship Division · Season 2 — Champions: Global Boomerangs"
-                note="79 players · Global Boomerangs won the Season 2 Championship Division"
-              />
-            )}
-          </div>
+            </div>
+          )}
+
+          {mensSeason === 's2' && (
+            <div className="mt">
+              <div className="tabbar" style={{ marginBottom: 14 }}>
+                <button className={mensDiv === 'premier' ? 'on' : ''} onClick={() => setMensDiv('premier')}>Premier Division</button>
+                <button className={mensDiv === 'champ' ? 'on' : ''} onClick={() => setMensDiv('champ')}>Championship Division</button>
+              </div>
+              {mensDiv === 'premier' && (
+                <RankTable
+                  data={MENS_S2_PREMIER}
+                  champion={{ name: 'Sonic Viboras', logo: '/logos/sonic-viboras.webp' }}
+                />
+              )}
+              {mensDiv === 'champ' && (
+                <RankTable
+                  data={MENS_S2_CHAMP}
+                  champion={{ name: 'Global Boomerangs', logo: '/logos/globo-boomerangs.webp' }}
+                />
+              )}
+            </div>
+          )}
+
+          {mensSeason === 's3' && (
+            <div className="mt"><Season3MensRankings /></div>
+          )}
         </>
       )}
 
-      {tab === 'ladies' && (
-        <div className="mt">
-          <RankingsTable
-            data={LADIES_S1}
-            title="Ladies Franchise League · Season 1 — Champions: Lunar Lillies"
-            note="53 players · Lunar Lillies won Season 1"
-          />
-        </div>
+      {/* ── LADIES ── */}
+      {league === 'ladies' && (
+        <>
+          <div className="tabbar mt">
+            <button className={ladiesSeason === 's1' ? 'on' : ''} onClick={() => setLadiesSeason('s1')}>Season 1</button>
+            <button className={ladiesSeason === 's2' ? 'on' : ''} onClick={() => setLadiesSeason('s2')}>Season 2</button>
+          </div>
+          {ladiesSeason === 's1' && (
+            <div className="mt">
+              <RankTable
+                data={LADIES_S1}
+                champion={{ name: 'Lunar Lillies', logo: '/logos/lunar-lillies.webp' }}
+              />
+            </div>
+          )}
+          {ladiesSeason === 's2' && (
+            <div className="mt">
+              <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>
+                <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20, marginBottom: 8 }}>Ladies Season 2</div>
+                <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Season 2 is upcoming — stats will appear here once play begins.</p>
+                <Link to="/register" className="btn gold">Register Now →</Link>
+              </div>
+            </div>
+          )}
+        </>
       )}
 
-      {tab === 'youth' && (
+      {/* ── YOUTH ── */}
+      {league === 'youth' && (
         <div className="mt">
           <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}>
-            <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20, marginBottom: 8 }}>Youth Rankings</div>
-            <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Youth competition historical rankings will appear here.</p>
+            <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20, marginBottom: 8 }}>Youth Championship</div>
+            <p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Youth competition stats will appear here once the championship launches.</p>
             <span className="chip">Coming Soon</span>
           </div>
         </div>

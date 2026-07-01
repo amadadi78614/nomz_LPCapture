@@ -17,7 +17,7 @@ import {
   RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
 } from './pages/leagues';
 import UnityCup from './pages/UnityCup';
-import { Leagues } from './pages/Leagues';
+import { Leagues } from './pages/leagues_new';
 import { Cups } from './pages/Cups';
 
 function ScrollTop() {

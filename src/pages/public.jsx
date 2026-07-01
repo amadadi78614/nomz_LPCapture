@@ -420,27 +420,97 @@ function HomeStyles() {
 
 /* ====================== MATCH CENTRE (hub) ===================== */
 export function MatchCentre() {
-  const [tab, setTab] = useState('live');
-  const groups = {
-    live: FIXTURES.filter((f) => f.status === 'live'),
-    fixtures: FIXTURES.filter((f) => f.status === 'scheduled'),
-    results: FIXTURES.filter((f) => f.status === 'final').slice().reverse(),
-  };
+  const [tab, setTab] = useState('results');
+  const [mdFilter, setMdFilter] = useState('all');
+
+  const live = FIXTURES.filter((f) => f.status === 'live');
+  const allResults = FIXTURES.filter((f) => f.status === 'final').slice().reverse();
+  const allFixtures = FIXTURES.filter((f) => f.status === 'scheduled');
+  const rounds = [...new Set(FIXTURES.map((f) => f.round))].sort((a, b) => a - b);
+
+  const filterByMd = (list) => mdFilter === 'all' ? list : list.filter((f) => f.round === Number(mdFilter));
+
+  const results = filterByMd(allResults);
+  const fixtures = filterByMd(allFixtures);
+
   return (
     <div className="page">
-      <h1 className="display">Match Centre</h1>
-      <div className="tabbar mt">
-        {['live', 'fixtures', 'results'].map((t) => (
-          <button key={t} className={tab === t ? 'on' : ''} onClick={() => setTab(t)}>
-            {t === 'live' ? '● Live' : t[0].toUpperCase() + t.slice(1)}
-          </button>
-        ))}
+      <div className="row spread" style={{ marginBottom: 4 }}>
+        <h1 className="display" style={{ margin: 0 }}>Match Centre</h1>
+        {live.length > 0 && <span className="chip" style={{ color: 'var(--live)', borderColor: 'var(--live)', animation: 'tvpulse 2s infinite' }}>● {live.length} Live</span>}
       </div>
-      <div className="grid cols-2 mt">
-        {tab === 'live' && groups.live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}
-        {tab === 'fixtures' && groups.fixtures.map((f) => <FixtureRow key={f.id} fixture={f} />)}
-        {tab === 'results' && groups.results.map((f) => <ResultCard key={f.id} fixture={f} />)}
-        {tab === 'live' && groups.live.length === 0 && <p className="muted">No matches in play. Next matchnight is in the fixtures tab.</p>}
+
+      {/* Tabs */}
+      <div className="tabbar mt">
+        {live.length > 0 && <button className={tab === 'live' ? 'on' : ''} onClick={() => setTab('live')}>● Live</button>}
+        <button className={tab === 'results' ? 'on' : ''} onClick={() => setTab('results')}>Results</button>
+        <button className={tab === 'fixtures' ? 'on' : ''} onClick={() => setTab('fixtures')}>Fixtures</button>
+      </div>
+
+      {/* Match Day filter */}
+      {(tab === 'results' || tab === 'fixtures') && (
+        <div className="row" style={{ gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
+          <button className={`chip ${mdFilter === 'all' ? 'on' : ''}`} style={{ cursor: 'pointer', fontWeight: mdFilter === 'all' ? 700 : 400 }} onClick={() => setMdFilter('all')}>All</button>
+          {rounds.map((r) => (
+            <button key={r} className={`chip ${mdFilter === String(r) ? 'on' : ''}`} style={{ cursor: 'pointer', fontWeight: mdFilter === String(r) ? 700 : 400 }} onClick={() => setMdFilter(String(r))}>MD{r}</button>
+          ))}
+        </div>
+      )}
+
+      <div className="mt">
+        {tab === 'live' && (
+          <div className="grid cols-2">
+            {live.length === 0
+              ? <p className="muted">No matches live right now.</p>
+              : live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}
+          </div>
+        )}
+
+        {tab === 'results' && (
+          <>
+            {results.length === 0
+              ? <p className="muted">No results for this match day.</p>
+              : rounds.filter((r) => mdFilter === 'all' || r === Number(mdFilter)).map((r) => {
+                  const mdResults = results.filter((f) => f.round === r);
+                  if (mdResults.length === 0) return null;
+                  return (
+                    <div key={r} style={{ marginBottom: 20 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                        <span className="eyebrow" style={{ fontSize: 11 }}>Match Day {r}</span>
+                        <span className="muted" style={{ fontSize: 11 }}>{new Date(mdResults[0].start).toLocaleDateString('en-ZA', { weekday: 'short', day: 'numeric', month: 'short' })}</span>
+                      </div>
+                      <div className="grid cols-2">
+                        {mdResults.map((f) => <ResultCard key={f.id} fixture={f} />)}
+                      </div>
+                    </div>
+                  );
+                })
+            }
+          </>
+        )}
+
+        {tab === 'fixtures' && (
+          <>
+            {fixtures.length === 0
+              ? <div className="card" style={{ textAlign: 'center', padding: '32px', color: 'var(--muted)' }}>No upcoming fixtures scheduled.</div>
+              : rounds.filter((r) => mdFilter === 'all' || r === Number(mdFilter)).map((r) => {
+                  const mdFixtures = fixtures.filter((f) => f.round === r);
+                  if (mdFixtures.length === 0) return null;
+                  return (
+                    <div key={r} style={{ marginBottom: 20 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+                        <span className="eyebrow" style={{ fontSize: 11 }}>Match Day {r}</span>
+                        <span className="muted" style={{ fontSize: 11 }}>{new Date(mdFixtures[0].start).toLocaleDateString('en-ZA', { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}</span>
+                      </div>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                        {mdFixtures.map((f) => <FixtureRow key={f.id} fixture={f} />)}
+                      </div>
+                    </div>
+                  );
+                })
+            }
+          </>
+        )}
       </div>
     </div>
   );
@@ -831,73 +901,172 @@ export function Players() {
 export function PlayerProfile() {
   const { id } = useParams();
   const p = playerById(id);
-  if (!p) return <div className="page"><p className="muted">Player not found.</p></div>;
+  if (!p) return <div className="page"><p className="muted">Player not found.</p><Link to="/players" className="btn ghost mt">← All Players</Link></div>;
   const fr = franchiseById(p.franchise_id);
   const t = tier(p.lp_rating);
   const wpct = winPct(p.stats);
   const partner = bestPartner(p.id);
+
+  // Form guide — last 6 rubbers this player was involved in
+  const playerRubbers = FIXTURES
+    .filter((f) => f.status === 'final' && f.score?.rubbers)
+    .flatMap((f) => f.score.rubbers
+      .filter((r) => r.homeIds?.includes(p.id) || r.awayIds?.includes(p.id))
+      .map((r) => {
+        const isHome = r.homeIds?.includes(p.id);
+        return { result: r.winner === (isHome ? 'home' : 'away') ? 'W' : 'L', fixture: f };
+      })
+    ).slice(-6).reverse();
+
+  // All-time stats summary
+  const setWinPct = p.stats.sets_won + p.stats.sets_lost > 0
+    ? Math.round((p.stats.sets_won / (p.stats.sets_won + p.stats.sets_lost)) * 100)
+    : 0;
+
+  // Matches played
+  const matchesPlayed = FIXTURES.filter((f) => f.status === 'final' && f.score?.rubbers &&
+    f.score.rubbers.some((r) => r.homeIds?.includes(p.id) || r.awayIds?.includes(p.id)));
+
   return (
     <div className="page">
-      <div className="hero" style={{ '--stripe': stripeVar(fr.id) }}>
-        <div className="row" style={{ gap: 16, flexWrap: 'wrap' }}>
-          <span className="avatar" style={{ width: 72, height: 72, fontSize: 26, border: `2px solid ${stripeVar(fr.id).replace('var(', '').replace(')', '') ? '' : ''}`, borderColor: 'var(--line-strong)' }}>
+      {/* ── HERO ── */}
+      <div style={{ borderLeft: `4px solid var(--fr-${fr.id})`, paddingLeft: 16, marginBottom: 20 }}>
+        <Link to={`/franchise/${fr.id}`} className="muted" style={{ fontSize: 12 }}>← {fr.name}</Link>
+        <div className="row" style={{ gap: 16, marginTop: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+          <span className="avatar" style={{ width: 72, height: 72, fontSize: 26, background: `var(--fr-${fr.id})22`, border: `2px solid var(--fr-${fr.id})` }}>
             {p.name.split(' ').map((w) => w[0]).join('')}
           </span>
           <div>
-            <span className="eyebrow">{fr.name} · {p.tier} · {p.role === 'captain' ? 'Captain' : 'Player'}</span>
-            <h1 className="display">{p.name}</h1>
-            <div className="row mt" style={{ gap: 8 }}>
-              <span className="lp-badge">LP {p.lp_rating}</span>
-              <span className="chip" style={{ color: t.color }}>{t.label}</span>
-              <span className="chip">{p.stats.wins}-{p.stats.losses}</span>
+            <div className="row" style={{ gap: 6, flexWrap: 'wrap', marginBottom: 4 }}>
+              <span className="chip" style={{ fontSize: 10 }}>{p.tier}</span>
+              {p.role === 'captain' && <span className="chip" style={{ color: 'var(--gold)', borderColor: 'var(--gold)', fontSize: 10 }}>© Captain</span>}
+              <span className="chip" style={{ color: t.color, fontSize: 10 }}>{t.label}</span>
             </div>
-            <a className="wa-share" target="_blank" rel="noreferrer"
-              href={`https://wa.me/?text=${encodeURIComponent(`${p.name} — LP Rating ${p.lp_rating}, ${p.stats.wins}-${p.stats.losses}, ${p.stats.mvp_points} MVP pts on Lowveld Padel. ${typeof window !== 'undefined' ? window.location.href : ''}`)}`}>
-              ✆ Share to WhatsApp
-            </a>
-            <style>{`.wa-share{display:inline-flex;align-items:center;gap:6px;margin-top:10px;background:#25D366;color:#06270f;font-weight:700;font-size:12px;padding:5px 12px;border-radius:999px;}`}</style>
+            <h1 className="display" style={{ margin: '2px 0 6px', fontSize: 'clamp(20px,5vw,28px)' }}>{p.name}</h1>
+            <div className="row" style={{ gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ fontFamily: 'var(--display)', fontSize: 22, color: 'var(--gold)' }}>LP {p.lp_rating}</span>
+              <span className="muted" style={{ fontSize: 13 }}>{p.stats.wins}W – {p.stats.losses}L</span>
+              <span style={{ color: 'var(--gold)', fontSize: 13 }}>★ {p.stats.mvp_points} MVP</span>
+            </div>
           </div>
         </div>
+        <a className="wa-share" target="_blank" rel="noreferrer"
+          href={`https://wa.me/?text=${encodeURIComponent(`${p.name} — LP ${p.lp_rating} · ${p.stats.wins}W-${p.stats.losses}L · ★${p.stats.mvp_points} MVP pts | lowveldpadel.co.za`)}`}
+          style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 12, background: '#25D366', color: '#06270f', fontWeight: 700, fontSize: 12, padding: '6px 14px', borderRadius: 999, textDecoration: 'none' }}>
+          ✆ Share to WhatsApp
+        </a>
       </div>
-      <div className="kpis mt">
+
+      {/* ── STAT BAR ── */}
+      <div className="kpis" style={{ marginBottom: 16 }}>
         <div className="kpi"><div className="v">{p.stats.played}</div><div className="l">Matches</div></div>
-        <div className="kpi"><div className="v">{wpct}%</div><div className="l">Win rate</div></div>
-        <div className="kpi"><div className="v">{p.stats.rubbers_won}</div><div className="l">Rubbers won</div></div>
-        <div className="kpi"><div className="v">{p.stats.bonus_points}</div><div className="l">Bonus points</div></div>
+        <div className="kpi"><div className="v" style={{ color: wpct >= 60 ? 'var(--win)' : 'var(--text)' }}>{wpct}%</div><div className="l">Win rate</div></div>
+        <div className="kpi"><div className="v">{p.stats.rubbers_won}</div><div className="l">Rubbers</div></div>
+        <div className="kpi"><div className="v" style={{ color: 'var(--gold)' }}>{p.stats.bonus_points}</div><div className="l">Bonus pts</div></div>
       </div>
-      {partner && (
-        <Link to={`/player/${partner.player.id}`} className="card stripe mt" style={{ '--stripe': stripeVar(fr.id), display: 'block' }}>
-          <p className="eyebrow" style={{ marginBottom: 6 }}>Best partnership</p>
-          <div className="row spread">
-            <span className="row" style={{ gap: 10 }}>
-              <span className="avatar" style={{ width: 32, height: 32, fontSize: 11 }}>{partner.player.name.split(' ').map((w) => w[0]).join('')}</span>
-              <b>{partner.player.name}</b>
-            </span>
-            <span className="num"><b style={{ color: 'var(--win)' }}>{partner.won}</b><span className="muted">/{partner.played} · {Math.round(partner.pct * 100)}%</span></span>
+
+      {/* ── RECENT FORM ── */}
+      {playerRubbers.length > 0 && (
+        <div className="card" style={{ marginBottom: 12 }}>
+          <p className="eyebrow" style={{ marginBottom: 10 }}>Recent Form</p>
+          <div className="row" style={{ gap: 6 }}>
+            {playerRubbers.map((r, i) => (
+              <Link key={i} to={`/match/${r.fixture.id}`}
+                style={{ width: 32, height: 32, borderRadius: 8, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 13, textDecoration: 'none',
+                  background: r.result === 'W' ? 'rgba(34,197,94,.15)' : 'rgba(239,68,68,.15)',
+                  border: `1px solid ${r.result === 'W' ? 'var(--win)' : 'var(--loss)'}`,
+                  color: r.result === 'W' ? 'var(--win)' : 'var(--loss)' }}>
+                {r.result}
+              </Link>
+            ))}
+            <span className="muted" style={{ fontSize: 11, alignSelf: 'center', marginLeft: 4 }}>← most recent</span>
           </div>
-        </Link>
+        </div>
       )}
-      <div className="grid cols-2 mt">
+
+      {/* ── STATS GRID ── */}
+      <div className="grid cols-2" style={{ gap: 10, marginBottom: 12 }}>
         <div className="card">
-          <p className="eyebrow" style={{ marginBottom: 10 }}>Season form</p>
-          {[['Rubbers won', p.stats.rubbers_won, 6], ['Sets won', p.stats.sets_won, 12], ['MVP points', p.stats.mvp_points, 35], ['Bonus points (4-0 wins)', p.stats.bonus_points, 4]].map(([l, v, max]) => (
-            <div className="statline" key={l}>
-              <span style={{ fontSize: 13 }}>{l}</span><b className="num">{v}</b>
-              <div className="bar"><i style={{ width: `${Math.min(100, (v / max) * 100)}%` }} /></div>
+          <p className="eyebrow" style={{ marginBottom: 10 }}>Season Stats</p>
+          {[
+            ['Matches played', p.stats.played],
+            ['Rubbers won', p.stats.rubbers_won],
+            ['Sets won', p.stats.sets_won],
+            ['Games won', p.stats.games_won],
+            ['Bonus points', p.stats.bonus_points],
+            ['MVP points', p.stats.mvp_points],
+          ].map(([label, val]) => (
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '5px 0', borderBottom: '1px solid var(--line)', fontSize: 13 }}>
+              <span className="muted">{label}</span>
+              <b>{val}</b>
             </div>
           ))}
         </div>
         <div className="card">
-          <p className="eyebrow" style={{ marginBottom: 10 }}>Franchise</p>
-          <Link to={`/franchise/${fr.id}`} className="row">
-            <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
-            <div>
-              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17 }}>{fr.name}</b>
-              <div className="muted" style={{ fontSize: 12 }}>{fr.league === 'mens' ? "Men's" : 'Ladies'} League · {fr.venue}</div>
+          <p className="eyebrow" style={{ marginBottom: 10 }}>Performance</p>
+          {[
+            ['Win rate', `${wpct}%`, wpct, 100],
+            ['Set win rate', `${setWinPct}%`, setWinPct, 100],
+            ['LP Rating', p.lp_rating, p.lp_rating - 1200, 400],
+          ].map(([label, display, val, max]) => (
+            <div key={label} style={{ marginBottom: 10 }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12, marginBottom: 4 }}>
+                <span className="muted">{label}</span>
+                <b style={{ color: 'var(--gold)' }}>{display}</b>
+              </div>
+              <div style={{ height: 4, background: 'var(--line)', borderRadius: 2, overflow: 'hidden' }}>
+                <div style={{ height: '100%', width: `${Math.min(100, Math.max(0, (val / max) * 100))}%`, background: 'var(--gold)', borderRadius: 2, transition: 'width .4s' }} />
+              </div>
             </div>
-          </Link>
+          ))}
         </div>
       </div>
+
+      {/* ── BEST PARTNERSHIP ── */}
+      {partner && (
+        <Link to={`/player/${partner.player.id}`} className="card stripe" style={{ '--stripe': stripeVar(fr.id), display: 'block', marginBottom: 12 }}>
+          <p className="eyebrow" style={{ marginBottom: 8 }}>Best Partnership</p>
+          <div className="row spread">
+            <div className="row" style={{ gap: 10 }}>
+              <span className="avatar" style={{ width: 36, height: 36, fontSize: 12 }}>{partner.player.name.split(' ').map((w) => w[0]).join('')}</span>
+              <div>
+                <b style={{ fontSize: 14 }}>{partner.player.name}</b>
+                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(partner.player.franchise_id).name}</div>
+              </div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <b style={{ color: 'var(--win)', fontSize: 16 }}>{partner.won}/{partner.played}</b>
+              <div className="muted" style={{ fontSize: 11 }}>{Math.round(partner.pct * 100)}% win rate</div>
+            </div>
+          </div>
+        </Link>
+      )}
+
+      {/* ── FRANCHISE ── */}
+      <div className="card" style={{ marginBottom: 12 }}>
+        <p className="eyebrow" style={{ marginBottom: 8 }}>Franchise</p>
+        <Link to={`/franchise/${fr.id}`} className="row" style={{ gap: 12 }}>
+          <img src={fr.logo} alt="" style={{ width: 48, height: 48, objectFit: 'contain' }} />
+          <div>
+            <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{fr.name}</b>
+            <div className="muted" style={{ fontSize: 12 }}>Owner: {fr.owner}</div>
+            <div className="muted" style={{ fontSize: 12 }}>Venue: {fr.venue}</div>
+          </div>
+        </Link>
+      </div>
+
+      {/* ── MATCH HISTORY ── */}
+      {matchesPlayed.length > 0 && (
+        <div>
+          <SectionHead title="Match History" />
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {matchesPlayed.slice(0, 5).map((f) => <ResultCard key={f.id} fixture={f} />)}
+          </div>
+          {matchesPlayed.length > 5 && (
+            <Link to="/live" className="btn ghost" style={{ marginTop: 10, display: 'block', textAlign: 'center' }}>View all results →</Link>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -977,63 +1146,161 @@ export function Franchises() {
 export function FranchiseHub() {
   const { id } = useParams();
   const fr = franchiseById(id);
+  const [tab, setTab] = useState('squad');
   const squad = PLAYERS.filter((p) => p.franchise_id === id).sort((a, b) => a.tier.localeCompare(b.tier) || b.lp_rating - a.lp_rating);
+  const captain = squad.find((p) => p.role === 'captain');
   const row = STANDINGS[fr.league]?.franchise?.find((r) => r.franchise_id === id);
   const pos = (STANDINGS[fr.league]?.franchise?.findIndex((r) => r.franchise_id === id) ?? -1) + 1;
-  const fixtures = FIXTURES.filter((f) => f.home === id || f.away === id);
-  const form = teamForm(id);
+  const fixtures = FIXTURES.filter((f) => (f.home === id || f.away === id));
+  const results = fixtures.filter((f) => f.status === 'final').slice().reverse();
+  const upcoming = fixtures.filter((f) => f.status === 'scheduled');
+  const form = teamForm(id, 6);
+
+  const topPlayers = [...squad].filter((p) => p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points).slice(0, 3);
+
   return (
     <div className="page">
-      <div className="hero" style={{ borderLeft: `4px solid`, borderLeftColor: `var(--fr-${id})` }}>
-        <div className="row" style={{ gap: 16, flexWrap: 'wrap' }}>
-          <img src={fr.logo} alt="" style={{ width: 84, height: 84, objectFit: 'contain' }} />
-          <div>
-            <span className="eyebrow">{fr.league === 'mens' ? "Men's" : 'Ladies'} League · {fr.venue}</span>
-            <h1 className="display">{fr.name}</h1>
+      {/* ── HERO ── */}
+      <div style={{ borderLeft: `4px solid var(--fr-${id})`, paddingLeft: 16, paddingBottom: 4, marginBottom: 16 }}>
+        <div className="row" style={{ gap: 16, flexWrap: 'wrap', alignItems: 'center' }}>
+          <img src={fr.logo} alt="" style={{ width: 80, height: 80, objectFit: 'contain' }} />
+          <div style={{ flex: 1 }}>
+            <span className="eyebrow">{fr.league === 'mens' ? "Men's" : 'Ladies'} Franchise League · {fr.venue}</span>
+            <h1 className="display" style={{ margin: '4px 0 6px', fontSize: 'clamp(20px,5vw,30px)' }}>{fr.name}</h1>
             {fr.owner && fr.owner !== 'Franchise Owner' && (
-              <p className="muted" style={{ margin: '2px 0 0', fontSize: 13 }}>
+              <p className="muted" style={{ margin: '0 0 8px', fontSize: 13 }}>
                 Owner: <b style={{ color: 'var(--text)' }}>{fr.owner}</b>
                 {fr.ownerBrand && <span> · {fr.ownerBrand}</span>}
               </p>
             )}
             {row && (
-              <div className="row mt" style={{ gap: 8, flexWrap: 'wrap' }}>
-                <span className="chip">#{pos} on the table</span>
-                <span className="chip">{row.won}W – {row.lost}L</span>
-                <span className="chip">{row.points} pts</span>
-                {form.length > 0 && <span className="form">{form.map((f, k) => <i key={k} className={f === 'W' ? 'w' : 'l'}>{f}</i>)}</span>}
+              <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>
+                <span className="chip" style={{ color: pos <= 4 ? 'var(--win)' : 'var(--muted)' }}>#{pos} {pos <= 4 ? '· Finals spot' : ''}</span>
+                <span className="chip">{row.played}P · {row.won}W · {row.lost}L</span>
+                <span className="chip" style={{ color: 'var(--gold)' }}>{row.points} pts</span>
+                {row.bp > 0 && <span className="chip">{row.bp} bonus pts</span>}
               </div>
             )}
           </div>
         </div>
+
+        {/* Form guide */}
+        {form.length > 0 && (
+          <div className="row" style={{ gap: 5, marginTop: 12 }}>
+            <span className="muted" style={{ fontSize: 11, marginRight: 4 }}>Form:</span>
+            {form.map((r, i) => (
+              <span key={i} style={{ width: 26, height: 26, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: 12,
+                background: r === 'W' ? 'rgba(34,197,94,.15)' : r === 'L' ? 'rgba(239,68,68,.15)' : 'rgba(199,154,62,.15)',
+                border: `1px solid ${r === 'W' ? 'var(--win)' : r === 'L' ? 'var(--loss)' : 'var(--gold)'}`,
+                color: r === 'W' ? 'var(--win)' : r === 'L' ? 'var(--loss)' : 'var(--gold)' }}>
+                {r}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
-      <SectionHead title="Squad" />
-      <div className="grid cols-3">
-        {squad.map((p) => (
-          <Link key={p.id} to={`/player/${p.id}`} className="card row spread" style={{ padding: 12 }}>
-            <span className="row">
-              <span className="avatar" style={{ width: 34, height: 34, fontSize: 12 }}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
-              <span>
-                <b style={{ fontSize: 14 }}>{p.name}</b> <span className="chip" style={{ padding: '1px 6px', fontSize: 10 }}>{p.tier}</span> {p.role === 'captain' && <span className="gold">©</span>}
-              </span>
-            </span>
-            <span className="num gold">{p.lp_rating}</span>
-          </Link>
+      {/* ── QUICK STATS ── */}
+      {row && (
+        <div className="kpis" style={{ marginBottom: 16 }}>
+          <div className="kpi"><div className="v" style={{ color: 'var(--gold)' }}>{row.points}</div><div className="l">Points</div></div>
+          <div className="kpi"><div className="v" style={{ color: 'var(--win)' }}>{row.won}</div><div className="l">Wins</div></div>
+          <div className="kpi"><div className="v" style={{ color: 'var(--loss)' }}>{row.lost}</div><div className="l">Losses</div></div>
+          <div className="kpi"><div className="v">{row.bp}</div><div className="l">Bonus pts</div></div>
+        </div>
+      )}
+
+      {/* ── TABS ── */}
+      <div className="tabbar" style={{ marginBottom: 16 }}>
+        {[['squad','Squad'],['results','Results'],['fixtures','Fixtures']].map(([k,lbl]) => (
+          <button key={k} className={tab === k ? 'on' : ''} onClick={() => setTab(k)}>{lbl}</button>
         ))}
       </div>
 
-      <SectionHead title="Schedule & results" />
-      <div className="grid cols-2">
-        {fixtures.map((f) => f.status === 'final'
-          ? <ResultCard key={f.id} fixture={f} />
-          : f.status === 'live'
-            ? <LiveScoreCard key={f.id} fixture={f} compact />
-            : <FixtureRow key={f.id} fixture={f} />)}
-      </div>
+      {/* ── SQUAD ── */}
+      {tab === 'squad' && (
+        <>
+          {captain && (
+            <Link to={`/player/${captain.id}`} className="card stripe" style={{ '--stripe': stripeVar(id), display: 'block', marginBottom: 12 }}>
+              <span className="eyebrow">Captain</span>
+              <div className="row" style={{ gap: 12, marginTop: 6 }}>
+                <span className="avatar" style={{ width: 44, height: 44, fontSize: 15 }}>{captain.name.split(' ').map((w) => w[0]).join('')}</span>
+                <div>
+                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{captain.name}</b>
+                  <div className="muted" style={{ fontSize: 12 }}>{captain.tier} · LP {captain.lp_rating}</div>
+                </div>
+              </div>
+            </Link>
+          )}
+
+          {['P1','P2','P3'].map((tier) => {
+            const tierPlayers = squad.filter((p) => p.tier === tier);
+            if (tierPlayers.length === 0) return null;
+            return (
+              <div key={tier} style={{ marginBottom: 16 }}>
+                <p className="eyebrow" style={{ marginBottom: 8 }}>{tier} · {['Padel 24','Play 360','Play 360'][['P1','P2','P3'].indexOf(tier)]}</p>
+                <div className="grid cols-2">
+                  {tierPlayers.map((p) => (
+                    <Link key={p.id} to={`/player/${p.id}`} className="card row spread" style={{ padding: 12, gap: 10 }}>
+                      <div className="row" style={{ gap: 8 }}>
+                        <span className="avatar" style={{ width: 32, height: 32, fontSize: 11 }}>{p.name.split(' ').map((w) => w[0]).join('')}</span>
+                        <div>
+                          <b style={{ fontSize: 13, display: 'block' }}>{p.name}</b>
+                          <span className="muted" style={{ fontSize: 11 }}>
+                            {p.stats.played > 0 ? `${p.stats.wins}W-${p.stats.losses}L · ★${p.stats.mvp_points}` : 'No matches yet'}
+                          </span>
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                        <b style={{ color: 'var(--gold)', fontSize: 14 }}>{p.lp_rating}</b>
+                        <div className="muted" style={{ fontSize: 10 }}>LP Rating</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+
+          {topPlayers.length > 0 && (
+            <div className="card" style={{ marginTop: 8 }}>
+              <p className="eyebrow" style={{ marginBottom: 10 }}>Top Performers</p>
+              {topPlayers.map((p, i) => (
+                <Link key={p.id} to={`/player/${p.id}`} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: i < topPlayers.length - 1 ? '1px solid var(--line)' : 'none', textDecoration: 'none' }}>
+                  <span className="row" style={{ gap: 8 }}>
+                    <b className="muted" style={{ width: 16, fontSize: 12 }}>{i + 1}</b>
+                    <span style={{ fontSize: 13 }}>{p.name}</span>
+                    <span className="muted" style={{ fontSize: 11 }}>{p.tier}</span>
+                  </span>
+                  <span style={{ color: 'var(--gold)', fontSize: 13, fontWeight: 700 }}>★ {p.stats.mvp_points}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* ── RESULTS ── */}
+      {tab === 'results' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {results.length === 0
+            ? <p className="muted">No results yet.</p>
+            : results.map((f) => <ResultCard key={f.id} fixture={f} />)}
+        </div>
+      )}
+
+      {/* ── FIXTURES ── */}
+      {tab === 'fixtures' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {upcoming.length === 0
+            ? <p className="muted">No upcoming fixtures.</p>
+            : upcoming.map((f) => <FixtureRow key={f.id} fixture={f} />)}
+        </div>
+      )}
     </div>
   );
 }
+
 
 /* ====================== RANKINGS / MVP / LP ===================== */
 export function Rankings() {

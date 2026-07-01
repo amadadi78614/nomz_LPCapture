@@ -516,29 +516,11 @@ function PlaceholderSeason({ season, league }) {
   );
 }
 
-/* ══════════════════════════════════════════════
-   MEN'S FRANCHISE LEAGUE
-══════════════════════════════════════════════ */
-function MensLeague() {
-  const [season, setSeason] = useState('s3');
-  const [subTab, setSubTab] = useState('standings');
-  const [tier2, setTier2] = useState('franchise');
 
-  const mensFranchises = FRANCHISES.filter((f) => f.league === 'mens');
+function MensS2({ subTab, setSubTab }) {
+  const [s2div, setS2div] = useState('premier');
 
-  return (
-    <>
-      {/* Season selector */}
-      <div className="tabbar mt">
-        {[['s1', 'Season 1'], ['s2', 'Season 2'], ['s3', 'Season 3']].map(([k, lbl]) => (
-          <button key={k} className={season === k ? 'on' : ''} onClick={() => { setSeason(k); setSubTab('standings'); setTier2('franchise'); }}>{lbl}</button>
-        ))}
-      </div>
-
-      {/* S1 / S2 placeholders */}
-      {season === 's1' && <div className="mt"><PlaceholderSeason season="Season 1" league="Men's Franchise League" /></div>}
-      {season === 's2' && (() => {
-        const MENS_S2_PREMIER = [
+  const MENS_S2_PREMIER = [
   { rank: 1, name: 'Yusuf Packery', team: 'Desert Falcons', played: 6, won: 6, lost: 0, setsWon: 17, gamesWon: 128 },
   { rank: 2, name: 'Heinrich Coomans', team: 'Sonic Viboras', played: 7, won: 5, lost: 2, setsWon: 16, gamesWon: 141 },
   { rank: 3, name: 'Uwaiz Patel', team: 'Desert Falcons', played: 7, won: 5, lost: 2, setsWon: 15, gamesWon: 140 },
@@ -635,7 +617,7 @@ function MensLeague() {
   { rank: 94, name: 'Ruaan Naude', team: 'Avalanche Aces', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 40 },
   { rank: 95, name: 'Sikander Cassim', team: 'Baltic Blades', played: 4, won: 0, lost: 4, setsWon: 0, gamesWon: 27 },
 ];
-        const MENS_S2_CHAMP = [
+  const MENS_S2_CHAMP = [
   { rank: 1, name: 'Felix Lombard', team: 'Avalanche Aces', played: 7, won: 6, lost: 1, setsWon: 16, gamesWon: 140 },
   { rank: 2, name: 'Irshaad Mahomed', team: 'Sonic Viboras', played: 7, won: 6, lost: 1, setsWon: 16, gamesWon: 132 },
   { rank: 3, name: 'Etienne Grobler', team: 'Desert Falcons', played: 7, won: 6, lost: 1, setsWon: 15, gamesWon: 137 },
@@ -716,82 +698,105 @@ function MensLeague() {
   { rank: 78, name: 'Jay Nagar', team: 'Globo Boomerangs', played: 1, won: 0, lost: 1, setsWon: 0, gamesWon: 7 },
   { rank: 79, name: 'Noah Snell', team: 'Samurai Kicksmashers', played: 1, won: 0, lost: 1, setsWon: 0, gamesWon: 0 },
 ];
-        const [s2div, setS2div] = useState('premier');
-        return (
-          <>
-            <div className="tabbar mt">
-              {[['standings','Standings'],['franchises','Franchises'],['rankings','Rankings']].map(([k,lbl]) => (
-                <button key={k} className={subTab === k ? 'on' : ''} onClick={() => setSubTab(k)}>{lbl}</button>
-              ))}
-            </div>
-            {(subTab === 'standings' || subTab === 'franchises') && (
-              <div className="mt"><PlaceholderSeason season="Season 2" league="Men's Franchise League" /></div>
-            )}
-            {subTab === 'rankings' && (
-              <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-                <div className="tabbar">
-                  <button className={s2div === 'premier' ? 'on' : ''} onClick={() => setS2div('premier')}>Premier Division</button>
-                  <button className={s2div === 'champ' ? 'on' : ''} onClick={() => setS2div('champ')}>Championship Division</button>
-                </div>
-                {s2div === 'premier' && (
-                  <>
-                    <div className="card" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14 }}>
-                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Premier Division · Season 2</b>
-                      <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>95 players</p>
-                    </div>
-                    <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
-                      <table className="tbl">
-                        <thead><tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Sets</th><th className="num">Games</th></tr></thead>
-                        <tbody>
-                          {MENS_S2_PREMIER.map((p) => (
-                            <tr key={p.rank}>
-                              <td><span className="pos-badge">{p.rank}</span></td>
-                              <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
-                              <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
-                              <td className="num">{p.played}</td>
-                              <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
-                              <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
-                              <td className="num">{p.setsWon}</td>
-                              <td className="num">{p.gamesWon}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </>
-                )}
-                {s2div === 'champ' && (
-                  <>
-                    <div className="card" style={{ borderLeft: '3px solid var(--court)', paddingLeft: 14 }}>
-                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Championship Division · Season 2</b>
-                      <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>79 players</p>
-                    </div>
-                    <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
-                      <table className="tbl">
-                        <thead><tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Sets</th><th className="num">Games</th></tr></thead>
-                        <tbody>
-                          {MENS_S2_CHAMP.map((p) => (
-                            <tr key={p.rank}>
-                              <td><span className="pos-badge">{p.rank}</span></td>
-                              <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
-                              <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
-                              <td className="num">{p.played}</td>
-                              <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
-                              <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
-                              <td className="num">{p.setsWon}</td>
-                              <td className="num">{p.gamesWon}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </>
-                )}
+
+  return (
+    <>
+      <div className="tabbar mt">
+        {[['standings','Standings'],['franchises','Franchises'],['rankings','Rankings']].map(([k,lbl]) => (
+          <button key={k} className={subTab === k ? 'on' : ''} onClick={() => setSubTab(k)}>{lbl}</button>
+        ))}
+      </div>
+      {(subTab === 'standings' || subTab === 'franchises') && (
+        <div className="mt"><PlaceholderSeason season="Season 2" league="Men's Franchise League" /></div>
+      )}
+      {subTab === 'rankings' && (
+        <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div className="tabbar">
+            <button className={s2div === 'premier' ? 'on' : ''} onClick={() => setS2div('premier')}>Premier Division</button>
+            <button className={s2div === 'champ' ? 'on' : ''} onClick={() => setS2div('champ')}>Championship Division</button>
+          </div>
+          {s2div === 'premier' && (
+            <>
+              <div className="card" style={{ borderLeft: '3px solid var(--gold)', paddingLeft: 14 }}>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Premier Division · Season 2</b>
+                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>95 players</p>
               </div>
-            )}
-          </>
-        );
-      })()}
+              <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+                <table className="tbl">
+                  <thead><tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Sets</th><th className="num">Games</th></tr></thead>
+                  <tbody>
+                    {MENS_S2_PREMIER.map((p) => (
+                      <tr key={p.rank}>
+                        <td><span className="pos-badge">{p.rank}</span></td>
+                        <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
+                        <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
+                        <td className="num">{p.played}</td>
+                        <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
+                        <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
+                        <td className="num">{p.setsWon}</td>
+                        <td className="num">{p.gamesWon}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+          {s2div === 'champ' && (
+            <>
+              <div className="card" style={{ borderLeft: '3px solid var(--court)', paddingLeft: 14 }}>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Championship Division · Season 2</b>
+                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>79 players</p>
+              </div>
+              <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+                <table className="tbl">
+                  <thead><tr><th>#</th><th>Player</th><th>Team</th><th className="num">P</th><th className="num">W</th><th className="num">L</th><th className="num">Sets</th><th className="num">Games</th></tr></thead>
+                  <tbody>
+                    {MENS_S2_CHAMP.map((p) => (
+                      <tr key={p.rank}>
+                        <td><span className="pos-badge">{p.rank}</span></td>
+                        <td><b style={{ fontSize: 13 }}>{p.name}</b></td>
+                        <td className="muted" style={{ fontSize: 11 }}>{p.team}</td>
+                        <td className="num">{p.played}</td>
+                        <td className="num" style={{ color: 'var(--win)' }}>{p.won}</td>
+                        <td className="num" style={{ color: 'var(--loss)' }}>{p.lost}</td>
+                        <td className="num">{p.setsWon}</td>
+                        <td className="num">{p.gamesWon}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
+/* ══════════════════════════════════════════════
+   MEN'S FRANCHISE LEAGUE
+══════════════════════════════════════════════ */
+function MensLeague() {
+  const [season, setSeason] = useState('s3');
+  const [subTab, setSubTab] = useState('standings');
+  const [tier2, setTier2] = useState('franchise');
+
+  const mensFranchises = FRANCHISES.filter((f) => f.league === 'mens');
+
+  return (
+    <>
+      {/* Season selector */}
+      <div className="tabbar mt">
+        {[['s1', 'Season 1'], ['s2', 'Season 2'], ['s3', 'Season 3']].map(([k, lbl]) => (
+          <button key={k} className={season === k ? 'on' : ''} onClick={() => { setSeason(k); setSubTab('standings'); setTier2('franchise'); }}>{lbl}</button>
+        ))}
+      </div>
+
+      {/* S1 / S2 placeholders */}
+      {season === 's1' && <div className="mt"><PlaceholderSeason season="Season 1" league="Men's Franchise League" /></div>}
+      {season === 's2' && <MensS2 subTab={subTab} setSubTab={setSubTab} />}
 
       {/* S3 live */}
       {season === 's3' && (
@@ -959,8 +964,27 @@ function LadiesLeague() {
 
       {season === 's1' && (
         <>
-          {(subTab === 'standings' || subTab === 'franchises') && (
+          {subTab === 'standings' && (
             <div className="mt"><PlaceholderSeason season="Season 1" league="Ladies Franchise League" /></div>
+          )}
+          {subTab === 'franchises' && (
+            <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <div className="card" style={{ borderLeft: '3px solid #db2777', paddingLeft: 14 }}>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Season 1 Franchises</b>
+                <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>The same 6 franchises competed in Season 1</p>
+              </div>
+              <div className="grid cols-2">
+                {FRANCHISES.filter((f) => f.league === 'ladies').map((fr) => (
+                  <div key={fr.id} className="card row" style={{ gap: 12 }}>
+                    <img src={fr.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
+                    <div>
+                      <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{fr.name}</b>
+                      <div className="muted" style={{ fontSize: 11 }}>Ladies Franchise League · Season 1</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
           {subTab === 'rankings' && (
             <div className="mt" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>

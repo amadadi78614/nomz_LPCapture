@@ -5,6 +5,7 @@ import {
   Home, MatchCentre, MatchPage, Standings, Players, PlayerProfile,
   Franchises, FranchiseHub, Rankings, NewsCentre, SponsorCentre, More,
 } from './pages/public';
+import { Registration } from './pages/Registration';
 import {
   AdminDashboard, CaptainDashboard, CommissionerDashboard, SponsorAnalytics,
 } from './pages/dashboards';
@@ -62,6 +63,7 @@ export default function App() {
           <Route path="/commissioner" element={<CommissionerDashboard />} />
           <Route path="/sponsor-analytics" element={<SponsorAnalytics />} />
           <Route path="/unity-cup" element={<UnityCup />} />
+          <Route path="/register" element={<Registration />} />
           <Route path="*" element={<Home />} />
         </Routes>
         <BottomNav />

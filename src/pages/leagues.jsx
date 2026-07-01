@@ -6,9 +6,10 @@ import {
   PREDICTION_OPTIONS, PREDICTION_SCORING, PREDICTOR_BADGES, PREDICTION_LEADERBOARD,
   matchOfTheWeek, lpAiPredict, POWER_RANKINGS_WEEKLY, playerOfWeek,
   franchiseById, playerById, stripeVar, fanPotwCandidates,
+  STANDINGS, FRANCHISES, TIER_SPONSORS, POWER_RANKINGS,
 } from '../data/seed';
 import { communityLinks, waShare } from '../config/communityLinks';
-import { SectionHead, ComingSoon } from '../components/ui';
+import { SectionHead, ComingSoon, StandingsTable, SponsorRail } from '../components/ui';
 
 const legacyStripe = (id) => `var(--fr-${id})`;
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' }) : 'TBC';

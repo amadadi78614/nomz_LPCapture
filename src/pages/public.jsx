@@ -52,6 +52,37 @@ export function Home() {
         </div>
       </div>
 
+      {/* ============ LADIES REGISTRATION CTA ============ */}
+      <Link to="/register" style={{ display: 'block', textDecoration: 'none' }}>
+        <div style={{
+          background: 'linear-gradient(135deg, rgba(220,38,38,.15), rgba(220,38,38,.05))',
+          border: '2px solid var(--live)',
+          borderRadius: 'var(--r)',
+          padding: '16px 18px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 12,
+        }}>
+          <div>
+            <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 17, marginBottom: 3 }}>
+              Ladies League Season 2
+            </div>
+            <div style={{ color: 'var(--muted)', fontSize: 13 }}>
+              Registration is open — secure your spot now before it fills up.
+            </div>
+          </div>
+          <div style={{
+            background: 'var(--live)', color: '#fff', fontWeight: 800,
+            fontSize: 13, padding: '10px 16px', borderRadius: 8,
+            whiteSpace: 'nowrap', letterSpacing: '.04em',
+            flexShrink: 0,
+          }}>
+            Register →
+          </div>
+        </div>
+      </Link>
+
       {/* ============ LIVE CENTRE ============ */}
       {live.length > 0 ? (
         <>

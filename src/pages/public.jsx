@@ -47,63 +47,82 @@ export function Home() {
       <section className="hp-hero">
         <div className="hp-hero-glow" />
         <div className="hp-hero-noise" />
-        <div className="hp-hero-content">
-          {/* Eyebrow */}
-          <div className="hp-hero-eye">
-            {live.length > 0
-              ? <span className="hp-live-pill"><span className="hp-live-dot" />LIVE NOW · {live.length} MATCH{live.length > 1 ? 'ES' : ''}</span>
-              : <span className="hp-season-pill">SEASON 3 · MATCH DAY 7 · TITLE RACE</span>}
+        <div className="hp-hero-layout">
+          {/* LEFT — text content */}
+          <div className="hp-hero-content">
+            <div className="hp-hero-eye">
+              {live.length > 0
+                ? <span className="hp-live-pill"><span className="hp-live-dot" />LIVE NOW · {live.length} MATCH{live.length > 1 ? 'ES' : ''}</span>
+                : <span className="hp-season-pill">SEASON 3 · MATCH DAY 7 · TITLE RACE</span>}
+            </div>
+
+            <h1 className="hp-hero-h1">
+              <span className="hp-hero-word1">LOWVELD</span>
+              <span className="hp-hero-word2">PADEL</span>
+            </h1>
+            <p className="hp-hero-sub">The Home of Competitive Padel in Mpumalanga</p>
+
+            <div className="hp-hero-ctas">
+              <Link to="/live" className="hp-btn-primary">
+                {live.length > 0 ? '● Watch Live' : '● Match Centre'}
+              </Link>
+              <Link to="/leagues" className="hp-btn-secondary">Standings</Link>
+              <Link to="/leagues" className="hp-btn-secondary">Fixtures</Link>
+            </div>
           </div>
 
-          {/* Headline */}
-          <h1 className="hp-hero-h1">
-            <span className="hp-hero-word1">LOWVELD</span>
-            <span className="hp-hero-word2">PADEL</span>
-          </h1>
-          <p className="hp-hero-sub">The Home of Competitive Padel in Mpumalanga</p>
-
-          {/* CTAs */}
-          <div className="hp-hero-ctas">
-            <Link to="/live" className="hp-btn-primary">
-              {live.length > 0 ? '● Watch Live' : '● Match Centre'}
-            </Link>
-            <Link to="/leagues" className="hp-btn-secondary">Standings</Link>
-            <Link to="/leagues" className="hp-btn-secondary">Fixtures</Link>
+          {/* RIGHT — LP mark + stats */}
+          <div className="hp-hero-right">
+            <div className="hp-hero-emblem">
+              <img src="/brand/lp-mark.png" alt="Lowveld Padel" className="hp-hero-mark" />
+              <div className="hp-hero-emblem-glow" />
+            </div>
           </div>
+        </div>
 
-          {/* Stats strip */}
-          <div className="hp-hero-strip">
-            {leader && (
-              <div className="hp-strip-item">
-                <span className="hp-strip-label">LEAGUE LEADER</span>
+        {/* Stats strip — full width below */}
+        <div className="hp-hero-strip">
+          {leader && (
+            <div className="hp-strip-item">
+              <span className="hp-strip-label">LEAGUE LEADER</span>
+              <div className="hp-strip-val-row">
+                <img src={franchiseById(leader.franchise_id).logo} alt="" style={{ width: 18, height: 18, objectFit: 'contain' }} />
                 <span className="hp-strip-val" style={{ color: 'var(--gold)' }}>{franchiseById(leader.franchise_id).name}</span>
-                <span className="hp-strip-sub">{leader.points} pts</span>
               </div>
-            )}
-            <div className="hp-strip-div" />
-            {mvp && (
-              <div className="hp-strip-item">
-                <span className="hp-strip-label">MVP LEADER</span>
-                <span className="hp-strip-val" style={{ color: 'var(--win)' }}>{mvp.name.split(' ')[0]} {mvp.name.split(' ').slice(-1)}</span>
-                <span className="hp-strip-sub">★ {mvp.stats.mvp_points} pts</span>
-              </div>
-            )}
-            <div className="hp-strip-div" />
-            {nextFx ? (
-              <div className="hp-strip-item">
-                <span className="hp-strip-label">NEXT MATCH</span>
-                <span className="hp-strip-val" style={{ color: 'var(--court)' }}>
-                  {daysUntil > 0 ? `${daysUntil}d ${hoursUntil}h` : hoursUntil > 0 ? `${hoursUntil}h` : 'Today'}
-                </span>
-                <span className="hp-strip-sub">{franchiseById(nextFx.home).short || franchiseById(nextFx.home).name} v {franchiseById(nextFx.away).short || franchiseById(nextFx.away).name}</span>
-              </div>
-            ) : (
-              <div className="hp-strip-item">
-                <span className="hp-strip-label">SEASON</span>
-                <span className="hp-strip-val" style={{ color: 'var(--court)' }}>7 of 9 MDs</span>
-                <span className="hp-strip-sub">Title race live</span>
-              </div>
-            )}
+              <span className="hp-strip-sub">{leader.points} pts</span>
+            </div>
+          )}
+          <div className="hp-strip-div" />
+          {mvp && (
+            <div className="hp-strip-item">
+              <span className="hp-strip-label">MVP LEADER</span>
+              <span className="hp-strip-val" style={{ color: 'var(--win)' }}>{mvp.name.split(' ').slice(-1)[0]}</span>
+              <span className="hp-strip-sub">★ {mvp.stats.mvp_points} pts</span>
+            </div>
+          )}
+          <div className="hp-strip-div" />
+          {nextFx ? (
+            <div className="hp-strip-item">
+              <span className="hp-strip-label">NEXT FIXTURE</span>
+              <span className="hp-strip-val" style={{ color: 'var(--court)', fontSize: 'clamp(11px,2.5vw,15px)' }}>
+                {franchiseById(nextFx.home).short || franchiseById(nextFx.home).name.split(' ')[0]} v {franchiseById(nextFx.away).short || franchiseById(nextFx.away).name.split(' ')[0]}
+              </span>
+              <span className="hp-strip-sub">
+                {daysUntil > 0 ? `in ${daysUntil}d ${hoursUntil}h` : hoursUntil > 0 ? `in ${hoursUntil}h` : 'Today'} · {nextFx.court}
+              </span>
+            </div>
+          ) : (
+            <div className="hp-strip-item">
+              <span className="hp-strip-label">SEASON PROGRESS</span>
+              <span className="hp-strip-val" style={{ color: 'var(--court)' }}>MD 7 of 9</span>
+              <span className="hp-strip-sub">Title race on</span>
+            </div>
+          )}
+          <div className="hp-strip-div" />
+          <div className="hp-strip-item">
+            <span className="hp-strip-label">LP LEGACY</span>
+            <span className="hp-strip-val" style={{ color: 'var(--gold)' }}>● Live</span>
+            <span className="hp-strip-sub">MD 1 Complete</span>
           </div>
         </div>
       </section>
@@ -177,60 +196,130 @@ export function Home() {
       </section>
 
       {/* ════════════════════════════════════════
-          LEAGUE STANDINGS
+          LEAGUE STANDINGS — tabbed
       ════════════════════════════════════════ */}
-      <section className="hp-section">
-        <div className="hp-section-head">
-          <h2 className="hp-section-title">League Standings</h2>
-          <Link to="/leagues" className="hp-section-link">Full table →</Link>
-        </div>
-        <div className="hp-table-wrap">
-          <table className="hp-standings-tbl">
-            <thead>
-              <tr>
-                <th>#</th><th>Franchise</th>
-                <th>P</th><th>W</th><th>L</th><th>Pts</th>
-                <th className="hp-col-form">Form</th>
-              </tr>
-            </thead>
-            <tbody>
-              {sFr.slice(0, 7).map((r, i) => {
-                const fr = franchiseById(r.franchise_id);
-                const form = teamForm(r.franchise_id, 5);
-                const isTop4 = i < 4;
-                return (
-                  <tr key={r.franchise_id} className={`hp-standing-row ${isTop4 ? 'hp-row-qualify' : ''}`}>
-                    <td className="hp-pos-cell">
-                      <span className={`hp-pos ${isTop4 ? 'hp-pos-q' : ''}`}>{i + 1}</span>
-                    </td>
-                    <td>
-                      <Link to={`/franchise/${fr.id}`} className="hp-team-cell">
-                        <span className="hp-team-stripe" style={{ background: `var(--fr-${fr.id})` }} />
-                        <img src={fr.logo} alt={fr.name} className="hp-team-logo" />
-                        <span className="hp-team-name">{fr.name}</span>
-                      </Link>
-                    </td>
-                    <td className="hp-num">{r.played}</td>
-                    <td className="hp-num hp-col-w">{r.won}</td>
-                    <td className="hp-num">{r.lost}</td>
-                    <td className="hp-num hp-col-pts"><b style={{ color: isTop4 ? 'var(--gold)' : 'var(--text)' }}>{r.points}</b></td>
-                    <td className="hp-col-form">
-                      <span className="hp-form-pills">
-                        {form.map((res, fi) => (
-                          <span key={fi} className={`hp-form-pill hp-fp-${res}`}>{res}</span>
-                        ))}
-                      </span>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-          <div className="hp-table-foot">
-            <span className="hp-qualify-dot" /> Top 4 qualify for Finals Night
-          </div>
-        </div>
-      </section>
+      {(() => {
+        const [standTab, setStandTab] = React.useState('mens');
+        const legacySorted = [...LEGACY_STANDINGS].sort((a,b) => b.points - a.points || (b.gd||0) - (a.gd||0));
+        return (
+          <section className="hp-section">
+            <div className="hp-section-head">
+              <h2 className="hp-section-title">Standings</h2>
+              <Link to="/leagues" className="hp-section-link">Full tables →</Link>
+            </div>
+
+            {/* League tabs */}
+            <div className="hp-stand-tabs">
+              {[
+                ['mens', "Men's League"],
+                ['legacy', 'LP Legacy'],
+                ['ladies', 'Ladies'],
+              ].map(([key, label]) => (
+                <button
+                  key={key}
+                  className={`hp-stand-tab ${standTab === key ? 'hp-stand-tab-on' : ''}`}
+                  onClick={() => setStandTab(key)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {/* MEN'S */}
+            {standTab === 'mens' && (
+              <div className="hp-table-wrap">
+                <table className="hp-standings-tbl">
+                  <thead>
+                    <tr><th>#</th><th>Franchise</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th className="hp-col-form">Form</th></tr>
+                  </thead>
+                  <tbody>
+                    {sFr.slice(0, 7).map((r, i) => {
+                      const fr = franchiseById(r.franchise_id);
+                      const form = teamForm(r.franchise_id, 5);
+                      const isTop4 = i < 4;
+                      return (
+                        <tr key={r.franchise_id} className={`hp-standing-row ${isTop4 ? 'hp-row-qualify' : ''}`}>
+                          <td className="hp-pos-cell"><span className={`hp-pos ${isTop4 ? 'hp-pos-q' : ''}`}>{i + 1}</span></td>
+                          <td>
+                            <Link to={`/franchise/${fr.id}`} className="hp-team-cell">
+                              <span className="hp-team-stripe" style={{ background: `var(--fr-${fr.id})` }} />
+                              <img src={fr.logo} alt={fr.name} className="hp-team-logo" />
+                              <span className="hp-team-name">{fr.name}</span>
+                            </Link>
+                          </td>
+                          <td className="hp-num">{r.played}</td>
+                          <td className="hp-num hp-col-w">{r.won}</td>
+                          <td className="hp-num">{r.lost}</td>
+                          <td className="hp-num hp-col-pts"><b style={{ color: isTop4 ? 'var(--gold)' : 'var(--text)' }}>{r.points}</b></td>
+                          <td className="hp-col-form">
+                            <span className="hp-form-pills">
+                              {form.map((res, fi) => <span key={fi} className={`hp-form-pill hp-fp-${res}`}>{res}</span>)}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <div className="hp-table-foot"><span className="hp-qualify-dot" /> Top 4 qualify for Finals Night</div>
+              </div>
+            )}
+
+            {/* LEGACY */}
+            {standTab === 'legacy' && (
+              <div className="hp-table-wrap">
+                <table className="hp-standings-tbl">
+                  <thead>
+                    <tr><th>#</th><th>Franchise</th><th>P</th><th>W</th><th>L</th><th>MP</th><th>GD</th></tr>
+                  </thead>
+                  <tbody>
+                    {legacySorted.map((row, i) => {
+                      const fr = legacyFranchiseById(row.franchise_id);
+                      if (!fr) return null;
+                      const gd = row.gd || 0;
+                      return (
+                        <tr key={fr.id} className="hp-standing-row">
+                          <td className="hp-pos-cell"><span className="hp-pos">{i + 1}</span></td>
+                          <td>
+                            <Link to={`/legacy-franchise/${fr.id}`} className="hp-team-cell">
+                              <span className="hp-team-stripe" style={{ background: fr.primary }} />
+                              <img src={fr.logo} alt={fr.name} className="hp-team-logo" style={{ mixBlendMode: 'screen' }} />
+                              <span className="hp-team-name">{fr.name}</span>
+                            </Link>
+                          </td>
+                          <td className="hp-num">{row.played}</td>
+                          <td className="hp-num hp-col-w">{row.won}</td>
+                          <td className="hp-num">{row.lost}</td>
+                          <td className="hp-num hp-col-pts"><b style={{ color: 'var(--gold)' }}>{row.points}</b></td>
+                          <td className="hp-num" style={{ color: gd > 0 ? 'var(--win)' : gd < 0 ? 'var(--loss)' : 'var(--muted)' }}>
+                            {gd > 0 ? '+' : ''}{gd}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                <div className="hp-table-foot">MP = Match Points · GD = Game Difference · After MD 1</div>
+              </div>
+            )}
+
+            {/* LADIES */}
+            {standTab === 'ladies' && (
+              <div className="hp-table-wrap" style={{ textAlign: 'center', padding: '32px 20px' }}>
+                <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, color: '#db2777', marginBottom: 8 }}>
+                  Ladies Franchise League
+                </div>
+                <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16 }}>
+                  Season 2 is upcoming — standings will appear once play begins.
+                </p>
+                <Link to="/register" className="hp-btn-primary" style={{ background: '#db2777', display: 'inline-flex', fontSize: 13 }}>
+                  Register for Season 2 →
+                </Link>
+              </div>
+            )}
+          </section>
+        );
+      })()}
 
       {/* ════════════════════════════════════════
           UPCOMING EVENTS
@@ -394,6 +483,21 @@ export function Home() {
       </section>
 
       {/* ════════════════════════════════════════
+          UNITY CUP — ON HOLD
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <Link to="/unity-cup" className="hp-unity-banner">
+          <div className="hp-unity-flags">🇿🇦 <span style={{ color: 'var(--muted)', fontSize: 16 }}>vs</span> 🇸🇿</div>
+          <div className="hp-supercup-info">
+            <span className="hp-supercup-eye" style={{ color: 'rgba(154,168,35,.8)' }}>★ INTERNATIONAL NATIONS CUP</span>
+            <b className="hp-supercup-title">Unity Cup</b>
+            <span className="hp-supercup-loc">South Africa vs Eswatini · New date to be confirmed</span>
+          </div>
+          <span className="chip" style={{ color: 'var(--muted)', borderColor: 'var(--line)', flexShrink: 0 }}>On Hold</span>
+        </Link>
+      </section>
+
+      {/* ════════════════════════════════════════
           360 SUPER CUP INVITATION
       ════════════════════════════════════════ */}
       <section className="hp-section">
@@ -524,10 +628,33 @@ function HomeStyles() {
       .hp-hero {
         position: relative; overflow: hidden;
         background: linear-gradient(160deg, #0d1428 0%, #0b0f1c 55%, #10152a 100%);
-        border-radius: 0; padding: clamp(28px,5vw,52px) var(--pad) clamp(24px,4vw,44px);
+        border-radius: 0; padding: clamp(24px,4vw,48px) var(--pad) 0;
         margin: 0 calc(-1 * var(--pad));
       }
       @media (min-width: 700px) { .hp-hero { border-radius: 20px; margin: 0; } }
+      /* two-col layout on desktop */
+      .hp-hero-layout {
+        display: flex; align-items: center; gap: 24px;
+      }
+      .hp-hero-content { flex: 1; padding-bottom: clamp(20px,3vw,36px); }
+      .hp-hero-right {
+        display: none; flex-shrink: 0;
+        width: clamp(140px,20vw,220px); align-items: center; justify-content: center;
+        padding-bottom: clamp(20px,3vw,36px);
+      }
+      @media (min-width: 700px) { .hp-hero-right { display: flex; } }
+      .hp-hero-emblem { position: relative; display: flex; align-items: center; justify-content: center; }
+      .hp-hero-mark {
+        width: clamp(120px,18vw,200px); height: auto; object-fit: contain;
+        filter: drop-shadow(0 0 40px rgba(232,184,75,.35)) drop-shadow(0 0 80px rgba(232,184,75,.15));
+        animation: emblem-float 4s ease-in-out infinite;
+      }
+      @keyframes emblem-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+      .hp-hero-emblem-glow {
+        position: absolute; inset: -20%; border-radius: 50%;
+        background: radial-gradient(ellipse at center, rgba(232,184,75,.12), transparent 70%);
+        pointer-events: none;
+      }
       .hp-hero-glow {
         position: absolute; inset: 0; pointer-events: none;
         background:
@@ -585,6 +712,7 @@ function HomeStyles() {
       .hp-strip-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 8px; gap: 2px; }
       .hp-strip-label { font-size: 9px; font-weight: 800; letter-spacing: .1em; color: var(--faint); text-transform: uppercase; }
       .hp-strip-val { font-family: var(--display); font-size: clamp(13px,3vw,18px); font-weight: 800; line-height: 1.1; text-align: center; }
+      .hp-strip-val-row { display: flex; align-items: center; gap: 5px; justify-content: center; }
       .hp-strip-sub { font-size: 10px; color: var(--muted); text-align: center; }
       .hp-strip-div { width: 1px; background: var(--line); align-self: stretch; margin: 10px 0; }
 
@@ -802,6 +930,18 @@ function HomeStyles() {
       .hp-ig-card .hp-community-icon { color: #e4405f; }
       .hp-tv-card .hp-community-icon { color: var(--live); }
       .hp-coming-soon { opacity: 0.55; cursor: default; }
+      /* standings tabs */
+      .hp-stand-tabs { display: flex; gap: 4px; margin-bottom: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 4px; }
+      .hp-stand-tab { flex: 1; padding: 8px 10px; border-radius: 7px; font-size: 13px; font-weight: 600; color: var(--muted); transition: all .15s; border: none; background: none; cursor: pointer; white-space: nowrap; }
+      .hp-stand-tab-on { background: var(--surface-2); color: var(--text); font-weight: 700; }
+      .hp-unity-banner {
+        display: flex; align-items: center; gap: 14px;
+        background: rgba(154,168,35,.06); border: 1px solid rgba(154,168,35,.2);
+        border-radius: var(--r); padding: 14px 16px; text-decoration: none;
+        transition: background .15s; opacity: 0.75;
+      }
+      .hp-unity-banner:hover { background: rgba(154,168,35,.1); }
+      .hp-unity-flags { font-size: 24px; flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
     `}</style>
   );
 }

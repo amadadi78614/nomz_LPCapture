@@ -238,8 +238,8 @@ const LADIES_S1 = [
 
 const TEAM_COLORS = {
   'Desert Falcons': '#c79a3e', 'Ice Breakers': '#00C8E8', 'Avalanche Aces': '#0057E9',
-  'Sonic Viboras': '#9aa823', 'Samurai Kick Smashers': '#dc2626', 'Samurai Kick Smashers': '#dc2626',
-  'Global Boomerangs': '#7c3aed', 'Global Boomerangs': '#7c3aed', 'Sahara Lions': '#f59e0b',
+  'Sonic Viboras': '#9aa823', 'Samurai Kick Smashers': '#dc2626',
+  'Global Boomerangs': '#7c3aed', 'Sahara Lions': '#f59e0b',
   'Rulo Apaches': '#6b7280', 'Baltic Blades': '#0891b2',
   'Lunar Lillies': '#8b5cf6', 'Desert Roses': '#ec4899', 'Phoenix Flames': '#f97316',
   'Backhand Blossoms': '#10b981', 'Net Novas': '#3b82f6', 'Arctic Angels': '#06b6d4',

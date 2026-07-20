@@ -54,7 +54,7 @@ const NAV = [
 ];
 export function TopBar() {
   return (
-    <header style={{ background: '#070a13', borderBottom: '1px solid var(--line)' }}>
+    <header style={{ background: 'rgba(7,10,19,0.97)', borderBottom: '1px solid var(--line)', backdropFilter: 'blur(12px)', position: 'sticky', top: 'var(--ticker-h)', zIndex: 40 }}>
       <div className="topbar">
         <Link to="/" className="row" style={{ gap: 10 }}>
           <img src="/brand/lp-mark.png" alt="Lowveld Padel" style={{ borderRadius: '50%' }} />
@@ -76,15 +76,24 @@ export function TopBar() {
   );
 }
 export function BottomNav() {
+  const live = FIXTURES.filter((f) => f.status === 'live');
   return (
-    <nav className="bottomnav" aria-label="Primary">
-      {NAV.map((n) => (
-        <NavLink key={n.to} to={n.to} end={n.to === '/'}>
-          <span className="ico">{n.ico}</span>
-          {n.label}
+    <>
+      {live.length > 0 && (
+        <NavLink to="/live" className="sticky-live" aria-label="Live matches">
+          <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#fff', animation: 'pulse 1.2s infinite' }} />
+          {live.length} Live
         </NavLink>
-      ))}
-    </nav>
+      )}
+      <nav className="bottomnav" aria-label="Primary navigation">
+        {NAV.map((n) => (
+          <NavLink key={n.to} to={n.to} end={n.to === '/'}>
+            <span className="ico" aria-hidden="true">{n.ico}</span>
+            {n.label}
+          </NavLink>
+        ))}
+      </nav>
+    </>
   );
 }
 

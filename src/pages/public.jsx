@@ -25,111 +25,199 @@ export function Home() {
   const sFr = STANDINGS.mens.franchise;
   const leader = sFr[0];
   const power = POWER_RANKINGS_WEEKLY.mens.slice(0, 5);
-  const rotw = RIVALRIES.find((r) => headToHead(r.a, r.b).played > 0) || RIVALRIES[0];
-  const rA = franchiseById(rotw.a); const rB = franchiseById(rotw.b); const rH = headToHead(rotw.a, rotw.b);
   const motw = matchOfTheWeek();
   const potwId = playerOfWeek.current;
   const potw = potwId ? playerById(potwId) : null;
   const topRated = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.lp_rating - a.lp_rating)[0];
+  const topMvpPlayers = [...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points).slice(0, 5);
+
+  // Countdown to next fixture
+  const nextFx = upcoming[0];
+  const msUntil = nextFx ? new Date(nextFx.start) - new Date() : null;
+  const daysUntil = msUntil ? Math.floor(msUntil / 86400000) : null;
+  const hoursUntil = msUntil ? Math.floor((msUntil % 86400000) / 3600000) : null;
 
   return (
-    <div className="page">
+    <div className="hp-root">
       <HomeStyles />
 
-      {/* ── 1. HERO ── */}
-      <div className="home-hero">
-        <span className="eyebrow" style={{ color: 'var(--live)', fontSize: 11 }}>Season 3 · Short break · MD7 coming Tuesday · Legacy League launched! 🔥</span>
-        <h1 className="display" style={{ fontSize: 'clamp(22px,5vw,32px)', margin: '6px 0 4px', lineHeight: 1.1 }}>
-          Legacy League is LIVE. Season 3 title race on a knife edge. Ladies — last few spots remaining!
-        </h1>
-        <p style={{ fontSize: 13, color: 'var(--muted)', fontStyle: 'italic', margin: '0 0 4px' }}>
-          Legacy League launched in spectacular fashion 🏆 · Ladies registration closes soon ·{' '}
-          <Link to="/unity-cup" style={{ color: 'var(--gold)', fontWeight: 700, fontStyle: 'normal' }}>Unity Cup update</Link>
-        </p>
-        <div className="home-hero-stats">
-          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--gold)' }}>{leader.points}</span><span className="muted">pts lead</span></div>
-          <div className="home-hero-stat-div" />
-          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--win)' }}>{mvp ? mvp.stats.mvp_points : '—'}</span><span className="muted">MVP pts</span></div>
-          <div className="home-hero-stat-div" />
-          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--court)' }}>7</span><span className="muted">of 9 MDs</span></div>
-        </div>
-        <div className="row mt" style={{ gap: 8, flexWrap: 'wrap' }}>
-          <Link to="/live" className="btn live" style={{ fontSize: 13 }}>● Match Centre</Link>
-          <Link to="/leagues" className="btn ghost" style={{ fontSize: 13 }}>Leagues</Link>
-          <Link to="/register" className="btn ghost" style={{ fontSize: 13, borderColor: '#db2777', color: '#db2777' }}>Ladies Register</Link>
-        </div>
-      </div>
+      {/* ════════════════════════════════════════
+          HERO
+      ════════════════════════════════════════ */}
+      <section className="hp-hero">
+        <div className="hp-hero-glow" />
+        <div className="hp-hero-noise" />
+        <div className="hp-hero-content">
+          {/* Eyebrow */}
+          <div className="hp-hero-eye">
+            {live.length > 0
+              ? <span className="hp-live-pill"><span className="hp-live-dot" />LIVE NOW · {live.length} MATCH{live.length > 1 ? 'ES' : ''}</span>
+              : <span className="hp-season-pill">SEASON 3 · MATCH DAY 7 · TITLE RACE</span>}
+          </div>
 
-      {/* ── 2. LIVE / LATEST RESULT / NEXT FIXTURE ── */}
-      <div className="home-section">
-        {live.length > 0 ? (
-          <>
-            <SectionHead title="Live now" to="/live" cta="Match Centre" />
-            <div className="grid cols-2">{live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}</div>
-          </>
-        ) : (
-          <>
-            <SectionHead title="Match Centre" to="/live" cta="All results →" />
-            <div className="home-match-grid">
-              {/* Latest results */}
-              <div>
-                <p className="eyebrow" style={{ marginBottom: 8 }}>Latest Results</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {results.slice(0, 2).map((f) => <ResultCard key={f.id} fixture={f} />)}
-                </div>
+          {/* Headline */}
+          <h1 className="hp-hero-h1">
+            <span className="hp-hero-word1">LOWVELD</span>
+            <span className="hp-hero-word2">PADEL</span>
+          </h1>
+          <p className="hp-hero-sub">The Home of Competitive Padel in Mpumalanga</p>
+
+          {/* CTAs */}
+          <div className="hp-hero-ctas">
+            <Link to="/live" className="hp-btn-primary">
+              {live.length > 0 ? '● Watch Live' : '● Match Centre'}
+            </Link>
+            <Link to="/leagues" className="hp-btn-secondary">Standings</Link>
+            <Link to="/leagues" className="hp-btn-secondary">Fixtures</Link>
+          </div>
+
+          {/* Stats strip */}
+          <div className="hp-hero-strip">
+            {leader && (
+              <div className="hp-strip-item">
+                <span className="hp-strip-label">LEAGUE LEADER</span>
+                <span className="hp-strip-val" style={{ color: 'var(--gold)' }}>{franchiseById(leader.franchise_id).name}</span>
+                <span className="hp-strip-sub">{leader.points} pts</span>
               </div>
-              {/* Next fixtures */}
-              <div>
-                <p className="eyebrow" style={{ marginBottom: 8 }}>Next Fixtures</p>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  {upcoming.slice(0, 2).map((f) => <FixtureRow key={f.id} fixture={f} />)}
-                  {upcoming.length === 0 && (
-                    <div className="card" style={{ textAlign: 'center', padding: '20px', color: 'var(--muted)', fontSize: 13 }}>
-                      Schedule to be announced
-                    </div>
-                  )}
-                </div>
+            )}
+            <div className="hp-strip-div" />
+            {mvp && (
+              <div className="hp-strip-item">
+                <span className="hp-strip-label">MVP LEADER</span>
+                <span className="hp-strip-val" style={{ color: 'var(--win)' }}>{mvp.name.split(' ')[0]} {mvp.name.split(' ').slice(-1)}</span>
+                <span className="hp-strip-sub">★ {mvp.stats.mvp_points} pts</span>
+              </div>
+            )}
+            <div className="hp-strip-div" />
+            {nextFx ? (
+              <div className="hp-strip-item">
+                <span className="hp-strip-label">NEXT MATCH</span>
+                <span className="hp-strip-val" style={{ color: 'var(--court)' }}>
+                  {daysUntil > 0 ? `${daysUntil}d ${hoursUntil}h` : hoursUntil > 0 ? `${hoursUntil}h` : 'Today'}
+                </span>
+                <span className="hp-strip-sub">{franchiseById(nextFx.home).short || franchiseById(nextFx.home).name} v {franchiseById(nextFx.away).short || franchiseById(nextFx.away).name}</span>
+              </div>
+            ) : (
+              <div className="hp-strip-item">
+                <span className="hp-strip-label">SEASON</span>
+                <span className="hp-strip-val" style={{ color: 'var(--court)' }}>7 of 9 MDs</span>
+                <span className="hp-strip-sub">Title race live</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          BREAKING NEWS
+      ════════════════════════════════════════ */}
+      {NEWS.length > 0 && (
+        <section className="hp-section">
+          <div className="hp-section-head">
+            <h2 className="hp-section-title">Breaking News</h2>
+            <Link to="/news" className="hp-section-link">All news →</Link>
+          </div>
+          <div className="hp-news-grid">
+            {/* Hero story */}
+            <Link to="/news" className="hp-news-hero">
+              <div className="hp-news-hero-bg" />
+              <div className="hp-news-hero-content">
+                <span className="hp-news-kicker" style={{ color: NEWS[0].tag === 'legacy' ? 'var(--gold)' : NEWS[0].tag === 'ladies' ? '#f0abcc' : 'var(--live)' }}>
+                  {NEWS[0].kicker}
+                </span>
+                <h3 className="hp-news-hero-title">{NEWS[0].title}</h3>
+                <p className="hp-news-body">{NEWS[0].body?.slice(0, 120)}...</p>
+                <span className="hp-news-date">{new Date(NEWS[0].date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+              </div>
+            </Link>
+            {/* Side stories */}
+            <div className="hp-news-side">
+              {NEWS.slice(1, 4).map((n) => (
+                <Link key={n.id} to="/news" className="hp-news-card">
+                  <span className="hp-news-kicker" style={{ color: n.tag === 'legacy' ? 'var(--gold)' : n.tag === 'ladies' ? '#f0abcc' : 'var(--live)', fontSize: 10 }}>{n.kicker}</span>
+                  <p className="hp-news-card-title">{n.title}</p>
+                  <span className="hp-news-date">{new Date(n.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ════════════════════════════════════════
+          LIVE CENTRE / RESULTS / FIXTURES
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <div className="hp-section-head">
+          <h2 className="hp-section-title">{live.length > 0 ? '● Live Now' : 'Match Centre'}</h2>
+          <Link to="/live" className="hp-section-link">Full centre →</Link>
+        </div>
+        {live.length > 0 ? (
+          <div className="hp-match-grid">
+            {live.map((f) => <LiveScoreCard key={f.id} fixture={f} />)}
+          </div>
+        ) : (
+          <div className="hp-match-split">
+            <div>
+              <p className="hp-sub-label">Latest Results</p>
+              <div className="hp-match-col">
+                {results.slice(0, 2).map((f) => <ResultCard key={f.id} fixture={f} />)}
               </div>
             </div>
-          </>
+            <div>
+              <p className="hp-sub-label">Next Fixtures</p>
+              <div className="hp-match-col">
+                {upcoming.length > 0
+                  ? upcoming.slice(0, 2).map((f) => <FixtureRow key={f.id} fixture={f} />)
+                  : <div className="hp-empty">Schedule to be announced</div>}
+              </div>
+            </div>
+          </div>
         )}
-      </div>
+      </section>
 
-      {/* ── 3. LEAGUE TABLE (top 4 only) ── */}
-      <div className="home-section">
-        <SectionHead title="League Table" to="/leagues" cta="Full table →" />
-        <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
-          <table className="tbl">
+      {/* ════════════════════════════════════════
+          LEAGUE STANDINGS
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <div className="hp-section-head">
+          <h2 className="hp-section-title">League Standings</h2>
+          <Link to="/leagues" className="hp-section-link">Full table →</Link>
+        </div>
+        <div className="hp-table-wrap">
+          <table className="hp-standings-tbl">
             <thead>
               <tr>
                 <th>#</th><th>Franchise</th>
-                <th className="num">P</th><th className="num">W</th><th className="num">L</th>
-                <th className="num">BP</th><th className="num">Pts</th>
-                <th className="num" style={{ minWidth: 60 }}>Form</th>
+                <th>P</th><th>W</th><th>L</th><th>Pts</th>
+                <th className="hp-col-form">Form</th>
               </tr>
             </thead>
             <tbody>
               {sFr.slice(0, 7).map((r, i) => {
                 const fr = franchiseById(r.franchise_id);
                 const form = teamForm(r.franchise_id, 5);
+                const isTop4 = i < 4;
                 return (
-                  <tr key={r.franchise_id} style={{ borderLeft: i === 3 ? '2px solid var(--line)' : 'none' }}>
-                    <td><span className={`pos-badge ${i < 4 ? 'q' : ''}`}>{i + 1}</span></td>
+                  <tr key={r.franchise_id} className={`hp-standing-row ${isTop4 ? 'hp-row-qualify' : ''}`}>
+                    <td className="hp-pos-cell">
+                      <span className={`hp-pos ${isTop4 ? 'hp-pos-q' : ''}`}>{i + 1}</span>
+                    </td>
                     <td>
-                      <Link to={`/franchise/${fr.id}`} className="row" style={{ gap: 8 }}>
-                        <img src={fr.logo} alt="" style={{ width: 20, height: 20, objectFit: 'contain' }} />
-                        <b style={{ fontSize: 13 }}>{fr.name}</b>
+                      <Link to={`/franchise/${fr.id}`} className="hp-team-cell">
+                        <span className="hp-team-stripe" style={{ background: `var(--fr-${fr.id})` }} />
+                        <img src={fr.logo} alt={fr.name} className="hp-team-logo" />
+                        <span className="hp-team-name">{fr.name}</span>
                       </Link>
                     </td>
-                    <td className="num">{r.played}</td>
-                    <td className="num">{r.won}</td>
-                    <td className="num">{r.lost}</td>
-                    <td className="num">{r.bp}</td>
-                    <td className="num"><b style={{ color: 'var(--gold)' }}>{r.points}</b></td>
-                    <td className="num">
-                      <span className="form-row">
+                    <td className="hp-num">{r.played}</td>
+                    <td className="hp-num hp-col-w">{r.won}</td>
+                    <td className="hp-num">{r.lost}</td>
+                    <td className="hp-num hp-col-pts"><b style={{ color: isTop4 ? 'var(--gold)' : 'var(--text)' }}>{r.points}</b></td>
+                    <td className="hp-col-form">
+                      <span className="hp-form-pills">
                         {form.map((res, fi) => (
-                          <span key={fi} className={`form-dot ${res}`} title={res === 'W' ? 'Win' : res === 'L' ? 'Loss' : 'Draw'} />
+                          <span key={fi} className={`hp-form-pill hp-fp-${res}`}>{res}</span>
                         ))}
                       </span>
                     </td>
@@ -138,278 +226,290 @@ export function Home() {
               })}
             </tbody>
           </table>
-          <div className="muted" style={{ padding: '6px 12px', fontSize: 11, borderTop: '1px solid var(--line)' }}>
-            🟢 Top 4 qualify for Finals Night
+          <div className="hp-table-foot">
+            <span className="hp-qualify-dot" /> Top 4 qualify for Finals Night
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── 4. MVP RACE ── */}
-      {mvp && (
-        <div className="home-section">
-          <SectionHead title="MVP Race" to="/rankings" cta="Leaderboard →" />
-          <Link to={`/player/${mvp.id}`} className="card stripe row spread" style={{ '--stripe': 'var(--gold)' }}>
-            <div className="row" style={{ gap: 12 }}>
-              <span className="avatar" style={{ width: 40, height: 40, fontSize: 13 }}>{mvp.name.split(' ').map((w) => w[0]).join('')}</span>
-              <div>
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{mvp.name}</b>
-                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(mvp.franchise_id).name} · {mvp.tier}</div>
-                <div style={{ fontSize: 12, marginTop: 2 }}>
-                  <span style={{ color: 'var(--win)' }}>{mvp.stats.wins}W</span>
-                  <span className="muted"> · </span>
-                  <span>{mvp.stats.rubbers_won} rubbers</span>
-                  <span className="muted"> · </span>
-                  <span style={{ color: 'var(--gold)' }}>{mvp.stats.bonus_points} BP</span>
-                </div>
-              </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: 'var(--display)', fontSize: 28, color: 'var(--gold)', lineHeight: 1 }}>★ {mvp.stats.mvp_points}</div>
-              <div className="muted" style={{ fontSize: 11 }}>MVP pts</div>
-            </div>
+      {/* ════════════════════════════════════════
+          UPCOMING EVENTS
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <div className="hp-section-head">
+          <h2 className="hp-section-title">Upcoming Events</h2>
+        </div>
+        <div className="hp-events-grid">
+          <Link to="/leagues" className="hp-event-card hp-event-mens">
+            <span className="hp-event-badge">Active</span>
+            <span className="hp-event-name">Men's Franchise League</span>
+            <span className="hp-event-meta">Season 3 · 2 Match Days Remaining</span>
+            <span className="hp-event-venue">Play 360 & Padel 24</span>
           </Link>
-          {/* Top 5 quick view */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 8 }}>
-            {[...PLAYERS].filter((p) => p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points).slice(1, 5).map((p, i) => (
-              <Link key={p.id} to={`/player/${p.id}`} className="card row spread" style={{ padding: '8px 12px' }}>
-                <span className="row" style={{ gap: 10 }}>
-                  <b className="muted" style={{ width: 16, fontSize: 12 }}>{i + 2}</b>
-                  <span style={{ fontSize: 13 }}>{p.name}</span>
-                  <span className="muted" style={{ fontSize: 11 }}>{franchiseById(p.franchise_id).name}</span>
-                </span>
-                <b style={{ color: 'var(--gold)', fontSize: 13 }}>★ {p.stats.mvp_points}</b>
-              </Link>
-            ))}
+          <Link to="/leagues" className="hp-event-card hp-event-legacy">
+            <span className="hp-event-badge">● Live</span>
+            <span className="hp-event-name">LP Legacy League</span>
+            <span className="hp-event-meta">Match Day 1 Complete</span>
+            <span className="hp-event-venue">Play 360 · Nelspruit</span>
+          </Link>
+          <Link to="/leagues" className="hp-event-card hp-event-ladies">
+            <span className="hp-event-badge">Registration Open</span>
+            <span className="hp-event-name">Ladies Franchise League</span>
+            <span className="hp-event-meta">Season 2 · Last Few Spots</span>
+            <span className="hp-event-venue">Register Now</span>
+          </Link>
+          <Link to="/360-super-cup" className="hp-event-card hp-event-360">
+            <span className="hp-event-badge">Official Invite</span>
+            <span className="hp-event-name">360 Super Cup</span>
+            <span className="hp-event-meta">28–30 August 2026</span>
+            <span className="hp-event-venue">Johannesburg</span>
+          </Link>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════
+          MVP RACE + POWER RANKINGS (side by side on desktop)
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <div className="hp-two-col">
+          {/* MVP Race */}
+          <div>
+            <div className="hp-section-head">
+              <h2 className="hp-section-title">MVP Race</h2>
+              <Link to="/rankings" className="hp-section-link">Full board →</Link>
+            </div>
+            <div className="hp-mvp-list">
+              {topMvpPlayers.map((p, i) => {
+                const fr = franchiseById(p.franchise_id);
+                return (
+                  <Link key={p.id} to={`/player/${p.id}`} className={`hp-mvp-row ${i === 0 ? 'hp-mvp-leader' : ''}`}>
+                    <span className="hp-mvp-rank" style={{ color: i === 0 ? 'var(--gold)' : 'var(--muted)' }}>{i + 1}</span>
+                    <span className="hp-avatar-sm" style={{ background: `var(--fr-${fr.id})22`, border: `1px solid var(--fr-${fr.id})` }}>
+                      {p.name.split(' ').map((w) => w[0]).join('').slice(0, 2)}
+                    </span>
+                    <span className="hp-mvp-info">
+                      <b className="hp-mvp-name">{p.name}</b>
+                      <span className="hp-mvp-sub">{fr.name} · {p.tier}</span>
+                    </span>
+                    <span className="hp-mvp-pts" style={{ color: i === 0 ? 'var(--gold)' : 'var(--text)' }}>★ {p.stats.mvp_points}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Power Rankings */}
+          <div>
+            <div className="hp-section-head">
+              <h2 className="hp-section-title">Power Rankings</h2>
+            </div>
+            <div className="hp-power-list">
+              {power.map((entry, i) => {
+                const fr = franchiseById(entry.franchise);
+                const row = sFr.find((r) => r.franchise_id === entry.franchise);
+                return (
+                  <Link key={entry.franchise} to={`/franchise/${entry.franchise}`} className="hp-power-row">
+                    <span className="hp-power-rank">{i + 1}</span>
+                    <img src={fr.logo} alt={fr.name} className="hp-power-logo" />
+                    <span className="hp-power-info">
+                      <b className="hp-power-name">{fr.name}</b>
+                      <span className="hp-power-note">{entry.note}</span>
+                    </span>
+                    <span className={`hp-move hp-move-${entry.move}`}>
+                      {entry.move === 'up' ? '▲' : entry.move === 'down' ? '▼' : '▬'}
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
-      )}
+      </section>
 
-      {/* ── 5. POWER RANKINGS ── */}
-      <div className="home-section">
-        <SectionHead title="Power Rankings" to="/rankings" cta="Full board →" />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {power.map((entry, i) => {
-            const fr = franchiseById(entry.franchise);
-            const row = sFr.find((r) => r.franchise_id === entry.franchise);
-            const moveColor = entry.move === 'up' ? 'var(--win)' : entry.move === 'down' ? 'var(--loss)' : 'var(--muted)';
-            const moveIcon = entry.move === 'up' ? '▲' : entry.move === 'down' ? '▼' : '▬';
+      {/* ════════════════════════════════════════
+          PLAYER OF THE WEEK / TOP RATED
+      ════════════════════════════════════════ */}
+      {(potw || topRated) && (
+        <section className="hp-section">
+          <div className="hp-section-head">
+            <h2 className="hp-section-title">{potw ? 'Player of the Week' : 'Top LP Rating'}</h2>
+            <Link to="/rankings" className="hp-section-link">All players →</Link>
+          </div>
+          {(() => {
+            const p = potw || topRated;
+            const fr = franchiseById(p.franchise_id);
             return (
-              <Link key={entry.franchise} to={`/franchise/${entry.franchise}`} className="card stripe row spread" style={{ '--stripe': stripeVar(entry.franchise), padding: '10px 12px' }}>
-                <span className="row" style={{ gap: 10 }}>
-                  <b style={{ width: 20, fontSize: 18, fontFamily: 'var(--display)' }}>{i + 1}</b>
-                  <img src={fr.logo} alt="" style={{ width: 28, height: 28, objectFit: 'contain' }} />
-                  <span>
-                    <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14, display: 'block' }}>{fr.name}</b>
-                    <span className="muted" style={{ fontSize: 11 }}>{entry.note}</span>
-                  </span>
+              <Link to={`/player/${p.id}`} className="hp-potw-card" style={{ borderLeft: `4px solid var(--fr-${fr.id})` }}>
+                <span className="hp-potw-avatar" style={{ background: `var(--fr-${fr.id})22`, border: `2px solid var(--fr-${fr.id})` }}>
+                  {p.name.split(' ').map((w) => w[0]).join('')}
                 </span>
-                <span className="row" style={{ gap: 8 }}>
-                  {row && <span className="muted" style={{ fontSize: 12 }}>{row.points} pts</span>}
-                  <b style={{ color: moveColor, fontSize: 12 }}>{moveIcon}</b>
-                </span>
+                <div className="hp-potw-info">
+                  {potw && <span className="hp-potw-label">🏅 Player of the Week</span>}
+                  <b className="hp-potw-name">{p.name}</b>
+                  <span className="hp-potw-franchise">{fr.name} · {p.tier}</span>
+                </div>
+                <div className="hp-potw-stats">
+                  <div className="hp-potw-stat"><span>{p.lp_rating}</span><small>LP Rating</small></div>
+                  <div className="hp-potw-stat"><span style={{ color: 'var(--win)' }}>{p.stats.wins}W</span><small>Wins</small></div>
+                  <div className="hp-potw-stat"><span style={{ color: 'var(--gold)' }}>★{p.stats.mvp_points}</span><small>MVP</small></div>
+                </div>
               </Link>
             );
-          })}
-        </div>
-      </div>
-
-      {/* ── 6. PLAYER OF THE WEEK ── */}
-      {potw ? (
-        <div className="home-section">
-          <SectionHead title="Player of the Week" to={`/player/${potw.id}`} />
-          <Link to={`/player/${potw.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(potw.franchise_id) }}>
-            <div className="row" style={{ gap: 12 }}>
-              <span className="avatar" style={{ width: 44, height: 44, fontSize: 14, background: stripeVar(potw.franchise_id) + '33' }}>
-                {potw.name.split(' ').map((w) => w[0]).join('')}
-              </span>
-              <div>
-                <span className="eyebrow">Player of the Week</span>
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 18, display: 'block' }}>{potw.name}</b>
-                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(potw.franchise_id).name} · {potw.tier}</div>
-              </div>
-            </div>
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: 28 }}>🏅</div>
-            </div>
-          </Link>
-        </div>
-      ) : topRated && (
-        <div className="home-section">
-          <SectionHead title="Top LP Rating" to="/rankings" cta="Full rankings →" />
-          <Link to={`/player/${topRated.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(topRated.franchise_id) }}>
-            <div className="row" style={{ gap: 12 }}>
-              <span className="avatar" style={{ width: 40, height: 40, fontSize: 13 }}>{topRated.name.split(' ').map((w) => w[0]).join('')}</span>
-              <div>
-                <span className="eyebrow">Top LP Rating</span>
-                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, display: 'block' }}>{topRated.name}</b>
-                <div className="muted" style={{ fontSize: 12 }}>{franchiseById(topRated.franchise_id).name}</div>
-              </div>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontFamily: 'var(--display)', fontSize: 28, color: 'var(--court)', lineHeight: 1 }}>{topRated.lp_rating}</div>
-              <div className="muted" style={{ fontSize: 11 }}>LP Rating</div>
-            </div>
-          </Link>
-        </div>
+          })()}
+        </section>
       )}
 
-      {/* ── 7. ROAD TO 360 ── */}
-      <div className="home-section">
-        <Link to="/360-super-cup" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(199,154,62,.12), rgba(199,154,62,.03))', border: '1px solid rgba(199,154,62,.3)' }}>
-          <div className="row spread">
-            <div className="row" style={{ gap: 12 }}>
-              <span style={{ fontSize: 28 }}>🇿🇦</span>
-              <div>
-                <span className="eyebrow" style={{ color: 'var(--gold)' }}>Official Invitation · 28–30 Aug 2026</span>
-                <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Lowveld Padel at the 360 Super Cup</b>
-                <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{ROAD_TO_360.location} · {ROAD_TO_360.dates}</div>
-              </div>
-            </div>
-            <span className="chip" style={{ color: 'var(--gold)', borderColor: 'var(--gold)' }}>Johannesburg</span>
-          </div>
-        </Link>
-      </div>
-
-      {/* ── 8. LP LEGACY LEAGUE ── */}
-      <div className="home-section">
-        <SectionHead title="LP Legacy League" to="/legacy-league" cta="Full standings →" />
-        <div className="card" style={{ background: 'linear-gradient(135deg, rgba(199,154,62,.08), transparent)', border: '1px solid rgba(199,154,62,.2)', marginBottom: 8 }}>
-          <div className="row spread" style={{ marginBottom: 10 }}>
+      {/* ════════════════════════════════════════
+          LEGACY LEAGUE
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <div className="hp-section-head">
+          <h2 className="hp-section-title">LP Legacy League</h2>
+          <Link to="/legacy-league" className="hp-section-link">Full standings →</Link>
+        </div>
+        <div className="hp-legacy-card">
+          <div className="hp-legacy-header">
             <div>
-              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Inaugural Season · Match Day 1 Complete</b>
-              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Phenomenal support — families packed Play 360 🔥</div>
+              <b className="hp-legacy-title">Inaugural Season · Match Day 1 Complete</b>
+              <p className="hp-legacy-sub">Phenomenal support — families packed Play 360 on launch day 🔥</p>
             </div>
-            <span className="chip" style={{ color: 'var(--win)', borderColor: 'var(--win)' }}>● Live</span>
+            <span className="hp-live-chip">● Live</span>
           </div>
-          {/* Mini standings */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+          <div className="hp-legacy-table">
             {LEGACY_STANDINGS.slice(0, 6).map((row, i) => {
               const fr = legacyFranchiseById(row.franchise_id);
               if (!fr) return null;
               return (
-                <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: i < 5 ? '1px solid var(--line)' : 'none', textDecoration: 'none' }}>
-                  <b style={{ width: 16, fontSize: 12, color: 'var(--muted)' }}>{i + 1}</b>
-                  <img src={fr.logo} alt="" style={{ width: 20, height: 20, objectFit: 'contain', mixBlendMode: 'screen' }} />
-                  <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{fr.name}</span>
-                  <span className="muted" style={{ fontSize: 11 }}>{row.played}P {row.won}W</span>
-                  <b style={{ color: 'var(--gold)', fontSize: 13, minWidth: 24, textAlign: 'right' }}>{row.points}</b>
+                <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} className="hp-legacy-row">
+                  <span className="hp-legacy-pos">{i + 1}</span>
+                  <img src={fr.logo} alt={fr.name} style={{ width: 22, height: 22, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                  <span className="hp-legacy-name">{fr.name}</span>
+                  <span className="hp-legacy-record">{row.played}P {row.won}W {row.lost}L</span>
+                  <b className="hp-legacy-pts">{row.points}</b>
                 </Link>
               );
             })}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ── 9. UNITY CUP ── */}
-      <div className="home-section">
-        <Link to="/unity-cup" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(154,168,35,.06), transparent)', border: '1px solid rgba(154,168,35,.15)' }}>
-          <div className="row spread">
-            <div>
-              <span className="eyebrow" style={{ color: '#9aa823' }}>★ International Nations Cup</span>
-              <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, marginTop: 4 }}>Unity Cup</b>
-              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>🇿🇦 South Africa vs 🇸🇿 Eswatini · New date to be confirmed</div>
-            </div>
-            <span className="chip" style={{ color: 'var(--muted)', flexShrink: 0 }}>On Hold</span>
+      {/* ════════════════════════════════════════
+          360 SUPER CUP INVITATION
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
+        <Link to="/360-super-cup" className="hp-supercup-banner">
+          <div className="hp-supercup-flag">🇿🇦</div>
+          <div className="hp-supercup-info">
+            <span className="hp-supercup-eye">OFFICIAL INVITATION · 28–30 AUGUST 2026</span>
+            <b className="hp-supercup-title">Lowveld Padel at the 360 Super Cup</b>
+            <span className="hp-supercup-loc">Johannesburg · Representing Mpumalanga on the National Stage</span>
           </div>
+          <span className="hp-supercup-arrow">→</span>
         </Link>
-      </div>
+      </section>
 
-      {/* ── 10. LADIES LEAGUE ── */}
-      <div className="home-section">
-        <SectionHead title="Ladies Franchise League" to="/leagues" cta="Season 2 →" />
-        <Link to="/register" style={{ display: 'block', textDecoration: 'none' }}>
-          <div style={{ background: 'linear-gradient(135deg, rgba(219,39,119,.12), rgba(219,39,119,.02))', border: '2px solid #db2777', borderRadius: 'var(--r)', padding: '14px 16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
-            <div>
-              <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, color: '#db2777', marginBottom: 2 }}>Season 2 — Registration Open</div>
-              <div style={{ color: 'var(--muted)', fontSize: 12 }}>Registration closes 18 July 2026 · Secure your spot now</div>
-            </div>
-            <div style={{ background: '#db2777', color: '#fff', fontWeight: 800, fontSize: 12, padding: '8px 14px', borderRadius: 8, whiteSpace: 'nowrap', flexShrink: 0 }}>Register →</div>
-          </div>
-        </Link>
-      </div>
-
-      {/* ── 11. MATCH OF THE WEEK / PREDICTION ── */}
+      {/* ════════════════════════════════════════
+          MATCH OF THE WEEK
+      ════════════════════════════════════════ */}
       {motw && (() => {
-        const a = franchiseById(motw.home); const b = franchiseById(motw.away);
+        const a = franchiseById(motw.home);
+        const b = franchiseById(motw.away);
         return (
-          <div className="home-section">
-            <SectionHead title="Match of the Week" to="/predictor" cta="Predict →" />
-            <Link to="/predictor" className="card stripe" style={{ '--stripe': 'var(--live)', display: 'block' }}>
-              <span className="eyebrow" style={{ color: 'var(--live)' }}>Can you predict the result?</span>
-              <div className="row spread" style={{ marginTop: 12 }}>
-                <div className="row" style={{ gap: 8 }}><img src={a.logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain' }} /><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{a.name}</b></div>
-                <b className="muted" style={{ fontSize: 18 }}>v</b>
-                <div className="row" style={{ gap: 8 }}><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{b.name}</b><img src={b.logo} alt="" style={{ width: 36, height: 36, objectFit: 'contain' }} /></div>
+          <section className="hp-section">
+            <div className="hp-section-head">
+              <h2 className="hp-section-title">Match of the Week</h2>
+              <Link to="/predictor" className="hp-section-link">Predict →</Link>
+            </div>
+            <Link to="/predictor" className="hp-motw-card">
+              <span className="hp-motw-label">Can you predict the result?</span>
+              <div className="hp-motw-matchup">
+                <div className="hp-motw-team">
+                  <img src={a.logo} alt={a.name} />
+                  <b>{a.name}</b>
+                </div>
+                <span className="hp-motw-vs">VS</span>
+                <div className="hp-motw-team">
+                  <img src={b.logo} alt={b.name} />
+                  <b>{b.name}</b>
+                </div>
               </div>
-              <div style={{ textAlign: 'center', marginTop: 10, fontSize: 12, color: 'var(--live)' }}>Tap to predict →</div>
+              <span className="hp-motw-cta">Tap to predict →</span>
             </Link>
-          </div>
+          </section>
         );
       })()}
 
-      {/* ── 12. LATEST NEWS ── */}
-      <div className="home-section">
-        <SectionHead title="Latest News" to="/news" cta="All news →" />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {NEWS.slice(0, 3).map((n) => (
-            <Link key={n.id} to="/news" className="card row spread" style={{ gap: 12, alignItems: 'flex-start' }}>
-              <div style={{ flex: 1 }}>
-                <span className="kicker" style={{ color: n.tag === 'mens' ? 'var(--court)' : n.tag === 'ladies' ? '#db2777' : 'var(--gold)' }}>{n.kicker}</span>
-                <p style={{ margin: '3px 0 0', fontSize: 13, fontWeight: 600, lineHeight: 1.3 }}>{n.title}</p>
-                <span className="muted" style={{ fontSize: 11 }}>{new Date(n.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* ── 13. LOWVELD TV ── */}
+      {/* ════════════════════════════════════════
+          LOWVELD TV
+      ════════════════════════════════════════ */}
       {TV_VIDEOS.length > 0 && (
-        <div className="home-section">
-          <SectionHead title="Lowveld TV" to="/tv" cta="Watch →" />
-          <div className="grid cols-3">
+        <section className="hp-section">
+          <div className="hp-section-head">
+            <h2 className="hp-section-title">Lowveld TV</h2>
+            <Link to="/tv" className="hp-section-link">Watch all →</Link>
+          </div>
+          <div className="hp-tv-grid">
             {TV_VIDEOS.slice(0, 3).map((v) => {
               const thumb = v.thumbnail || ytThumb(v.youtube_url);
               return (
-                <Link key={v.id} to="/tv" className="card" style={{ padding: 0, overflow: 'hidden' }}>
-                  <div style={{ position: 'relative', width: '100%', paddingTop: '56.25%', background: '#0a0f1c' }}>
-                    {thumb ? <img src={thumb} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} /> : <img src="/brand/lp-mark.png" alt="" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 38, opacity: .4 }} />}
-                    <span style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 34, height: 34, borderRadius: '50%', background: 'rgba(0,0,0,.6)', border: '1.5px solid rgba(255,255,255,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14 }}>►</span>
+                <Link key={v.id} to="/tv" className="hp-tv-card">
+                  <div className="hp-tv-thumb">
+                    {thumb
+                      ? <img src={thumb} alt={v.title} />
+                      : <div className="hp-tv-placeholder"><img src="/brand/lp-mark.png" alt="" /></div>}
+                    <span className="hp-tv-play">▶</span>
+                    {v.live && <span className="hp-tv-live-tag">LIVE</span>}
                   </div>
-                  <div style={{ padding: '8px 10px' }}>
-                    <span className="kicker" style={{ color: 'var(--live)', fontSize: 10 }}>{v.category}</span>
-                    <p style={{ fontSize: 12, fontWeight: 600, margin: '2px 0 0', lineHeight: 1.25 }}>{v.title}</p>
+                  <div className="hp-tv-meta">
+                    <span className="hp-tv-cat">{v.category}</span>
+                    <p className="hp-tv-title">{v.title}</p>
                   </div>
                 </Link>
               );
             })}
           </div>
-        </div>
+        </section>
       )}
 
-      {/* ── 14. SPONSORS ── */}
-      <div className="home-section">
+      {/* ════════════════════════════════════════
+          SPONSORS
+      ════════════════════════════════════════ */}
+      <section className="hp-section">
         <SponsorRail placement="home" />
-      </div>
+      </section>
 
-      {/* ── 15. COMMUNITY ── */}
-      <div className="home-section">
-        {communityLinks.leagueCommunity ? (
-          <a href={communityLinks.leagueCommunity} target="_blank" rel="noreferrer" className="card" style={{ display: 'block', borderLeft: '3px solid #25D366', paddingLeft: 16, textDecoration: 'none' }}>
-            <div className="row spread">
-              <div><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Join the Community</b><div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Match-night chat, results & banter on WhatsApp</div></div>
-              <span style={{ fontSize: 22, color: '#25D366' }}>✆</span>
+      {/* ════════════════════════════════════════
+          COMMUNITY
+      ════════════════════════════════════════ */}
+      <section className="hp-section hp-community">
+        <h2 className="hp-section-title" style={{ marginBottom: 12 }}>Community</h2>
+        <div className="hp-community-grid">
+          {communityLinks.leagueCommunity ? (
+            <a href={communityLinks.leagueCommunity} target="_blank" rel="noreferrer" className="hp-community-card hp-wa-card">
+              <span className="hp-community-icon">✆</span>
+              <b>WhatsApp</b>
+              <span>Join the league community</span>
+            </a>
+          ) : (
+            <div className="hp-community-card hp-wa-card hp-coming-soon">
+              <span className="hp-community-icon">✆</span>
+              <b>WhatsApp</b>
+              <span>Group links coming soon</span>
             </div>
+          )}
+          <a href="https://www.instagram.com/lowveldpadel" target="_blank" rel="noreferrer" className="hp-community-card hp-ig-card">
+            <span className="hp-community-icon">◈</span>
+            <b>Instagram</b>
+            <span>@LowveldPadel</span>
           </a>
-        ) : (
-          <div className="card" style={{ borderLeft: '3px solid rgba(37,211,102,.4)', paddingLeft: 16, opacity: 0.7 }}>
-            <div className="row spread">
-              <div><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Community WhatsApp</b><div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Group links coming soon</div></div>
-              <span className="chip" style={{ fontSize: 10 }}>Coming Soon</span>
-            </div>
-          </div>
-        )}
-      </div>
+          <Link to="/tv" className="hp-community-card hp-tv-card">
+            <span className="hp-community-icon">▶</span>
+            <b>Lowveld TV</b>
+            <span>Highlights & replays</span>
+          </Link>
+        </div>
+      </section>
+
     </div>
   );
 }
@@ -417,20 +517,291 @@ export function Home() {
 function HomeStyles() {
   return (
     <style>{`
-      .home-hero { padding: 4px 0 16px; }
-      .home-hero-stats { display: flex; align-items: center; gap: 0; margin: 12px 0 14px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
-      .home-hero-stat { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 10px 8px; gap: 2px; }
-      .home-hero-stat .num { font-family: var(--display); font-size: 22px; line-height: 1; }
-      .home-hero-stat .muted { font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
-      .home-hero-stat-div { width: 1px; align-self: stretch; background: var(--line); margin: 8px 0; }
-      .home-section { margin-top: 24px; }
-      .home-match-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-      .form-row { display: flex; gap: 3px; justify-content: flex-end; }
-      .form-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
-      .form-dot.W { background: var(--win); }
-      .form-dot.L { background: var(--loss); }
-      .form-dot.D { background: var(--gold); }
-      @media (min-width: 600px) { .home-match-grid { grid-template-columns: 1fr 1fr; } }
+      /* ── root ── */
+      .hp-root { width: 100%; max-width: var(--maxw); margin: 0 auto; padding-bottom: calc(var(--nav-h) + 32px); }
+
+      /* ── hero ── */
+      .hp-hero {
+        position: relative; overflow: hidden;
+        background: linear-gradient(160deg, #0d1428 0%, #0b0f1c 55%, #10152a 100%);
+        border-radius: 0; padding: clamp(28px,5vw,52px) var(--pad) clamp(24px,4vw,44px);
+        margin: 0 calc(-1 * var(--pad));
+      }
+      @media (min-width: 700px) { .hp-hero { border-radius: 20px; margin: 0; } }
+      .hp-hero-glow {
+        position: absolute; inset: 0; pointer-events: none;
+        background:
+          radial-gradient(ellipse 70% 50% at 80% -10%, rgba(255,77,46,.18), transparent 60%),
+          radial-gradient(ellipse 60% 40% at 0% 100%, rgba(47,125,246,.14), transparent 60%),
+          radial-gradient(ellipse 40% 60% at 50% 50%, rgba(232,184,75,.06), transparent 70%);
+      }
+      .hp-hero-noise {
+        position: absolute; inset: 0; pointer-events: none; opacity: .025;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      .hp-hero-content { position: relative; z-index: 1; }
+      .hp-hero-eye { margin-bottom: 12px; }
+      .hp-live-pill {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: rgba(255,77,46,.15); border: 1px solid rgba(255,77,46,.4);
+        color: var(--live); font-size: 11px; font-weight: 800; letter-spacing: .1em;
+        padding: 4px 10px; border-radius: 999px;
+      }
+      .hp-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--live); animation: pulse 1.2s infinite; }
+      .hp-season-pill {
+        display: inline-block;
+        background: rgba(232,184,75,.1); border: 1px solid rgba(232,184,75,.3);
+        color: var(--gold); font-size: 11px; font-weight: 800; letter-spacing: .1em;
+        padding: 4px 10px; border-radius: 999px;
+      }
+      .hp-hero-h1 {
+        font-family: var(--display); font-weight: 900; line-height: .88;
+        font-size: clamp(44px, 11vw, 88px); margin-bottom: 10px;
+        display: flex; flex-direction: column;
+      }
+      .hp-hero-word1 { color: var(--text); }
+      .hp-hero-word2 { color: var(--gold); -webkit-text-stroke: 1px var(--gold); }
+      .hp-hero-sub { color: var(--muted); font-size: clamp(13px,2.5vw,16px); margin-bottom: 20px; }
+      .hp-hero-ctas { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+      .hp-btn-primary {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: var(--live); color: #fff; font-weight: 800; font-size: 14px;
+        padding: 11px 22px; border-radius: 10px; letter-spacing: .02em;
+        transition: filter .15s; text-decoration: none;
+      }
+      .hp-btn-primary:hover { filter: brightness(1.1); }
+      .hp-btn-secondary {
+        display: inline-flex; align-items: center;
+        background: var(--surface-2); color: var(--text); font-weight: 700; font-size: 14px;
+        padding: 11px 18px; border-radius: 10px; border: 1px solid var(--line-strong);
+        transition: background .15s; text-decoration: none;
+      }
+      .hp-btn-secondary:hover { background: #253050; }
+      .hp-hero-strip {
+        display: flex; gap: 0; background: rgba(255,255,255,.05);
+        border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+        backdrop-filter: blur(8px);
+      }
+      .hp-strip-item { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 8px; gap: 2px; }
+      .hp-strip-label { font-size: 9px; font-weight: 800; letter-spacing: .1em; color: var(--faint); text-transform: uppercase; }
+      .hp-strip-val { font-family: var(--display); font-size: clamp(13px,3vw,18px); font-weight: 800; line-height: 1.1; text-align: center; }
+      .hp-strip-sub { font-size: 10px; color: var(--muted); text-align: center; }
+      .hp-strip-div { width: 1px; background: var(--line); align-self: stretch; margin: 10px 0; }
+
+      /* ── sections ── */
+      .hp-section { padding: 0 var(--pad); margin-top: 32px; }
+      @media (min-width: 700px) { .hp-section { padding: 0; } }
+      .hp-section-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+      .hp-section-title { font-family: var(--display); font-weight: 800; font-size: clamp(16px,4vw,22px); text-transform: uppercase; letter-spacing: .01em; }
+      .hp-section-link { font-size: 13px; font-weight: 600; color: var(--court); white-space: nowrap; }
+      .hp-sub-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+
+      /* ── news ── */
+      .hp-news-grid { display: grid; gap: 12px; }
+      @media (min-width: 700px) { .hp-news-grid { grid-template-columns: 1fr 1fr; } }
+      .hp-news-hero {
+        position: relative; display: block; border-radius: var(--r); overflow: hidden;
+        min-height: 220px; background: var(--surface-2); text-decoration: none;
+        transition: transform .2s;
+      }
+      .hp-news-hero:hover { transform: translateY(-2px); }
+      .hp-news-hero-bg {
+        position: absolute; inset: 0;
+        background: linear-gradient(160deg, rgba(255,77,46,.12), rgba(47,125,246,.08));
+      }
+      .hp-news-hero-content { position: relative; z-index: 1; padding: 20px 18px; }
+      .hp-news-kicker { display: block; font-size: 11px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+      .hp-news-hero-title { font-family: var(--display); font-size: clamp(16px,3.5vw,22px); font-weight: 800; text-transform: uppercase; line-height: 1.1; margin-bottom: 8px; }
+      .hp-news-body { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+      .hp-news-date { font-size: 11px; color: var(--faint); }
+      .hp-news-side { display: flex; flex-direction: column; gap: 8px; }
+      .hp-news-card { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 14px; text-decoration: none; transition: background .15s; }
+      .hp-news-card:hover { background: var(--surface-2); }
+      .hp-news-card-title { font-size: 13px; font-weight: 700; line-height: 1.35; margin: 3px 0 4px; color: var(--text); }
+
+      /* ── match centre ── */
+      .hp-match-split { display: grid; gap: 16px; }
+      @media (min-width: 600px) { .hp-match-split { grid-template-columns: 1fr 1fr; } }
+      .hp-match-col { display: flex; flex-direction: column; gap: 8px; }
+      .hp-match-grid { display: grid; gap: 10px; }
+      @media (min-width: 600px) { .hp-match-grid { grid-template-columns: 1fr 1fr; } }
+      .hp-empty { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; text-align: center; color: var(--muted); font-size: 13px; }
+
+      /* ── standings ── */
+      .hp-table-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+      .hp-standings-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .hp-standings-tbl thead tr { border-bottom: 1px solid var(--line-strong); }
+      .hp-standings-tbl th { padding: 10px 8px; text-align: center; font-size: 10px; font-weight: 700; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+      .hp-standings-tbl th:nth-child(2) { text-align: left; }
+      .hp-standing-row { border-bottom: 1px solid var(--line); transition: background .12s; }
+      .hp-standing-row:last-child { border-bottom: none; }
+      .hp-standing-row:hover { background: var(--surface-2); }
+      .hp-row-qualify { border-left: 2px solid var(--win); }
+      .hp-pos-cell { padding: 10px 10px; text-align: center; }
+      .hp-pos { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font-size: 12px; font-weight: 800; background: var(--surface-2); color: var(--muted); }
+      .hp-pos-q { background: rgba(46,204,143,.15); color: var(--win); }
+      .hp-team-cell { display: flex; align-items: center; gap: 8px; padding: 10px 8px; text-decoration: none; }
+      .hp-team-stripe { width: 3px; height: 20px; border-radius: 2px; flex-shrink: 0; }
+      .hp-team-logo { width: 22px; height: 22px; object-fit: contain; flex-shrink: 0; }
+      .hp-team-name { font-weight: 700; font-size: 13px; color: var(--text); white-space: nowrap; }
+      .hp-num { text-align: center; padding: 10px 6px; font-family: var(--data); font-weight: 600; color: var(--muted); }
+      .hp-col-w { color: var(--text) !important; }
+      .hp-col-pts { color: var(--gold); }
+      .hp-col-form { text-align: right; padding-right: 12px; }
+      .hp-form-pills { display: flex; gap: 3px; justify-content: flex-end; }
+      .hp-form-pill { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 4px; font-size: 9px; font-weight: 800; }
+      .hp-fp-W { background: rgba(46,204,143,.2); color: var(--win); }
+      .hp-fp-L { background: rgba(255,93,108,.15); color: var(--loss); }
+      .hp-fp-D { background: rgba(232,184,75,.15); color: var(--gold); }
+      .hp-table-foot { padding: 8px 14px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); display: flex; align-items: center; gap: 6px; }
+      .hp-qualify-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--win); flex-shrink: 0; }
+      @media (max-width: 500px) { .hp-col-form { display: none; } }
+
+      /* ── events ── */
+      .hp-events-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+      @media (min-width: 700px) { .hp-events-grid { grid-template-columns: repeat(4, 1fr); } }
+      .hp-event-card {
+        display: flex; flex-direction: column; gap: 4px; padding: 16px 14px;
+        border-radius: var(--r); border: 1px solid var(--line);
+        background: var(--surface); text-decoration: none;
+        transition: transform .15s, background .15s;
+      }
+      .hp-event-card:hover { transform: translateY(-2px); background: var(--surface-2); }
+      .hp-event-badge { font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 4px; }
+      .hp-event-name { font-family: var(--display); font-size: 14px; font-weight: 800; text-transform: uppercase; color: var(--text); line-height: 1.1; }
+      .hp-event-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+      .hp-event-venue { font-size: 10px; color: var(--faint); }
+      .hp-event-mens .hp-event-badge { color: var(--court); }
+      .hp-event-legacy .hp-event-badge { color: var(--gold); }
+      .hp-event-ladies .hp-event-badge { color: #f0abcc; }
+      .hp-event-360 .hp-event-badge { color: var(--gold); }
+
+      /* ── two col ── */
+      .hp-two-col { display: grid; gap: 24px; }
+      @media (min-width: 800px) { .hp-two-col { grid-template-columns: 1fr 1fr; } }
+
+      /* ── mvp ── */
+      .hp-mvp-list { display: flex; flex-direction: column; gap: 4px; }
+      .hp-mvp-row {
+        display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+        text-decoration: none; transition: background .12s;
+      }
+      .hp-mvp-row:hover { background: var(--surface-2); }
+      .hp-mvp-leader { border-color: rgba(232,184,75,.3); background: rgba(232,184,75,.06); }
+      .hp-mvp-rank { font-family: var(--display); font-size: 16px; font-weight: 900; width: 20px; flex-shrink: 0; }
+      .hp-avatar-sm { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+      .hp-mvp-info { flex: 1; min-width: 0; }
+      .hp-mvp-name { display: block; font-size: 13px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .hp-mvp-sub { font-size: 11px; color: var(--muted); }
+      .hp-mvp-pts { font-family: var(--display); font-size: 16px; font-weight: 800; flex-shrink: 0; }
+
+      /* ── power ── */
+      .hp-power-list { display: flex; flex-direction: column; gap: 4px; }
+      .hp-power-row {
+        display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm);
+        text-decoration: none; transition: background .12s;
+      }
+      .hp-power-row:hover { background: var(--surface-2); }
+      .hp-power-rank { font-family: var(--display); font-size: 18px; font-weight: 900; width: 22px; flex-shrink: 0; color: var(--muted); }
+      .hp-power-logo { width: 26px; height: 26px; object-fit: contain; flex-shrink: 0; }
+      .hp-power-info { flex: 1; min-width: 0; }
+      .hp-power-name { display: block; font-family: var(--display); font-size: 13px; font-weight: 800; text-transform: uppercase; }
+      .hp-power-note { font-size: 10px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+      .hp-move { font-size: 12px; font-weight: 800; flex-shrink: 0; }
+      .hp-move-up { color: var(--win); }
+      .hp-move-down { color: var(--loss); }
+      .hp-move-same { color: var(--muted); }
+
+      /* ── player of week ── */
+      .hp-potw-card {
+        display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+        padding: 16px; text-decoration: none; transition: background .15s;
+      }
+      .hp-potw-card:hover { background: var(--surface-2); }
+      .hp-potw-avatar { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 18px; font-weight: 900; flex-shrink: 0; }
+      .hp-potw-info { flex: 1; min-width: 120px; }
+      .hp-potw-label { display: block; font-size: 10px; font-weight: 800; letter-spacing: .08em; color: var(--gold); text-transform: uppercase; margin-bottom: 3px; }
+      .hp-potw-name { display: block; font-family: var(--display); font-size: 20px; font-weight: 900; text-transform: uppercase; }
+      .hp-potw-franchise { font-size: 12px; color: var(--muted); }
+      .hp-potw-stats { display: flex; gap: 0; margin-left: auto; }
+      .hp-potw-stat { display: flex; flex-direction: column; align-items: center; padding: 8px 14px; border-left: 1px solid var(--line); }
+      .hp-potw-stat span { font-family: var(--display); font-size: 20px; font-weight: 900; line-height: 1; }
+      .hp-potw-stat small { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-top: 2px; }
+
+      /* ── legacy ── */
+      .hp-legacy-card { background: linear-gradient(135deg, rgba(232,184,75,.08), var(--surface)); border: 1px solid rgba(232,184,75,.2); border-radius: var(--r); overflow: hidden; }
+      .hp-legacy-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 14px 16px 12px; border-bottom: 1px solid var(--line); }
+      .hp-legacy-title { display: block; font-family: var(--display); font-size: 15px; font-weight: 800; text-transform: uppercase; }
+      .hp-legacy-sub { font-size: 12px; color: var(--muted); margin-top: 3px; }
+      .hp-live-chip { background: rgba(46,204,143,.12); border: 1px solid rgba(46,204,143,.3); color: var(--win); font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
+      .hp-legacy-table { padding: 4px 0; }
+      .hp-legacy-row { display: flex; align-items: center; gap: 9px; padding: 7px 16px; text-decoration: none; border-bottom: 1px solid var(--line); transition: background .12s; }
+      .hp-legacy-row:last-child { border-bottom: none; }
+      .hp-legacy-row:hover { background: rgba(255,255,255,.03); }
+      .hp-legacy-pos { font-size: 12px; font-weight: 800; color: var(--muted); width: 16px; flex-shrink: 0; }
+      .hp-legacy-name { flex: 1; font-size: 13px; font-weight: 700; color: var(--text); }
+      .hp-legacy-record { font-size: 11px; color: var(--muted); }
+      .hp-legacy-pts { font-family: var(--display); font-size: 15px; font-weight: 900; color: var(--gold); min-width: 22px; text-align: right; }
+
+      /* ── super cup banner ── */
+      .hp-supercup-banner {
+        display: flex; align-items: center; gap: 14px;
+        background: linear-gradient(135deg, rgba(232,184,75,.12), rgba(232,184,75,.04));
+        border: 1px solid rgba(232,184,75,.3); border-radius: var(--r);
+        padding: 16px 18px; text-decoration: none; transition: background .15s;
+      }
+      .hp-supercup-banner:hover { background: linear-gradient(135deg, rgba(232,184,75,.18), rgba(232,184,75,.08)); }
+      .hp-supercup-flag { font-size: 36px; flex-shrink: 0; }
+      .hp-supercup-info { flex: 1; }
+      .hp-supercup-eye { display: block; font-size: 10px; font-weight: 800; letter-spacing: .1em; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
+      .hp-supercup-title { display: block; font-family: var(--display); font-size: 18px; font-weight: 900; text-transform: uppercase; color: var(--text); }
+      .hp-supercup-loc { font-size: 12px; color: var(--muted); }
+      .hp-supercup-arrow { font-size: 20px; color: var(--gold); flex-shrink: 0; }
+
+      /* ── motw ── */
+      .hp-motw-card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+        padding: 16px; text-decoration: none; display: block; transition: background .15s;
+      }
+      .hp-motw-card:hover { background: var(--surface-2); }
+      .hp-motw-label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: var(--live); text-transform: uppercase; margin-bottom: 12px; }
+      .hp-motw-matchup { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .hp-motw-team { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+      .hp-motw-team img { width: 44px; height: 44px; object-fit: contain; }
+      .hp-motw-team b { font-family: var(--display); font-size: 12px; font-weight: 800; text-transform: uppercase; text-align: center; }
+      .hp-motw-vs { font-family: var(--display); font-size: 24px; font-weight: 900; color: var(--muted); }
+      .hp-motw-cta { display: block; text-align: center; font-size: 12px; color: var(--court); margin-top: 12px; }
+
+      /* ── tv ── */
+      .hp-tv-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+      @media (min-width: 500px) { .hp-tv-grid { grid-template-columns: repeat(3, 1fr); } }
+      .hp-tv-card { display: block; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; text-decoration: none; transition: transform .15s; }
+      .hp-tv-card:hover { transform: translateY(-2px); }
+      .hp-tv-thumb { position: relative; padding-top: 56.25%; background: var(--surface-2); overflow: hidden; }
+      .hp-tv-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+      .hp-tv-placeholder { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+      .hp-tv-placeholder img { width: 36px; opacity: .3; }
+      .hp-tv-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,.65); border: 1.5px solid rgba(255,255,255,.7); display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; }
+      .hp-tv-live-tag { position: absolute; top: 8px; left: 8px; background: var(--live); color: #fff; font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 3px; letter-spacing: .08em; }
+      .hp-tv-meta { padding: 8px 10px; }
+      .hp-tv-cat { font-size: 9px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--live); }
+      .hp-tv-title { font-size: 12px; font-weight: 700; color: var(--text); margin: 2px 0 0; line-height: 1.3; }
+
+      /* ── community ── */
+      .hp-community { }
+      .hp-community-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .hp-community-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 18px 12px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); text-decoration: none; text-align: center; transition: background .15s; }
+      .hp-community-card:hover { background: var(--surface-2); }
+      .hp-community-icon { font-size: 24px; }
+      .hp-community-card b { font-size: 13px; font-weight: 800; color: var(--text); }
+      .hp-community-card span { font-size: 11px; color: var(--muted); }
+      .hp-wa-card .hp-community-icon { color: #25D366; }
+      .hp-ig-card .hp-community-icon { color: #e4405f; }
+      .hp-tv-card .hp-community-icon { color: var(--live); }
+      .hp-coming-soon { opacity: 0.55; cursor: default; }
     `}</style>
   );
 }

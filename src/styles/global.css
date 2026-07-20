@@ -144,3 +144,132 @@ h2.display { font-size: clamp(22px, 5vw, 32px); }
 .divider { height: 1px; background: var(--line); margin: 14px 0; }
 .avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-family: var(--display); font-weight: 800; font-size: 15px; }
 .lp-badge { display: inline-flex; align-items: center; gap: 6px; font-family: var(--data); font-weight: 800; padding: 3px 9px; border-radius: 6px; background: rgba(232, 184, 75, 0.14); color: var(--gold); font-size: 13px; }
+
+/* ============================================================
+   UPGRADE PACK — premium sports platform additions
+   Appended to existing global.css
+   ============================================================ */
+
+/* ── Better buttons ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font: inherit; font-weight: 700; font-size: 13px;
+  padding: 9px 18px; border-radius: 10px; cursor: pointer;
+  transition: filter .15s, transform .12s; text-decoration: none;
+  border: none; letter-spacing: .01em;
+}
+.btn:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn.live   { background: var(--live); color: #fff; }
+.btn.gold   { background: var(--gold); color: #0b0f1c; }
+.btn.ghost  { background: transparent; color: var(--text); border: 1px solid var(--line-strong); }
+.btn.ghost:hover { background: var(--surface-2); }
+.btn.court  { background: var(--court); color: #fff; }
+
+/* ── Improved tables ── */
+.tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+.tbl thead tr { border-bottom: 1px solid var(--line-strong); }
+.tbl th { padding: 10px 8px; font-size: 10px; font-weight: 700; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; text-align: center; white-space: nowrap; }
+.tbl td { padding: 10px 8px; border-bottom: 1px solid var(--line); text-align: center; }
+.tbl td:nth-child(2) { text-align: left; }
+.tbl th:nth-child(2) { text-align: left; }
+.tbl tbody tr:last-child td { border-bottom: none; }
+.tbl tbody tr { transition: background .1s; }
+.tbl tbody tr:hover { background: var(--surface-2); }
+.tbl .num { font-family: var(--data); font-variant-numeric: tabular-nums; font-weight: 600; }
+.pos-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 6px; font-size: 12px; font-weight: 800; background: var(--surface-2); color: var(--muted); }
+.pos-badge.q { background: rgba(46,204,143,.15); color: var(--win); }
+
+/* ── Improved cards ── */
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: var(--pad); transition: background .12s; }
+.card:where(a):hover, a.card:hover { background: var(--surface-2); }
+
+/* ── Better tabbar ── */
+.tabbar { display: flex; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; scrollbar-width: none; }
+.tabbar::-webkit-scrollbar { display: none; }
+.tabbar button { flex-shrink: 0; padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--muted); transition: all .15s; white-space: nowrap; }
+.tabbar button.on, .tabbar button:hover { background: var(--surface-2); color: var(--text); }
+.tabbar button.on { color: var(--text); font-weight: 700; }
+
+/* ── Avatar ── */
+.avatar { display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; font-family: var(--display); font-weight: 800; text-transform: uppercase; background: var(--surface-2); color: var(--text); flex-shrink: 0; }
+
+/* ── Chips ── */
+.chip { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 999px; font-size: 11px; font-weight: 700; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+
+/* ── Improved kpis ── */
+.kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.kpi { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-sm); padding: 12px 10px; text-align: center; }
+.kpi .v { font-family: var(--display); font-size: 26px; font-weight: 900; line-height: 1; }
+.kpi .l { font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-top: 4px; }
+
+/* ── Row utility ── */
+.row { display: flex; align-items: center; gap: 8px; }
+.row.spread { justify-content: space-between; }
+.mt { margin-top: 12px; }
+
+/* ── Better navigation (desktop) ── */
+.topbar nav a { position: relative; }
+.topbar nav a.active::after {
+  content: ''; position: absolute; bottom: -2px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 4px; border-radius: 50%; background: var(--gold);
+}
+
+/* ── Glassmorphism for certain overlays ── */
+.glass {
+  background: rgba(19, 26, 46, 0.75);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+}
+
+/* ── Skeleton loader ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: var(--r-sm);
+}
+@keyframes skeleton-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* ── Sticky live button (mobile) ── */
+.sticky-live {
+  position: fixed; bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 12px); right: 14px;
+  z-index: 40; display: flex; align-items: center; gap: 6px;
+  background: var(--live); color: #fff; font-weight: 800; font-size: 13px;
+  padding: 10px 16px; border-radius: 999px;
+  box-shadow: 0 4px 20px rgba(255,77,46,.4);
+  animation: live-glow 2s ease-in-out infinite;
+}
+@keyframes live-glow { 50% { box-shadow: 0 4px 28px rgba(255,77,46,.65); } }
+@media (min-width: 900px) { .sticky-live { display: none; } }
+
+/* ── Footer ── */
+.site-footer {
+  background: var(--surface); border-top: 1px solid var(--line);
+  padding: 32px var(--pad) 24px;
+  margin-top: 48px;
+}
+.site-footer-grid { display: grid; gap: 24px; max-width: var(--maxw); margin: 0 auto; }
+@media (min-width: 700px) { .site-footer-grid { grid-template-columns: repeat(3, 1fr); } }
+.site-footer-col h4 { font-family: var(--display); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; color: var(--gold); margin-bottom: 10px; }
+.site-footer-col a { display: block; font-size: 13px; color: var(--muted); padding: 3px 0; transition: color .12s; }
+.site-footer-col a:hover { color: var(--text); }
+.site-footer-bottom { max-width: var(--maxw); margin: 24px auto 0; padding-top: 16px; border-top: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.site-footer-copy { font-size: 12px; color: var(--faint); }
+
+/* ── Improved hero ── */
+.hero { border-radius: 16px; overflow: hidden; padding: clamp(20px, 4vw, 40px); }
+
+/* ── Mobile overflow prevention ── */
+@media (max-width: 600px) {
+  .kpis { grid-template-columns: repeat(2, 1fr); }
+  h1.display { font-size: clamp(26px, 7vw, 40px); }
+  .tbl th, .tbl td { padding: 8px 5px; font-size: 12px; }
+}
+
+/* ── Smooth page transitions ── */
+.page { animation: page-in .2s ease-out; }
+@keyframes page-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Focus visible improvements ── */
+:focus-visible { outline: 2px solid var(--court); outline-offset: 3px; border-radius: 4px; }

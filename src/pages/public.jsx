@@ -18,6 +18,7 @@ import {
 
 /* ============================ HOME ============================ */
 export function Home() {
+  const [standTab, setStandTab] = React.useState('mens');
   const live = FIXTURES.filter((f) => f.status === 'live');
   const results = FIXTURES.filter((f) => f.status === 'final').slice(-3).reverse();
   const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 3);
@@ -199,7 +200,6 @@ export function Home() {
           LEAGUE STANDINGS — tabbed
       ════════════════════════════════════════ */}
       {(() => {
-        const [standTab, setStandTab] = React.useState('mens');
         const legacySorted = [...LEGACY_STANDINGS].sort((a,b) => b.points - a.points || (b.gd||0) - (a.gd||0));
         return (
           <section className="hp-section">
@@ -951,6 +951,7 @@ export function MatchCentre() {
   const [tab, setTab] = useState('results');
   const [mdFilter, setMdFilter] = useState('all');
 
+  const [standTab, setStandTab] = React.useState('mens');
   const live = FIXTURES.filter((f) => f.status === 'live');
   const allResults = FIXTURES.filter((f) => f.status === 'final').slice().reverse();
   const allFixtures = FIXTURES.filter((f) => f.status === 'scheduled');

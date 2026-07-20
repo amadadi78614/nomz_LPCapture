@@ -18,7 +18,7 @@ import {
 
 /* ============================ HOME ============================ */
 export function Home() {
-  const [standTab, setStandTab] = React.useState('mens');
+  const [standTab, setStandTab] = useState('mens');
   const live = FIXTURES.filter((f) => f.status === 'live');
   const results = FIXTURES.filter((f) => f.status === 'final').slice(-3).reverse();
   const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 3);
@@ -950,8 +950,6 @@ function HomeStyles() {
 export function MatchCentre() {
   const [tab, setTab] = useState('results');
   const [mdFilter, setMdFilter] = useState('all');
-
-  const [standTab, setStandTab] = React.useState('mens');
   const live = FIXTURES.filter((f) => f.status === 'live');
   const allResults = FIXTURES.filter((f) => f.status === 'final').slice().reverse();
   const allFixtures = FIXTURES.filter((f) => f.status === 'scheduled');

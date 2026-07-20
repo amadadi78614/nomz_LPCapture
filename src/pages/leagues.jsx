@@ -1138,27 +1138,45 @@ function LegacyLeagueTab() {
       )}
 
       {subTab === 'standings' && (
-        <div className="grid mt">
-          {[...LEGACY_STANDINGS].sort((a,b) => b.points - a.points).length === 0 || LEGACY_STANDINGS.every(r => r.played === 0) ? (
-            <div className="card" style={{ textAlign: 'center', padding: '28px' }}>
-              <p className="muted" style={{ margin: 0 }}>Standings go live once the first match is played.</p>
-            </div>
-          ) : [...LEGACY_STANDINGS].sort((a,b) => b.points - a.points).map((row, i) => {
-            const fr = legacyFranchiseById(row.franchise_id);
-            if (!fr) return null;
-            return (
-              <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} className="card row spread" style={{ borderLeft: `3px solid ${fr.primary}`, paddingLeft: 14 }}>
-                <span className="row" style={{ gap: 10 }}>
-                  <b className="num muted" style={{ width: 22 }}>{i + 1}</b>
-                  <img src={fr.logo} alt="" style={{ width: 28, height: 28, objectFit: 'contain', mixBlendMode: 'screen' }} />
-                  <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>{fr.name}</b>
-                </span>
-                <span className="muted" style={{ fontSize: 13 }}>
-                  {row.played ? `${row.won}W–${row.lost}L` : '—'} · <b style={{ color: 'var(--text)' }}>{row.points} pts</b>
-                </span>
-              </Link>
-            );
-          })}
+        <div className="mt">
+          <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
+            <table className="tbl">
+              <thead>
+                <tr>
+                  <th>#</th><th>Team</th>
+                  <th className="num">P</th><th className="num">W</th><th className="num">L</th>
+                  <th className="num">MP</th><th className="num">GD</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[...LEGACY_STANDINGS].sort((a,b) => b.points - a.points || (b.gd||0) - (a.gd||0)).map((row, i) => {
+                  const fr = legacyFranchiseById(row.franchise_id);
+                  if (!fr) return null;
+                  const gd = row.gd || 0;
+                  return (
+                    <tr key={fr.id}>
+                      <td><span className="pos-badge">{i + 1}</span></td>
+                      <td>
+                        <Link to={`/legacy-franchise/${fr.id}`} className="row" style={{ gap: 8 }}>
+                          <span style={{ width: 4, alignSelf: 'stretch', borderRadius: 2, background: fr.primary }} />
+                          <img src={fr.logo} alt="" style={{ width: 22, height: 22, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                          <b>{fr.name}</b>
+                        </Link>
+                      </td>
+                      <td className="num">{row.played}</td>
+                      <td className="num">{row.won}</td>
+                      <td className="num">{row.lost}</td>
+                      <td className="num"><b style={{ color: 'var(--gold)' }}>{row.points}</b></td>
+                      <td className="num" style={{ color: gd > 0 ? 'var(--win)' : gd < 0 ? 'var(--loss)' : 'var(--muted)' }}>
+                        {gd > 0 ? '+' : ''}{gd}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="muted mt" style={{ fontSize: 12 }}>MP = Match Points · GD = Game Difference · After Match Day 1</p>
         </div>
       )}
 

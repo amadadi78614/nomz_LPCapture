@@ -38,20 +38,20 @@ export function Home() {
 
       {/* ── 1. HERO ── */}
       <div className="home-hero">
-        <span className="eyebrow" style={{ color: 'var(--live)', fontSize: 11 }}>Season 3 · Match Day 6 complete · 3 match days remaining</span>
+        <span className="eyebrow" style={{ color: 'var(--live)', fontSize: 11 }}>Season 3 · Short break · MD7 coming Tuesday · Legacy League launched! 🔥</span>
         <h1 className="display" style={{ fontSize: 'clamp(22px,5vw,32px)', margin: '6px 0 4px', lineHeight: 1.1 }}>
-          Season 3 in full flight. Legacy ready to take off. Ladies — your time is now!
+          Legacy League is LIVE. Season 3 title race on a knife edge. Ladies — last few spots remaining!
         </h1>
         <p style={{ fontSize: 13, color: 'var(--muted)', fontStyle: 'italic', margin: '0 0 4px' }}>
-          And something exciting is happening this July —{' '}
-          <a href="/unity-cup" style={{ color: 'var(--gold)', fontWeight: 700, fontStyle: 'normal' }}>Unity Cup ⚡</a>
+          Legacy League launched in spectacular fashion 🏆 · Ladies registration closes soon ·{' '}
+          <Link to="/unity-cup" style={{ color: 'var(--gold)', fontWeight: 700, fontStyle: 'normal' }}>Unity Cup update</Link>
         </p>
         <div className="home-hero-stats">
           <div className="home-hero-stat"><span className="num" style={{ color: 'var(--gold)' }}>{leader.points}</span><span className="muted">pts lead</span></div>
           <div className="home-hero-stat-div" />
           <div className="home-hero-stat"><span className="num" style={{ color: 'var(--win)' }}>{mvp ? mvp.stats.mvp_points : '—'}</span><span className="muted">MVP pts</span></div>
           <div className="home-hero-stat-div" />
-          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--court)' }}>6</span><span className="muted">of 9 MDs</span></div>
+          <div className="home-hero-stat"><span className="num" style={{ color: 'var(--court)' }}>7</span><span className="muted">of 9 MDs</span></div>
         </div>
         <div className="row mt" style={{ gap: 8, flexWrap: 'wrap' }}>
           <Link to="/live" className="btn live" style={{ fontSize: 13 }}>● Match Centre</Link>
@@ -272,33 +272,44 @@ export function Home() {
 
       {/* ── 8. LP LEGACY LEAGUE ── */}
       <div className="home-section">
-        <SectionHead title="LP Legacy League" to="/legacy-league" cta="Enter →" />
-        <Link to="/legacy-league" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(199,154,62,.08), transparent)', border: '1px solid rgba(199,154,62,.2)' }}>
+        <SectionHead title="LP Legacy League" to="/legacy-league" cta="Full standings →" />
+        <div className="card" style={{ background: 'linear-gradient(135deg, rgba(199,154,62,.08), transparent)', border: '1px solid rgba(199,154,62,.2)', marginBottom: 8 }}>
           <div className="row spread" style={{ marginBottom: 10 }}>
             <div>
-              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Inaugural Season</b>
-              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>48 players · 6 franchises · 5 adults + 3 youth each</div>
+              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Inaugural Season · Match Day 1 Complete</b>
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Phenomenal support — families packed Play 360 🔥</div>
             </div>
-            <span className="chip" style={{ color: 'var(--gold)' }}>Draft Complete</span>
+            <span className="chip" style={{ color: 'var(--win)', borderColor: 'var(--win)' }}>● Live</span>
           </div>
-          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
-            {LEGACY_FRANCHISES.map((fr) => (
-              <span key={fr.id} className="chip" style={{ fontSize: 10, borderLeft: `3px solid ${fr.primary}` }}>{fr.name}</span>
-            ))}
+          {/* Mini standings */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+            {LEGACY_STANDINGS.slice(0, 6).map((row, i) => {
+              const fr = legacyFranchiseById(row.franchise_id);
+              if (!fr) return null;
+              return (
+                <Link key={fr.id} to={`/legacy-franchise/${fr.id}`} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0', borderBottom: i < 5 ? '1px solid var(--line)' : 'none', textDecoration: 'none' }}>
+                  <b style={{ width: 16, fontSize: 12, color: 'var(--muted)' }}>{i + 1}</b>
+                  <img src={fr.logo} alt="" style={{ width: 20, height: 20, objectFit: 'contain', mixBlendMode: 'screen' }} />
+                  <span style={{ flex: 1, fontSize: 13, fontWeight: 600 }}>{fr.name}</span>
+                  <span className="muted" style={{ fontSize: 11 }}>{row.played}P {row.won}W</span>
+                  <b style={{ color: 'var(--gold)', fontSize: 13, minWidth: 24, textAlign: 'right' }}>{row.points}</b>
+                </Link>
+              );
+            })}
           </div>
-        </Link>
+        </div>
       </div>
 
       {/* ── 9. UNITY CUP ── */}
       <div className="home-section">
-        <Link to="/unity-cup" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(154,168,35,.1), transparent)', border: '1px solid rgba(154,168,35,.25)' }}>
+        <Link to="/unity-cup" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(154,168,35,.06), transparent)', border: '1px solid rgba(154,168,35,.15)' }}>
           <div className="row spread">
             <div>
-              <span className="eyebrow" style={{ color: '#9aa823' }}>★ International Nations Cup · 18 July 2026</span>
+              <span className="eyebrow" style={{ color: '#9aa823' }}>★ International Nations Cup</span>
               <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, marginTop: 4 }}>Unity Cup</b>
-              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>🇿🇦 South Africa vs 🇸🇿 Eswatini · Vodacom 4U The Grove</div>
+              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>🇿🇦 South Africa vs 🇸🇿 Eswatini · New date to be confirmed</div>
             </div>
-            <span style={{ fontSize: 28 }}>⚡</span>
+            <span className="chip" style={{ color: 'var(--muted)', flexShrink: 0 }}>On Hold</span>
           </div>
         </Link>
       </div>

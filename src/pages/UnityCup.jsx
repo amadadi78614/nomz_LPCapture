@@ -5,6 +5,10 @@ export default function UnityCup() {
     <div className="page">
       <span className="eyebrow" style={{ color: '#9aa823' }}>★ International Nations Cup · Nelson Mandela Day ★</span>
       <h1 className="display" style={{ margin: '6px 0 4px' }}>Unity Cup 2026</h1>
+      <div style={{ background: 'rgba(239,68,68,.1)', border: '1px solid rgba(239,68,68,.3)', borderRadius: 8, padding: '10px 14px', marginBottom: 16 }}>
+        <b style={{ color: 'var(--loss)', fontSize: 13 }}>⏸ Event currently on hold</b>
+        <p style={{ color: 'var(--muted)', fontSize: 12, margin: '4px 0 0' }}>New dates will be confirmed and announced here first. Follow @LowveldPadel for updates.</p>
+      </div>
       <p className="muted" style={{ fontSize: 13, marginBottom: 16 }}>Two Nations. One Trophy. One Vision.</p>
 
       {/* Poster */}
@@ -15,7 +19,7 @@ export default function UnityCup() {
       {/* Event Details */}
       <div className="grid cols-2" style={{ gap: 10, marginBottom: 16 }}>
         {[
-          ['Date', '18 July 2026'],
+          ['Date', 'TBC — Date to be confirmed'],
           ['Venue', 'Vodacom 4U The Grove, Mbombela'],
           ['Format', 'Nations Cup · International Series'],
           ['Hashtag', '#UnityCup2026'],

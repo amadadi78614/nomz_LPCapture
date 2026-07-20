@@ -522,19 +522,26 @@ ratedRubbers.forEach((rb) => {
 });
 
 export const NEWS = [
-  { id: 'nm6b', kicker: 'Match Day 6', title: 'Ice Breakers storm past Lions 15-6 — surge into top 3', date: T('2026-06-24', 23), tag: 'mens', body: 'Ice Breakers took four rubbers to Lions\' two at Play 360 — Wayne/Sergio, Nicky/Jacques and Irshaad/Waldo all posting bonus-point wins to jump to 34 points. Cameron Jacobsz and Pieter Badenhorst kept Lions\' P1 pride intact with two wins, but it wasn\'t enough.' },
-  { id: 'nm6a', kicker: 'Match Day 6', title: 'Sonics blow past Boomerangs 16-6 — close to within 1 point of Falcons', date: T('2026-06-24', 22, 30), tag: 'mens', body: 'Sonic Viboras were ruthless at Padel 24 — Heinrich/Anton, Yusuf/Pieter and Stefan/Mohamed all sweeping bonus points as the Sonics move to 58 points, just 1 behind the Falcons. Global Boomerangs took two P2 rubbers to avoid a whitewash. The title race is officially alive.' },
-  { id: 'nlg', kicker: 'Historic First · LP Legacy League', title: 'And so it begins. A new chapter: the LP Legacy Franchise League launches', date: T('2026-06-23', 20), tag: 'legacy', body: 'Where youth and adults come together — a pathway for growth, mentorship, competition and community. Juniors and seniors building skills side by side and shaping the future champions of Lowveld Padel. The draft is complete: 48 players across six franchises, five adults and three youth per team. #LowveldPadel #Padel' },
-  { id: 'nm5a', kicker: 'Match Day 5', title: 'Falcons march on: 19-3 over the Kick Smashers as the lead stretches to 17', date: T('2026-06-22', 22), tag: 'mens', body: 'Desert Falcons took five of six rubbers at Padel 24 — Uwaiz and Yusuf Patel and the Warno/Morne pair both sweeping 3-0 — to move clear at the top on 59 points. Only Siraaj Shaik and Azhar Sujee struck back for the Smashers, edging an 11-13 champions-tiebreak thriller.' },
-  { id: 'nm5b', kicker: 'Match Day 5', title: 'Honours even: Sonic Viboras and Avalanche Aces share the spoils 10-10', date: T('2026-06-22', 22, 30), tag: 'mens', body: 'A genuine tie at Play 360 — three rubbers each. Coomans and Grote stayed perfect with a P1 win, Dr Moola and Boshoff swept their rubber, but the Aces hit back through Frik de Beer and Pierre de Villiers and a battling P2 from Grobler and Naude to split the night.' },
-  { id: 'nm4', kicker: 'Match Day 4', title: 'Falcons stay perfect: 19-3 demolition of the Boomerangs at Padel 24', date: T('2026-06-18', 22), tag: 'mens', body: 'Desert Falcons made it twelve rubbers unbeaten, taking five of six against Global Boomerangs. Only Ryan Kennett and Nabeel Meer interrupted the procession, edging their P2 rubber 6-3, 6-2 before the Falcons closed out the night.' },
-  { id: 'n0', kicker: 'Match Day 3', title: 'Ice Breakers stun the Aces 16-7 for a first win; Viboras down the Smashers 15-7', date: T('2026-06-17', 22), tag: 'mens', body: 'Week 2 belonged to the Ice Breakers \u2014 Imaad/Salmaan, Swart/Herbst and Correia/Enslin all posting clean wins to sink Avalanche Aces 16-7 at Padel 24. At Play 360, Sonic Viboras took four rubbers to beat Samurai Kick Smashers 15-7.' },
-  { id: 'n1', kicker: 'Log tables', title: 'Falcons lead on 21 after the opening rounds; P3 drama as they sit bottom on -2', date: T('2026-06-11', 11), tag: 'mens', body: 'The Astron Energy P1, Vawda\'s Tyre Torque P2 and Omar\'s Motor Den P3 logs are live. Desert Falcons lead the franchise log — but a league adjustment leaves their P3 pairs bottom.' },
-  { id: 'n2', kicker: 'Match Day 2', title: 'Statement night: Falcons blank the Aces 21-0 at Padel 24', date: T('2026-06-10', 22), tag: 'mens', body: 'Desert Falcons won all six rubbers without dropping a game — four bonus-point performances in one night and an emphatic answer to anyone writing early power rankings.' },
-  { id: 'n3', kicker: 'Match Day 2', title: 'Lions roar back from 0-8 down to take the Boomerangs 15-8', date: T('2026-06-10', 22, 30), tag: 'mens', body: 'Global Boomerangs swept the 18:00 slot with two 4-0 bonus-point wins, then Sahara Lions won the last four rubbers 15-0 — Packery/Badenhorst and Morgan/Asvat flipping the night at Play 360.' },
-  { id: 'n4', kicker: 'Match Day 1', title: 'Kick Smashers edge the Aces 12-9 in the Season 3 opener', date: T('2026-06-08', 22), tag: 'mens', body: 'Three 4-0 bonus-point wins against three 3-0 replies — the Samurai took the night on aggregate games in the format\'s first margin-of-victory lesson at Play 360.' },
-  { id: 'n5', kicker: 'League news', title: 'Season 3 fixtures released: 21 matches, two venues, four double-header weeks', date: T('2026-06-05', 10), tag: 'league', body: 'The full round robin runs 8 June to 3 August across Padel 24 and Play 360, with a school-holiday break from 29 June to 20 July.' },
-  { id: 'n6', kicker: 'Announcement', title: 'Ladies League: Season 3 launch details to be announced', date: T('2026-06-06', 10), tag: 'ladies', body: 'The Ladies League launch date, lineup and fixtures will be published here and pushed to the app the moment they are locked.' },
+  { id: 'nm-legacy-launch', league: 'legacy', kicker: 'Legacy League', tag: 'legacy', date: '2026-07-18',
+    title: 'Legacy League launches in spectacular fashion — families pack Play 360',
+    body: 'The LP Legacy League kicked off on Saturday 18 July with phenomenal support as families turned out in their numbers. Three pulsating matches saw the Cheetahs, Leopards and Honey Badgers claim opening victories. The energy inside Play 360 was electric — this is just the beginning.',
+  },
+  { id: 'nm-legacy-md1-cheetahs', league: 'legacy', kicker: 'Match Report', tag: 'legacy', date: '2026-07-18',
+    title: 'Cheetahs secure opening Legacy League victory over Rhinos 8-3',
+    body: 'The LP Cheetahs opened their Legacy League campaign with a commanding 8-3 win over the LP Rhinos at Play 360. Mikel Pillay and Abdurahmaan Jogee were outstanding in the featured match to seal the win for the Cheetahs.',
+  },
+  { id: 'nm-ladies-closing', league: 'ladies', kicker: 'Registration', tag: 'ladies', date: '2026-07-19',
+    title: 'Ladies League Season 2 registration — only a few spots remaining!',
+    body: 'The response for Ladies Franchise League Season 2 has been overwhelming. Registration is filling up fast with only a few spots left. If you haven't registered yet, do it now before it's too late.',
+  },
+  { id: 'nm-mens-break', league: 'mens', kicker: 'Season Update', tag: 'mens', date: '2026-07-19',
+    title: 'Men's Franchise League takes a short break — title race heats up',
+    body: 'The Men's Franchise League takes a brief break before resuming the business end of the season. Falcons lead Viboras by just 1 point with 3 match days remaining. Every point counts.',
+  },
+  { id: 'nm-unity-cup-hold', league: 'mens', kicker: 'Unity Cup', tag: 'event', date: '2026-07-19',
+    title: 'Unity Cup postponed — new date to be confirmed',
+    body: 'The Unity Cup international nations clash between South Africa and Eswatini has been placed on hold. New dates will be confirmed shortly. Stay tuned to lowveldpadel.co.za for the announcement.',
+  },
 ];
 
 export const POWER_RANKINGS = {
@@ -854,13 +861,80 @@ export const LEGACY_SQUAD_NOTE = 'Squads confirmed — the LP Legacy League draf
 export const legacyPlayersByFranchise = (fid) => LEGACY_PLAYERS.filter((p) => p.franchise_id === fid);
 
 // Standings start level — fill as results come in.
-export const LEGACY_STANDINGS = LEGACY_FRANCHISES.map((fr) => ({
-  franchise_id: fr.id, played: 0, won: 0, lost: 0, drawn: 0, bp: 0, points: 0, adj: 0,
-}));
+export const LEGACY_STANDINGS = [
+  { franchise_id: 'lp-cheetahs',     played: 1, won: 1, lost: 0, drawn: 0, bp: 0, points: 8, mp: 8,  gd: 5,  adj: 0 },
+  { franchise_id: 'lp-leopards',     played: 1, won: 1, lost: 0, drawn: 0, bp: 0, points: 8, mp: 8,  gd: 2,  adj: 0 },
+  { franchise_id: 'lp-honey-badgers',played: 1, won: 1, lost: 0, drawn: 0, bp: 0, points: 7, mp: 7,  gd: 4,  adj: 0 },
+  { franchise_id: 'lp-eagles',       played: 1, won: 0, lost: 1, drawn: 0, bp: 0, points: 4, mp: 4,  gd: -4, adj: 0 },
+  { franchise_id: 'lp-jackals',      played: 1, won: 0, lost: 1, drawn: 0, bp: 0, points: 4, mp: 4,  gd: -2, adj: 0 },
+  { franchise_id: 'lp-rhinos',       played: 1, won: 0, lost: 1, drawn: 0, bp: 0, points: 3, mp: 3,  gd: -5, adj: 0 },
+];
 
-export const LEGACY_FIXTURES = []; // add scheduled/final fixtures here, same shape as FIXTURES
-export const LEGACY_POWER = LEGACY_FRANCHISES.map((f) => f.id); // weekly order, seed = registration order
-export const LEGACY_STATUS = 'drafted'; // 'pre' → 'drafted' (squads set) → 'live' (results in)
+export const LEGACY_FIXTURES = [
+  // ── MATCH DAY 1 · 18 July 2026 · Play 360 Padel Centre ──
+  {
+    id: 'lg-md1-1', round: 1, league: 'legacy', league_type: 'legacy',
+    home: 'lp-rhinos', away: 'lp-cheetahs',
+    start: new Date('2026-07-18T14:00:00+02:00'), court: 'Play 360', status: 'final',
+    score: {
+      winner: 'away',
+      totals: [3, 8],
+      rubbers: [
+        { slot: '14:00', winner: 'home', games: [3, 0],
+          homeIds: ['Christiaan van Aardt', 'Zinidine Morgan'], awayIds: ['Mauritz van der Mescht', 'Michael Smit'],
+          sets: [[6,4],[6,3],[1,10]] },
+        { slot: '15:00', winner: 'away', games: [0, 4],
+          homeIds: ['Irshaad Moola', 'Yusuf Amod'], awayIds: ['Shoaib Nomani', 'Mohamed Nomani'],
+          sets: [[4,6],[2,6],[8,10]] },
+        { slot: '16:00', winner: 'away', games: [0, 4],
+          homeIds: ['Ayaan Mohamed', 'Rafiq Mohamed'], awayIds: ['Mikel Pillay', 'Abdurahmaan Jogee'],
+          sets: [[6,7],[3,6],[7,10]] },
+      ],
+    },
+  },
+  {
+    id: 'lg-md1-2', round: 1, league: 'legacy', league_type: 'legacy',
+    home: 'lp-leopards', away: 'lp-jackals',
+    start: new Date('2026-07-18T14:00:00+02:00'), court: 'Play 360', status: 'final',
+    score: {
+      winner: 'home',
+      totals: [8, 4],
+      rubbers: [
+        { slot: '14:00', winner: 'away', games: [0, 4],
+          homeIds: ['Muhammed Ruhaan Shaik', 'Ebrahim Mangerah'], awayIds: ['Dewan Duvenhage', 'Yusuf Ismail'],
+          sets: [[0,6],[0,6],[6,10]] },
+        { slot: '15:00', winner: 'home', games: [4, 0],
+          homeIds: ['Ridhwaan Sujee', 'Huzaifah Sujee'], awayIds: ['Stiaan Duvenhage', 'Spanner Mescht'],
+          sets: [[6,2],[7,5],[10,0]] },
+        { slot: '16:00', winner: 'home', games: [4, 0],
+          homeIds: ['Ozayr Shaik', 'Adil Amod'], awayIds: ['Zunaid Ganchi', 'Mohamed Hoosein Patel'],
+          sets: [[6,2],[6,2],[10,7]] },
+      ],
+    },
+  },
+  {
+    id: 'lg-md1-3', round: 1, league: 'legacy', league_type: 'legacy',
+    home: 'lp-eagles', away: 'lp-honey-badgers',
+    start: new Date('2026-07-18T14:00:00+02:00'), court: 'Play 360', status: 'final',
+    score: {
+      winner: 'away',
+      totals: [4, 7],
+      rubbers: [
+        { slot: '14:00', winner: 'home', games: [4, 0],
+          homeIds: ['Fiaz Bhikhoo', 'Sahal Yunus'], awayIds: ['Sailesh Nagar', 'Zandre de Kok'],
+          sets: [[6,0],[6,2],[10,7]] },
+        { slot: '15:00', winner: 'away', games: [0, 4],
+          homeIds: ['Dian Erasmus', 'Mohamed Azhar Sujee'], awayIds: ['Jameel Valley', 'Faheem Seedat'],
+          sets: [[3,6],[3,6],[7,10]] },
+        { slot: '16:00', winner: 'away', games: [0, 3],
+          homeIds: ['Armaan Bhikhoo', 'Yahya Sujee'], awayIds: ['Seth van den Berg', 'Reyhaan Seedat'],
+          sets: [[2,6],[6,4],[7,10]] },
+      ],
+    },
+  },
+];
+export const LEGACY_POWER = ['lp-cheetahs', 'lp-leopards', 'lp-honey-badgers', 'lp-eagles', 'lp-jackals', 'lp-rhinos'];
+export const LEGACY_STATUS = 'live'; // 'pre' → 'drafted' (squads set) → 'live' (results in)
 
 /* =================================================================
  * ROAD TO THE 360 SUPER CUP  —  Lowveld's national journey.

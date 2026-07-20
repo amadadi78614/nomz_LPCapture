@@ -21,7 +21,7 @@ export function Cups() {
           <div className="card" style={{ textAlign: 'center', padding: '20px' }}>
             <p className="eyebrow" style={{ marginBottom: 6 }}>International Nations Cup · Nelson Mandela Day</p>
             <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20 }}>Unity Cup 2026</b>
-            <p className="muted" style={{ margin: '8px 0 0', fontSize: 13 }}>18 July 2026 · Vodacom 4U The Grove · South Africa vs Eswatini</p>
+            <p className="muted" style={{ margin: '8px 0 0', fontSize: 13 }}>TBC · Vodacom 4U The Grove · South Africa vs Eswatini</p>
             <p style={{ fontSize: 11, color: '#9aa823', margin: '8px 0 0', letterSpacing: '.08em', textTransform: 'uppercase' }}>#UnityCup2026 · Where Nations Unite. Legends Rise.</p>
           </div>
         </div>

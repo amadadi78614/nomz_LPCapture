@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import { TopBar, LiveTicker, BottomNav } from './components/ui';
 import {
@@ -17,8 +17,10 @@ import {
   RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
 } from './pages/leagues';
 import UnityCup from './pages/UnityCup';
+import { SuperCup360 } from './pages/leagues';
 import { Leagues } from './pages/leagues';
 import { AllTimeRankings } from './pages/AllTimeRankings';
+import { NotFound } from './pages/public';
 import { Cups } from './pages/Cups';
 
 function ScrollTop() {
@@ -51,8 +53,9 @@ export default function App() {
           <Route path="/draft" element={<DraftHistory />} />
           <Route path="/dynasty" element={<Dynasty />} />
           <Route path="/fan-zone" element={<FanZone />} />
-          <Route path="/road-to-360" element={<RoadTo360 />} />
-          <Route path="/road-to-360-super-cup" element={<RoadTo360 />} />
+          <Route path="/360-super-cup" element={<SuperCup360 />} />
+          <Route path="/road-to-360" element={<Navigate to="/360-super-cup" replace />} />
+          <Route path="/road-to-360-super-cup" element={<Navigate to="/360-super-cup" replace />} />
           <Route path="/legacy-league" element={<LegacyLeague />} />
           <Route path="/legacy-franchise/:id" element={<LegacyFranchise />} />
           <Route path="/predictor" element={<Predictor />} />
@@ -70,7 +73,8 @@ export default function App() {
           <Route path="/all-time-rankings" element={<AllTimeRankings />} />
           <Route path="/cups" element={<Cups />} />
           <Route path="/register" element={<Registration />} />
-          <Route path="*" element={<Home />} />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
         <BottomNav />
       </div>

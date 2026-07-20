@@ -532,7 +532,7 @@ export const NEWS = [
   },
   { id: 'nm-ladies-closing', league: 'ladies', kicker: 'Registration', tag: 'ladies', date: '2026-07-19',
     title: 'Ladies League Season 2 registration — only a few spots remaining!',
-    body: "The response for Ladies Franchise League Season 2 has been overwhelming. Registration is filling up fast with only a few spots left. If you haven't registered yet, do it now before it's too late.",
+    body: "The response for Ladies Franchise League Season 2 has been overwhelming. Registration is filling up fast with only a few spots left. If you haven\'t registered yet, do it now before it's too late.",
   },
   { id: 'nm-mens-break', league: 'mens', kicker: 'Season Update', tag: 'mens', date: '2026-07-19',
     title: "Men's Franchise League takes a short break — title race heats up",
@@ -941,8 +941,8 @@ export const LEGACY_STATUS = 'live'; // 'pre' → 'drafted' (squads set) → 'li
  * 28–30 August 2026. Lowveld Padel has been invited to compete.
  * ================================================================= */
 export const ROAD_TO_360 = {
-  title: 'Road to the 360 Super Cup',
-  subtitle: 'Lowveld Padel has been invited to compete on the national stage.',
+  title: '360 Super Cup — Official Invitation',
+  subtitle: 'Lowveld Padel has received an official invitation to participate in the 360 Super Cup, 28–30 August 2026 in Johannesburg.',
   location: 'Johannesburg',
   dates: '28–30 August 2026',
   startDate: '2026-08-28',

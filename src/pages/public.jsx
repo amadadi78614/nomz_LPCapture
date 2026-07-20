@@ -255,13 +255,13 @@ export function Home() {
 
       {/* ── 7. ROAD TO 360 ── */}
       <div className="home-section">
-        <Link to="/road-to-360" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(199,154,62,.12), rgba(199,154,62,.03))', border: '1px solid rgba(199,154,62,.3)' }}>
+        <Link to="/360-super-cup" className="card" style={{ display: 'block', background: 'linear-gradient(135deg, rgba(199,154,62,.12), rgba(199,154,62,.03))', border: '1px solid rgba(199,154,62,.3)' }}>
           <div className="row spread">
             <div className="row" style={{ gap: 12 }}>
               <span style={{ fontSize: 28 }}>🇿🇦</span>
               <div>
-                <span className="eyebrow" style={{ color: 'var(--gold)' }}>Road to 360</span>
-                <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Road to the 360 Super Cup</b>
+                <span className="eyebrow" style={{ color: 'var(--gold)' }}>Official Invitation · 28–30 Aug 2026</span>
+                <b style={{ display: 'block', fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>Lowveld Padel at the 360 Super Cup</b>
                 <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>{ROAD_TO_360.location} · {ROAD_TO_360.dates}</div>
               </div>
             </div>
@@ -394,15 +394,21 @@ export function Home() {
 
       {/* ── 15. COMMUNITY ── */}
       <div className="home-section">
-        <Link to="/community" className="card" style={{ display: 'block', borderLeft: '3px solid #25D366', paddingLeft: 16 }}>
-          <div className="row spread">
-            <div>
-              <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Join the Community</b>
-              <div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Match-night chat, results & banter on WhatsApp</div>
+        {communityLinks.leagueCommunity ? (
+          <a href={communityLinks.leagueCommunity} target="_blank" rel="noreferrer" className="card" style={{ display: 'block', borderLeft: '3px solid #25D366', paddingLeft: 16, textDecoration: 'none' }}>
+            <div className="row spread">
+              <div><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Join the Community</b><div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Match-night chat, results & banter on WhatsApp</div></div>
+              <span style={{ fontSize: 22, color: '#25D366' }}>✆</span>
             </div>
-            <span style={{ fontSize: 22, color: '#25D366' }}>✆</span>
+          </a>
+        ) : (
+          <div className="card" style={{ borderLeft: '3px solid rgba(37,211,102,.4)', paddingLeft: 16, opacity: 0.7 }}>
+            <div className="row spread">
+              <div><b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 14 }}>Community WhatsApp</b><div className="muted" style={{ fontSize: 12, marginTop: 2 }}>Group links coming soon</div></div>
+              <span className="chip" style={{ fontSize: 10 }}>Coming Soon</span>
+            </div>
           </div>
-        </Link>
+        )}
       </div>
     </div>
   );
@@ -1601,7 +1607,7 @@ export function SponsorCentre() {
 /* =========================== MORE ============================= */
 export function More() {
   const items = [
-    ['Road to 360', '/road-to-360'], ['Legacy League', '/legacy-league'], ['Predictor', '/predictor'], ['Lowveld TV', '/tv'],
+    ['360 Super Cup', '/360-super-cup'], ['Legacy League', '/legacy-league'], ['Predictor', '/predictor'], ['Lowveld TV', '/tv'],
     ['Rivalries', '/rivalries'], ['Hall of Fame', '/hall-of-fame'], ['Draft & Auction', '/draft'], ['Dynasty Tracker', '/dynasty'],
     ['Fan Zone', '/fan-zone'], ['Community', '/community'], ['Sports Hub', '/sports-hub'], ['Rankings', '/rankings'],
     ['Franchises', '/franchises'], ['News Centre', '/news'], ['Sponsors', '/sponsors'],
@@ -1615,6 +1621,17 @@ export function More() {
           <Link key={to} to={to} className="card row spread"><b>{l}</b><span className="muted">→</span></Link>
         ))}
       </div>
+    </div>
+  );
+}
+
+export function NotFound() {
+  return (
+    <div className="page" style={{ textAlign: 'center', padding: '60px 20px' }}>
+      <div style={{ fontFamily: 'var(--display)', fontSize: 72, color: 'var(--gold)', lineHeight: 1, opacity: .4 }}>404</div>
+      <h1 className="display" style={{ margin: '12px 0 8px', fontSize: 24 }}>Page Not Found</h1>
+      <p className="muted" style={{ marginBottom: 24, maxWidth: 300, margin: '8px auto 24px' }}>This page doesn't exist or may have moved.</p>
+      <Link to="/" className="btn gold">← Back to Home</Link>
     </div>
   );
 }

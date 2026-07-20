@@ -18,6 +18,8 @@ const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-ZA', { day: 'numer
  * WhatsApp button — reusable, reads from central config
  * ========================================================== */
 export function WaButton({ href, label = 'Join on WhatsApp', share, small }) {
+  const isActive = href && href !== '#';
+  if (!isActive && !share) return null;
   const url = share ? waShare(share) : (href || '#');
   return (
     <a className={`wa-btn ${small ? 'sm' : ''}`} href={url} target="_blank" rel="noreferrer">
@@ -181,7 +183,7 @@ export function LegacyLeague() {
           })}
         </div>
       )}
-      {tab === 'fixtures' && <PreState note={LEGACY_FIXTURES.length ? '' : 'Fixtures will be published once the draft is complete and the schedule is confirmed.'} />}
+      {tab === 'fixtures' && <PreState note={LEGACY_FIXTURES.length ? '' : 'Fixtures for upcoming match days will be published as the schedule is confirmed.'} />}
       {tab === 'mvp' && <PreState note="The LP Legacy League MVP race begins with the first match night." />}
       {tab === 'power' && (
         <div className="grid mt">
@@ -200,7 +202,7 @@ export function LegacyLeague() {
       {tab === 'draft' && (
         <div className="card mt">
           <p className="eyebrow" style={{ marginBottom: 6 }}>LP Legacy League Draft Centre</p>
-          <p className="gold" style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>🏆 Draft Complete — all 48 players assigned</p>
+          <p className="gold" style={{ margin: 0, fontSize: 14, fontWeight: 700 }}>{LEGACY_STATUS === 'live' ? '🔥 Season Active — Match Day 1 complete' : '🏆 Draft Complete — all 48 players assigned'}</p>
           <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>6 teams · 5 adults + 3 youth each · Season 4</p>
           <div className="lg-grid mt">
             {LEGACY_FRANCHISES.map((fr) => {
@@ -372,7 +374,7 @@ export function Predictor() {
             <div className="bar"><i style={{ width: `${split[o.key]}%` }} /></div>
           </div>
         ))}
-        <p className="muted" style={{ fontSize: 11, margin: '4px 0 0' }}>Live community split — sample data until votes accumulate.</p>
+        <p className="muted" style={{ fontSize: 11, margin: '4px 0 0' }}>Demo prediction data — community voting coming soon.</p>
       </div>
 
       <SectionHead title="LP AI Prediction" />
@@ -425,7 +427,7 @@ export function Community() {
     { key: 'leagueCommunity', title: 'League Community', note: 'The main hub for all Lowveld Padel news.' },
     { key: 'matchdayChat', title: 'Matchday Chat', note: 'Live banter and scores on match nights.' },
     { key: 'legacyLeague', title: 'Legacy League Community', note: 'Everything Legacy League.' },
-    { key: 'roadTo360', title: 'Road to 360 Updates', note: "Follow Lowveld's national journey." },
+    { key: 'roadTo360', title: 'Road to 360 Updates', note: "Follow Lowveld Padel on the national stage." },
   ];
   return (
     <div className="page">
@@ -1235,3 +1237,5 @@ export function Leagues() {
     </div>
   );
 }
+
+export function SuperCup360() { return <RoadTo360 />; }

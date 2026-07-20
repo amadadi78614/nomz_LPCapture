@@ -307,16 +307,24 @@ export function Home() {
 
             {/* LADIES */}
             {standTab === 'ladies' && (
-              <div className="hp-table-wrap" style={{ textAlign: 'center', padding: '32px 20px' }}>
-                <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16, color: '#db2777', marginBottom: 8 }}>
-                  Ladies Franchise League
+              <div className="hp-table-wrap">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 16px 12px', borderBottom: '1px solid var(--line)', flexWrap: 'wrap', gap: 10 }}>
+                  <div>
+                    <div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15, color: '#f0abcc' }}>Ladies Franchise League · Season 2</div>
+                    <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 3 }}>Mpumalanga's largest ever Ladies Padel League</div>
+                  </div>
+                  <span style={{ background: 'rgba(219,39,119,.15)', border: '1px solid rgba(219,39,119,.3)', color: '#f0abcc', fontSize: 11, fontWeight: 800, padding: '3px 10px', borderRadius: 999, letterSpacing: '.06em' }}>🔒 Registration Closed</span>
                 </div>
-                <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 16 }}>
-                  Season 2 is upcoming — standings will appear once play begins.
-                </p>
-                <Link to="/register" className="hp-btn-primary" style={{ background: '#db2777', display: 'inline-flex', fontSize: 13 }}>
-                  Register for Season 2 →
-                </Link>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '28px 20px', gap: 24, flexWrap: 'wrap' }}>
+                  <div style={{ textAlign: 'center' }}>
+                    <div style={{ fontFamily: 'var(--display)', fontSize: 64, fontWeight: 900, color: '#db2777', lineHeight: 1 }}>60</div>
+                    <div style={{ fontSize: 11, fontWeight: 800, letterSpacing: '.1em', color: '#f0abcc', textTransform: 'uppercase', marginTop: 4 }}>Players Confirmed</div>
+                  </div>
+                  <div style={{ color: 'var(--muted)', fontSize: 13, maxWidth: 260, lineHeight: 1.6, fontStyle: 'italic' }}>
+                    "Empower. Compete. Inspire." — All registered players will receive league details from the Lowveld Padel team.
+                  </div>
+                </div>
+                <div className="hp-table-foot">Standings will appear once the season begins</div>
               </div>
             )}
           </section>
@@ -343,11 +351,11 @@ export function Home() {
             <span className="hp-event-meta">Match Day 1 Complete</span>
             <span className="hp-event-venue">Play 360 · Nelspruit</span>
           </Link>
-          <Link to="/leagues" className="hp-event-card hp-event-ladies">
-            <span className="hp-event-badge">Registration Open</span>
+          <Link to="/register" className="hp-event-card hp-event-ladies">
+            <span className="hp-event-badge">🔒 Closed · 60 Players</span>
             <span className="hp-event-name">Ladies Franchise League</span>
-            <span className="hp-event-meta">Season 2 · Last Few Spots</span>
-            <span className="hp-event-venue">Register Now</span>
+            <span className="hp-event-meta">Season 2 · Starting Soon</span>
+            <span className="hp-event-venue">Mpumalanga's biggest ever</span>
           </Link>
           <Link to="/360-super-cup" className="hp-event-card hp-event-360">
             <span className="hp-event-badge">Official Invite</span>

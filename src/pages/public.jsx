@@ -75,7 +75,9 @@ export function Home() {
           {/* RIGHT — LP mark + stats */}
           <div className="hp-hero-right">
             <div className="hp-hero-emblem">
-              <img src="/brand/lp-mark.png" alt="Lowveld Padel" className="hp-hero-mark" />
+              <div className="hp-hero-emblem-ring">
+                <img src="/brand/lp-mark.png" alt="Lowveld Padel" className="hp-hero-mark" />
+              </div>
               <div className="hp-hero-emblem-glow" />
             </div>
           </div>
@@ -644,8 +646,18 @@ function HomeStyles() {
       }
       @media (min-width: 700px) { .hp-hero-right { display: flex; } }
       .hp-hero-emblem { position: relative; display: flex; align-items: center; justify-content: center; }
+      .hp-hero-emblem-ring {
+        width: clamp(140px,20vw,220px); height: clamp(140px,20vw,220px);
+        border-radius: 50%;
+        background: radial-gradient(circle, #111828 0%, #0b0f1c 70%);
+        border: 1px solid rgba(232,184,75,.2);
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden;
+        box-shadow: 0 0 0 1px rgba(232,184,75,.1), 0 0 40px rgba(232,184,75,.12), inset 0 0 30px rgba(0,0,0,.4);
+      }
       .hp-hero-mark {
         width: clamp(120px,18vw,200px); height: auto; object-fit: contain;
+        mix-blend-mode: screen;
         filter: drop-shadow(0 0 40px rgba(232,184,75,.35)) drop-shadow(0 0 80px rgba(232,184,75,.15));
         animation: emblem-float 4s ease-in-out infinite;
       }

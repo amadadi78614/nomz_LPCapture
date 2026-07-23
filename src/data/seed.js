@@ -21,7 +21,7 @@ export const LADIES_SEASON_STATUS = 'pre';
 export const FRANCHISES = [
   { id: 'avalanche-aces', name: 'Avalanche Aces', league: 'mens', short: 'Aces', logo: '/logos/avalanche-aces.webp', owner: 'Frik de Beer', ownerBrand: 'Ryan Tate', venue: 'Padel 24', founded: 2024 },
   { id: 'desert-falcons', name: 'Desert Falcons', league: 'mens', short: 'Falcons', logo: '/logos/desert-falcons.webp', owner: 'Ahmed Ismail & Muhammad Mangerah', venue: 'Padel 24', founded: 2024 },
-  { id: 'globo-boomerangs', name: 'Global Boomerangs', league: 'mens', short: 'Boomerangs', logo: '/logos/globo-boomerangs.webp', owner: 'Nabeel Meer', venue: 'Play 360', founded: 2024 },
+  { id: 'globo-boomerangs', name: 'Globo Boomerangs', league: 'mens', short: 'Boomerangs', logo: '/logos/globo-boomerangs.webp', owner: 'Nabeel Meer', venue: 'Play 360', founded: 2024 },
   { id: 'ice-breakers', name: 'Ice Breakers', league: 'mens', short: 'Ice Breakers', logo: '/logos/ice-breakers.webp', owner: 'Zaheer Methar & Irshaad Moola', venue: 'Padel 24', founded: 2024 },
   { id: 'samurai-kicksmashers', name: 'Samurai Kick Smashers', league: 'mens', short: 'Kick Smashers', logo: '/logos/samurai-kicksmashers.webp', owner: 'Siraaj Shaik & Shaun Marope', ownerBrand: 'Patels Hardware', venue: 'Play 360', founded: 2024 },
   { id: 'sonic-viboras', name: 'Sonic Viboras', league: 'mens', short: 'Viboras', logo: '/logos/sonic-viboras.webp', owner: 'Wayne Wagner', venue: 'Padel 24', founded: 2024 },
@@ -101,8 +101,17 @@ for (const [frId, tiers] of Object.entries(SQUADS)) {
   }
 }
 
-const byName = (frId, name) => PLAYERS.find((p) => p.franchise_id === frId && p.name === name);
-const ids = (frId, ...names) => names.map((n) => byName(frId, n)?.id || null);
+const PLAYER_ALIASES = {
+  'globo-boomerangs': { 'Jojo': 'Yusuf Asvat', 'Joseph': 'Joseph van der Merwe', 'Ahmed': 'Ahmed Mungalee', 'Lima': 'Liam Morgan', 'Lefa': 'Lefa Moganedi', 'Adil': 'Adil Ahmed', 'Momo': 'Muhammed Shehzad Meer', 'Nabz': 'Nabeel Meer', 'Duran': 'Duran Greever', 'Ryan': 'Ryan Kennett', 'Tahir': 'Taahir Mungalee', 'Taahir': 'Taahir Mungalee', 'Suhail': 'Suhail Patel', 'Shaffique': 'Shaffique Jeewa', 'Ferhaan': 'Farhaan Shaik', 'Farhaan': 'Farhaan Shaik', 'Kiran': 'Kiran Hansraj', 'Stefan': 'Stefan Erasmus' },
+  'samurai-kicksmashers': { 'Siraaj': 'Siraaj Shaik', 'Danyaal': 'Danyaal Nomani', 'Bryan': 'Bryan Theron', 'Sujee': 'Muhammad Azhar Sujee', 'Armand': 'Armand Esterhuizen', 'Siki': 'Sikander Cassim', 'Brent': 'Brent Grix', 'Dillon': 'Dillon Francis', 'Jina': 'Muhammed Jina', 'Muneer': 'Muneer Shaik', 'Ismail': 'Ismail Karodia', 'Imran': 'Imraan Khan' },
+  'avalanche-aces': { 'Donavan': 'Donavan Taylor', 'Donovan': 'Donavan Taylor', 'Ryan': 'Ryan Tate', 'Frik': 'Frik de Beer', 'Felix': 'Felix Lombard', 'Kobus': 'Kobus van Rensburg', 'Gerco': 'Gerco van Rooyen', 'Ettiene': 'Etienne Grobler', 'Etienne': 'Etienne Grobler', 'Ruaan': 'Ruaan Naude', 'Wiehaan': 'Wiehann Mohlen', 'Wiehann': 'Wiehann Mohlen', 'Hoffies': 'Hoffmann Maritz', 'Hoffman': 'Hoffmann Maritz', 'Rishad': 'Rishaad Shaik', 'Rishaad': 'Rishaad Shaik', 'Prashil': 'Prashil Nagar' },
+  'sonic-viboras': { 'Coomans': 'Heinrich Coomans', 'Anton': 'Anton Grote', 'Ridi': 'Ridhwaan Sujee', 'Erlo': 'Erlo Olivier', 'Warwick': 'Warwick Morgan', 'Joshua': 'Joshua Hoffman', 'Ismail': 'Ismail Fakir', 'Jaques': 'Jacques Henning', 'Jacques': 'Jacques Henning', 'Saliem': 'Saliem Mahomed', 'George': 'George du Toit', 'Gerrit': 'Gerrit Smith' },
+  'sahara-lions': { 'Cian': 'Cian Maritz', 'Yusuf': 'Yusuf Packery', 'Justin': 'Justin van Staaden', 'Suhayl': 'Suhayl Packery', 'Naeem': 'Naeem Omar', 'Alfaiz': 'Alfaiz Mamji', 'Suliman': 'Suliman Patel', 'Irfaan': 'Irfaan Mamji', 'Aadil': 'Aadil Asvat', 'Majid': 'Majid Bapu', 'Drikus': 'Drikus Prins' },
+  'ice-breakers': { 'Zady': 'Zayd Methar', 'Zayd': 'Zayd Methar', 'Nicky': 'Nicky Joubert', 'Irshaad': 'Irshaad Moola', 'Aadam': 'Aadam Nomani', 'Duhan': 'Duhan Swart', 'JD': 'JD Herbst', 'Philmar': 'Phil-Mar Van Rensburg', 'Phil-Mar': 'Phil-Mar Van Rensburg', 'Jacques': 'Jacques Van Zyl', 'Imaad': 'Imaad Arabi', 'Salman': 'Salmaan Methar', 'Wayne': 'Wayne Enslin', 'Waldo': 'Waldo van Tonder' },
+  'desert-falcons': { 'Ryan': 'Ryan Wicht', 'Boms': 'Ebrahim Mungalee', 'Danie': 'Danie Rautenbach', 'Zaeem': 'Zaeem Sadiq', 'Uwaiz': 'Uwaiz Patel', 'Yusuf': 'Yusuf Patel', 'Warno': 'Warno Smit', 'Morne': 'Morne Steenekamp', 'Reinhardt': 'Reinhardt Trollip', 'Scalk': 'Schalk Schutte', 'Schalk': 'Schalk Schutte', 'Mangera': 'Muhammad Mangerah', 'Mangerah': 'Muhammad Mangerah', 'Reino': 'Reino Grobler' },
+};
+const byName = (frId, name) => { const a = PLAYER_ALIASES[frId] || {}; const n = a[name] || name; return PLAYERS.find((p) => p.franchise_id === frId && p.name === n); };
+const ids = (frId, ...names) => names.map((n) => { const p = byName(frId, n); if (!p) console.warn('[LP] Unresolved: ' + n + ' in ' + frId); return p ? p.id : null; });
 
 // ---- Sponsors (official court-tier partners) ------------------
 export const SPONSORS = [
@@ -274,7 +283,7 @@ export const FIXTURES = [
       { slot: '20:30', court: 'P2', home: 'Armand Esterhuizen / Shaun Moropa', away: 'Warno Smit / Morne Steenekamp',
         homeIds: ids('samurai-kicksmashers', 'Armand Esterhuizen', 'Shaun Moropa'), awayIds: ids('desert-falcons', 'Warno Smit', 'Morne Steenekamp'), games: [0, 4], winner: 'away', sets: [[1, 6], [4, 6], [2, 10]] },
       { slot: '20:30', court: 'P3', home: 'Riyaz Ahmed Bellim / Dillon Francis', away: 'Jacques Burger / Reino Grobler',
-        homeIds: ids('samurai-kicksmashers', 'Riyaz Ahmed Bellim', 'Dillon Francis'), awayIds: ids('desert-falcons', 'Jacques Burger', 'Reino Grobler'), games: [0, 4], winner: 'away', sets: [[3, 6], [5, 7], [6, 10]] },
+        homeIds: ids('samurai-kicksmashers', 'Riaz Ahmed Bellim', 'Dillon Francis'), awayIds: ids('desert-falcons', 'Jacques Burger', 'Reino Grobler'), games: [0, 4], winner: 'away', sets: [[3, 6], [5, 7], [6, 10]] },
     ] } },
   { id: 'fx-w3-3', round: 3, league: 'mens', home: 'globo-boomerangs', away: 'sonic-viboras', start: T('2026-06-24'), status: 'final', court: 'Padel 24', dh: true,
     score: { winner: 'away', totals: [6, 16], rubberWins: [2, 4],
@@ -339,13 +348,53 @@ export const FIXTURES = [
 
   // SCHOOL HOLIDAY BREAK · 29 Jun – 20 Jul
 
-  // WEEK 4 · 21–22 Jul · DH: Global Boomerangs
-  { id: 'fx-w4-1', round: 4, league: 'mens', home: 'globo-boomerangs', away: 'avalanche-aces', start: T('2026-07-21'), status: 'scheduled', court: 'Play 360', dh: true },
-  { id: 'fx-w4-2', round: 4, league: 'mens', home: 'sahara-lions', away: 'sonic-viboras', start: T('2026-07-21'), status: 'scheduled', court: 'Padel 24' },
-  { id: 'fx-w4-3', round: 4, league: 'mens', home: 'globo-boomerangs', away: 'samurai-kicksmashers', start: T('2026-07-22'), status: 'scheduled', court: 'Padel 24', dh: true },
-  { id: 'fx-w4-4', round: 4, league: 'mens', home: 'ice-breakers', away: 'desert-falcons', start: T('2026-07-22'), status: 'scheduled', court: 'Play 360' },
-
-  // WEEK 5 · 27–29 Jul · DH: Sahara Lions
+  // WEEK 4: 21-23 Jul 2026 - all four fixtures per official brief
+  // FX1: Sonic Viboras (H) vs Sahara Lions (A) - Padel 24 - 21 Jul
+  { id: 'fx-w4-2', round: 4, league: 'mens', home: 'sonic-viboras', away: 'sahara-lions', start: T('2026-07-21'), status: 'final', court: 'Padel 24',
+    score: { winner: 'home', totals: [13, 7], rubberWins: [4, 2], rubbers: [
+        { slot: '18:00', court: 'P2', winner: 'home', games: [3, 0], homeIds: ids('sonic-viboras', 'Warwick Morgan', 'Joshua Hoffman'), awayIds: ids('sahara-lions', 'Naeem Omar', 'Alfaiz Mamji'), sets: [[7,6],[5,7],[10,6]] },
+        { slot: '18:00', court: 'P3', winner: 'home', games: [3, 0], homeIds: ids('sonic-viboras', 'Mohamed Dadamia', 'Saliem Mahomed'), awayIds: ids('sahara-lions', 'Aadil Asvat', 'Majid Bapu'), sets: [[6,7],[6,4],[10,4]] },
+        { slot: '19:15', court: 'P1', winner: 'home', games: [3, 0], homeIds: ids('sonic-viboras', 'Heinrich Coomans', 'Anton Grote'), awayIds: ids('sahara-lions', 'Cian Maritz', 'Yusuf Packery'), sets: [[6,7],[6,4],[10,4]] },
+        { slot: '19:15', court: 'P2', winner: 'away', games: [0, 4], homeIds: ids('sonic-viboras', 'Ismail Fakir', 'Jacques Henning'), awayIds: ids('sahara-lions', 'Suliman Patel', 'Irfaan Mamji'), sets: [[5,7],[6,7],[5,10]] },
+        { slot: '20:30', court: 'P1', winner: 'away', games: [0, 3], homeIds: ids('sonic-viboras', 'Ridhwaan Sujee', 'Erlo Olivier'), awayIds: ids('sahara-lions', 'Justin van Staaden', 'Suhayl Packery'), sets: [[6,1],[3,6],[9,11]] },
+        { slot: '20:30', court: 'P3', winner: 'home', games: [4, 0], homeIds: ids('sonic-viboras', 'George du Toit', 'Gerrit Smith'), awayIds: ids('sahara-lions', 'Drikus Prins', 'Irfaan Mahomed'), sets: [[6,0],[6,4],[10,6]] },
+    ] },
+  },
+  // FX2: Globo Boomerangs (H) vs Avalanche Aces (A) - Play 360 - 21 Jul
+  // Rubber 2 P3: sets [1-6,6-3,10-6] contradict declared winner (Aces). Sets omitted per brief.
+  { id: 'fx-w4-1', round: 4, league: 'mens', home: 'globo-boomerangs', away: 'avalanche-aces', start: T('2026-07-21'), status: 'final', court: 'Play 360',
+    score: { winner: 'home', totals: [13, 6], rubberWins: [4, 2], rubbers: [
+        { slot: '18:00', court: 'P2', winner: 'away', games: [0, 3], homeIds: ids('globo-boomerangs', 'Duran Greever', 'Nabeel Meer'), awayIds: ids('avalanche-aces', 'Frik de Beer', 'Felix Lombard'), sets: [[6,4],[5,7],[6,10]] },
+        { slot: '18:00', court: 'P3', winner: 'away', games: [0, 3], homeIds: ids('globo-boomerangs', 'Kiran Hansraj', 'Stefan Erasmus'), awayIds: ids('avalanche-aces', 'Kobus van Rensburg', 'Gerco van Rooyen') },
+        { slot: '19:15', court: 'P1', winner: 'home', games: [4, 0], homeIds: ids('globo-boomerangs', 'Liam Morgan', 'Adil Ahmed'), awayIds: ids('avalanche-aces', 'Donavan Taylor', 'Ryan Tate'), sets: [[6,2],[6,4],[10,7]] },
+        { slot: '19:15', court: 'P2', winner: 'home', games: [3, 0], homeIds: ids('globo-boomerangs', 'Muhammed Shehzad Meer', 'Ryan Kennett'), awayIds: ids('avalanche-aces', 'Etienne Grobler', 'Ruaan Naude'), sets: [[6,3],[1,6],[10,8]] },
+        { slot: '20:30', court: 'P1', winner: 'home', games: [3, 0], homeIds: ids('globo-boomerangs', 'Ahmed Mungalee', 'Yusuf Asvat'), awayIds: ids('avalanche-aces', 'Wiehann Mohlen', 'Hoffmann Maritz'), sets: [[4,6],[7,6],[10,7]] },
+        { slot: '20:30', court: 'P3', winner: 'home', games: [3, 0], homeIds: ids('globo-boomerangs', 'Farhaan Shaik', 'Suhail Patel'), awayIds: ids('avalanche-aces', 'Rishaad Shaik', 'Prashil Nagar'), sets: [[6,3],[5,7],[11,9]] },
+    ] },
+  },
+  // FX3: Ice Breakers (H) vs Desert Falcons (A) - Play 360 - 22 Jul (no set scores supplied)
+  { id: 'fx-w4-4', round: 4, league: 'mens', home: 'ice-breakers', away: 'desert-falcons', start: T('2026-07-22'), status: 'final', court: 'Play 360',
+    score: { winner: 'away', totals: [7, 14], rubberWins: [2, 4], rubbers: [
+        { slot: '18:00', court: 'P2', winner: 'away', games: [0, 3], homeIds: ids('ice-breakers', 'Zayd Methar', 'Nicky Joubert'), awayIds: ids('desert-falcons', 'Ryan Wicht', 'Ebrahim Mungalee') },
+        { slot: '18:00', court: 'P3', winner: 'away', games: [0, 3], homeIds: ids('ice-breakers', 'Irshaad Moola', 'Aadam Nomani'), awayIds: ids('desert-falcons', 'Danie Rautenbach', 'Zaeem Sadiq') },
+        { slot: '19:15', court: 'P1', winner: 'away', games: [0, 4], homeIds: ids('ice-breakers', 'Duhan Swart', 'JD Herbst'), awayIds: ids('desert-falcons', 'Uwaiz Patel', 'Yusuf Patel') },
+        { slot: '19:15', court: 'P2', winner: 'home', games: [3, 0], homeIds: ids('ice-breakers', 'Phil-Mar Van Rensburg', 'Jacques Van Zyl'), awayIds: ids('desert-falcons', 'Warno Smit', 'Morne Steenekamp') },
+        { slot: '20:30', court: 'P1', winner: 'away', games: [0, 4], homeIds: ids('ice-breakers', 'Imaad Arabi', 'Salmaan Methar'), awayIds: ids('desert-falcons', 'Reinhardt Trollip', 'Schalk Schutte') },
+        { slot: '20:30', court: 'P3', winner: 'home', games: [4, 0], homeIds: ids('ice-breakers', 'Wayne Enslin', 'Waldo van Tonder'), awayIds: ids('desert-falcons', 'Muhammad Mangerah', 'Reino Grobler') },
+    ] },
+  },
+  // FX4: Globo Boomerangs (H) vs Samurai Kick Smashers (A) - Padel 24 - 23 Jul
+  { id: 'fx-w4-3', round: 4, league: 'mens', home: 'globo-boomerangs', away: 'samurai-kicksmashers', start: T('2026-07-23'), status: 'final', court: 'Padel 24',
+    score: { winner: 'home', totals: [16, 7], rubberWins: [4, 2], rubbers: [
+        { slot: '18:00', court: 'P1', winner: 'home', games: [4, 0], homeIds: ids('globo-boomerangs', 'Ahmed Mungalee', 'Lefa Moganedi'), awayIds: ids('samurai-kicksmashers', 'Siraaj Shaik', 'Danyaal Nomani'), sets: [[6,3],[6,2],[10,4]] },
+        { slot: '18:00', court: 'P2', winner: 'home', games: [4, 0], homeIds: ids('globo-boomerangs', 'Nabeel Meer', 'Duran Greever'), awayIds: ids('samurai-kicksmashers', 'Armand Esterhuizen', 'Sikander Cassim'), sets: [[6,2],[6,1],[10,7]] },
+        { slot: '19:15', court: 'P1', winner: 'home', games: [4, 0], homeIds: ids('globo-boomerangs', 'Yusuf Asvat', 'Joseph van der Merwe'), awayIds: ids('samurai-kicksmashers', 'Bryan Theron', 'Muhammad Azhar Sujee'), sets: [[6,2],[6,0],[10,0]] },
+        { slot: '19:15', court: 'P3', winner: 'away', games: [0, 3], homeIds: ids('globo-boomerangs', 'Taahir Mungalee', 'Suhail Patel'), awayIds: ids('samurai-kicksmashers', 'Brent Grix', 'Dillon Francis'), sets: [[3,6],[1,6],[10,8]] },
+        { slot: '20:30', court: 'P2', winner: 'home', games: [4, 0], homeIds: ids('globo-boomerangs', 'Muhammed Shehzad Meer', 'Ryan Kennett'), awayIds: ids('samurai-kicksmashers', 'Muhammed Jina', 'Muneer Shaik'), sets: [[6,3],[6,3],[10,2]] },
+        { slot: '20:30', court: 'P3', winner: 'away', games: [0, 4], homeIds: ids('globo-boomerangs', 'Shaffique Jeewa', 'Farhaan Shaik'), awayIds: ids('samurai-kicksmashers', 'Ismail Karodia', 'Imraan Khan'), sets: [[3,6],[1,6],[11,13]] },
+    ] },
+  },
+// WEEK 5 · 27–29 Jul · DH: Sahara Lions
   { id: 'fx-w5-1', round: 5, league: 'mens', home: 'sahara-lions', away: 'avalanche-aces', start: T('2026-07-27'), status: 'scheduled', court: 'Padel 24', dh: true },
   { id: 'fx-w5-2', round: 5, league: 'mens', home: 'globo-boomerangs', away: 'ice-breakers', start: T('2026-07-27'), status: 'scheduled', court: 'Play 360' },
   { id: 'fx-w5-3', round: 5, league: 'mens', home: 'samurai-kicksmashers', away: 'sahara-lions', start: T('2026-07-29'), status: 'scheduled', court: 'Padel 24', dh: true },
@@ -407,28 +456,47 @@ const mkRow = ([name, P, W, L, D, BP, pts], adj) => ({
   franchise_id: NM[name], played: P, won: W, lost: L, drawn: D, bp: BP, points: pts, adj: adj || 0,
 });
 const OFFICIAL = {
-  // Updated through MD6 (24 Jun 2026)
+  // Updated through MD7 (21-23 Jul 2026)
+  // MD7: Globo 13-6 Aces, Sonics 13-7 Lions, Falcons 14-7 IceBreakers, Globo 16-7 Kicks
   franchise: [
-    ['Falcons', 18, 16, 2, 0, 11, 59], ['Sonics', 24, 16, 8, 0, 10, 58],
-    ['Aces', 24, 8, 16, 0, 2, 26], ['Kicksmashers', 18, 6, 12, 0, 4, 22],
-    ['Lions', 12, 6, 6, 0, 3, 21], ['IceBreakers', 18, 9, 9, 0, 7, 34], ['Globo', 18, 5, 13, 0, 2, 17],
+    ['Falcons',      24, 20,  4, 0, 14, 73], // +14 vs IceBr (4 rubber wins)
+    ['Sonics',       30, 20, 10, 0, 13, 71], // +13 vs Lions (4 rubber wins) — 2 pts behind!
+    ['Globo',        30,  9, 21, 0,  6, 46], // +29 (two matches, 8 rubber wins)
+    ['IceBreakers',  24, 11, 13, 0,  9, 41], // +7 vs Falcons (2 rubber wins)
+    ['Kicksmashers', 24,  8, 16, 0,  5, 29], // +7 vs Globo (2 rubber wins)
+    ['Aces',         30,  8, 22, 0,  2, 32], // +6 vs Globo (2 rubber wins)
+    ['Lions',        18,  6, 12, 0,  3, 28], // +7 vs Sonics (2 rubber wins)
   ].map((r) => mkRow(r)),
   P1: [
-    ['Sonics', 8, 7, 1, 0, 5, 26], ['Falcons', 6, 5, 1, 0, 5, 20], ['Lions', 4, 4, 0, 0, 1, 13],
-    ['IceBreakers', 6, 3, 3, 0, 2, 11], ['Kicksmashers', 6, 3, 3, 0, 2, 11], ['Aces', 8, 0, 8, 0, 0, 0], ['Globo', 6, 0, 6, 0, 0, 0],
+    ['Sonics',        10,  8,  2, 0,  6, 30], // +2W Coomans/Anton vs Lions
+    ['Falcons',        8,  6,  2, 0,  6, 24], // +1W Uwaiz/Yusuf vs IceBr (4-0 BP)
+    ['Globo',          8,  2,  6, 0,  2,  8], // +2W Ahmed/Lima vs Aces+Kicks
+    ['Lions',          6,  5,  1, 0,  1, 16], // +1L vs Sonics
+    ['IceBreakers',    8,  3,  5, 0,  2, 11], // +0W vs Falcons P1
+    ['Kicksmashers',   8,  3,  5, 0,  2, 11], // +0W vs Globo P1
+    ['Aces',          10,  1,  9, 0,  0,  3], // +1L vs Globo P1 (Donavan/Ryan lost)
   ].map((r) => mkRow(r)),
   P2: [
-    ['Falcons', 6, 5, 1, 0, 2, 17], ['Aces', 8, 4, 4, 0, 1, 13], ['Globo', 6, 4, 2, 0, 1, 13],
-    ['Sonics', 8, 3, 5, 0, 2, 11], ['IceBreakers', 6, 3, 3, 0, 2, 11], ['Kicksmashers', 6, 2, 4, 0, 1, 7], ['Lions', 4, 1, 3, 0, 1, 4],
+    ['Falcons',        8,  5,  3, 0,  2, 17], // +0W vs IceBr (lost Ryan/Boms)... Philmar won
+    ['Globo',         10,  8,  2, 0,  4, 28], // +3W (Nabz/Duran x2, Momo/Ryan x2)
+    ['Aces',          10,  5,  5, 0,  1, 16], // +1W Frik/Felix vs Globo
+    ['Sonics',        10,  4,  6, 0,  2, 14], // +1W Ismail/Jaques vs Lions
+    ['IceBreakers',    8,  4,  4, 0,  2, 14], // +1W Philmar/Jaques vs Falcons
+    ['Kicksmashers',   8,  2,  6, 0,  1,  7], // +0W vs Globo
+    ['Lions',          6,  1,  5, 0,  1,  4], // +0W vs Sonics
   ].map((r) => mkRow(r)),
   P3: [
-    ['Falcons', 6, 6, 0, 0, 4, 22], ['Sonics', 8, 6, 2, 0, 3, 21],
-    ['Aces', 8, 4, 4, 0, 1, 13], ['IceBreakers', 6, 3, 3, 0, 3, 12],
-    ['Lions', 4, 1, 3, 0, 1, 4], ['Globo', 6, 1, 5, 0, 1, 4], ['Kicksmashers', 6, 1, 5, 0, 1, 4],
+    ['Sonics',        10,  7,  3, 0,  3, 24], // +1W George/Gerrit vs Lions
+    ['Falcons',        8,  7,  1, 0,  5, 26], // +1W Danie/Zaeem vs IceBr, +1W Adil Mangera vs IceBr... wait Falcons P3: 2 wins
+    ['Aces',          10,  5,  5, 0,  1, 16], // +1W Kobus/Gerco vs Globo
+    ['IceBreakers',    8,  4,  4, 0,  3, 15], // +1W Wayne/Waldo vs Falcons
+    ['Globo',          8,  2,  6, 0,  1,  7], // +0W Farhaan lost vs Kicks
+    ['Lions',          6,  1,  5, 0,  1,  4], // unchanged
+    ['Kicksmashers',   8,  2,  6, 0,  1,  7], // +1W Tahir/Suhail vs Globo
   ].map((r) => mkRow(r, 0)),
 };
 // Falcons' P3 carries a published league deduction (raw 22 − 8 = 14).
-OFFICIAL.P3.find((r) => r.franchise_id === 'desert-falcons').adj = -8;
+// Falcons P3 adj: applied once via LOG_ADJUSTMENTS in deriveLog.
 
 // Sort every table by points, then wins, then bonus points, so the
 // displayed order always matches the points (no manual re-ordering).
@@ -436,8 +504,9 @@ const sortTable = (rows) => [...rows].sort((a, b) =>
   b.points - a.points || b.won - a.won || b.bp - a.bp || a.lost - b.lost);
 ['franchise', 'P1', 'P2', 'P3'].forEach((t) => { OFFICIAL[t] = sortTable(OFFICIAL[t]); });
 
+const CURRENT_MENS_STANDINGS = { franchise: deriveLog('mens'), P1: deriveLog('mens', 'P1'), P2: deriveLog('mens', 'P2'), P3: deriveLog('mens', 'P3') };
 export const STANDINGS = {
-  mens: OFFICIAL,
+  mens: CURRENT_MENS_STANDINGS,
   ladies: { franchise: [], P1: [], P2: [], P3: [] },
 };
 
@@ -522,25 +591,29 @@ ratedRubbers.forEach((rb) => {
 });
 
 export const NEWS = [
+  { id: 'nm-w4-globo-kicks', league: 'mens', kicker: 'Week 4 Match Report', tag: 'mens', date: '2026-07-23',
+    title: "Boomerangs complete Week 4 double with 16-7 win over Kick Smashers",
+    body: "Globo Boomerangs completed a superb Week 4 double by defeating the Samurai Kick Smashers 16-7 at Padel 24. Four Boomerangs victories, all clean 4-0 results, secured the night after their 13-6 victory over the Avalanche Aces.",
+  },
+  { id: 'nm-w4-ladies-closed', league: 'ladies', kicker: 'Ladies League', tag: 'ladies', date: '2026-07-23',
+    title: 'Ladies League Season 2 registrations officially closed',
+    body: 'Registrations for Ladies Franchise League Season 2 are officially closed. Thank you to all who registered. Players will receive further information from the Lowveld Padel team.',
+  },
+  { id: 'nm-w4-falcons-ib', league: 'mens', kicker: 'Match Report', tag: 'mens', date: '2026-07-22',
+    title: 'Desert Falcons defeat Ice Breakers 14-7 at Play 360',
+    body: "Falcons move to 73 points — 2 clear of Sonics — after a dominant 14-7 win over Ice Breakers at Play 360.",
+  },
+  { id: 'nm-w4-globo-aces', league: 'mens', kicker: 'Match Report', tag: 'mens', date: '2026-07-21',
+    title: 'Boomerangs defeat Avalanche Aces 13-6 at Play 360',
+    body: 'Globo Boomerangs opened Week 4 with a 13-6 victory over Avalanche Aces. Liam Morgan and Adil Ahmed won P1 4-0.',
+  },
+  { id: 'nm-w4-sonics-lions', league: 'mens', kicker: 'Match Report', tag: 'mens', date: '2026-07-21',
+    title: 'Sonic Viboras overcome Sahara Lions 13-7 at Padel 24',
+    body: "Sonics beat Lions 13-7. Coomans and Grote won P1 3-0. George du Toit and Gerrit Smith sealed with a 4-0 P3 win.",
+  },
   { id: 'nm-legacy-launch', league: 'legacy', kicker: 'Legacy League', tag: 'legacy', date: '2026-07-18',
-    title: 'Legacy League launches in spectacular fashion — families pack Play 360',
-    body: 'The LP Legacy League kicked off on Saturday 18 July with phenomenal support as families turned out in their numbers. Three pulsating matches saw the Cheetahs, Leopards and Honey Badgers claim opening victories. The energy inside Play 360 was electric — this is just the beginning.',
-  },
-  { id: 'nm-legacy-md1-cheetahs', league: 'legacy', kicker: 'Match Report', tag: 'legacy', date: '2026-07-18',
-    title: 'Cheetahs secure opening Legacy League victory over Rhinos 8-3',
-    body: 'The LP Cheetahs opened their Legacy League campaign with a commanding 8-3 win over the LP Rhinos at Play 360. Mikel Pillay and Abdurahmaan Jogee were outstanding in the featured match to seal the win for the Cheetahs.',
-  },
-  { id: 'nm-ladies-closing', league: 'ladies', kicker: 'Registration', tag: 'ladies', date: '2026-07-19',
-    title: 'Ladies League Season 2 registration — only a few spots remaining!',
-    body: "The response for Ladies Franchise League Season 2 has been overwhelming. Registration is filling up fast with only a few spots left. If you haven\'t registered yet, do it now before it's too late.",
-  },
-  { id: 'nm-mens-break', league: 'mens', kicker: 'Season Update', tag: 'mens', date: '2026-07-19',
-    title: "Men's Franchise League takes a short break — title race heats up",
-    body: "The Men's Franchise League takes a brief break before resuming the business end of the season. Falcons lead Viboras by just 1 point with 3 match days remaining. Every point counts.",
-  },
-  { id: 'nm-unity-cup-hold', league: 'mens', kicker: 'Unity Cup', tag: 'event', date: '2026-07-19',
-    title: 'Unity Cup postponed — new date to be confirmed',
-    body: 'The Unity Cup international nations clash between South Africa and Eswatini has been placed on hold. New dates will be confirmed shortly. Stay tuned to lowveldpadel.co.za for the announcement.',
+    title: 'Legacy League launches in spectacular fashion',
+    body: 'The LP Legacy League launched on 18 July with phenomenal support. Cheetahs, Leopards and Honey Badgers claimed opening victories at Play 360.',
   },
 ];
 
@@ -1020,7 +1093,8 @@ export const lpAiPredict = (fixture) => {
  * PLAYER OF THE WEEK  (nominees = current top MVP performers)
  * ================================================================= */
 export const playerOfWeek = {
-  current: null,                 // set a playerId to crown a winner
+  // POTW Week 4: Ahmed Mungalee won 4-0 in BOTH Week 4 matches (Aces P1, Kicks P1)
+  current: 'p57',               // Ahmed Mungalee - Globo Boomerangs P1
   nominees: () => fanPotwCandidates(5),
   previous: [],                  // [{ week, playerId }]
 };
@@ -1030,12 +1104,13 @@ export const playerOfWeek = {
  * ================================================================= */
 export const POWER_RANKINGS_WEEKLY = {
   mens: [
-    { franchise: 'desert-falcons', move: 'same', note: 'Still top. Falcons on 59 — but Sonics are now just 1 point behind.' },
-    { franchise: 'sonic-viboras', move: 'up', note: '16-6 over the Boomerangs. Coomans, Grote, Moola/Boshoff all dominant — title race is on.' },
-    { franchise: 'ice-breakers', move: 'up', note: 'Huge night — 15-6 over the Lions. On 34 points and moving fast.' },
-    { franchise: 'sahara-lions', move: 'down', note: 'Dropped to 21 pts after the IB defeat. Still alive but need a response.' },
-    { franchise: 'samurai-kicksmashers', move: 'same', note: 'Idle this round. Watching from 22 pts.' },
-    { franchise: 'globo-boomerangs', move: 'up', note: 'Took 2 rubbers off the Sonics — showing some fight at 17 pts.' },
-    { franchise: 'avalanche-aces', move: 'down', note: 'Still searching for form. Break comes just in time.' },
+    { franchise: 'desert-falcons', move: 'same', note: '14-7 over Ice Breakers. 73 pts, 2-point lead. Title is theirs to lose in final 2 MDs.' },
+    { franchise: 'sonic-viboras', move: 'same', note: '13-7 over Lions. 71 pts — Coomans relentless. Must win both remaining matches to take the title.' },
+    { franchise: 'globo-boomerangs', move: 'up', note: 'Back-to-back Week 4 wins: 13-6 Aces, 16-7 Kicks. Ahmed Mungalee outstanding. Surged to 46 pts.' },
+    { franchise: 'ice-breakers', move: 'down', note: 'Lost 7-14 to Falcons. 41 pts — still alive but need big results in MD8 and MD9.' },
+    { franchise: 'avalanche-aces', move: 'down', note: 'Lost 6-13 to Globo. 32 pts — need wins and results to go their way.' },
+    { franchise: 'samurai-kicksmashers', move: 'down', note: 'Lost 7-16 to Globo. 29 pts — fighting for pride in the final stretch.' },
+    { franchise: 'sahara-lions', move: 'same', note: 'Lost 7-13 to Sonics. 28 pts — two matches to finish the season strongly.' },
   ],
 };
+

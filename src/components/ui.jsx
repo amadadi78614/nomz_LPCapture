@@ -1,4 +1,4 @@
-import { NavLink, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FIXTURES, STANDINGS, franchiseById, stripeVar, SPONSORS } from '../data/seed';
 import { useLiveMatch } from '../hooks/useLiveMatch';
 import { displayPoints, scoreSummary } from '../lib/scoringEngine';
@@ -52,24 +52,38 @@ const NAV = [
   { to: '/cups', label: 'Cups', ico: '🏆' },
   { to: '/more', label: 'More', ico: '⋯' },
 ];
+function isActivePath(path) {
+  const current = window.location.pathname.replace(/\/$/, '') || '/';
+  return path === '/' ? current === '/' : current === path || current.startsWith(`${path}/`);
+}
+
+function HardNavLink({ to, children, className = '', ...props }) {
+  const active = isActivePath(to);
+  return (
+    <a href={to} className={`${className}${active ? ' active' : ''}`.trim()} {...props}>
+      {children}
+    </a>
+  );
+}
+
 export function TopBar() {
   return (
     <header style={{ background: 'rgba(7,10,19,0.97)', borderBottom: '1px solid var(--line)', backdropFilter: 'blur(12px)', position: 'sticky', top: 'var(--ticker-h)', zIndex: 40 }}>
       <div className="topbar">
-        <Link to="/" className="row" style={{ gap: 10 }}>
+        <HardNavLink to="/" className="row" style={{ gap: 10 }}>
           <img src="/brand/lp-mark.png" alt="Lowveld Padel" style={{ borderRadius: '50%' }} />
           <span className="wordmark">Lowveld Padel</span>
-        </Link>
+        </HardNavLink>
         <nav>
-          <NavLink to="/" end>Home</NavLink>
-          <NavLink to="/live">Match Centre</NavLink>
-          <NavLink to="/leagues">Leagues</NavLink>
-          <NavLink to="/cups">Cups</NavLink>
-          <NavLink to="/players">Players</NavLink>
-          <NavLink to="/all-time-rankings">All-Time</NavLink>
-          <NavLink to="/tv">Lowveld TV</NavLink>
-          <NavLink to="/news">News</NavLink>
-          <NavLink to="/sponsors">Sponsors</NavLink>
+          <HardNavLink to="/">Home</HardNavLink>
+          <HardNavLink to="/live">Match Centre</HardNavLink>
+          <HardNavLink to="/leagues">Leagues</HardNavLink>
+          <HardNavLink to="/cups">Cups</HardNavLink>
+          <HardNavLink to="/players">Players</HardNavLink>
+          <HardNavLink to="/all-time-rankings">All-Time</HardNavLink>
+          <HardNavLink to="/tv">Lowveld TV</HardNavLink>
+          <HardNavLink to="/news">News</HardNavLink>
+          <HardNavLink to="/sponsors">Sponsors</HardNavLink>
         </nav>
       </div>
     </header>
@@ -80,17 +94,17 @@ export function BottomNav() {
   return (
     <>
       {live.length > 0 && (
-        <NavLink to="/live" className="sticky-live" aria-label="Live matches">
+        <HardNavLink to="/live" className="sticky-live" aria-label="Live matches">
           <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#fff', animation: 'pulse 1.2s infinite' }} />
           {live.length} Live
-        </NavLink>
+        </HardNavLink>
       )}
       <nav className="bottomnav" aria-label="Primary navigation">
         {NAV.map((n) => (
-          <NavLink key={n.to} to={n.to} end={n.to === '/'}>
+          <HardNavLink key={n.to} to={n.to}>
             <span className="ico" aria-hidden="true">{n.ico}</span>
             {n.label}
-          </NavLink>
+          </HardNavLink>
         ))}
       </nav>
     </>
@@ -158,7 +172,7 @@ export function ResultCard({ fixture }) {
     return (
       <Link to={`/match/${fixture.id}`} className="card stripe" style={{ '--stripe': 'var(--line)', display: 'block' }}>
         <div className="row spread" style={{ marginBottom: 8 }}>
-          <span className="eyebrow">Final \u00b7 W{fixture.round}</span>
+          <span className="eyebrow">Final · W{fixture.round}</span>
           <span className="muted" style={{ fontSize: 12 }}>{new Date(fixture.start).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' })}</span>
         </div>
         <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{home.name} v {away.name}</b>
@@ -249,53 +263,28 @@ export function StandingsTable({ league, tier = 'franchise', limit }) {
                 <td className="num">{r.lost}</td>
                 <td className="num">{r.drawn}</td>
                 <td className="num">{r.bp}</td>
-                <td className="num"><b style={{ color: r.points < 0 ? 'var(--loss)' : 'inherit' }}>{r.points}</b></td>
+                <td className="num"><b style={{ color: r.points < 0 ? 'var(--loss)' : 'var(--gold)' }}>{r.points}</b></td>
               </tr>
             );
           })}
         </tbody>
       </table>
-      {hasAdj && (
-        <div className="muted" style={{ padding: '8px 14px', fontSize: 11, borderTop: '1px solid rgba(255,255,255,.06)' }}>
-          * Includes a league points adjustment.
-        </div>
-      )}
+      {hasAdj && <div className="muted" style={{ padding: '8px 12px', fontSize: 11 }}>* Includes league adjustment</div>}
     </div>
   );
 }
 
-/* ---------------- Sponsor rail (tracked exposure) ---------------- */
+/* ---------------- Sponsor rail ---------------- */
 export function SponsorRail({ placement = 'home' }) {
-  const trackClick = (sp) => {
-    // Production: insert into sponsor_clicks (sponsor_id, placement, ts)
-    if (window?.lpTrack) window.lpTrack('sponsor_click', { sponsor: sp.id, placement });
-  };
+  const logos = SPONSORS.filter((s) => s.placement.includes(placement));
+  if (!logos.length) return null;
   return (
-    <div>
-      <div className="section-head">
-        <span className="eyebrow">League partners</span>
-        <Link to="/sponsors">Partner with LP →</Link>
-      </div>
-      <div className="sponsor-rail">
-        {SPONSORS.map((sp) => (
-          <a key={sp.id} className="sponsor-tile" href={sp.url} onClick={() => trackClick(sp)}>
-            <span className="tier">{sp.tier}</span>
-            {sp.logo
-              ? <img src={sp.logo} alt={sp.name} style={{ maxWidth: '100%', maxHeight: 34, objectFit: 'contain', borderRadius: 4 }} />
-              : <span className="name">{sp.name}</span>}
-          </a>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ---------------- Section header ---------------- */
-export function SectionHead({ title, to, cta = 'See all' }) {
-  return (
-    <div className="section-head">
-      <h2 className="display">{title}</h2>
-      {to && <Link to={to}>{cta} →</Link>}
+    <div className="sponsor-rail">
+      {logos.map((s) => (
+        <a key={s.id} href={s.link || '#'} target={s.link ? '_blank' : undefined} rel="noreferrer">
+          <img src={s.logo} alt={s.name} />
+        </a>
+      ))}
     </div>
   );
 }

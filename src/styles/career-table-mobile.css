@@ -1,0 +1,37 @@
+/* Keep the player identity visible while wide ranking tables scroll on mobile.
+   This prevents repeated franchise names from looking like duplicate records. */
+@media (max-width: 700px) {
+  .tbl {
+    min-width: 760px;
+  }
+
+  .tbl th:first-child,
+  .tbl td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    width: 34px;
+    min-width: 34px;
+    background: var(--surface);
+  }
+
+  .tbl th:nth-child(2),
+  .tbl td:nth-child(2) {
+    position: sticky;
+    left: 34px;
+    z-index: 3;
+    min-width: 150px;
+    background: var(--surface);
+    box-shadow: 10px 0 18px -18px rgba(0, 0, 0, 0.9);
+  }
+
+  .tbl thead th:first-child,
+  .tbl thead th:nth-child(2) {
+    z-index: 6;
+  }
+
+  .tbl tbody tr:hover td:first-child,
+  .tbl tbody tr:hover td:nth-child(2) {
+    background: var(--surface-2);
+  }
+}

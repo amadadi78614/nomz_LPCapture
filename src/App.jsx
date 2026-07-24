@@ -2,9 +2,11 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import { useEffect } from 'react';
 import { TopBar, LiveTicker, BottomNav } from './components/ui';
 import {
-  Home, MatchCentre, MatchPage, Standings, Players, PlayerProfile,
+  MatchCentre, MatchPage, Players, PlayerProfile,
   Franchises, FranchiseHub, Rankings, NewsCentre, SponsorCentre, More,
 } from './pages/public';
+import HomeV2 from './pages/HomeV2';
+import StandingsV2 from './pages/StandingsV2';
 import { Registration } from './pages/Registration';
 import {
   AdminDashboard, CaptainDashboard, CommissionerDashboard, SponsorAnalytics,
@@ -37,10 +39,10 @@ export default function App() {
         <LiveTicker />
         <TopBar />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<HomeV2 />} />
           <Route path="/live" element={<MatchCentre />} />
           <Route path="/match/:id" element={<MatchPage />} />
-          <Route path="/standings" element={<Standings />} />
+          <Route path="/standings" element={<StandingsV2 />} />
           <Route path="/players" element={<Players />} />
           <Route path="/player/:id" element={<PlayerProfile />} />
           <Route path="/franchises" element={<Franchises />} />

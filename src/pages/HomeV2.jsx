@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import {
   FIXTURES,
-  NEWS,
   STANDINGS,
   TV_VIDEOS,
   franchiseById,
@@ -35,12 +34,17 @@ function CompetitionCard({ eyebrow, title, copy, to, tone = 'gold', status }) {
   );
 }
 
+const LEGACY_ROUND_TWO = [
+  { winner: 'Honey Badgers', score: '7–4', loser: 'Leopards' },
+  { winner: 'Jackals', score: '7–4', loser: 'Rhinos' },
+  { winner: 'Cheetahs', score: '8–3', loser: 'Eagles' },
+];
+
 export default function HomeV2() {
   const live = FIXTURES.filter((fixture) => fixture.status === 'live');
   const results = FIXTURES.filter((fixture) => fixture.status === 'final').slice(-3).reverse();
   const nextFixture = FIXTURES.find((fixture) => fixture.status === 'scheduled');
   const standings = STANDINGS.mens?.franchise || [];
-  const leadStory = NEWS[0];
 
   return (
     <main className="lpv2">
@@ -62,21 +66,21 @@ export default function HomeV2() {
 
         <div className="lpv2-now">
           <div className="lpv2-now-head">
-            <span>Happening now</span>
-            <i>{live.length ? `${live.length} LIVE` : 'LATEST'}</i>
+            <span>Latest news</span>
+            <i>{live.length ? `${live.length} LIVE` : 'ROUND 2 COMPLETE'}</i>
           </div>
           <article className="lpv2-now-feature">
-            <span className="lpv2-kicker">LADIES LEAGUE · BIGGER THAN EVER</span>
-            <strong>60 ladies.<br />6 franchises.</strong>
-            <p>The biggest Ladies League in Lowveld Padel history.</p>
+            <span className="lpv2-kicker">LP LEGACY LEAGUE</span>
+            <strong>Cheetahs stay perfect.<br />Round 2 delivers.</strong>
+            <p>Cheetahs and Honey Badgers move to 2–0, while Jackals claim their first victory.</p>
             <div className="lpv2-date-block">
-              <span>Auction</span>
-              <b>29 JULY 2026</b>
+              <span>League leaders</span>
+              <b>CHEETAHS · 16 PTS</b>
             </div>
           </article>
           <div className="lpv2-now-row">
-            <span><b>THIS WEEKEND</b> Legacy League Round 2</span>
-            <Link to="/legacy-league">View league →</Link>
+            <span><b>NEXT BIG EVENT</b> Ladies League auction · 29 July</span>
+            <Link to="/legacy-league">Round 2 results →</Link>
           </div>
         </div>
       </section>
@@ -84,40 +88,60 @@ export default function HomeV2() {
       <section className="lpv2-pulse" aria-label="Lowveld Padel growth highlights">
         <div><strong>60</strong><span>Ladies registered</span></div>
         <div><strong>6</strong><span>Ladies franchises</span></div>
-        <div><strong>7</strong><span>Men's franchises</span></div>
-        <div><strong>R2</strong><span>Legacy this weekend</span></div>
+        <div><strong>2–0</strong><span>Cheetahs & Badgers</span></div>
+        <div><strong>29 JUL</strong><span>Ladies auction</span></div>
       </section>
 
       <section className="lpv2-section lpv2-story-section">
         <div className="lpv2-section-heading">
-          <span className="lpv2-kicker">THE NEXT CHAPTER</span>
-          <h2>Building the future of padel</h2>
+          <span className="lpv2-kicker">LATEST FROM LOWVELD PADEL</span>
+          <h2>Round 2 reshapes the Legacy League</h2>
         </div>
         <div className="lpv2-story-grid">
           <article className="lpv2-story lpv2-story-main">
             <span className="lpv2-story-number">01</span>
-            <h3>The largest Ladies League we have ever staged</h3>
+            <h3>Cheetahs take control of the table</h3>
             <p>
-              Sixty players will enter six franchises, with the auction taking place on
-              29 July. It is a major step forward for women's participation and competitive
-              padel in the Lowveld.
+              The LP Cheetahs defeated the Eagles 8–3 to remain unbeaten and move to the top
+              of the standings with 16 points and a +10 game difference.
             </p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">02</span>
-            <h3>Legacy League Round 2</h3>
-            <p>Fun, competitive and family-driven padel returns this weekend for the second round.</p>
+            <h3>Honey Badgers remain unbeaten</h3>
+            <p>Honey Badgers beat the Leopards 7–4 and move to 14 points after two rounds.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">03</span>
-            <h3>Youth development</h3>
-            <p>Creating a pathway for young players to learn, compete and become the next generation of Lowveld champions.</p>
+            <h3>Jackals get their first win</h3>
+            <p>Jackals responded strongly with a 7–4 victory over the Rhinos.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">04</span>
-            <h3>Fathers, sons and family</h3>
-            <p>Using padel to strengthen family bonds and create shared sporting memories across generations.</p>
+            <h3>Ladies League auction next</h3>
+            <p>Sixty ladies across six franchises enter the biggest Ladies League auction yet on 29 July.</p>
           </article>
+        </div>
+      </section>
+
+      <section className="lpv2-section">
+        <div className="lpv2-section-heading lpv2-heading-row">
+          <div>
+            <span className="lpv2-kicker">ROUND 2 SCOREBOARD</span>
+            <h2>Legacy League results</h2>
+          </div>
+          <Link to="/legacy-league">Full Legacy League →</Link>
+        </div>
+        <div className="lpv2-results">
+          {LEGACY_ROUND_TWO.map((result) => (
+            <Link key={`${result.winner}-${result.loser}`} to="/legacy-league" className="lpv2-result-row">
+              <span className="lpv2-round">R2</span>
+              <span className="lpv2-result-team">{result.winner}</span>
+              <strong>{result.score.split('–')[0]}</strong>
+              <span className="lpv2-result-team">{result.loser}</span>
+              <strong>{result.score.split('–')[1]}</strong>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -132,7 +156,7 @@ export default function HomeV2() {
         <div className="lpv2-competition-grid">
           <CompetitionCard eyebrow="Season 3" title="Franchise League" copy="The title race enters its decisive stage." to="/leagues" tone="blue" />
           <CompetitionCard eyebrow="Record season" title="Ladies League" copy="60 ladies. Six franchises. Auction on 29 July." to="/leagues" tone="rose" status="Auction · 29 July" />
-          <CompetitionCard eyebrow="Family competition" title="LP Legacy" copy="Round 2 takes place this weekend." to="/legacy-league" tone="gold" status="Round 2 · This weekend" />
+          <CompetitionCard eyebrow="Round 2 complete" title="LP Legacy" copy="Cheetahs lead after another action-packed round." to="/legacy-league" tone="gold" status="View results & standings" />
           <CompetitionCard eyebrow="International Nations Cup" title="Unity Cup" copy="Competition format and scheduling are under review." to="/unity-cup" tone="muted" status="On hold" />
         </div>
       </section>
@@ -208,17 +232,19 @@ export default function HomeV2() {
         </div>
       </section>
 
-      {leadStory && (
-        <section className="lpv2-section lpv2-editorial">
-          <div>
-            <span className="lpv2-kicker">LATEST FROM LOWVELD PADEL</span>
-            <h2>{leadStory.title}</h2>
-            <p>{leadStory.body}</p>
-            <Link to="/news">Read all news →</Link>
-          </div>
-          <div className="lpv2-editorial-mark">LP</div>
-        </section>
-      )}
+      <section className="lpv2-section lpv2-editorial">
+        <div>
+          <span className="lpv2-kicker">THE NEXT CHAPTER</span>
+          <h2>Biggest Ladies League yet</h2>
+          <p>
+            Sixty ladies will compete across six franchises, with the player auction taking place
+            on 29 July. The league forms part of Lowveld Padel's wider commitment to competitive
+            growth, youth development and stronger family participation.
+          </p>
+          <Link to="/leagues">Explore all competitions →</Link>
+        </div>
+        <div className="lpv2-editorial-mark">60</div>
+      </section>
 
       {TV_VIDEOS.length > 0 && (
         <section className="lpv2-section">

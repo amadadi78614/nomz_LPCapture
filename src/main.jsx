@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './data/fixturePresentation';
+import './data/legacyRound2Update';
 import './styles/global.css';
 import './styles/career-table-mobile.css';
 import './styles/home-premium.css';

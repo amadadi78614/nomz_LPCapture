@@ -1,6 +1,6 @@
 .standings-page{padding-bottom:calc(var(--nav-h) + 36px)}
 .standings-intro{font-size:13px;line-height:1.55;max-width:760px}
-.standings-shell{overflow:hidden;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+.standings-shell{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
 .standings-table{width:100%;border-collapse:collapse;min-width:760px}
 .standings-table th,.standings-table td{white-space:nowrap}
 .standings-table th{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -14,31 +14,41 @@
 .standings-sponsor span,.standings-note{font-size:12px}
 
 @media(max-width:650px){
-  .standings-page{padding-left:0;padding-right:0}
-  .standings-page>h1,.standings-page>.standings-intro,.standings-page>.standings-tabs,.standings-page>.standings-sponsor,.standings-page>.standings-note{margin-left:var(--pad);margin-right:var(--pad)}
+  .standings-page{padding-left:var(--pad);padding-right:var(--pad)}
   .standings-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:transparent;border:none;padding:0}
   .standings-tier-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .standings-tabs button{min-width:0;padding:10px 6px;font-size:12px;border:1px solid var(--line);background:var(--surface)}
-  .standings-tabs button.on{background:var(--surface-2);border-color:var(--line-strong)}
-  .standings-shell{margin-left:var(--pad);margin-right:var(--pad);overflow:visible;border:none;background:transparent}
-  .standings-mobile-cards{display:block;min-width:0;background:transparent}
-  .standings-mobile-cards thead{display:none}
-  .standings-mobile-cards tbody{display:grid;gap:10px}
-  .standings-mobile-cards tr{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.18)}
-  .standings-mobile-cards td{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;min-height:58px;padding:10px 12px!important;border-right:1px solid var(--line);border-bottom:1px solid var(--line);white-space:normal;text-align:left!important;font-family:var(--data)}
-  .standings-mobile-cards td:before{content:attr(data-label);display:block;margin-bottom:4px;font-size:8px;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--faint)}
-  .standings-mobile-cards td:nth-child(1){grid-column:1;grid-row:1}
-  .standings-mobile-cards td:nth-child(2){grid-column:2/4;grid-row:1;border-right:none}
-  .standings-mobile-cards td:nth-child(3),.standings-mobile-cards td:nth-child(4),.standings-mobile-cards td:nth-child(5){border-bottom:1px solid var(--line)}
-  .standings-mobile-cards td:nth-child(3n){border-right:none}
-  .standings-mobile-cards td:last-child{border-right:none}
-  .standings-mobile-cards .standings-team-cell a{width:100%;gap:8px!important}
-  .standings-mobile-cards .standings-team-cell img{width:30px;height:30px}
-  .standings-mobile-cards .standings-team-cell b{font-family:var(--display);font-size:14px;text-transform:uppercase}
-  .standings-mobile-cards .pos-badge{width:28px;height:28px}
-  .standings-mobile-cards .standings-rounds,.standings-mobile-cards .standings-points{font-size:20px}
-  .standings-key{margin-top:8px;padding:8px 2px;border-top:none;line-height:1.45}
+  .standings-tabs button{min-width:0;padding:10px 5px;font-size:11px;border:1px solid var(--line);background:var(--surface)}
+  .standings-tabs button.on{background:var(--surface-2);border-color:var(--gold);color:var(--text)}
+  .standings-shell{width:100%;overflow-x:auto;border-radius:10px;background:#0b1018}
+  .standings-table{display:table;min-width:610px;font-size:11px}
+  .standings-mobile-cards thead{display:table-header-group}
+  .standings-mobile-cards tbody{display:table-row-group}
+  .standings-mobile-cards tr{display:table-row;background:transparent;border:none;box-shadow:none}
+  .standings-mobile-cards td{display:table-cell;min-height:0;padding:10px 7px!important;border-right:none;border-bottom:1px solid var(--line);white-space:nowrap;text-align:center!important;font-family:var(--data)}
+  .standings-mobile-cards td:before{display:none!important;content:none!important}
+  .standings-mobile-cards th{padding:9px 7px;font-size:8px;text-align:center;background:#0b1018}
+  .standings-mobile-cards th:nth-child(2){text-align:left}
+  .standings-mobile-cards td:nth-child(1),.standings-mobile-cards th:nth-child(1){position:sticky;left:0;z-index:3;width:34px;min-width:34px;background:#0b1018}
+  .standings-mobile-cards td:nth-child(2),.standings-mobile-cards th:nth-child(2){position:sticky;left:34px;z-index:2;min-width:150px;max-width:150px;background:#0b1018;box-shadow:8px 0 14px rgba(0,0,0,.28)}
+  .standings-mobile-cards tbody tr:nth-child(even) td{background:#0d131d}
+  .standings-mobile-cards tbody tr:nth-child(even) td:nth-child(1),
+  .standings-mobile-cards tbody tr:nth-child(even) td:nth-child(2){background:#0d131d}
+  .standings-mobile-cards .standings-team-cell a{width:100%;gap:6px!important;overflow:hidden}
+  .standings-mobile-cards .standings-team-cell img{width:24px;height:24px}
+  .standings-mobile-cards .standings-team-cell b{font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-transform:none}
+  .standings-mobile-cards .standings-stripe{height:24px}
+  .standings-mobile-cards .pos-badge{width:22px;height:22px;font-size:10px}
+  .standings-mobile-cards .standings-rounds,.standings-mobile-cards .standings-points{font-size:13px}
+  .standings-key{padding:8px 10px;line-height:1.4;white-space:normal}
   .standings-sponsor{align-items:flex-start!important}
   .standings-sponsor img{height:22px}
   .standings-sponsor span{line-height:1.4}
+}
+
+@media(max-width:420px){
+  .standings-table{min-width:560px}
+  .standings-mobile-cards td:nth-child(2),.standings-mobile-cards th:nth-child(2){min-width:132px;max-width:132px}
+  .standings-mobile-cards td:nth-child(2),.standings-mobile-cards th:nth-child(2){left:34px}
+  .standings-mobile-cards .standings-team-cell img{width:21px;height:21px}
+  .standings-mobile-cards .standings-team-cell b{font-size:10px}
 }

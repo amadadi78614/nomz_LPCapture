@@ -34,6 +34,13 @@ function CompetitionCard({ eyebrow, title, copy, to, tone = 'gold', status }) {
   );
 }
 
+const FRANCHISE_WEEK_RESULTS = [
+  { winner: 'Sonic Viboras', score: '13–7', loser: 'Sahara Lions' },
+  { winner: 'Globo Boomerangs', score: '13–6', loser: 'Avalanche Aces' },
+  { winner: 'Desert Falcons', score: '14–7', loser: 'Ice Breakers' },
+  { winner: 'Globo Boomerangs', score: '16–7', loser: 'Samurai Kick Smashers' },
+];
+
 const LEGACY_ROUND_TWO = [
   { winner: 'Honey Badgers', score: '7–4', loser: 'Leopards' },
   { winner: 'Jackals', score: '7–4', loser: 'Rhinos' },
@@ -67,20 +74,20 @@ export default function HomeV2() {
         <div className="lpv2-now">
           <div className="lpv2-now-head">
             <span>Latest news</span>
-            <i>{live.length ? `${live.length} LIVE` : 'ROUND 2 COMPLETE'}</i>
+            <i>{live.length ? `${live.length} LIVE` : 'FRANCHISE WEEK COMPLETE'}</i>
           </div>
           <article className="lpv2-now-feature">
-            <span className="lpv2-kicker">LP LEGACY LEAGUE</span>
-            <strong>Cheetahs stay perfect.<br />Round 2 delivers.</strong>
-            <p>Cheetahs and Honey Badgers move to 2–0, while Jackals claim their first victory.</p>
+            <span className="lpv2-kicker">FRANCHISE LEAGUE</span>
+            <strong>Boomerangs make a statement.<br />The title race heats up.</strong>
+            <p>Globo Boomerangs recorded two major victories, while Viboras and Falcons also collected important wins.</p>
             <div className="lpv2-date-block">
-              <span>League leaders</span>
-              <b>CHEETAHS · 16 PTS</b>
+              <span>Biggest result</span>
+              <b>BOOMERANGS 16–7 KICK SMASHERS</b>
             </div>
           </article>
           <div className="lpv2-now-row">
-            <span><b>NEXT BIG EVENT</b> Ladies League auction · 29 July</span>
-            <Link to="/legacy-league">Round 2 results →</Link>
+            <span><b>ALSO TRENDING</b> Legacy Round 2 complete · Ladies auction 29 July</span>
+            <Link to="/live">All results →</Link>
           </div>
         </div>
       </section>
@@ -88,39 +95,60 @@ export default function HomeV2() {
       <section className="lpv2-pulse" aria-label="Lowveld Padel growth highlights">
         <div><strong>60</strong><span>Ladies registered</span></div>
         <div><strong>6</strong><span>Ladies franchises</span></div>
-        <div><strong>2–0</strong><span>Cheetahs & Badgers</span></div>
+        <div><strong>4</strong><span>Franchise results</span></div>
         <div><strong>29 JUL</strong><span>Ladies auction</span></div>
       </section>
 
       <section className="lpv2-section lpv2-story-section">
         <div className="lpv2-section-heading">
           <span className="lpv2-kicker">LATEST FROM LOWVELD PADEL</span>
-          <h2>Round 2 reshapes the Legacy League</h2>
+          <h2>A massive week across both leagues</h2>
         </div>
         <div className="lpv2-story-grid">
           <article className="lpv2-story lpv2-story-main">
             <span className="lpv2-story-number">01</span>
-            <h3>Cheetahs take control of the table</h3>
+            <h3>Boomerangs drive the Franchise League title race</h3>
             <p>
-              The LP Cheetahs defeated the Eagles 8–3 to remain unbeaten and move to the top
-              of the standings with 16 points and a +10 game difference.
+              Globo Boomerangs defeated Avalanche Aces 13–6 before producing a commanding
+              16–7 victory over Samurai Kick Smashers in the week's headline result.
             </p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">02</span>
-            <h3>Honey Badgers remain unbeaten</h3>
-            <p>Honey Badgers beat the Leopards 7–4 and move to 14 points after two rounds.</p>
+            <h3>Viboras and Falcons collect key wins</h3>
+            <p>Sonic Viboras beat Sahara Lions 13–7, while Desert Falcons overcame Ice Breakers 14–7.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">03</span>
-            <h3>Jackals get their first win</h3>
-            <p>Jackals responded strongly with a 7–4 victory over the Rhinos.</p>
+            <h3>Legacy League Round 2 delivers</h3>
+            <p>Cheetahs and Honey Badgers remain unbeaten, while Jackals secured their first win.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">04</span>
             <h3>Ladies League auction next</h3>
             <p>Sixty ladies across six franchises enter the biggest Ladies League auction yet on 29 July.</p>
           </article>
+        </div>
+      </section>
+
+      <section className="lpv2-section">
+        <div className="lpv2-section-heading lpv2-heading-row">
+          <div>
+            <span className="lpv2-kicker">FRANCHISE LEAGUE SCOREBOARD</span>
+            <h2>This week's results</h2>
+          </div>
+          <Link to="/live">Full Match Centre →</Link>
+        </div>
+        <div className="lpv2-results">
+          {FRANCHISE_WEEK_RESULTS.map((result) => (
+            <Link key={`${result.winner}-${result.loser}`} to="/live" className="lpv2-result-row">
+              <span className="lpv2-round">FT</span>
+              <span className="lpv2-result-team">{result.winner}</span>
+              <strong>{result.score.split('–')[0]}</strong>
+              <span className="lpv2-result-team">{result.loser}</span>
+              <strong>{result.score.split('–')[1]}</strong>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -154,7 +182,7 @@ export default function HomeV2() {
           <Link to="/leagues">View all leagues →</Link>
         </div>
         <div className="lpv2-competition-grid">
-          <CompetitionCard eyebrow="Season 3" title="Franchise League" copy="The title race enters its decisive stage." to="/leagues" tone="blue" />
+          <CompetitionCard eyebrow="Season 3" title="Franchise League" copy="Four major results shape the latest title race." to="/leagues" tone="blue" status="View results & standings" />
           <CompetitionCard eyebrow="Record season" title="Ladies League" copy="60 ladies. Six franchises. Auction on 29 July." to="/leagues" tone="rose" status="Auction · 29 July" />
           <CompetitionCard eyebrow="Round 2 complete" title="LP Legacy" copy="Cheetahs lead after another action-packed round." to="/legacy-league" tone="gold" status="View results & standings" />
           <CompetitionCard eyebrow="International Nations Cup" title="Unity Cup" copy="Competition format and scheduling are under review." to="/unity-cup" tone="muted" status="On hold" />
@@ -208,7 +236,7 @@ export default function HomeV2() {
           <Link to="/standings">Full standings →</Link>
         </div>
         <div className="lpv2-table-wrap">
-          <table className="lpv2-table">
+          <table className="lpv2-table lpv2-table-mobile-cards">
             <thead><tr><th>#</th><th>Franchise</th><th>R</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th>Form</th></tr></thead>
             <tbody>
               {standings.slice(0, 7).map((row, index) => {
@@ -216,14 +244,14 @@ export default function HomeV2() {
                 const form = teamForm(row.franchise_id, 5);
                 return (
                   <tr key={row.franchise_id}>
-                    <td>{index + 1}</td>
-                    <td><Link to={`/franchise/${franchise.id}`}><img src={franchise.logo} alt="" />{franchise.name}</Link></td>
-                    <td>{roundsPlayed(row.franchise_id)}</td>
-                    <td>{row.played}</td>
-                    <td>{row.won}</td>
-                    <td>{row.lost}</td>
-                    <td><b>{row.points}</b></td>
-                    <td><span className="lpv2-form">{form.length ? form.join(' ') : '—'}</span></td>
+                    <td data-label="Position">{index + 1}</td>
+                    <td data-label="Franchise"><Link to={`/franchise/${franchise.id}`}><img src={franchise.logo} alt="" />{franchise.name}</Link></td>
+                    <td data-label="Rounds">{roundsPlayed(row.franchise_id)}</td>
+                    <td data-label="Played">{row.played}</td>
+                    <td data-label="Won">{row.won}</td>
+                    <td data-label="Lost">{row.lost}</td>
+                    <td data-label="Points"><b>{row.points}</b></td>
+                    <td data-label="Form"><span className="lpv2-form">{form.length ? form.join(' ') : '—'}</span></td>
                   </tr>
                 );
               })}

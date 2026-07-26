@@ -1,0 +1,22 @@
+@media (max-width:650px){
+  .lpv2-table-wrap{width:100%;overflow-x:auto!important;-webkit-overflow-scrolling:touch;border:1px solid rgba(255,255,255,.08)!important;background:#0b1018!important}
+  .lpv2-table-mobile-cards{display:table!important;width:100%;min-width:610px!important;border-collapse:collapse}
+  .lpv2-table-mobile-cards thead{display:table-header-group!important}
+  .lpv2-table-mobile-cards tbody{display:table-row-group!important}
+  .lpv2-table-mobile-cards tr{display:table-row!important;background:transparent!important;border:none!important;box-shadow:none!important}
+  .lpv2-table-mobile-cards th{display:table-cell!important;padding:9px 7px!important;font-size:8px!important;white-space:nowrap;background:#0b1018}
+  .lpv2-table-mobile-cards td{display:table-cell!important;min-height:0!important;padding:10px 7px!important;white-space:nowrap!important;text-align:center!important;border-right:none!important;border-bottom:1px solid rgba(255,255,255,.07)!important;font-size:11px}
+  .lpv2-table-mobile-cards td:before{display:none!important;content:none!important}
+  .lpv2-table-mobile-cards th:nth-child(1),.lpv2-table-mobile-cards td:nth-child(1){position:sticky;left:0;z-index:4;width:34px;min-width:34px;background:#0b1018}
+  .lpv2-table-mobile-cards th:nth-child(2),.lpv2-table-mobile-cards td:nth-child(2){position:sticky;left:34px;z-index:3;min-width:150px;max-width:150px;text-align:left!important;background:#0b1018;box-shadow:8px 0 14px rgba(0,0,0,.3)}
+  .lpv2-table-mobile-cards tbody tr:nth-child(even) td{background:#0d131d!important}
+  .lpv2-table-mobile-cards tbody tr:nth-child(even) td:nth-child(1),.lpv2-table-mobile-cards tbody tr:nth-child(even) td:nth-child(2){background:#0d131d!important}
+  .lpv2-table-mobile-cards td a{gap:6px!important;overflow:hidden;white-space:nowrap}
+  .lpv2-table-mobile-cards td a img{width:22px!important;height:22px!important;flex:0 0 auto}
+  .lpv2-table-mobile-cards td a span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px}
+  .lpv2-table-mobile-cards .lpv2-form{font-size:9px;white-space:nowrap}
+}
+@media (max-width:420px){
+  .lpv2-table-mobile-cards{min-width:560px!important}
+  .lpv2-table-mobile-cards th:nth-child(2),.lpv2-table-mobile-cards td:nth-child(2){min-width:132px;max-width:132px}
+}

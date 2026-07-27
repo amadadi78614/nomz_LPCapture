@@ -2,10 +2,11 @@ import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-route
 import { useEffect } from 'react';
 import { TopBar, LiveTicker, BottomNav } from './components/ui';
 import {
-  MatchCentre, MatchPage, Players, PlayerProfile,
+  MatchPage, Players, PlayerProfile,
   Franchises, FranchiseHub, Rankings, NewsCentre, SponsorCentre, More,
 } from './pages/public';
 import HomeV2 from './pages/HomeV2';
+import MatchCentreV2 from './pages/MatchCentreV2';
 import StandingsV2 from './pages/StandingsV2';
 import { Registration } from './pages/Registration';
 import {
@@ -40,7 +41,7 @@ export default function App() {
         <TopBar />
         <Routes>
           <Route path="/" element={<HomeV2 />} />
-          <Route path="/live" element={<MatchCentre />} />
+          <Route path="/live" element={<MatchCentreV2 />} />
           <Route path="/match/:id" element={<MatchPage />} />
           <Route path="/standings" element={<StandingsV2 />} />
           <Route path="/players" element={<Players />} />

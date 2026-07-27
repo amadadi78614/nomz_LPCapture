@@ -9,6 +9,7 @@ import './styles/career-table-mobile.css';
 import './styles/home-premium.css';
 import './styles/home-standings-mobile-fix.css';
 import './styles/leagues-standings-fix.css';
+import './styles/home-layout-final-fix.css';
 
 // A stale service worker was caching old HTML/JS between deployments.
 // That caused client-side navigation to occasionally render a blank screen

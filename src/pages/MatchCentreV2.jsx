@@ -1,27 +1,34 @@
 import { useMemo, useState } from 'react';
 import { FIXTURES } from '../data/seed';
+import { ROUND5_FIXTURES } from '../data/franchiseRound5Update';
 import { FixtureRow, LiveScoreCard, ResultCard } from '../components/ui';
 import '../styles/match-centre-v2.css';
 
+const mergeFixtures = () => {
+  const merged = [...ROUND5_FIXTURES, ...FIXTURES];
+  return merged.filter((fixture, index, list) => list.findIndex((item) => item.id === fixture.id) === index);
+};
+
 export default function MatchCentreV2() {
+  const fixturesData = useMemo(() => mergeFixtures(), []);
   const completedRounds = useMemo(
-    () => [...new Set(FIXTURES.filter((f) => f.status === 'final').map((f) => f.round))].sort((a, b) => b - a),
-    [],
+    () => [...new Set(fixturesData.filter((f) => f.status === 'final').map((f) => f.round))].sort((a, b) => b - a),
+    [fixturesData],
   );
   const scheduledRounds = useMemo(
-    () => [...new Set(FIXTURES.filter((f) => f.status === 'scheduled').map((f) => f.round))].sort((a, b) => a - b),
-    [],
+    () => [...new Set(fixturesData.filter((f) => f.status === 'scheduled').map((f) => f.round))].sort((a, b) => a - b),
+    [fixturesData],
   );
   const latestRound = completedRounds[0] || 'all';
   const [tab, setTab] = useState('results');
   const [roundFilter, setRoundFilter] = useState(String(latestRound));
 
-  const live = FIXTURES.filter((f) => f.status === 'live');
-  const allResults = FIXTURES
+  const live = fixturesData.filter((f) => f.status === 'live');
+  const allResults = fixturesData
     .filter((f) => f.status === 'final')
     .slice()
     .sort((a, b) => new Date(b.start) - new Date(a.start));
-  const allFixtures = FIXTURES
+  const allFixtures = fixturesData
     .filter((f) => f.status === 'scheduled')
     .slice()
     .sort((a, b) => new Date(a.start) - new Date(b.start));
@@ -43,7 +50,7 @@ export default function MatchCentreV2() {
         <div>
           <span className="eyebrow">Season 3</span>
           <h1 className="display">Match Centre</h1>
-          <p className="muted">Round 5 results are now live with the complete rubber breakdown.</p>
+          <p className="muted">Round 5 results are live with the complete rubber breakdown.</p>
         </div>
         {live.length > 0 && <span className="chip mc2-live">● {live.length} Live</span>}
       </div>

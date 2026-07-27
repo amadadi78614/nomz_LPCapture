@@ -3,13 +3,11 @@ import { FIXTURES, PLAYERS, STANDINGS } from './seed';
 const findPlayerId = (franchiseId, name) =>
   PLAYERS.find((p) => p.franchise_id === franchiseId && p.name === name)?.id || null;
 
-const rubber = ({ slot, court, home, away, homeNames, awayNames, sets, games, winner }) => ({
+const rubber = ({ slot, court, homeFranchise, awayFranchise, homeNames, awayNames, sets, games, winner }) => ({
   slot,
   court,
-  home,
-  away,
-  homeIds: homeNames.map((name) => findPlayerId(home.includes('Lions') ? 'sahara-lions' : home.includes('Aces') ? 'avalanche-aces' : home.includes('Ice') ? 'ice-breakers' : 'globo-boomerangs', name)),
-  awayIds: awayNames.map((name) => findPlayerId(away.includes('Lions') ? 'sahara-lions' : away.includes('Aces') ? 'avalanche-aces' : away.includes('Ice') ? 'ice-breakers' : 'globo-boomerangs', name)),
+  homeIds: homeNames.map((name) => findPlayerId(homeFranchise, name)),
+  awayIds: awayNames.map((name) => findPlayerId(awayFranchise, name)),
   sets,
   games,
   winner,
@@ -20,24 +18,24 @@ const fixtures = [
     id: 'fx-w5-1', round: 5, league: 'mens', home: 'globo-boomerangs', away: 'ice-breakers',
     start: '2026-07-27T18:00:00+02:00', status: 'final', court: 'Padel 24',
     score: { winner: 'home', totals: [15, 7], rubberWins: [4, 2], rubbers: [
-      rubber({ slot: '18:00', court: 'P2', home: 'Globo Boomerangs', away: 'Ice Breakers', homeNames: ['Bevan Francis', 'Muhammed Shehzad Meer'], awayNames: ['Phil-Mar Van Rensburg', 'Zayd Methar'], sets: [[6,2],[6,3],[10,5]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '18:00', court: 'P1', home: 'Globo Boomerangs', away: 'Ice Breakers', homeNames: ['Adil Ahmed', 'Lefa Moganedi'], awayNames: ['Zaheer Methar', 'Salmaan Methar'], sets: [[7,5],[6,4],[3,10]], games: [3,0], winner: 'home' }),
-      rubber({ slot: '19:15', court: 'P3', home: 'Ice Breakers', away: 'Globo Boomerangs', homeNames: ['Wayne Enslin', 'Waldo van Tonder'], awayNames: ['Stefan Erasmus', 'Suhail Patel'], sets: [[6,4],[6,2],[12,10]], games: [0,4], winner: 'away' }),
-      rubber({ slot: '19:15', court: 'P2', home: 'Globo Boomerangs', away: 'Ice Breakers', homeNames: ['Diego Sebastian', 'Ryan Kennett'], awayNames: ['Zahid Methar', 'Chaz Taylor'], sets: [[6,3],[6,3],[10,6]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '20:30', court: 'P3', home: 'Globo Boomerangs', away: 'Ice Breakers', homeNames: ['Shaffique Jeewa', 'Farhaan Shaik'], awayNames: ['Aadam Nomani', 'Shaun Caromba'], sets: [[7,5],[7,5],[10,8]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '20:30', court: 'P1', home: 'Ice Breakers', away: 'Globo Boomerangs', homeNames: ['Duhan Swart', 'Maaz Randera'], awayNames: ['Yusuf Asvat', 'Ahmed Mungalee'], sets: [[7,6],[7,6],[8,10]], games: [0,3], winner: 'away' }),
+      rubber({ slot: '18:00', court: 'P2', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Bevan Francis', 'Muhammed Shehzad Meer'], awayNames: ['Phil-Mar Van Rensburg', 'Zayd Methar'], sets: [[6,2],[6,3],[10,5]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '18:00', court: 'P1', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Adil Ahmed', 'Lefa Moganedi'], awayNames: ['Zaheer Methar', 'Salmaan Methar'], sets: [[7,5],[6,4],[3,10]], games: [3,0], winner: 'home' }),
+      rubber({ slot: '19:15', court: 'P3', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Stefan Erasmus', 'Suhail Patel'], awayNames: ['Wayne Enslin', 'Waldo van Tonder'], sets: [[4,6],[2,6],[10,12]], games: [0,4], winner: 'away' }),
+      rubber({ slot: '19:15', court: 'P2', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Diego Sebastian', 'Ryan Kennett'], awayNames: ['Zahid Methar', 'Chaz Taylor'], sets: [[6,3],[6,3],[10,6]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P3', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Shaffique Jeewa', 'Farhaan Shaik'], awayNames: ['Aadam Nomani', 'Shaun Caromba'], sets: [[7,5],[7,5],[10,8]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P1', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Yusuf Asvat', 'Ahmed Mungalee'], awayNames: ['Duhan Swart', 'Maaz Randera'], sets: [[6,7],[6,7],[10,8]], games: [0,3], winner: 'away' }),
     ] },
   },
   {
     id: 'fx-w5-2', round: 5, league: 'mens', home: 'sahara-lions', away: 'avalanche-aces',
     start: '2026-07-27T18:00:00+02:00', status: 'final', court: 'Padel 24',
     score: { winner: 'home', totals: [12, 10], rubberWins: [3, 3], rubbers: [
-      rubber({ slot: '18:00', court: 'P1', home: 'Sahara Lions', away: 'Avalanche Aces', homeNames: ['Pieter Badenhorst', 'Justin van Staaden'], awayNames: ['Patrick Leyden', 'Steven Pinker'], sets: [[6,0],[6,1],[10,7]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '18:00', court: 'P2', home: 'Sahara Lions', away: 'Avalanche Aces', homeNames: ['Soyab Patel', 'Irfaan Mamji'], awayNames: ['Frik de Beer', 'Luqmaan Hoosen'], sets: [[7,5],[6,7],[15,17]], games: [0,3], winner: 'away' }),
-      rubber({ slot: '19:15', court: 'P1', home: 'Sahara Lions', away: 'Avalanche Aces', homeNames: ['Cian Maritz', 'Yusuf Packery'], awayNames: ['Wiehann Mohlen', 'Hoffmann Maritz'], sets: [[7,6],[6,2],[10,4]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '19:15', court: 'P3', home: 'Sahara Lions', away: 'Avalanche Aces', homeNames: ['Warren Morgan', 'Aadil Asvat'], awayNames: ['Anas Mungalee', 'Gerco van Rooyen'], sets: [[0,6],[2,6],[6,10]], games: [0,4], winner: 'away' }),
-      rubber({ slot: '20:30', court: 'P2', home: 'Sahara Lions', away: 'Avalanche Aces', homeNames: ['Alfaiz Mamji', 'Adil Patel'], awayNames: ['Etienne Grobler', 'Ruaan Naude'], sets: [[6,4],[6,1],[10,8]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '20:30', court: 'P3', home: 'Sahara Lions', away: 'Avalanche Aces', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Rishaad Shaik', 'Prashil Nagar'], sets: [[4,6],[4,6],[10,9]], games: [0,3], winner: 'away' }),
+      rubber({ slot: '18:00', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Pieter Badenhorst', 'Justin van Staaden'], awayNames: ['Patrick Leyden', 'Steven Pinker'], sets: [[6,0],[6,1],[10,7]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '18:00', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Soyab Patel', 'Irfaan Mamji'], awayNames: ['Frik de Beer', 'Luqmaan Hoosen'], sets: [[7,5],[6,7],[15,17]], games: [0,3], winner: 'away' }),
+      rubber({ slot: '19:15', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Cian Maritz', 'Yusuf Packery'], awayNames: ['Wiehann Mohlen', 'Hoffmann Maritz'], sets: [[7,6],[6,2],[10,4]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '19:15', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Warren Morgan', 'Aadil Asvat'], awayNames: ['Anas Mungalee', 'Gerco van Rooyen'], sets: [[0,6],[2,6],[6,10]], games: [0,4], winner: 'away' }),
+      rubber({ slot: '20:30', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Alfaiz Mamji', 'Adil Patel'], awayNames: ['Etienne Grobler', 'Ruaan Naude'], sets: [[6,4],[6,1],[10,8]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Rishaad Shaik', 'Prashil Nagar'], sets: [[4,6],[4,6],[10,9]], games: [0,3], winner: 'away' }),
     ] },
   },
 ];

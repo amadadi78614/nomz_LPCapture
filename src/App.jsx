@@ -20,7 +20,7 @@ import {
 } from './pages/leagues';
 import UnityCup from './pages/UnityCup';
 import { SuperCup360 } from './pages/leagues';
-import { Leagues } from './pages/leagues';
+import { Leagues } from './pages/leagues_new';
 import { AllTimeRankings } from './pages/AllTimeRankings';
 import { NotFound } from './pages/public';
 import { Cups } from './pages/Cups';

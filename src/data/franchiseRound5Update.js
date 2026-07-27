@@ -13,7 +13,7 @@ const rubber = ({ slot, court, homeFranchise, awayFranchise, homeNames, awayName
   winner,
 });
 
-const fixtures = [
+export const ROUND5_FIXTURES = [
   {
     id: 'fx-w5-1', round: 5, league: 'mens', home: 'globo-boomerangs', away: 'ice-breakers',
     start: '2026-07-27T18:00:00+02:00', status: 'final', court: 'Padel 24',
@@ -41,7 +41,7 @@ const fixtures = [
 ];
 
 const fixtureExists = (id) => FIXTURES.some((fixture) => fixture.id === id);
-fixtures.forEach((fixture) => { if (!fixtureExists(fixture.id)) FIXTURES.push(fixture); });
+ROUND5_FIXTURES.forEach((fixture) => { if (!fixtureExists(fixture.id)) FIXTURES.push(fixture); });
 
 const bonus = (games, side) => (side === 'home' ? games?.[0] === 4 : games?.[1] === 4);
 const applyTableResult = (rows, fixture, result) => {
@@ -58,7 +58,7 @@ const applyTableResult = (rows, fixture, result) => {
   }
 };
 
-fixtures.forEach((fixture) => {
+ROUND5_FIXTURES.forEach((fixture) => {
   fixture.score.rubbers.forEach((result) => {
     applyTableResult(STANDINGS.mens.franchise, fixture, result);
     applyTableResult(STANDINGS.mens[result.court], fixture, result);

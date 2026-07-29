@@ -35,6 +35,7 @@ function CompetitionCard({ eyebrow, title, copy, to, tone = 'gold', status }) {
 }
 
 const ROUND_FIVE_RESULTS = [
+  { round: 5, winner: 'Desert Falcons', score: '15–6', loser: 'Sonic Viboras', fixtureId: 'fx-w5-4', date: '29 Jul' },
   { round: 5, winner: 'Sahara Lions', score: '18–3', loser: 'Samurai Kick Smashers', fixtureId: 'fx-w5-3', date: '29 Jul' },
   { round: 5, winner: 'Globo Boomerangs', score: '15–7', loser: 'Ice Breakers', fixtureId: 'fx-w5-1', date: '27 Jul' },
   { round: 5, winner: 'Sahara Lions', score: '12–10', loser: 'Avalanche Aces', fixtureId: 'fx-w5-2', date: '27 Jul' },
@@ -84,15 +85,15 @@ export default function HomeV2() {
           </div>
           <article className="lpv2-now-feature">
             <span className="lpv2-kicker">FRANCHISE LEAGUE · ROUND 5</span>
-            <strong>Lions roar past<br />Kick Smashers 18–3.</strong>
-            <p>Sahara Lions won five of six rubbers at Padel 24 on 29 July, collecting four bonus-point victories.</p>
+            <strong>Falcons defeat<br />Sonic Viboras 15–6.</strong>
+            <p>Desert Falcons won four of six rubbers, with one fixture played on 28 July and the remaining five completed on 29 July.</p>
             <div className="lpv2-date-block">
               <span>Latest result</span>
-              <b>LIONS 18–3 KICK SMASHERS</b>
+              <b>FALCONS 15–6 SONIC VIBORAS</b>
             </div>
           </article>
           <div className="lpv2-now-row">
-            <span><b>ROUND 5</b> Lions add another major win · standings and player stats updated</span>
+            <span><b>ROUND 5</b> Falcons take the latest result · standings and player stats updated</span>
             <Link to="/live">All results →</Link>
           </div>
         </div>
@@ -100,39 +101,39 @@ export default function HomeV2() {
 
       <section className="lpv2-pulse" aria-label="Lowveld Padel latest highlights">
         <div><strong>R5</strong><span>Current round</span></div>
-        <div><strong>18–3</strong><span>Lions v Kick Smashers</span></div>
-        <div><strong>5–1</strong><span>Rubber wins</span></div>
-        <div><strong>29 JUL</strong><span>Latest result</span></div>
+        <div><strong>15–6</strong><span>Falcons v Sonics</span></div>
+        <div><strong>4–2</strong><span>Rubber wins</span></div>
+        <div><strong>28–29 JUL</strong><span>Fixture dates</span></div>
       </section>
 
       <section className="lpv2-section lpv2-story-section">
         <div className="lpv2-section-heading">
           <span className="lpv2-kicker">LATEST FROM LOWVELD PADEL</span>
-          <h2>Lions produce the biggest Round 5 win</h2>
+          <h2>Falcons claim the latest Round 5 result</h2>
         </div>
         <div className="lpv2-story-grid">
           <article className="lpv2-story lpv2-story-main">
             <span className="lpv2-story-number">01</span>
-            <h3>Sahara Lions dominate 18–3</h3>
+            <h3>Desert Falcons win 15–6</h3>
             <p>
-              The Lions won five rubbers against Samurai Kick Smashers, including four 4–0 bonus-point victories,
-              to record the latest headline result of Round 5.
+              The Falcons won four rubbers against Sonic Viboras, including three 4–0 bonus-point victories,
+              to strengthen their Round 5 campaign.
             </p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">02</span>
-            <h3>Cian and Yusuf set the tone</h3>
-            <p>Cian Maritz and Yusuf Packery opened the night with a 6–4, 6–2, 11–9 victory in P1.</p>
+            <h3>Schalk and Faheem opened the fixture</h3>
+            <p>Schalk Schutte and Faheem Nomani beat Ridhwaan Sujee and Erlo Olivier on 28 July, one day before the remaining rubbers.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">03</span>
             <h3>Round 5 tables updated</h3>
-            <p>The Franchise, P1, P2 and P3 standings now include the 29 July result and completed rounds.</p>
+            <p>The Franchise, P1, P2 and P3 standings now include the Falcons–Sonics result and completed rounds.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">04</span>
             <h3>Match Centre has the full breakdown</h3>
-            <p>All six rubbers, pairings and set scores are available in the Round 5 Match Centre.</p>
+            <p>All six rubbers, pairings, dates and set scores are available in the Round 5 Match Centre.</p>
           </article>
         </div>
       </section>
@@ -209,7 +210,7 @@ export default function HomeV2() {
           <Link to="/leagues">View all leagues →</Link>
         </div>
         <div className="lpv2-competition-grid">
-          <CompetitionCard eyebrow="Round 5 updated" title="Franchise League" copy="Lions defeat Kick Smashers 18–3 in the latest result." to="/leagues" tone="blue" status="View results & standings" />
+          <CompetitionCard eyebrow="Round 5 updated" title="Franchise League" copy="Falcons defeat Sonic Viboras 15–6 in the latest result." to="/leagues" tone="blue" status="View results & standings" />
           <CompetitionCard eyebrow="Record season" title="Ladies League" copy="60 ladies. Six franchises. Season preparations continue." to="/leagues" tone="rose" status="Explore Ladies League" />
           <CompetitionCard eyebrow="Round 2 complete" title="LP Legacy" copy="Cheetahs lead after another action-packed round." to="/legacy-league" tone="gold" status="View results & standings" />
           <CompetitionCard eyebrow="International Nations Cup" title="Unity Cup" copy="Competition format and scheduling are under review." to="/unity-cup" tone="muted" status="On hold" />

@@ -16,9 +16,24 @@ const rubber = ({ slot, court, homeFranchise, awayFranchise, homeNames, awayName
   winner,
 });
 
+// IDs deliberately match the original scheduled fixtures in seed.js.
+// Replacing those objects means Match Centre, franchise Results/Fixtures,
+// player profiles, ticker, homepage and every other FIXTURES consumer agree.
 export const ROUND5_FIXTURES = [
   {
-    id: 'fx-w5-1', round: 5, league: 'mens', home: 'globo-boomerangs', away: 'ice-breakers',
+    id: 'fx-w5-1', round: 5, league: 'mens', home: 'sahara-lions', away: 'avalanche-aces',
+    start: '2026-07-27T18:00:00+02:00', status: 'final', court: 'Padel 24', dh: true,
+    score: { winner: 'home', totals: [12, 10], rubberWins: [3, 3], rubbers: [
+      rubber({ slot: '18:00', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Pieter Badenhorst', 'Justin van Staaden'], awayNames: ['Patrick Leyden', 'Steven Pinker'], sets: [[6,0],[6,1],[10,7]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '18:00', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Soyab Patel', 'Irfaan Mamji'], awayNames: ['Frik de Beer', 'Luqmaan Hoosen'], sets: [[7,5],[6,7],[15,17]], games: [0,3], winner: 'away' }),
+      rubber({ slot: '19:15', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Cian Maritz', 'Yusuf Packery'], awayNames: ['Wiehann Mohlen', 'Hoffmann Maritz'], sets: [[7,6],[6,2],[10,4]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '19:15', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Warren Morgan', 'Aadil Asvat'], awayNames: ['Anas Mungalee', 'Gerco van Rooyen'], sets: [[0,6],[2,6],[6,10]], games: [0,4], winner: 'away' }),
+      rubber({ slot: '20:30', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Alfaiz Mamji', 'Adil Patel'], awayNames: ['Etienne Grobler', 'Ruaan Naude'], sets: [[6,4],[6,1],[10,8]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Rishaad Shaik', 'Prashil Nagar'], sets: [[4,6],[4,6],[10,9]], games: [0,3], winner: 'away' }),
+    ] },
+  },
+  {
+    id: 'fx-w5-2', round: 5, league: 'mens', home: 'globo-boomerangs', away: 'ice-breakers',
     start: '2026-07-27T18:00:00+02:00', status: 'final', court: 'Padel 24',
     score: { winner: 'home', totals: [15, 7], rubberWins: [4, 2], rubbers: [
       rubber({ slot: '18:00', court: 'P2', homeFranchise: 'globo-boomerangs', awayFranchise: 'ice-breakers', homeNames: ['Bevan Francis', 'Muhammed Shehzad Meer'], awayNames: ['Phil-Mar Van Rensburg', 'Zayd Methar'], sets: [[6,2],[6,3],[10,5]], games: [4,0], winner: 'home' }),
@@ -30,20 +45,8 @@ export const ROUND5_FIXTURES = [
     ] },
   },
   {
-    id: 'fx-w5-2', round: 5, league: 'mens', home: 'sahara-lions', away: 'avalanche-aces',
-    start: '2026-07-27T18:00:00+02:00', status: 'final', court: 'Padel 24',
-    score: { winner: 'home', totals: [12, 10], rubberWins: [3, 3], rubbers: [
-      rubber({ slot: '18:00', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Pieter Badenhorst', 'Justin van Staaden'], awayNames: ['Patrick Leyden', 'Steven Pinker'], sets: [[6,0],[6,1],[10,7]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '18:00', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Soyab Patel', 'Irfaan Mamji'], awayNames: ['Frik de Beer', 'Luqmaan Hoosen'], sets: [[7,5],[6,7],[15,17]], games: [0,3], winner: 'away' }),
-      rubber({ slot: '19:15', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Cian Maritz', 'Yusuf Packery'], awayNames: ['Wiehann Mohlen', 'Hoffmann Maritz'], sets: [[7,6],[6,2],[10,4]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '19:15', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Warren Morgan', 'Aadil Asvat'], awayNames: ['Anas Mungalee', 'Gerco van Rooyen'], sets: [[0,6],[2,6],[6,10]], games: [0,4], winner: 'away' }),
-      rubber({ slot: '20:30', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Alfaiz Mamji', 'Adil Patel'], awayNames: ['Etienne Grobler', 'Ruaan Naude'], sets: [[6,4],[6,1],[10,8]], games: [4,0], winner: 'home' }),
-      rubber({ slot: '20:30', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Rishaad Shaik', 'Prashil Nagar'], sets: [[4,6],[4,6],[10,9]], games: [0,3], winner: 'away' }),
-    ] },
-  },
-  {
     id: 'fx-w5-3', round: 5, league: 'mens', home: 'sahara-lions', away: 'samurai-kicksmashers',
-    start: '2026-07-29T17:30:00+02:00', status: 'final', court: 'Padel 24',
+    start: '2026-07-29T17:30:00+02:00', status: 'final', court: 'Padel 24', dh: true,
     score: { winner: 'home', totals: [18, 3], rubberWins: [5, 1], rubbers: [
       rubber({ slot: '17:30', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Cian Maritz', 'Yusuf Packery'], awayNames: ['Bryan Theron', 'Burger Bester'], sets: [[6,4],[6,2],[11,9]], games: [4,0], winner: 'home' }),
       rubber({ slot: '18:00', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Naeem Omar', 'Alfaiz Mamji'], awayNames: ['Armand Esterhuizen', 'Muneer Shaik'], sets: [[6,3],[6,4],[10,5]], games: [4,0], winner: 'home' }),
@@ -67,8 +70,12 @@ export const ROUND5_FIXTURES = [
   },
 ];
 
-const existingIds = new Set(FIXTURES.map((fixture) => fixture.id));
-ROUND5_FIXTURES.filter((fixture) => !existingIds.has(fixture.id)).forEach((fixture) => FIXTURES.push(fixture));
+// Replace the original scheduled objects in place. This is the critical sync step.
+ROUND5_FIXTURES.forEach((officialFixture) => {
+  const existing = FIXTURES.find((fixture) => fixture.id === officialFixture.id);
+  if (existing) Object.assign(existing, officialFixture);
+  else FIXTURES.push(officialFixture);
+});
 
 const bonus = (games, side) => (side === 'home' ? games?.[0] === 4 : games?.[1] === 4);
 const applyTableResult = (rows, fixture, result) => {
@@ -85,8 +92,6 @@ const applyTableResult = (rows, fixture, result) => {
   }
 };
 
-// The seed fixture list already contains presentation copies of some Round 5 fixtures.
-// Standings and player statistics must nevertheless process every official Round 5 result exactly once.
 ROUND5_FIXTURES.forEach((fixture) => {
   fixture.score.rubbers.forEach((result) => {
     applyTableResult(STANDINGS.mens.franchise, fixture, result);

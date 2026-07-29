@@ -4,6 +4,7 @@ import App from './App';
 import './data/fixturePresentation';
 import './data/legacyRound2Update';
 import './data/franchiseRound5Update';
+import './data/round5SiteSync';
 import './data/roundsDisplaySync';
 import './styles/global.css';
 import './styles/career-table-mobile.css';

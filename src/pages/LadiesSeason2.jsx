@@ -11,7 +11,7 @@ export function LadiesSeason2Franchise() {
 
   return (
     <div className="page">
-      <Link to="/leagues" className="muted" style={{ fontSize: 12 }}>← Ladies Franchise League</Link>
+      <Link to="/leagues?league=ladies" className="muted" style={{ fontSize: 12 }}>← Ladies Franchise League</Link>
       <section className="card" style={{ marginTop: 12, padding: 20, display: 'grid', gridTemplateColumns: 'minmax(110px,180px) 1fr', gap: 22, alignItems: 'center' }}>
         <img src={team.logo} alt={team.name} style={{ width: '100%', aspectRatio: '1', objectFit: 'cover', borderRadius: 16 }} />
         <div>

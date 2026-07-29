@@ -35,8 +35,9 @@ function CompetitionCard({ eyebrow, title, copy, to, tone = 'gold', status }) {
 }
 
 const ROUND_FIVE_RESULTS = [
-  { round: 5, winner: 'Globo Boomerangs', score: '15–7', loser: 'Ice Breakers', fixtureId: 'fx-w5-1' },
-  { round: 5, winner: 'Sahara Lions', score: '12–10', loser: 'Avalanche Aces', fixtureId: 'fx-w5-2' },
+  { round: 5, winner: 'Sahara Lions', score: '18–3', loser: 'Samurai Kick Smashers', fixtureId: 'fx-w5-3', date: '29 Jul' },
+  { round: 5, winner: 'Globo Boomerangs', score: '15–7', loser: 'Ice Breakers', fixtureId: 'fx-w5-1', date: '27 Jul' },
+  { round: 5, winner: 'Sahara Lions', score: '12–10', loser: 'Avalanche Aces', fixtureId: 'fx-w5-2', date: '27 Jul' },
 ];
 
 const PREVIOUS_FRANCHISE_RESULTS = [
@@ -79,19 +80,19 @@ export default function HomeV2() {
         <div className="lpv2-now">
           <div className="lpv2-now-head">
             <span>Latest news</span>
-            <i>{live.length ? `${live.length} LIVE` : 'ROUND 5 COMPLETE'}</i>
+            <i>{live.length ? `${live.length} LIVE` : 'ROUND 5 UPDATED'}</i>
           </div>
           <article className="lpv2-now-feature">
             <span className="lpv2-kicker">FRANCHISE LEAGUE · ROUND 5</span>
-            <strong>Boomerangs beat the Breakers.<br />Lions edge the Aces.</strong>
-            <p>Globo Boomerangs won 15–7, while Sahara Lions claimed a dramatic 12–10 victory on 27 July.</p>
+            <strong>Lions roar past<br />Kick Smashers 18–3.</strong>
+            <p>Sahara Lions won five of six rubbers at Padel 24 on 29 July, collecting four bonus-point victories.</p>
             <div className="lpv2-date-block">
-              <span>Latest results</span>
-              <b>BOOMERANGS 15–7 · LIONS 12–10</b>
+              <span>Latest result</span>
+              <b>LIONS 18–3 KICK SMASHERS</b>
             </div>
           </article>
           <div className="lpv2-now-row">
-            <span><b>ROUND 5</b> Twelve rubbers completed · standings and player stats updated</span>
+            <span><b>ROUND 5</b> Lions add another major win · standings and player stats updated</span>
             <Link to="/live">All results →</Link>
           </div>
         </div>
@@ -99,39 +100,39 @@ export default function HomeV2() {
 
       <section className="lpv2-pulse" aria-label="Lowveld Padel latest highlights">
         <div><strong>R5</strong><span>Current round</span></div>
-        <div><strong>15–7</strong><span>Boomerangs v Breakers</span></div>
-        <div><strong>12–10</strong><span>Lions v Aces</span></div>
-        <div><strong>29 JUL</strong><span>Ladies auction</span></div>
+        <div><strong>18–3</strong><span>Lions v Kick Smashers</span></div>
+        <div><strong>5–1</strong><span>Rubber wins</span></div>
+        <div><strong>29 JUL</strong><span>Latest result</span></div>
       </section>
 
       <section className="lpv2-section lpv2-story-section">
         <div className="lpv2-section-heading">
           <span className="lpv2-kicker">LATEST FROM LOWVELD PADEL</span>
-          <h2>Round 5 delivers two statement results</h2>
+          <h2>Lions produce the biggest Round 5 win</h2>
         </div>
         <div className="lpv2-story-grid">
           <article className="lpv2-story lpv2-story-main">
             <span className="lpv2-story-number">01</span>
-            <h3>Boomerangs defeat Ice Breakers 15–7</h3>
+            <h3>Sahara Lions dominate 18–3</h3>
             <p>
-              Globo Boomerangs collected four rubber wins, including three bonus-point victories,
-              to secure the first completed result of Round 5.
+              The Lions won five rubbers against Samurai Kick Smashers, including four 4–0 bonus-point victories,
+              to record the latest headline result of Round 5.
             </p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">02</span>
-            <h3>Lions survive an Aces fightback</h3>
-            <p>Sahara Lions and Avalanche Aces split the rubbers 3–3, but the Lions took the fixture 12–10.</p>
+            <h3>Cian and Yusuf set the tone</h3>
+            <p>Cian Maritz and Yusuf Packery opened the night with a 6–4, 6–2, 11–9 victory in P1.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">03</span>
-            <h3>Tables now include Round 5</h3>
-            <p>The Franchise, P1, P2 and P3 tables now show rounds completed separately from rubbers played.</p>
+            <h3>Round 5 tables updated</h3>
+            <p>The Franchise, P1, P2 and P3 standings now include the 29 July result and completed rounds.</p>
           </article>
           <article className="lpv2-story">
             <span className="lpv2-story-number">04</span>
-            <h3>Ladies League auction next</h3>
-            <p>Sixty ladies across six franchises enter the biggest Ladies League auction yet on 29 July.</p>
+            <h3>Match Centre has the full breakdown</h3>
+            <p>All six rubbers, pairings and set scores are available in the Round 5 Match Centre.</p>
           </article>
         </div>
       </section>
@@ -139,8 +140,8 @@ export default function HomeV2() {
       <section className="lpv2-section">
         <div className="lpv2-section-heading lpv2-heading-row">
           <div>
-            <span className="lpv2-kicker">ROUND 5 SCOREBOARD · 27 JULY</span>
-            <h2>Tonight's Franchise League results</h2>
+            <span className="lpv2-kicker">ROUND 5 SCOREBOARD · UPDATED 29 JULY</span>
+            <h2>Latest Franchise League results</h2>
           </div>
           <Link to="/live">Full Match Centre →</Link>
         </div>
@@ -208,8 +209,8 @@ export default function HomeV2() {
           <Link to="/leagues">View all leagues →</Link>
         </div>
         <div className="lpv2-competition-grid">
-          <CompetitionCard eyebrow="Round 5 underway" title="Franchise League" copy="Boomerangs beat the Breakers and Lions edge the Aces." to="/leagues" tone="blue" status="View results & standings" />
-          <CompetitionCard eyebrow="Record season" title="Ladies League" copy="60 ladies. Six franchises. Auction on 29 July." to="/leagues" tone="rose" status="Auction · 29 July" />
+          <CompetitionCard eyebrow="Round 5 updated" title="Franchise League" copy="Lions defeat Kick Smashers 18–3 in the latest result." to="/leagues" tone="blue" status="View results & standings" />
+          <CompetitionCard eyebrow="Record season" title="Ladies League" copy="60 ladies. Six franchises. Season preparations continue." to="/leagues" tone="rose" status="Explore Ladies League" />
           <CompetitionCard eyebrow="Round 2 complete" title="LP Legacy" copy="Cheetahs lead after another action-packed round." to="/legacy-league" tone="gold" status="View results & standings" />
           <CompetitionCard eyebrow="International Nations Cup" title="Unity Cup" copy="Competition format and scheduling are under review." to="/unity-cup" tone="muted" status="On hold" />
         </div>
@@ -289,15 +290,14 @@ export default function HomeV2() {
       <section className="lpv2-section lpv2-editorial">
         <div>
           <span className="lpv2-kicker">THE NEXT CHAPTER</span>
-          <h2>Biggest Ladies League yet</h2>
+          <h2>Lowveld Padel keeps growing</h2>
           <p>
-            Sixty ladies will compete across six franchises, with the player auction taking place
-            on 29 July. The league forms part of Lowveld Padel's wider commitment to competitive
-            growth, youth development and stronger family participation.
+            The Franchise League, Ladies League, Legacy League and community competitions continue
+            to build a stronger competitive padel ecosystem across the Lowveld.
           </p>
           <Link to="/leagues">Explore all competitions →</Link>
         </div>
-        <div className="lpv2-editorial-mark">60</div>
+        <div className="lpv2-editorial-mark">LP</div>
       </section>
 
       {TV_VIDEOS.length > 0 && (

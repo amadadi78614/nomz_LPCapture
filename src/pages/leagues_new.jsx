@@ -8,9 +8,9 @@ import {
 import { ComingSoon, SponsorRail } from '../components/ui';
 import '../styles/leagues-standings-fix.css';
 
-function roundsPlayed(row, tier = 'franchise') {
-  const rubbersPerRound = tier === 'franchise' ? 6 : 2;
-  return Math.floor((row?.played || 0) / rubbersPerRound);
+function completedFixtures(row, tier = 'franchise') {
+  const rubbersPerFixture = tier === 'franchise' ? 6 : 2;
+  return Math.round((Number(row?.played) || 0) / rubbersPerFixture);
 }
 
 function LeagueStandingsTable({ tier = 'franchise' }) {
@@ -24,7 +24,7 @@ function LeagueStandingsTable({ tier = 'franchise' }) {
           <tr>
             <th>#</th>
             <th>Franchise</th>
-            <th className="num" title="Completed fixture rounds">R</th>
+            <th className="num" title="Completed fixtures">R</th>
             <th className="num" title="Rubbers played">P</th>
             <th className="num">W</th>
             <th className="num">L</th>
@@ -46,7 +46,7 @@ function LeagueStandingsTable({ tier = 'franchise' }) {
                     <b>{franchise.name}{row.adj ? ' *' : ''}</b>
                   </Link>
                 </td>
-                <td className="num league-rounds"><b>{roundsPlayed(row, tier)}</b></td>
+                <td className="num league-rounds"><b>{completedFixtures(row, tier)}</b></td>
                 <td className="num">{row.played}</td>
                 <td className="num">{row.won}</td>
                 <td className="num">{row.lost}</td>
@@ -59,7 +59,7 @@ function LeagueStandingsTable({ tier = 'franchise' }) {
         </tbody>
       </table>
       <div className="league-standings-key muted">
-        R = completed fixture rounds · P = rubbers played{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
+        Updated through Round 5 · R = completed fixtures · P = rubbers played{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
       </div>
     </div>
   );
@@ -105,7 +105,7 @@ function MensLeague() {
 
           {subTab === 'standings' && (
             <div className="mt">
-              <p className="muted league-rules">Rubber win = 3 pts · draw = 1 pt · bonus point for a 4–0 win. Rounds and rubbers are shown separately.</p>
+              <p className="muted league-rules">Rubber win = 3 pts · draw = 1 pt · bonus point for a 4–0 win. Round 5 results are included in every table.</p>
               <div className="tabbar mt league-tabs league-tier-tabs">
                 {[["franchise", 'Franchise'], ["P1", 'P1'], ["P2", 'P2'], ["P3", 'P3']].map(([value, label]) => (
                   <button key={value} className={tier2 === value ? 'on' : ''} onClick={() => setTier2(value)}>{label}</button>
@@ -132,7 +132,7 @@ function MensLeague() {
                       <img src={franchise.logo} alt="" style={{ width: 44, height: 44, objectFit: 'contain' }} />
                       <div>
                         <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 16 }}>{franchise.name}</b>
-                        <div className="muted" style={{ fontSize: 12 }}>R{roundsPlayed(row)} · P{row.played} · W{row.won} · {row.points} pts</div>
+                        <div className="muted" style={{ fontSize: 12 }}>R{completedFixtures(row)} · P{row.played} · W{row.won} · {row.points} pts</div>
                         <div className="muted" style={{ fontSize: 11 }}>Owner: {franchise.owner}</div>
                       </div>
                     </div>
@@ -157,7 +157,7 @@ function MensLeague() {
                         <img src={franchise.logo} alt="" style={{ width: 32, height: 32, objectFit: 'contain' }} />
                         <span>
                           <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 15 }}>{franchise.name}</b>
-                          {row && <div className="muted" style={{ fontSize: 11 }}>R{roundsPlayed(row)} · {row.points} pts · {row.won}W–{row.lost}L</div>}
+                          {row && <div className="muted" style={{ fontSize: 11 }}>R{completedFixtures(row)} · {row.points} pts · {row.won}W–{row.lost}L</div>}
                         </span>
                       </span>
                     </Link>

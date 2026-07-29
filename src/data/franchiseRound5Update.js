@@ -68,8 +68,7 @@ export const ROUND5_FIXTURES = [
 ];
 
 const existingIds = new Set(FIXTURES.map((fixture) => fixture.id));
-const newFixtures = ROUND5_FIXTURES.filter((fixture) => !existingIds.has(fixture.id));
-newFixtures.forEach((fixture) => FIXTURES.push(fixture));
+ROUND5_FIXTURES.filter((fixture) => !existingIds.has(fixture.id)).forEach((fixture) => FIXTURES.push(fixture));
 
 const bonus = (games, side) => (side === 'home' ? games?.[0] === 4 : games?.[1] === 4);
 const applyTableResult = (rows, fixture, result) => {
@@ -86,7 +85,9 @@ const applyTableResult = (rows, fixture, result) => {
   }
 };
 
-newFixtures.forEach((fixture) => {
+// The seed fixture list already contains presentation copies of some Round 5 fixtures.
+// Standings and player statistics must nevertheless process every official Round 5 result exactly once.
+ROUND5_FIXTURES.forEach((fixture) => {
   fixture.score.rubbers.forEach((result) => {
     applyTableResult(STANDINGS.mens.franchise, fixture, result);
     applyTableResult(STANDINGS.mens[result.court], fixture, result);

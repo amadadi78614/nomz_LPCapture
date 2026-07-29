@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  FIXTURES,
   STANDINGS,
   TIER_SPONSORS,
   LEGACY_STANDINGS,
@@ -12,14 +11,9 @@ import {
 import { ComingSoon } from '../components/ui';
 import '../styles/standings-v2.css';
 
-function roundsPlayed(franchiseId, league) {
-  return new Set(
-    FIXTURES.filter(
-      (fixture) => fixture.league === league
-        && fixture.status === 'final'
-        && (fixture.home === franchiseId || fixture.away === franchiseId),
-    ).map((fixture) => fixture.round),
-  ).size;
+function roundsPlayed(row, tier = 'franchise') {
+  const rubbersPerRound = tier === 'franchise' ? 6 : 2;
+  return Math.floor((row?.played || 0) / rubbersPerRound);
 }
 
 function LeagueTable({ league, tier }) {
@@ -42,8 +36,8 @@ function LeagueTable({ league, tier }) {
           <tr>
             <th>#</th>
             <th>Franchise</th>
-            <th className="num" title="Distinct league rounds completed">R</th>
-            <th className="num" title="Matches or rubbers played">P</th>
+            <th className="num" title="Completed fixture rounds">R</th>
+            <th className="num" title="Rubbers played">P</th>
             <th className="num">W</th>
             <th className="num">L</th>
             <th className="num">D</th>
@@ -64,7 +58,7 @@ function LeagueTable({ league, tier }) {
                     <b>{franchise.name}{row.adj ? ' *' : ''}</b>
                   </Link>
                 </td>
-                <td data-label="Rounds" className="num"><b className="standings-rounds">{roundsPlayed(row.franchise_id, league)}</b></td>
+                <td data-label="Rounds" className="num"><b className="standings-rounds">{roundsPlayed(row, tier)}</b></td>
                 <td data-label="Played" className="num">{row.played}</td>
                 <td data-label="Won" className="num">{row.won}</td>
                 <td data-label="Lost" className="num">{row.lost}</td>
@@ -77,7 +71,7 @@ function LeagueTable({ league, tier }) {
         </tbody>
       </table>
       <div className="standings-key muted">
-        R = rounds completed · P = matches/rubbers played{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
+        R = completed fixture rounds · P = rubbers played{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
       </div>
     </div>
   );
@@ -92,7 +86,7 @@ export default function StandingsV2() {
     <div className="page standings-page">
       <h1 className="display">Log Tables</h1>
       <p className="muted standings-intro">
-        Rounds and played are shown separately: R tracks league rounds completed, while P tracks matches or rubbers played.
+        Rounds and played are shown separately: R tracks completed fixture rounds, while P tracks rubbers played.
       </p>
 
       <div className="tabbar mt standings-tabs">
@@ -103,7 +97,7 @@ export default function StandingsV2() {
 
       {league === 'mens' && (
         <div className="tabbar mt standings-tabs standings-tier-tabs">
-          {[['franchise', 'Franchise'], ['P1', 'P1'], ['P2', 'P2'], ['P3', 'P3']].map(([value, label]) => (
+          {[["franchise", 'Franchise'], ["P1", 'P1'], ["P2", 'P2'], ["P3", 'P3']].map(([value, label]) => (
             <button key={value} className={tier === value ? 'on' : ''} onClick={() => setTier(value)}>{label}</button>
           ))}
         </div>

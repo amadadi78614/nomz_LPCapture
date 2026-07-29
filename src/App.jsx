@@ -15,6 +15,9 @@ import {
 } from './pages/dashboards';
 import LowveldTV from './pages/tv';
 import {
+  Rivalries, RivalryPage, HallOfFame, DraftHistory, Dynasty, FanZone,
+} from './pages/community';
+import {
   RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
 } from './pages/leagues';
 import UnityCup from './pages/UnityCup';

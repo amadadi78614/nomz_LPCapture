@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { TopBar, LiveTicker, BottomNav } from './components/ui';
+import { LiveTicker } from './components/ui';
+import { TopBar, BottomNav } from './components/SiteNavigation';
 import {
   MatchPage, Players, PlayerProfile,
   Franchises, FranchiseHub, Rankings, NewsCentre, SponsorCentre, More,
@@ -13,9 +14,6 @@ import {
   AdminDashboard, CaptainDashboard, CommissionerDashboard, SponsorAnalytics,
 } from './pages/dashboards';
 import LowveldTV from './pages/tv';
-import {
-  Rivalries, RivalryPage, HallOfFame, DraftHistory, Dynasty, FanZone,
-} from './pages/community';
 import {
   RoadTo360, LegacyLeague, LegacyFranchise, Predictor, Community, SportsHub,
 } from './pages/leagues';

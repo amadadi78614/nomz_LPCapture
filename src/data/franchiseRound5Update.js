@@ -6,6 +6,8 @@ const findPlayerId = (franchiseId, name) =>
 const rubber = ({ slot, court, homeFranchise, awayFranchise, homeNames, awayNames, sets, games, winner }) => ({
   slot,
   court,
+  home: homeNames.join(' / '),
+  away: awayNames.join(' / '),
   homeIds: homeNames.map((name) => findPlayerId(homeFranchise, name)),
   awayIds: awayNames.map((name) => findPlayerId(awayFranchise, name)),
   sets,
@@ -38,10 +40,23 @@ export const ROUND5_FIXTURES = [
       rubber({ slot: '20:30', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'avalanche-aces', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Rishaad Shaik', 'Prashil Nagar'], sets: [[4,6],[4,6],[10,9]], games: [0,3], winner: 'away' }),
     ] },
   },
+  {
+    id: 'fx-w5-3', round: 5, league: 'mens', home: 'sahara-lions', away: 'samurai-kicksmashers',
+    start: '2026-07-29T17:30:00+02:00', status: 'final', court: 'Padel 24',
+    score: { winner: 'home', totals: [18, 3], rubberWins: [5, 1], rubbers: [
+      rubber({ slot: '17:30', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Cian Maritz', 'Yusuf Packery'], awayNames: ['Bryan Theron', 'Burger Bester'], sets: [[6,4],[6,2],[11,9]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '18:00', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Naeem Omar', 'Alfaiz Mamji'], awayNames: ['Armand Esterhuizen', 'Muneer Shaik'], sets: [[6,3],[6,4],[10,5]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '19:15', court: 'P1', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Suhayl Packery', 'Justin van Staaden'], awayNames: ['Siraaj Shaik', 'Muhammad Azhar Sujee'], sets: [[6,3],[5,7],[10,3]], games: [3,0], winner: 'home' }),
+      rubber({ slot: '19:15', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Ismail Karodia', 'Nuaym Shaik'], sets: [[6,4],[7,6],[7,10]], games: [3,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Soyab Patel', 'Adil Patel'], awayNames: ['Sikander Cassim', 'Shaun Moropa'], sets: [[6,1],[6,1],[10,8]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Warren Morgan', 'Irfaan Mahomed'], awayNames: ['Riaz Ahmed Bellim', 'Dillon Francis'], sets: [[4,6],[6,4],[7,10]], games: [0,3], winner: 'away' }),
+    ] },
+  },
 ];
 
-const fixtureExists = (id) => FIXTURES.some((fixture) => fixture.id === id);
-ROUND5_FIXTURES.forEach((fixture) => { if (!fixtureExists(fixture.id)) FIXTURES.push(fixture); });
+const existingIds = new Set(FIXTURES.map((fixture) => fixture.id));
+const newFixtures = ROUND5_FIXTURES.filter((fixture) => !existingIds.has(fixture.id));
+newFixtures.forEach((fixture) => FIXTURES.push(fixture));
 
 const bonus = (games, side) => (side === 'home' ? games?.[0] === 4 : games?.[1] === 4);
 const applyTableResult = (rows, fixture, result) => {
@@ -58,7 +73,7 @@ const applyTableResult = (rows, fixture, result) => {
   }
 };
 
-ROUND5_FIXTURES.forEach((fixture) => {
+newFixtures.forEach((fixture) => {
   fixture.score.rubbers.forEach((result) => {
     applyTableResult(STANDINGS.mens.franchise, fixture, result);
     applyTableResult(STANDINGS.mens[result.court], fixture, result);

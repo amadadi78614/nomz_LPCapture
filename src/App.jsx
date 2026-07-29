@@ -22,7 +22,7 @@ import {
 import UnityCup from './pages/UnityCup';
 import { SuperCup360 } from './pages/leagues';
 import { Leagues } from './pages/leagues_new';
-import { AllTimeRankings } from './pages/AllTimeRankings';
+import { AllTimeSeason1 } from './pages/AllTimeSeason1';
 import { NotFound } from './pages/public';
 import { Cups } from './pages/Cups';
 
@@ -73,7 +73,7 @@ export default function App() {
           <Route path="/sponsor-analytics" element={<SponsorAnalytics />} />
           <Route path="/unity-cup" element={<UnityCup />} />
           <Route path="/leagues" element={<Leagues />} />
-          <Route path="/all-time-rankings" element={<AllTimeRankings />} />
+          <Route path="/all-time-rankings" element={<AllTimeSeason1 />} />
           <Route path="/cups" element={<Cups />} />
           <Route path="/register" element={<Registration />} />
           <Route path="/not-found" element={<NotFound />} />

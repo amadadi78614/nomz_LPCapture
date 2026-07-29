@@ -11,9 +11,9 @@ import {
 import { ComingSoon } from '../components/ui';
 import '../styles/standings-v2.css';
 
-function roundsPlayed(row, tier = 'franchise') {
-  const rubbersPerRound = tier === 'franchise' ? 6 : 2;
-  return Math.floor((row?.played || 0) / rubbersPerRound);
+function completedFixtures(row, tier = 'franchise') {
+  const rubbersPerFixture = tier === 'franchise' ? 6 : 2;
+  return Math.round((Number(row?.played) || 0) / rubbersPerFixture);
 }
 
 function LeagueTable({ league, tier }) {
@@ -36,7 +36,7 @@ function LeagueTable({ league, tier }) {
           <tr>
             <th>#</th>
             <th>Franchise</th>
-            <th className="num" title="Completed fixture rounds">R</th>
+            <th className="num" title="Completed fixtures">R</th>
             <th className="num" title="Rubbers played">P</th>
             <th className="num">W</th>
             <th className="num">L</th>
@@ -58,7 +58,7 @@ function LeagueTable({ league, tier }) {
                     <b>{franchise.name}{row.adj ? ' *' : ''}</b>
                   </Link>
                 </td>
-                <td data-label="Rounds" className="num"><b className="standings-rounds">{roundsPlayed(row, tier)}</b></td>
+                <td data-label="Rounds" className="num"><b className="standings-rounds">{completedFixtures(row, tier)}</b></td>
                 <td data-label="Played" className="num">{row.played}</td>
                 <td data-label="Won" className="num">{row.won}</td>
                 <td data-label="Lost" className="num">{row.lost}</td>
@@ -71,7 +71,7 @@ function LeagueTable({ league, tier }) {
         </tbody>
       </table>
       <div className="standings-key muted">
-        R = completed fixture rounds · P = rubbers played{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
+        Updated through Round 5 · R = completed fixtures · P = rubbers played{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
       </div>
     </div>
   );
@@ -86,7 +86,7 @@ export default function StandingsV2() {
     <div className="page standings-page">
       <h1 className="display">Log Tables</h1>
       <p className="muted standings-intro">
-        Rounds and played are shown separately: R tracks completed fixture rounds, while P tracks rubbers played.
+        Round 5 is included across Franchise, P1, P2 and P3. R tracks completed fixtures, while P tracks rubbers played.
       </p>
 
       <div className="tabbar mt standings-tabs">

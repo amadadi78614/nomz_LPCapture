@@ -23,6 +23,7 @@ import UnityCup from './pages/UnityCup';
 import { SuperCup360 } from './pages/leagues';
 import { Leagues } from './pages/leagues_new';
 import { AllTimeSeason1 } from './pages/AllTimeSeason1';
+import { LadiesSeason2Franchise } from './pages/LadiesSeason2';
 import { NotFound } from './pages/public';
 import { Cups } from './pages/Cups';
 
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="/player/:id" element={<PlayerProfile />} />
           <Route path="/franchises" element={<Franchises />} />
           <Route path="/franchise/:id" element={<FranchiseHub />} />
+          <Route path="/ladies-franchise/:id" element={<LadiesSeason2Franchise />} />
           <Route path="/rankings" element={<Rankings />} />
           <Route path="/tv" element={<LowveldTV />} />
           <Route path="/rivalries" element={<Rivalries />} />

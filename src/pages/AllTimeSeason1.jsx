@@ -5,18 +5,12 @@ function extractArray(name, nextName) {
   const startToken = `const ${name} = [`;
   const start = source.indexOf(startToken);
   if (start < 0) return [];
+
   const bodyStart = start + `const ${name} = `.length;
-  const endToken = nextName ? `\nconst ${nextName} =` : '\n];';
-  let end;
-  if (nextName) {
-    end = source.indexOf(endToken, bodyStart);
-    if (end < 0) return [];
-    end += 2;
-  } else {
-    end = source.indexOf('\n];', bodyStart);
-    if (end < 0) return [];
-    end += 2;
-  }
+  const endToken = `\nconst ${nextName} =`;
+  const end = source.indexOf(endToken, bodyStart);
+  if (end < 0) return [];
+
   const literal = source.slice(bodyStart, end).trim().replace(/;$/, '');
   try {
     return Function(`"use strict"; return (${literal});`)();

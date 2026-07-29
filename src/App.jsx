@@ -5,11 +5,12 @@ import { TopBar, BottomNav } from './components/SiteNavigation';
 import { HardNavigationGuard, SiteErrorBoundary } from './components/SiteReliability';
 import {
   MatchPage, Players, PlayerProfile,
-  Franchises, FranchiseHub, Rankings, NewsCentre, SponsorCentre, More,
+  Franchises, FranchiseHub, NewsCentre, SponsorCentre, More,
 } from './pages/public';
 import HomeV2 from './pages/HomeV2';
 import MatchCentreV2 from './pages/MatchCentreV2';
 import StandingsV2 from './pages/StandingsV2';
+import RankingsV2 from './pages/RankingsV2';
 import { Registration } from './pages/Registration';
 import {
   AdminDashboard, CaptainDashboard, CommissionerDashboard, SponsorAnalytics,
@@ -50,7 +51,7 @@ function SiteRoutes() {
         <Route path="/franchises" element={<Franchises />} />
         <Route path="/franchise/:id" element={<FranchiseHub />} />
         <Route path="/ladies-franchise/:id" element={<LadiesSeason2Franchise />} />
-        <Route path="/rankings" element={<Rankings />} />
+        <Route path="/rankings" element={<RankingsV2 />} />
         <Route path="/tv" element={<LowveldTV />} />
         <Route path="/rivalries" element={<Rivalries />} />
         <Route path="/rivalry/:id" element={<RivalryPage />} />

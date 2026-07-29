@@ -3,9 +3,10 @@ import { FIXTURES, PLAYERS, STANDINGS } from './seed';
 const findPlayerId = (franchiseId, name) =>
   PLAYERS.find((p) => p.franchise_id === franchiseId && p.name === name)?.id || null;
 
-const rubber = ({ slot, court, homeFranchise, awayFranchise, homeNames, awayNames, sets, games, winner }) => ({
+const rubber = ({ slot, court, homeFranchise, awayFranchise, homeNames, awayNames, sets, games, winner, playedOn }) => ({
   slot,
   court,
+  playedOn,
   home: homeNames.join(' / '),
   away: awayNames.join(' / '),
   homeIds: homeNames.map((name) => findPlayerId(homeFranchise, name)),
@@ -50,6 +51,18 @@ export const ROUND5_FIXTURES = [
       rubber({ slot: '19:15', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Imtiaz Mohamed', 'Majid Bapu'], awayNames: ['Ismail Karodia', 'Nuaym Shaik'], sets: [[6,4],[7,6],[7,10]], games: [3,0], winner: 'home' }),
       rubber({ slot: '20:30', court: 'P2', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Soyab Patel', 'Adil Patel'], awayNames: ['Sikander Cassim', 'Shaun Moropa'], sets: [[6,1],[6,1],[10,8]], games: [4,0], winner: 'home' }),
       rubber({ slot: '20:30', court: 'P3', homeFranchise: 'sahara-lions', awayFranchise: 'samurai-kicksmashers', homeNames: ['Warren Morgan', 'Irfaan Mahomed'], awayNames: ['Riaz Ahmed Bellim', 'Dillon Francis'], sets: [[4,6],[6,4],[7,10]], games: [0,3], winner: 'away' }),
+    ] },
+  },
+  {
+    id: 'fx-w5-4', round: 5, league: 'mens', home: 'desert-falcons', away: 'sonic-viboras',
+    start: '2026-07-29T18:00:00+02:00', status: 'final', court: 'Padel 24',
+    score: { winner: 'home', totals: [15, 6], rubberWins: [4, 2], rubbers: [
+      rubber({ slot: '19:30', court: 'P1', playedOn: '2026-07-28', homeFranchise: 'desert-falcons', awayFranchise: 'sonic-viboras', homeNames: ['Schalk Schutte', 'Faheem Nomani'], awayNames: ['Ridhwaan Sujee', 'Erlo Olivier'], sets: [[6,3],[6,4],[10,3]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '18:00', court: 'P3', playedOn: '2026-07-29', homeFranchise: 'desert-falcons', awayFranchise: 'sonic-viboras', homeNames: ['Reino Grobler', 'Muhammad Mangerah'], awayNames: ['George du Toit', 'Dewald Meyer'], sets: [[7,6],[1,6],[9,11]], games: [0,3], winner: 'away' }),
+      rubber({ slot: '19:15', court: 'P1', playedOn: '2026-07-29', homeFranchise: 'desert-falcons', awayFranchise: 'sonic-viboras', homeNames: ['Yusuf Patel', 'Uwaiz Patel'], awayNames: ['Heinrich Coomans', 'Pieter Boshoff'], sets: [[6,4],[6,3],[10,7]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '19:15', court: 'P2', playedOn: '2026-07-29', homeFranchise: 'desert-falcons', awayFranchise: 'sonic-viboras', homeNames: ['Fahad Patel', 'Ebrahim Mungalee'], awayNames: ['Marius Loock', 'Khalid Jeewa'], sets: [[6,7],[4,6],[10,4]], games: [0,3], winner: 'away' }),
+      rubber({ slot: '20:30', court: 'P2', playedOn: '2026-07-29', homeFranchise: 'desert-falcons', awayFranchise: 'sonic-viboras', homeNames: ['Warno Smit', 'Morne Steenekamp'], awayNames: ['Warwick Morgan', 'Joshua Hoffman'], sets: [[6,3],[7,5],[10,8]], games: [4,0], winner: 'home' }),
+      rubber({ slot: '20:30', court: 'P3', playedOn: '2026-07-29', homeFranchise: 'desert-falcons', awayFranchise: 'sonic-viboras', homeNames: ['Zaeem Sadiq', 'Jude van den Berg'], awayNames: ['Gerrit Smith', 'Stefan de Villiers'], sets: [[7,6],[7,5],[4,10]], games: [3,0], winner: 'home' }),
     ] },
   },
 ];

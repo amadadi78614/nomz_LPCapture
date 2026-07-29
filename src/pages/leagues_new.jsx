@@ -216,14 +216,23 @@ function LadiesLeague() {
 }
 
 export function Leagues() {
-  const [league, setLeague] = useState('mens');
+  const [league, setLeague] = useState(() => {
+    const selected = new URLSearchParams(window.location.search).get('league');
+    return selected === 'ladies' ? 'ladies' : 'mens';
+  });
+
+  const selectLeague = (nextLeague) => {
+    setLeague(nextLeague);
+    const url = nextLeague === 'ladies' ? '/leagues?league=ladies' : '/leagues';
+    window.history.replaceState({}, '', url);
+  };
 
   return (
     <div className="page leagues-page">
       <h1 className="display">Leagues</h1>
       <div className="tabbar mt league-tabs league-main-tabs">
-        <button className={league === 'mens' ? 'on' : ''} onClick={() => setLeague('mens')}>Men's Franchise League</button>
-        <button className={league === 'ladies' ? 'on' : ''} onClick={() => setLeague('ladies')}>Ladies Franchise League</button>
+        <button className={league === 'mens' ? 'on' : ''} onClick={() => selectLeague('mens')}>Men's Franchise League</button>
+        <button className={league === 'ladies' ? 'on' : ''} onClick={() => selectLeague('ladies')}>Ladies Franchise League</button>
       </div>
       {league === 'mens' && <MensLeague />}
       {league === 'ladies' && <LadiesLeague />}

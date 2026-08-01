@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './data/fixturePresentation';
 import './data/legacyRound2Update';
+import './data/legacyRound3Update';
 import './data/franchiseRound5Update';
 import './data/round5SiteSync';
 import './data/ladiesSeason2Data';

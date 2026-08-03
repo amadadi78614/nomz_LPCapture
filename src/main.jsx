@@ -9,13 +9,11 @@ import './data/round5SiteSync';
 import './data/ladiesSeason2Data';
 import './data/ladiesSeason2HomeSync';
 import './data/ladiesSeason2LeagueSync';
-import './data/leagueDifferentialColumns';
 import './styles/global.css';
 import './styles/career-table-mobile.css';
 import './styles/home-premium.css';
 import './styles/home-standings-mobile-fix.css';
 import './styles/leagues-standings-fix.css';
-import './styles/league-differentials.css';
 import './styles/home-layout-final-fix.css';
 
 if ('serviceWorker' in navigator) {

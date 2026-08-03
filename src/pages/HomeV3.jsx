@@ -3,19 +3,31 @@ import { franchiseById } from '../data/seed';
 import '../styles/home-v3.css';
 
 const FRANCHISE_TABLE = [
-  { id: 'desert-falcons', r: 5, p: 30, w: 24, l: 6, rd: 18, bp: 16, pts: 88 },
-  { id: 'sonic-viboras', r: 6, p: 36, w: 22, l: 14, rd: 8, bp: 11, pts: 77 },
-  { id: 'globo-boomerangs', r: 6, p: 36, w: 17, l: 19, rd: -2, bp: 10, pts: 61 },
-  { id: 'sahara-lions', r: 5, p: 30, w: 16, l: 14, rd: 2, bp: 10, pts: 58 },
-  { id: 'ice-breakers', r: 5, p: 30, w: 13, l: 17, rd: -4, bp: 9, pts: 48 },
-  { id: 'avalanche-aces', r: 6, p: 36, w: 13, l: 23, rd: -10, bp: 3, pts: 42 },
-  { id: 'samurai-kicksmashers', r: 5, p: 30, w: 9, l: 21, rd: -12, bp: 5, pts: 32 },
+  { id: 'desert-falcons', r: 5, p: 30, w: 24, l: 6, rd: 18, sd: null, gd: null, bp: 16, pts: 88 },
+  { id: 'sonic-viboras', r: 6, p: 36, w: 22, l: 14, rd: 8, sd: null, gd: null, bp: 11, pts: 77 },
+  { id: 'globo-boomerangs', r: 6, p: 36, w: 17, l: 19, rd: -2, sd: null, gd: null, bp: 10, pts: 61 },
+  { id: 'sahara-lions', r: 5, p: 30, w: 16, l: 14, rd: 2, sd: null, gd: null, bp: 10, pts: 58 },
+  { id: 'ice-breakers', r: 5, p: 30, w: 13, l: 17, rd: -4, sd: null, gd: null, bp: 9, pts: 48 },
+  { id: 'avalanche-aces', r: 6, p: 36, w: 13, l: 23, rd: -10, sd: null, gd: null, bp: 3, pts: 42 },
+  { id: 'samurai-kicksmashers', r: 5, p: 30, w: 9, l: 21, rd: -12, sd: null, gd: null, bp: 5, pts: 32 },
 ];
 
 const LEGACY_RESULTS = [
   { winner: 'Honey Badgers', score: '7–4', loser: 'LP Cheetahs' },
   { winner: 'LP Jackals', score: '8–4', loser: 'LP Eagles' },
 ];
+
+function signed(value) {
+  if (value === null || value === undefined) return 'Pending';
+  return value > 0 ? `+${value}` : String(value);
+}
+
+function differentialClass(value) {
+  if (value === null || value === undefined) return 'hv3-pending';
+  if (value > 0) return 'hv3-pos';
+  if (value < 0) return 'hv3-neg';
+  return '';
+}
 
 function StandingRow({ row, index }) {
   const franchise = franchiseById(row.id);
@@ -32,7 +44,9 @@ function StandingRow({ row, index }) {
       <td>{row.p}</td>
       <td>{row.w}</td>
       <td>{row.l}</td>
-      <td className={row.rd > 0 ? 'hv3-pos' : row.rd < 0 ? 'hv3-neg' : ''}>{row.rd > 0 ? `+${row.rd}` : row.rd}</td>
+      <td className={differentialClass(row.rd)}>{signed(row.rd)}</td>
+      <td className={differentialClass(row.sd)}>{signed(row.sd)}</td>
+      <td className={differentialClass(row.gd)}>{signed(row.gd)}</td>
       <td>{row.bp}</td>
       <td><strong>{row.pts}</strong></td>
     </tr>
@@ -95,7 +109,13 @@ export default function HomeV3() {
         <div className="hv3-table-wrap">
           <table className="hv3-table">
             <thead>
-              <tr><th>#</th><th>Franchise</th><th>R</th><th>P</th><th>W</th><th>L</th><th>RD</th><th>BP</th><th>Pts</th></tr>
+              <tr>
+                <th>#</th><th>Franchise</th><th>R</th><th>P</th><th>W</th><th>L</th>
+                <th title="Rubber difference">RD</th>
+                <th title="Set difference">SD</th>
+                <th title="Game difference">GD</th>
+                <th>BP</th><th>Pts</th>
+              </tr>
             </thead>
             <tbody>
               {FRANCHISE_TABLE.map((row, index) => <StandingRow key={row.id} row={row} index={index} />)}
@@ -104,9 +124,9 @@ export default function HomeV3() {
         </div>
 
         <div className="hv3-note">
-          <strong>Table key:</strong> R = completed fixtures · P = rubbers played · RD = rubber difference · BP = bonus points.
+          <strong>Table key:</strong> R = completed fixtures · P = rubbers played · RD = rubber difference · SD = set difference · GD = game difference · BP = bonus points.
           <br />
-          Set difference and game difference are not displayed yet because some earlier fixtures do not have complete underlying set scores. They will only be published once the historical score gaps are verified.
+          RD is verified. SD and GD are included as requested and marked Pending until all missing historical set scores are captured and verified; no figures have been invented.
         </div>
       </section>
 

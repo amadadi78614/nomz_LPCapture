@@ -7,7 +7,7 @@ import {
   MatchPage, Players, PlayerProfile,
   Franchises, FranchiseHub, NewsCentre, SponsorCentre, More,
 } from './pages/public';
-import HomeChampionship from './pages/HomeChampionship';
+import HomeV3 from './pages/HomeV3';
 import MatchCentreV2 from './pages/MatchCentreV2';
 import StandingsV2 from './pages/StandingsV2';
 import RankingsV2 from './pages/RankingsV2';
@@ -42,7 +42,7 @@ function SiteRoutes() {
       <LiveTicker />
       <TopBar />
       <Routes>
-        <Route path="/" element={<HomeChampionship />} />
+        <Route path="/" element={<HomeV3 />} />
         <Route path="/live" element={<MatchCentreV2 />} />
         <Route path="/match/:id" element={<MatchPage />} />
         <Route path="/standings" element={<StandingsV2 />} />

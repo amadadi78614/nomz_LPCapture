@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
-import { franchiseById } from '../data/seed';
+import { FIXTURES, FRANCHISES, franchiseById } from '../data/seed';
 import '../styles/home-v3.css';
 
 const FRANCHISE_TABLE = [
-  { id: 'desert-falcons', r: 5, p: 30, w: 24, l: 6, rd: 18, sd: null, gd: null, bp: 16, pts: 88 },
-  { id: 'sonic-viboras', r: 6, p: 36, w: 22, l: 14, rd: 8, sd: null, gd: null, bp: 11, pts: 77 },
-  { id: 'globo-boomerangs', r: 6, p: 36, w: 17, l: 19, rd: -2, sd: null, gd: null, bp: 10, pts: 61 },
-  { id: 'sahara-lions', r: 5, p: 30, w: 16, l: 14, rd: 2, sd: null, gd: null, bp: 10, pts: 58 },
-  { id: 'ice-breakers', r: 5, p: 30, w: 13, l: 17, rd: -4, sd: null, gd: null, bp: 9, pts: 48 },
-  { id: 'avalanche-aces', r: 6, p: 36, w: 13, l: 23, rd: -10, sd: null, gd: null, bp: 3, pts: 42 },
-  { id: 'samurai-kicksmashers', r: 5, p: 30, w: 9, l: 21, rd: -12, sd: null, gd: null, bp: 5, pts: 32 },
+  { id: 'desert-falcons', r: 5, p: 30, w: 24, l: 6, bp: 16, pts: 88 },
+  { id: 'sonic-viboras', r: 6, p: 36, w: 22, l: 14, bp: 11, pts: 77 },
+  { id: 'globo-boomerangs', r: 6, p: 36, w: 17, l: 19, bp: 10, pts: 61 },
+  { id: 'sahara-lions', r: 5, p: 30, w: 16, l: 14, bp: 10, pts: 58 },
+  { id: 'ice-breakers', r: 5, p: 30, w: 13, l: 17, bp: 9, pts: 48 },
+  { id: 'avalanche-aces', r: 6, p: 36, w: 13, l: 23, bp: 3, pts: 42 },
+  { id: 'samurai-kicksmashers', r: 5, p: 30, w: 9, l: 21, bp: 5, pts: 32 },
 ];
 
 const LEGACY_RESULTS = [
@@ -17,20 +17,73 @@ const LEGACY_RESULTS = [
   { winner: 'LP Jackals', score: '8–4', loser: 'LP Eagles' },
 ];
 
+function buildHomepageDifferentials() {
+  const stats = Object.fromEntries(
+    FRANCHISES.filter((franchise) => franchise.league === 'mens')
+      .map((franchise) => [franchise.id, { sd: 0, gd: 0, scoredRubbers: 0 }]),
+  );
+
+  FIXTURES.filter((fixture) => fixture.league === 'mens' && fixture.status === 'final')
+    .forEach((fixture) => {
+      (fixture.score?.rubbers || []).forEach((rubber) => {
+        if (!Array.isArray(rubber.sets) || rubber.sets.length === 0) return;
+
+        let homeSets = 0;
+        let awaySets = 0;
+        let homeGames = 0;
+        let awayGames = 0;
+        let hasValidSet = false;
+
+        rubber.sets.forEach((setScore) => {
+          if (!Array.isArray(setScore) || setScore.length < 2) return;
+          const home = Number(setScore[0]);
+          const away = Number(setScore[1]);
+          if (!Number.isFinite(home) || !Number.isFinite(away)) return;
+
+          hasValidSet = true;
+          homeGames += home;
+          awayGames += away;
+          if (home > away) homeSets += 1;
+          if (away > home) awaySets += 1;
+        });
+
+        if (!hasValidSet) return;
+
+        if (stats[fixture.home]) {
+          stats[fixture.home].sd += homeSets - awaySets;
+          stats[fixture.home].gd += homeGames - awayGames;
+          stats[fixture.home].scoredRubbers += 1;
+        }
+        if (stats[fixture.away]) {
+          stats[fixture.away].sd += awaySets - homeSets;
+          stats[fixture.away].gd += awayGames - homeGames;
+          stats[fixture.away].scoredRubbers += 1;
+        }
+      });
+    });
+
+  return stats;
+}
+
+const HOMEPAGE_DIFFERENTIALS = buildHomepageDifferentials();
+
 function signed(value) {
-  if (value === null || value === undefined) return 'Pending';
-  return value > 0 ? `+${value}` : String(value);
+  const number = Number(value) || 0;
+  return number > 0 ? `+${number}` : String(number);
 }
 
 function differentialClass(value) {
-  if (value === null || value === undefined) return 'hv3-pending';
-  if (value > 0) return 'hv3-pos';
-  if (value < 0) return 'hv3-neg';
+  const number = Number(value) || 0;
+  if (number > 0) return 'hv3-pos';
+  if (number < 0) return 'hv3-neg';
   return '';
 }
 
 function StandingRow({ row, index }) {
   const franchise = franchiseById(row.id);
+  const differential = HOMEPAGE_DIFFERENTIALS[row.id] || { sd: 0, gd: 0, scoredRubbers: 0 };
+  const rd = row.w - row.l;
+
   return (
     <tr>
       <td>{index + 1}</td>
@@ -44,9 +97,9 @@ function StandingRow({ row, index }) {
       <td>{row.p}</td>
       <td>{row.w}</td>
       <td>{row.l}</td>
-      <td className={differentialClass(row.rd)}>{signed(row.rd)}</td>
-      <td className={differentialClass(row.sd)}>{signed(row.sd)}</td>
-      <td className={differentialClass(row.gd)}>{signed(row.gd)}</td>
+      <td className={differentialClass(rd)}>{signed(rd)}</td>
+      <td className={differentialClass(differential.sd)} title={`From ${differential.scoredRubbers} rubbers with recorded set scores`}>{signed(differential.sd)}</td>
+      <td className={differentialClass(differential.gd)} title={`From ${differential.scoredRubbers} rubbers with recorded set scores`}>{signed(differential.gd)}</td>
       <td>{row.bp}</td>
       <td><strong>{row.pts}</strong></td>
     </tr>
@@ -126,7 +179,7 @@ export default function HomeV3() {
         <div className="hv3-note">
           <strong>Table key:</strong> R = completed fixtures · P = rubbers played · RD = rubber difference · SD = set difference · GD = game difference · BP = bonus points.
           <br />
-          RD is verified. SD and GD are included as requested and marked Pending until all missing historical set scores are captured and verified; no figures have been invented.
+          RD is calculated from rubber wins and losses. SD and GD are calculated from all currently captured set scores and will update automatically when further historical scores are added.
         </div>
       </section>
 

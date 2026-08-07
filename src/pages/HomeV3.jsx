@@ -151,9 +151,9 @@ export default function HomeV3() {
           <p>The Falcons’ outstanding P1 pair were beaten for the first time as Heinrich Coomans and Anton Grote claimed a defining 3–0 result.</p>
         </article>
         <article>
-          <span className="hv3-kicker">YOUTH LEADER</span>
-          <h2>Jude van den Berg leads.</h2>
-          <p>The 12-year-old currently heads the Young Player of the Tournament race after another composed win against adult opposition.</p>
+          <span className="hv3-kicker">SEMI-FINAL WATCH</span>
+          <h2>Falcons and Lions fight for the last final place.</h2>
+          <p>Everything now comes down to the semi-final. The winner earns the right to face the Sonic Viboras for the title.</p>
         </article>
       </section>
 

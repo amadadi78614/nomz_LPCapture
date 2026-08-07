@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { LiveTicker } from './components/ui';
 import { TopBar, BottomNav } from './components/SiteNavigation';
 import { HardNavigationGuard, SiteErrorBoundary } from './components/SiteReliability';
+import { SeasonAwards } from './components/SeasonAwards';
 import {
   MatchPage, Players, PlayerProfile,
   Franchises, FranchiseHub, NewsCentre, SponsorCentre, More,
@@ -36,6 +37,17 @@ function ScrollTop() {
   return null;
 }
 
+function RankingsPage() {
+  return (
+    <>
+      <div className="page awards-page-lead">
+        <SeasonAwards />
+      </div>
+      <RankingsV2 />
+    </>
+  );
+}
+
 function SiteRoutes() {
   return (
     <div className="shell">
@@ -51,7 +63,7 @@ function SiteRoutes() {
         <Route path="/franchises" element={<Franchises />} />
         <Route path="/franchise/:id" element={<FranchiseHub />} />
         <Route path="/ladies-franchise/:id" element={<LadiesSeason2Franchise />} />
-        <Route path="/rankings" element={<RankingsV2 />} />
+        <Route path="/rankings" element={<RankingsPage />} />
         <Route path="/tv" element={<LowveldTV />} />
         <Route path="/rivalries" element={<Rivalries />} />
         <Route path="/rivalry/:id" element={<RivalryPage />} />

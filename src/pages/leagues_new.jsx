@@ -32,39 +32,38 @@ function buildDifferentials(tier) {
       .map((franchise) => [franchise.id, { sd: 0, gd: 0, scoredRubbers: 0 }]),
   );
 
-  FIXTURES.filter(isRegularSeasonFixture)
-    .forEach((fixture) => {
-      (fixture.score?.rubbers || []).forEach((rubber) => {
-        if (tier !== 'franchise' && rubber.court !== tier) return;
-        if (!Array.isArray(rubber.sets) || rubber.sets.length === 0) return;
+  FIXTURES.filter(isRegularSeasonFixture).forEach((fixture) => {
+    (fixture.score?.rubbers || []).forEach((rubber) => {
+      if (tier !== 'franchise' && rubber.court !== tier) return;
+      if (!Array.isArray(rubber.sets) || rubber.sets.length === 0) return;
 
-        let homeSets = 0;
-        let awaySets = 0;
-        let homeGames = 0;
-        let awayGames = 0;
+      let homeSets = 0;
+      let awaySets = 0;
+      let homeGames = 0;
+      let awayGames = 0;
 
-        rubber.sets.forEach((setScore) => {
-          if (!Array.isArray(setScore) || setScore.length < 2) return;
-          const home = Number(setScore[0]) || 0;
-          const away = Number(setScore[1]) || 0;
-          homeGames += home;
-          awayGames += away;
-          if (home > away) homeSets += 1;
-          if (away > home) awaySets += 1;
-        });
-
-        if (stats[fixture.home]) {
-          stats[fixture.home].sd += homeSets - awaySets;
-          stats[fixture.home].gd += homeGames - awayGames;
-          stats[fixture.home].scoredRubbers += 1;
-        }
-        if (stats[fixture.away]) {
-          stats[fixture.away].sd += awaySets - homeSets;
-          stats[fixture.away].gd += awayGames - homeGames;
-          stats[fixture.away].scoredRubbers += 1;
-        }
+      rubber.sets.forEach((setScore) => {
+        if (!Array.isArray(setScore) || setScore.length < 2) return;
+        const home = Number(setScore[0]) || 0;
+        const away = Number(setScore[1]) || 0;
+        homeGames += home;
+        awayGames += away;
+        if (home > away) homeSets += 1;
+        if (away > home) awaySets += 1;
       });
+
+      if (stats[fixture.home]) {
+        stats[fixture.home].sd += homeSets - awaySets;
+        stats[fixture.home].gd += homeGames - awayGames;
+        stats[fixture.home].scoredRubbers += 1;
+      }
+      if (stats[fixture.away]) {
+        stats[fixture.away].sd += awaySets - homeSets;
+        stats[fixture.away].gd += awayGames - homeGames;
+        stats[fixture.away].scoredRubbers += 1;
+      }
     });
+  });
 
   return stats;
 }
@@ -128,11 +127,41 @@ function PlaceholderSeason({ season, league }) {
   return <div className="card" style={{ textAlign: 'center', padding: '36px 20px' }}><div style={{ fontFamily: 'var(--display)', textTransform: 'uppercase', fontSize: 20, marginBottom: 8 }}>{league} · {season}</div><p className="muted" style={{ margin: '0 0 14px', fontSize: 13 }}>Historical data for {season} will be published here.</p><span className="chip">Coming Soon</span></div>;
 }
 
+const mvpValue = (player) => Number(player.stats?.mvp_points) || 0;
+const playerWins = (player) => Number(player.stats?.wins) || 0;
+const playerPlayed = (player) => Number(player.stats?.played) || 0;
+
+function divisionLeaders(tier) {
+  const ranked = PLAYERS
+    .filter((player) => player.league === 'mens' && player.tier === tier && playerPlayed(player) > 0)
+    .sort((a, b) => mvpValue(b) - mvpValue(a) || playerWins(b) - playerWins(a) || winPct(b.stats) - winPct(a.stats) || playerPlayed(b) - playerPlayed(a));
+  if (!ranked.length) return [];
+  const top = ranked[0];
+  return ranked.filter((player) => mvpValue(player) === mvpValue(top) && playerWins(player) === playerWins(top));
+}
+
+function MvpDivisionCard({ tier, leaders }) {
+  if (!leaders.length) return null;
+  const lead = leaders[0];
+  return (
+    <div className="card" style={{ borderTop: '3px solid var(--gold)' }}>
+      <span className="eyebrow">{tier} MVP</span>
+      <h3 className="display" style={{ margin: '6px 0 8px', fontSize: 22 }}>{leaders.map((player) => player.name).join(' & ')}</h3>
+      <div className="muted" style={{ fontSize: 12 }}>
+        {leaders.length > 1 ? 'Joint leaders' : 'Current leader'} · {playerPlayed(lead)} rubbers · {playerWins(lead)}W–{Number(lead.stats?.losses) || 0}L · {winPct(lead.stats)}% win · ★ {mvpValue(lead)}
+      </div>
+    </div>
+  );
+}
+
 function MensLeague() {
   const [season, setSeason] = useState('s3');
   const [subTab, setSubTab] = useState('standings');
   const [tier2, setTier2] = useState('franchise');
-  const rankedPlayers = useMemo(() => [...PLAYERS].filter((p) => p.league === 'mens' && p.stats.played > 0).sort((a, b) => b.stats.mvp_points - a.stats.mvp_points || b.stats.wins - a.stats.wins || b.lp_rating - a.lp_rating), []);
+  const rankedPlayers = useMemo(() => [...PLAYERS]
+    .filter((p) => p.league === 'mens' && p.stats.played > 0)
+    .sort((a, b) => mvpValue(b) - mvpValue(a) || playerWins(b) - playerWins(a) || winPct(b.stats) - winPct(a.stats) || playerPlayed(b) - playerPlayed(a)), []);
+  const mvpLeaders = useMemo(() => ({ P1: divisionLeaders('P1'), P2: divisionLeaders('P2'), P3: divisionLeaders('P3') }), []);
 
   return <>
     <div className="tabbar mt league-tabs">{[['s1','Season 1'],['s2','Season 2'],['s3','Season 3']].map(([key,label]) => <button key={key} className={season===key?'on':''} onClick={() => { setSeason(key); setSubTab('standings'); setTier2('franchise'); }}>{label}</button>)}</div>
@@ -148,7 +177,23 @@ function MensLeague() {
         {tier2 === 'franchise' && <p className="muted mt" style={{ fontSize: 12 }}>Top 4 qualified for Finals Night.</p>}
       </div>}
       {subTab === 'franchises' && <div className="grid cols-2 mt">{STANDINGS.mens.franchise.map((row,index) => { const franchise=franchiseById(row.franchise_id); return <Link key={franchise.id} to={`/franchise/${franchise.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(franchise.id) }}><div className="row"><img src={franchise.logo} alt="" style={{ width:44,height:44,objectFit:'contain' }}/><div><b style={{fontFamily:'var(--display)',textTransform:'uppercase',fontSize:16}}>{franchise.name}</b><div className="muted" style={{fontSize:12}}>R{completedFixtures(row)} · P{row.played} · W{row.won} · {row.points} pts</div><div className="muted" style={{fontSize:11}}>Owner: {franchise.owner}</div></div></div><span className={`pos-badge ${index<4?'q':''}`} style={{width:30,height:30,fontSize:14}}>{index+1}</span></Link>; })}</div>}
-      {subTab === 'rankings' && <div className="mt"><p className="muted" style={{fontSize:13,marginBottom:12}}>Player rankings from completed Season 3 rubbers, including playoff performances.</p><div className="grid">{rankedPlayers.slice(0,30).map((p,index) => { const fr=franchiseById(p.franchise_id); return <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{'--stripe':stripeVar(fr.id)}}><span className="row"><b className="num" style={{fontSize:20,width:28}}>{index+1}</b><span><b>{p.name}</b><div className="muted" style={{fontSize:11}}>{fr.name} · {p.tier} · {p.stats.played} rubbers · {winPct(p.stats)}% win</div></span></span><b style={{color:'var(--gold)'}}>★ {p.stats.mvp_points}</b></Link>; })}</div><Link to="/rankings" className="btn ghost mt" style={{display:'block',textAlign:'center'}}>Open full rankings →</Link></div>}
+      {subTab === 'rankings' && <div className="mt">
+        <div className="row spread" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+          <div><span className="eyebrow">Current MVP race</span><h2 className="display" style={{ margin: '4px 0', fontSize: 28 }}>P1 · P2 · P3 MVP Leaders</h2></div>
+          <span className="muted" style={{ fontSize: 12 }}>Includes completed regular-season and playoff rubbers.</span>
+        </div>
+        <div className="grid cols-3">
+          <MvpDivisionCard tier="P1" leaders={mvpLeaders.P1} />
+          <MvpDivisionCard tier="P2" leaders={mvpLeaders.P2} />
+          <MvpDivisionCard tier="P3" leaders={mvpLeaders.P3} />
+        </div>
+        <div className="row spread mt" style={{ gap: 12, flexWrap: 'wrap' }}>
+          <div><span className="eyebrow">Overall player ranking</span><h2 className="display" style={{ margin: '4px 0', fontSize: 26 }}>Season 3 leaderboard</h2></div>
+          <span className="muted" style={{ fontSize: 12 }}>MVP points → wins → win % → appearances.</span>
+        </div>
+        <div className="grid mt">{rankedPlayers.slice(0,30).map((p,index) => { const fr=franchiseById(p.franchise_id); return <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{'--stripe':stripeVar(fr.id)}}><span className="row"><b className="num" style={{fontSize:20,width:28}}>{index+1}</b><span><b>{p.name}</b><div className="muted" style={{fontSize:11}}>{fr.name} · {p.tier} · {p.stats.played} rubbers · {p.stats.wins}W–{p.stats.losses}L · {winPct(p.stats)}% win</div></span></span><b style={{color:'var(--gold)'}}>★ {p.stats.mvp_points}</b></Link>; })}</div>
+        <Link to="/rankings" className="btn ghost mt" style={{display:'block',textAlign:'center'}}>Open full rankings →</Link>
+      </div>}
     </>}
   </>;
 }

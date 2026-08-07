@@ -12,7 +12,7 @@ import '../styles/league-differentials.css';
 
 function completedFixtures(row, tier = 'franchise') {
   const rubbersPerFixture = tier === 'franchise' ? 6 : 2;
-  return Math.round((Number(row?.played) || 0) / rubbersPerFixture);
+  return Math.min(6, Math.round((Number(row?.played) || 0) / rubbersPerFixture));
 }
 
 function formatDiff(value) {
@@ -20,13 +20,19 @@ function formatDiff(value) {
   return n > 0 ? `+${n}` : String(n);
 }
 
+const isRegularSeasonFixture = (fixture) =>
+  fixture.league === 'mens'
+  && fixture.status === 'final'
+  && !fixture.stage
+  && Number(fixture.round) <= 6;
+
 function buildDifferentials(tier) {
   const stats = Object.fromEntries(
     FRANCHISES.filter((franchise) => franchise.league === 'mens')
       .map((franchise) => [franchise.id, { sd: 0, gd: 0, scoredRubbers: 0 }]),
   );
 
-  FIXTURES.filter((fixture) => fixture.league === 'mens' && fixture.status === 'final')
+  FIXTURES.filter(isRegularSeasonFixture)
     .forEach((fixture) => {
       (fixture.score?.rubbers || []).forEach((rubber) => {
         if (tier !== 'franchise' && rubber.court !== tier) return;
@@ -101,8 +107,8 @@ function LeagueStandingsTable({ tier = 'franchise' }) {
                 <td className="num">{row.lost}</td>
                 <td className="num">{row.drawn}</td>
                 <td className={`num league-diff-column ${rd > 0 ? 'diff-positive' : rd < 0 ? 'diff-negative' : ''}`}>{formatDiff(rd)}</td>
-                <td className={`num league-diff-column ${diff.sd > 0 ? 'diff-positive' : diff.sd < 0 ? 'diff-negative' : ''}`} title={`From ${diff.scoredRubbers} rubbers with recorded set scores`}>{formatDiff(diff.sd)}</td>
-                <td className={`num league-diff-column ${diff.gd > 0 ? 'diff-positive' : diff.gd < 0 ? 'diff-negative' : ''}`} title={`From ${diff.scoredRubbers} rubbers with recorded set scores`}>{formatDiff(diff.gd)}</td>
+                <td className={`num league-diff-column ${diff.sd > 0 ? 'diff-positive' : diff.sd < 0 ? 'diff-negative' : ''}`} title={`From ${diff.scoredRubbers} regular-season rubbers with recorded set scores`}>{formatDiff(diff.sd)}</td>
+                <td className={`num league-diff-column ${diff.gd > 0 ? 'diff-positive' : diff.gd < 0 ? 'diff-negative' : ''}`} title={`From ${diff.scoredRubbers} regular-season rubbers with recorded set scores`}>{formatDiff(diff.gd)}</td>
                 <td className="num">{row.bp}</td>
                 <td className="num league-points"><b>{row.points}</b></td>
               </tr>
@@ -111,8 +117,8 @@ function LeagueStandingsTable({ tier = 'franchise' }) {
         </tbody>
       </table>
       <div className="league-standings-key muted">
-        Updated through Round 5 · R = completed fixtures · P = rubbers played · RD = rubber difference · SD = set difference · GD = game difference.
-        SD and GD are calculated from all currently captured set scores{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
+        Final regular-season table after Round 6 · every franchise plays six fixtures · R = rounds · P = rubbers · RD = rubber difference · SD = set difference · GD = game difference.
+        Playoff results are excluded from this table{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
       </div>
     </div>
   );
@@ -135,14 +141,14 @@ function MensLeague() {
     {season === 's3' && <>
       <div className="tabbar mt league-tabs">{[['standings','Standings'],['franchises','Franchises'],['rankings','Rankings']].map(([key,label]) => <button key={key} className={subTab===key?'on':''} onClick={() => setSubTab(key)}>{label}</button>)}</div>
       {subTab === 'standings' && <div className="mt">
-        <p className="muted league-rules">Rubber win = 3 pts · draw = 1 pt · bonus point for a 4–0 win. Round 5 results are included in every table.</p>
+        <p className="muted league-rules">Rubber win = 3 pts · draw = 1 pt · bonus point for a 4–0 win. The six-round regular season is complete; playoff results are separate.</p>
         <div className="tabbar mt league-tabs league-tier-tabs">{[['franchise','Franchise'],['P1','P1'],['P2','P2'],['P3','P3']].map(([value,label]) => <button key={value} className={tier2===value?'on':''} onClick={() => setTier2(value)}>{label}</button>)}</div>
         {tier2 !== 'franchise' && TIER_SPONSORS[tier2] && <div className="row mt league-sponsor" style={{ gap: 10, alignItems: 'center' }}><img src={TIER_SPONSORS[tier2].logo} alt={TIER_SPONSORS[tier2].name} /><span className="muted">{tier2} Log · presented by {TIER_SPONSORS[tier2].name}</span></div>}
         <div className="mt"><LeagueStandingsTable tier={tier2} /></div>
-        {tier2 === 'franchise' && <p className="muted mt" style={{ fontSize: 12 }}>Top 4 qualify for Finals Night.</p>}
+        {tier2 === 'franchise' && <p className="muted mt" style={{ fontSize: 12 }}>Top 4 qualified for Finals Night.</p>}
       </div>}
       {subTab === 'franchises' && <div className="grid cols-2 mt">{STANDINGS.mens.franchise.map((row,index) => { const franchise=franchiseById(row.franchise_id); return <Link key={franchise.id} to={`/franchise/${franchise.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(franchise.id) }}><div className="row"><img src={franchise.logo} alt="" style={{ width:44,height:44,objectFit:'contain' }}/><div><b style={{fontFamily:'var(--display)',textTransform:'uppercase',fontSize:16}}>{franchise.name}</b><div className="muted" style={{fontSize:12}}>R{completedFixtures(row)} · P{row.played} · W{row.won} · {row.points} pts</div><div className="muted" style={{fontSize:11}}>Owner: {franchise.owner}</div></div></div><span className={`pos-badge ${index<4?'q':''}`} style={{width:30,height:30,fontSize:14}}>{index+1}</span></Link>; })}</div>}
-      {subTab === 'rankings' && <div className="mt"><p className="muted" style={{fontSize:13,marginBottom:12}}>Player rankings from completed Season 3 rubbers.</p><div className="grid">{rankedPlayers.slice(0,30).map((p,index) => { const fr=franchiseById(p.franchise_id); return <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{'--stripe':stripeVar(fr.id)}}><span className="row"><b className="num" style={{fontSize:20,width:28}}>{index+1}</b><span><b>{p.name}</b><div className="muted" style={{fontSize:11}}>{fr.name} · {p.tier} · {p.stats.played} rubbers · {winPct(p.stats)}% win</div></span></span><b style={{color:'var(--gold)'}}>★ {p.stats.mvp_points}</b></Link>; })}</div><Link to="/rankings" className="btn ghost mt" style={{display:'block',textAlign:'center'}}>Open full rankings →</Link></div>}
+      {subTab === 'rankings' && <div className="mt"><p className="muted" style={{fontSize:13,marginBottom:12}}>Player rankings from completed Season 3 rubbers, including playoff performances.</p><div className="grid">{rankedPlayers.slice(0,30).map((p,index) => { const fr=franchiseById(p.franchise_id); return <Link key={p.id} to={`/player/${p.id}`} className="card stripe row spread" style={{'--stripe':stripeVar(fr.id)}}><span className="row"><b className="num" style={{fontSize:20,width:28}}>{index+1}</b><span><b>{p.name}</b><div className="muted" style={{fontSize:11}}>{fr.name} · {p.tier} · {p.stats.played} rubbers · {winPct(p.stats)}% win</div></span></span><b style={{color:'var(--gold)'}}>★ {p.stats.mvp_points}</b></Link>; })}</div><Link to="/rankings" className="btn ghost mt" style={{display:'block',textAlign:'center'}}>Open full rankings →</Link></div>}
     </>}
   </>;
 }

@@ -27,6 +27,10 @@ const legacyWinPct = (player) => {
   return played ? Math.round(((player.stats?.wins || 0) / played) * 100) : 0;
 };
 
+const mensMvpValue = (player) => Number(player.stats?.mvp_points) || 0;
+const mensWins = (player) => Number(player.stats?.wins) || 0;
+const mensPlayed = (player) => Number(player.stats?.played) || 0;
+
 function TeamTable({ rows, legacy = false }) {
   return (
     <div className="card" style={{ padding: 0, overflowX: 'auto' }}>
@@ -66,6 +70,25 @@ function TeamTable({ rows, legacy = false }) {
   );
 }
 
+function rankNumber(players, index, legacy, sortBy) {
+  if (index === 0) return 1;
+  const current = players[index];
+  const previous = players[index - 1];
+  const metric = (player) => {
+    const stats = player.stats || {};
+    if (legacy) {
+      if (sortBy === 'win') return legacyWinPct(player);
+      if (sortBy === 'wins') return stats.wins || 0;
+      return legacyMvp(player);
+    }
+    if (sortBy === 'lp') return Number(player.lp_rating) || 0;
+    if (sortBy === 'win') return winPct(stats);
+    if (sortBy === 'wins') return stats.wins || 0;
+    return stats.mvp_points || 0;
+  };
+  return metric(current) === metric(previous) ? rankNumber(players, index - 1, legacy, sortBy) : index + 1;
+}
+
 function PlayerList({ players, legacy = false, sortBy }) {
   if (!players.length) return <div className="card"><p className="muted" style={{ margin: 0 }}>No completed results are available for this ranking yet.</p></div>;
   return (
@@ -83,7 +106,7 @@ function PlayerList({ players, legacy = false, sortBy }) {
           <Link key={player.id || player.name} to={to} className="card stripe" style={{ '--stripe': legacy ? fr.primary : stripeVar(fr.id), padding: 12 }}>
             <div className="row spread">
               <span className="row" style={{ minWidth: 0 }}>
-                <b className="num muted" style={{ width: 28 }}>{index + 1}</b>
+                <b className="num muted" style={{ width: 28 }}>{rankNumber(players, index, legacy, sortBy)}</b>
                 <span className="avatar" style={{ width: 36, height: 36, fontSize: 12 }}>{player.name.split(' ').map((word) => word[0]).join('').slice(0, 3)}</span>
                 <span style={{ minWidth: 0 }}>
                   <b style={{ fontSize: 14 }}>{player.name}</b>
@@ -102,6 +125,39 @@ function PlayerList({ players, legacy = false, sortBy }) {
           </Link>
         );
       })}
+    </div>
+  );
+}
+
+function buildMvpLeaders(players, court = 'all') {
+  const eligible = players
+    .filter((player) => player.league === 'mens' && mensPlayed(player) > 0)
+    .filter((player) => court === 'all' || player.tier === court)
+    .sort((a, b) => mensMvpValue(b) - mensMvpValue(a) || mensWins(b) - mensWins(a) || winPct(b.stats) - winPct(a.stats));
+
+  if (!eligible.length) return [];
+  const top = eligible[0];
+  return eligible.filter((player) =>
+    mensMvpValue(player) === mensMvpValue(top)
+    && mensWins(player) === mensWins(top)
+    && mensPlayed(player) === mensPlayed(top));
+}
+
+function MvpLeaderCard({ label, leaders }) {
+  if (!leaders.length) return null;
+  const points = mensMvpValue(leaders[0]);
+  const wins = mensWins(leaders[0]);
+  const played = mensPlayed(leaders[0]);
+  return (
+    <div className="card" style={{ borderTop: '3px solid var(--gold)' }}>
+      <span className="eyebrow">{label}</span>
+      <h3 className="display" style={{ margin: '6px 0 8px', fontSize: 22 }}>
+        {leaders.map((player) => player.name).join(' & ')}
+      </h3>
+      <div className="muted" style={{ fontSize: 12 }}>
+        {leaders.length > 1 ? 'Joint leaders' : 'Current leader'} · {played} rubbers · {wins} wins · ★ {points} MVP pts
+      </div>
+      {leaders.length > 1 && <p className="muted" style={{ margin: '8px 0 0', fontSize: 11 }}>Equal results are displayed as a joint lead — no artificial split between tied players.</p>}
     </div>
   );
 }
@@ -138,6 +194,13 @@ export default function RankingsV2() {
     };
     return [...played].sort(sorters[sortBy === 'lp' ? 'mvp' : sortBy]);
   }, [sortBy]);
+
+  const mvpLeaders = useMemo(() => ({
+    overall: buildMvpLeaders(PLAYERS, 'all'),
+    P1: buildMvpLeaders(PLAYERS, 'P1'),
+    P2: buildMvpLeaders(PLAYERS, 'P2'),
+    P3: buildMvpLeaders(PLAYERS, 'P3'),
+  }), []);
 
   const currentTeams = league === 'legacy' ? legacyTeams : mensTeams;
   const currentPlayers = league === 'legacy' ? legacyPlayers : mensPlayers;
@@ -177,6 +240,28 @@ export default function RankingsV2() {
         </>
       ) : (
         <>
+          {league === 'mens' && (
+            <section className="mt">
+              <div className="row spread" style={{ gap: 12, flexWrap: 'wrap', marginBottom: 12 }}>
+                <div>
+                  <span className="eyebrow">Current MVP race</span>
+                  <h2 className="display" style={{ margin: '4px 0', fontSize: 28 }}>Overall + division leaders</h2>
+                </div>
+                <span className="muted" style={{ fontSize: 12 }}>P1, P2 and P3 are judged separately. Overall uses all completed rubbers.</span>
+              </div>
+              <div className="grid cols-2">
+                <MvpLeaderCard label="Overall MVP" leaders={mvpLeaders.overall} />
+                <MvpLeaderCard label="P1 MVP" leaders={mvpLeaders.P1} />
+                <MvpLeaderCard label="P2 MVP" leaders={mvpLeaders.P2} />
+                <MvpLeaderCard label="P3 MVP" leaders={mvpLeaders.P3} />
+              </div>
+              <div className="card mt" style={{ borderLeft: '4px solid var(--gold)' }}>
+                <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase' }}>MVP integrity rule</b>
+                <p className="muted" style={{ margin: '6px 0 0', fontSize: 12 }}>Uwais Patel and Yusuf Patel played together throughout the campaign. Their shared results are treated as identical and, when tied, they are shown as joint leaders rather than being artificially ranked first and second.</p>
+              </div>
+            </section>
+          )}
+
           <div className="tabbar mt">
             <button className={view === 'players' ? 'on' : ''} onClick={() => setView('players')}>Player Rankings</button>
             <button className={view === 'teams' ? 'on' : ''} onClick={() => setView('teams')}>Franchise Rankings</button>
@@ -204,9 +289,9 @@ export default function RankingsV2() {
                 </>
               )}
               <p className="muted mt" style={{ fontSize: 12 }}>
-                {sortBy === 'mvp' && 'MVP Points: 3 per rubber won plus 1 bonus point for a clean 4–0.'}
-                {sortBy === 'wins' && 'Rubber Wins: total individual rubbers won, not team fixtures.'}
-                {sortBy === 'win' && 'Win %: rubbers won divided by rubbers played.'}
+                {sortBy === 'mvp' && 'MVP Points: 3 per rubber won plus 1 bonus point for a clean 4–0. Equal records share the same ranking.'}
+                {sortBy === 'wins' && 'Rubber Wins: total individual rubbers won, not team fixtures. Equal totals share the same ranking.'}
+                {sortBy === 'win' && 'Win %: rubbers won divided by rubbers played. Equal percentages share the same ranking.'}
                 {sortBy === 'lp' && 'LP Rating: doubles Elo calculated chronologically from completed rubbers.'}
               </p>
               <PlayerList players={currentPlayers} legacy={league === 'legacy'} sortBy={sortBy} />
@@ -245,7 +330,7 @@ export default function RankingsV2() {
           <div className="row spread" style={{ gap: 10, flexWrap: 'wrap' }}>
             <div>
               <b style={{ fontFamily: 'var(--display)', textTransform: 'uppercase' }}>LP Legacy League restored</b>
-              <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>Cheetahs, Honey Badgers, Leopards, Jackals, Rhinos and Eagles are ranked from the official Round 2 table.</p>
+              <p className="muted" style={{ margin: '4px 0 0', fontSize: 12 }}>Cheetahs, Honey Badgers, Leopards, Jackals, Rhinos and Eagles are ranked from the official Round 3 table.</p>
             </div>
             <Link to="/legacy-league" className="btn ghost">Fixtures, results and franchises →</Link>
           </div>

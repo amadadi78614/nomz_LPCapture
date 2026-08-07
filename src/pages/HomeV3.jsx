@@ -124,7 +124,7 @@ export default function HomeV3() {
         <div>
           <span className="hv3-kicker">MEN'S FRANCHISE LEAGUE · FINALS SERIES</span>
           <h1>Sonics reach a third straight final.</h1>
-          <p>Sonic Viboras delivered when it mattered, beating the Falcons 15–8 to book another place in the championship match.</p>
+          <p>Sonic Viboras delivered when it mattered, beating the Falcons 15–8 to book another place in the Franchise League final.</p>
           <div className="hv3-actions">
             <Link to="/live" className="hv3-primary">View playoff results</Link>
             <Link to="/leagues">Regular-season table</Link>

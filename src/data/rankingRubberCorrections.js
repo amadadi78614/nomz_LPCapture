@@ -1,16 +1,17 @@
-import { FIXTURES } from './seed';
+import { PLAYERS } from './seed';
 
-// Correct missing/under-counted Season 3 men's rubber appearances in ranking displays.
-// The ranking UI derives appearances from fixture rubbers, so these entries are applied
-// at presentation time without changing historical match scores.
-export const RANKING_RUBBER_APPEARANCE_OVERRIDES = {
-  'Justin': 7,
-  'Uwais Patel': 7,
+// Verified Season 3 men's appearance totals.
+// These run after the fixture/stat syncs so rankings and player pages stay consistent.
+const VERIFIED_PLAYED = {
+  'Justin van Staaden': 7,
+  'Uwaiz Patel': 7,
   'Yusuf Patel': 7,
 };
 
-export function getRankingRubberCount(playerName, calculatedCount) {
-  return RANKING_RUBBER_APPEARANCE_OVERRIDES[playerName] ?? calculatedCount;
-}
+Object.entries(VERIFIED_PLAYED).forEach(([name, played]) => {
+  const player = PLAYERS.find((item) => item.league === 'mens' && item.name === name);
+  if (!player) return;
 
-export default FIXTURES;
+  player.stats.played = played;
+  player.stats.losses = Math.max(0, played - (Number(player.stats.wins) || 0));
+});

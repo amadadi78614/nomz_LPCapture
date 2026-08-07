@@ -8,6 +8,7 @@ import './data/franchiseRound5Update';
 import './data/round5SiteSync';
 import './data/franchiseFinalsRunUpdate';
 import './data/regularSeasonSixRoundFix';
+import './data/mvpPairIntegrity';
 import './data/ladiesSeason2Data';
 import './data/ladiesSeason2HomeSync';
 import './data/ladiesSeason2LeagueSync';

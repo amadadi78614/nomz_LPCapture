@@ -17,6 +17,7 @@ import './styles/home-premium.css';
 import './styles/home-standings-mobile-fix.css';
 import './styles/leagues-standings-fix.css';
 import './styles/home-layout-final-fix.css';
+import './styles/season-awards.css';
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', async () => {

@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { SeasonAwards } from '../components/SeasonAwards';
 import { FIXTURES, FRANCHISES, STANDINGS, franchiseById } from '../data/seed';
 import '../styles/home-v3.css';
 
@@ -146,15 +147,17 @@ export default function HomeV3() {
         </article>
         <article>
           <span className="hv3-kicker">P1 SHOCK</span>
-          <h2>Uwaiz and Yusuf suffer their first defeat.</h2>
-          <p>The Falcons’ outstanding P1 pair were beaten for the first time as Coomans and Anton claimed a defining 3–0 result.</p>
+          <h2>Uwais and Yusuf suffer their first defeat.</h2>
+          <p>The Falcons’ outstanding P1 pair were beaten for the first time as Heinrich Coomans and Anton Grote claimed a defining 3–0 result.</p>
         </article>
         <article>
-          <span className="hv3-kicker">THE FUTURE IS NOW</span>
-          <h2>Four young winners.</h2>
-          <p>Aadam Nomani (10), Jude van den Berg (12), Yusuf Packery (13) and Joshua Hoffman (13) have all won in the past two matchdays.</p>
+          <span className="hv3-kicker">YOUTH LEADER</span>
+          <h2>Jude van den Berg leads.</h2>
+          <p>The 12-year-old currently heads the Young Player of the Tournament race after another composed win against adult opposition.</p>
         </article>
       </section>
+
+      <SeasonAwards compact />
 
       <section className="hv3-section">
         <div className="hv3-heading">

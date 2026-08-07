@@ -9,6 +9,7 @@ const played = (player) => Number(player.stats?.played) || 0;
 const bonus = (player) => Number(player.stats?.bonus_points) || 0;
 
 const SORTS = [
+  ['performance', 'Overall rank'],
   ['mvp', 'MVP points'],
   ['win', 'Win %'],
   ['wins', 'Wins'],
@@ -23,7 +24,7 @@ const DIVISIONS = [
 ];
 
 function comparePlayers(sortBy) {
-  if (sortBy === 'win') {
+  if (sortBy === 'performance' || sortBy === 'win') {
     return (a, b) => winPct(b.stats) - winPct(a.stats)
       || played(b) - played(a)
       || wins(b) - wins(a)
@@ -37,8 +38,8 @@ function comparePlayers(sortBy) {
   }
   if (sortBy === 'played') {
     return (a, b) => played(b) - played(a)
-      || wins(b) - wins(a)
       || winPct(b.stats) - winPct(a.stats)
+      || wins(b) - wins(a)
       || mvp(b) - mvp(a);
   }
   return (a, b) => mvp(b) - mvp(a)
@@ -48,6 +49,7 @@ function comparePlayers(sortBy) {
 }
 
 function metricValue(player, sortBy) {
+  if (sortBy === 'performance') return `${winPct(player.stats)}%`;
   if (sortBy === 'win') return `${winPct(player.stats)}%`;
   if (sortBy === 'wins') return `${wins(player)} W`;
   if (sortBy === 'played') return `${played(player)}`;
@@ -55,6 +57,7 @@ function metricValue(player, sortBy) {
 }
 
 function metricLabel(sortBy) {
+  if (sortBy === 'performance') return 'Overall rank';
   if (sortBy === 'win') return 'Win rate';
   if (sortBy === 'wins') return 'Rubber wins';
   if (sortBy === 'played') return 'Rubbers';
@@ -76,7 +79,7 @@ function LeaderSummary({ label, player, value }) {
 
 export default function MensRankingsStage({ showHeader = true }) {
   const [division, setDivision] = useState('all');
-  const [sortBy, setSortBy] = useState('mvp');
+  const [sortBy, setSortBy] = useState('performance');
 
   const allPlayers = useMemo(() => PLAYERS.filter((player) => player.league === 'mens' && played(player) > 0), []);
 
@@ -84,8 +87,8 @@ export default function MensRankingsStage({ showHeader = true }) {
     .filter((player) => division === 'all' || player.tier === division)
     .sort(comparePlayers(sortBy)), [allPlayers, division, sortBy]);
 
+  const performanceLeader = useMemo(() => [...allPlayers].sort(comparePlayers('performance'))[0], [allPlayers]);
   const mvpLeader = useMemo(() => [...allPlayers].sort(comparePlayers('mvp'))[0], [allPlayers]);
-  const winLeader = useMemo(() => [...allPlayers].sort(comparePlayers('win'))[0], [allPlayers]);
   const winsLeader = useMemo(() => [...allPlayers].sort(comparePlayers('wins'))[0], [allPlayers]);
 
   return (
@@ -101,16 +104,16 @@ export default function MensRankingsStage({ showHeader = true }) {
       )}
 
       <div className="card mt" style={{ borderLeft: '4px solid var(--gold)', padding: 16 }}>
-        <b style={{ display: 'block', marginBottom: 6 }}>How the MVP race works</b>
+        <b style={{ display: 'block', marginBottom: 6 }}>How rankings work</b>
         <div className="muted" style={{ fontSize: 12, lineHeight: 1.6 }}>
-          MVP points are the official race: <b style={{ color: 'var(--text)' }}>3 points per rubber win + 1 bonus point for a 4–0 win</b>.
-          Win percentage is shown separately because it measures efficiency, not total MVP contribution. That is why a 100% player can sit below a player with more MVP points.
+          <b style={{ color: 'var(--text)' }}>Overall player rank = win % → appearances → wins → MVP points.</b>
+          {' '}That rewards sustained winning first: a 7–0 record ranks above a 7–1 record. The MVP race remains a separate official points competition: 3 points per rubber win + 1 bonus point for a 4–0 win.
         </div>
       </div>
 
       <div className="grid cols-3 mt">
-        <LeaderSummary label="MVP leader" player={mvpLeader} value={`★ ${mvp(mvpLeader)}`} />
-        <LeaderSummary label="Best win rate" player={winLeader} value={`${winPct(winLeader?.stats)}% · ${played(winLeader)} rubbers`} />
+        <LeaderSummary label="Overall #1" player={performanceLeader} value={`${winPct(performanceLeader?.stats)}% · ${played(performanceLeader)} rubbers`} />
+        <LeaderSummary label="MVP points leader" player={mvpLeader} value={`★ ${mvp(mvpLeader)}`} />
         <LeaderSummary label="Most wins" player={winsLeader} value={`${wins(winsLeader)} wins`} />
       </div>
 

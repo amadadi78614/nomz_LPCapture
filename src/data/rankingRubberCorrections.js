@@ -3,9 +3,9 @@ import { PLAYERS } from './seed';
 // Official Season 3 ranking corrections supplied by the competition record.
 // Runs after fixture/stat syncs so every ranking surface and player profile uses the same values.
 const VERIFIED_RECORDS = {
-  'Justin van Staaden': { played: 7 },
-  'Uwaiz Patel': { played: 8, wins: 7, losses: 1, displayName: 'Uwais Patel' },
-  'Yusuf Patel': { played: 8, wins: 7, losses: 1 },
+  'Justin van Staaden': { played: 8 },
+  'Uwaiz Patel': { played: 9, wins: 7, losses: 2, displayName: 'Uwais Patel' },
+  'Yusuf Patel': { played: 9, wins: 7, losses: 2 },
 };
 
 Object.entries(VERIFIED_RECORDS).forEach(([sourceName, record]) => {

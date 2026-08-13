@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import { SeasonAwards } from '../components/SeasonAwards';
 import { FIXTURES, FRANCHISES, STANDINGS, franchiseById } from '../data/seed';
 import '../styles/home-v3.css';
 
@@ -123,46 +122,44 @@ export default function HomeV3() {
     <main className="hv3">
       <section className="hv3-hero">
         <div>
-          <span className="hv3-kicker">MEN'S FRANCHISE LEAGUE · FINALS SERIES</span>
-          <h1>Sonics reach a third straight final.</h1>
-          <p>Sonic Viboras delivered when it mattered, beating the Falcons 15–8 to book another place in the Franchise League final.</p>
+          <span className="hv3-kicker">MEN'S FRANCHISE LEAGUE · FINAL SET</span>
+          <h1>Falcons survive the Lions. Sonics await.</h1>
+          <p>Desert Falcons edged Sahara Lions 12–11 in a semi-final thriller and will face Sonic Viboras in the Franchise League final.</p>
           <div className="hv3-actions">
-            <Link to="/live" className="hv3-primary">View playoff results</Link>
-            <Link to="/leagues">Regular-season table</Link>
+            <Link to="/live" className="hv3-primary">View semi-final results</Link>
+            <Link to="/rankings">Updated MVP rankings</Link>
           </div>
         </div>
         <div className="hv3-hero-panel">
-          <span>SEMI-FINAL</span>
-          <strong>Falcons v Lions</strong>
-          <b>One final place remains</b>
-          <small>Lions carry momentum. Falcons must stop a two-match slide.</small>
+          <span>FRANCHISE LEAGUE FINAL</span>
+          <strong>Sonic Viboras v Desert Falcons</strong>
+          <b>One match for the title</b>
+          <small>Sonics chase a third straight crown. Falcons arrive after surviving an 11–12 semi-final battle.</small>
         </div>
       </section>
 
       <section className="hv3-grid">
         <article>
-          <span className="hv3-kicker">SONICS SURGE</span>
-          <h2>Three finals in three seasons.</h2>
-          <p>The Sonics pulled out all the stops in the qualifier and now wait for the winner of Falcons versus Lions.</p>
+          <span className="hv3-kicker">SEMI-FINAL · 13 AUGUST</span>
+          <h2>Falcons 12–11 Lions.</h2>
+          <p>The tie finished three rubbers apiece, but the Falcons held the aggregate edge by a single point to reach the final.</p>
         </article>
         <article>
-          <span className="hv3-kicker">P1 SHOCK</span>
-          <h2>Uwais and Yusuf suffer their first defeat.</h2>
-          <p>The Falcons’ outstanding P1 pair were beaten for the first time as Heinrich Coomans and Anton Grote claimed a defining 3–0 result.</p>
+          <span className="hv3-kicker">P1 TURNING POINT</span>
+          <h2>Cian Maritz & Yusuf Packery land a major win.</h2>
+          <p>The Lions pair beat Uwais Patel & Yusuf Patel 3–0, handing the Falcons’ leading P1 partnership a second consecutive defeat.</p>
         </article>
         <article>
-          <span className="hv3-kicker">SEMI-FINAL WATCH</span>
-          <h2>Falcons and Lions fight for the last final place.</h2>
-          <p>Everything now comes down to the semi-final. The winner earns the right to face the Sonic Viboras for the title.</p>
+          <span className="hv3-kicker">YOUTH WATCH</span>
+          <h2>Jude van den Berg delivers again.</h2>
+          <p>Jude and Danie Rautenbach claimed a 4–0 P3 win in the semi-final, strengthening Jude’s Young Player of the Tournament case.</p>
         </article>
       </section>
-
-      <SeasonAwards compact />
 
       <section className="hv3-section">
         <div className="hv3-heading">
           <div>
-            <span className="hv3-kicker">REGULAR-SEASON POSITION</span>
+            <span className="hv3-kicker">FINAL REGULAR-SEASON POSITION</span>
             <h2>Men's Franchise League standings</h2>
           </div>
           <Link to="/leagues">Full league centre →</Link>
@@ -186,7 +183,7 @@ export default function HomeV3() {
         </div>
 
         <div className="hv3-note">
-          <strong>Six-round regular season:</strong> every franchise plays six fixtures before the playoffs. Playoff, eliminator and qualifier results appear in Match Centre and player statistics but do not change this table.
+          <strong>Six-round regular season:</strong> every franchise played six fixtures before the playoffs. Eliminator, qualifier and semi-final results appear in Match Centre and player statistics but do not change the regular-season table.
           <br />
           R = rounds · P = rubbers · RD = rubber difference · SD = set difference · GD = game difference · BP = bonus points.
         </div>

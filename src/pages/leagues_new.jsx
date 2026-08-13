@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  STANDINGS, FRANCHISES, PLAYERS, FIXTURES,
+  STANDINGS, FRANCHISES, FIXTURES,
   franchiseById, stripeVar, TIER_SPONSORS,
   LEGACY_FRANCHISES, LEGACY_STANDINGS, LEGACY_PLAYERS, LEGACY_FIXTURES,
   legacyFranchiseById, winPct,
@@ -77,48 +77,101 @@ function LeagueStandingsTable({ tier = 'franchise' }) {
   return (
     <div className="league-standings-shell">
       <table className="tbl league-standings-table">
-        <thead>
-          <tr>
-            <th>#</th><th>Franchise</th>
-            <th className="num">R</th><th className="num">P</th>
-            <th className="num">W</th><th className="num">L</th><th className="num">D</th>
-            <th className="num">RD</th><th className="num">SD</th><th className="num">GD</th>
-            <th className="num">BP</th><th className="num">Pts</th>
-          </tr>
-        </thead>
+        <thead><tr>
+          <th>#</th><th>Franchise</th><th className="num">R</th><th className="num">P</th>
+          <th className="num">W</th><th className="num">L</th><th className="num">D</th>
+          <th className="num">RD</th><th className="num">SD</th><th className="num">GD</th>
+          <th className="num">BP</th><th className="num">Pts</th>
+        </tr></thead>
         <tbody>
           {rows.map((row, index) => {
             const franchise = franchiseById(row.franchise_id);
-            const diff = differentials[row.franchise_id] || { sd: 0, gd: 0, scoredRubbers: 0 };
+            const diff = differentials[row.franchise_id] || { sd: 0, gd: 0 };
             const rd = (Number(row.won) || 0) - (Number(row.lost) || 0);
             return (
               <tr key={row.franchise_id}>
                 <td><span className={`pos-badge ${tier === 'franchise' && index < 4 ? 'q' : ''}`}>{index + 1}</span></td>
-                <td className="league-team-cell">
-                  <Link to={`/franchise/${franchise.id}`} className="row">
-                    <span className="league-team-stripe" style={{ background: stripeVar(franchise.id) }} />
-                    <img src={franchise.logo} alt="" />
-                    <b>{franchise.name}{row.adj ? ' *' : ''}</b>
-                  </Link>
-                </td>
+                <td className="league-team-cell"><Link to={`/franchise/${franchise.id}`} className="row"><span className="league-team-stripe" style={{ background: stripeVar(franchise.id) }} /><img src={franchise.logo} alt="" /><b>{franchise.name}{row.adj ? ' *' : ''}</b></Link></td>
                 <td className="num league-rounds"><b>{completedFixtures(row, tier)}</b></td>
-                <td className="num">{row.played}</td>
-                <td className="num">{row.won}</td>
-                <td className="num">{row.lost}</td>
-                <td className="num">{row.drawn}</td>
+                <td className="num">{row.played}</td><td className="num">{row.won}</td><td className="num">{row.lost}</td><td className="num">{row.drawn}</td>
                 <td className={`num league-diff-column ${rd > 0 ? 'diff-positive' : rd < 0 ? 'diff-negative' : ''}`}>{formatDiff(rd)}</td>
-                <td className={`num league-diff-column ${diff.sd > 0 ? 'diff-positive' : diff.sd < 0 ? 'diff-negative' : ''}`} title={`From ${diff.scoredRubbers} regular-season rubbers with recorded set scores`}>{formatDiff(diff.sd)}</td>
-                <td className={`num league-diff-column ${diff.gd > 0 ? 'diff-positive' : diff.gd < 0 ? 'diff-negative' : ''}`} title={`From ${diff.scoredRubbers} regular-season rubbers with recorded set scores`}>{formatDiff(diff.gd)}</td>
-                <td className="num">{row.bp}</td>
-                <td className="num league-points"><b>{row.points}</b></td>
+                <td className={`num league-diff-column ${diff.sd > 0 ? 'diff-positive' : diff.sd < 0 ? 'diff-negative' : ''}`}>{formatDiff(diff.sd)}</td>
+                <td className={`num league-diff-column ${diff.gd > 0 ? 'diff-positive' : diff.gd < 0 ? 'diff-negative' : ''}`}>{formatDiff(diff.gd)}</td>
+                <td className="num">{row.bp}</td><td className="num league-points"><b>{row.points}</b></td>
               </tr>
             );
           })}
         </tbody>
       </table>
-      <div className="league-standings-key muted">
-        Final regular-season table after Round 6 · every franchise plays six fixtures · R = rounds · P = rubbers · RD = rubber difference · SD = set difference · GD = game difference.
-        Playoff results are excluded from this table{hasAdjustment ? ' · * includes a league points adjustment' : ''}.
+      <div className="league-standings-key muted">Final regular-season table after Round 6 · every franchise plays six fixtures · R = rounds · P = rubbers · RD = rubber difference · SD = set difference · GD = game difference. Playoff results are excluded from this table{hasAdjustment ? ' · * includes a league points adjustment' : ''}.</div>
+    </div>
+  );
+}
+
+const STAGE_LABELS = {
+  eliminator: 'Eliminator',
+  qualifier: 'Final Qualifier',
+  semifinal: 'Semi-final',
+  'semi-final': 'Semi-final',
+  final: 'Franchise League Final',
+};
+
+function PlayoffsCentre() {
+  const playoffFixtures = useMemo(() => FIXTURES
+    .filter((fixture) => fixture.league === 'mens' && fixture.stage)
+    .slice()
+    .sort((a, b) => new Date(a.start) - new Date(b.start)), []);
+
+  const completed = playoffFixtures.filter((fixture) => fixture.status === 'final');
+  const upcoming = playoffFixtures.filter((fixture) => fixture.status !== 'final');
+
+  return (
+    <div className="mt">
+      <div className="card" style={{ borderLeft: '4px solid var(--gold)' }}>
+        <span className="eyebrow">Season 3 Finals Series</span>
+        <h2 className="display" style={{ margin: '6px 0 8px', fontSize: 30 }}>Playoffs</h2>
+        <p className="muted" style={{ margin: 0 }}>The regular season is complete. Playoff results are tracked separately and do not change the six-round league standings.</p>
+      </div>
+
+      <div className="grid cols-2 mt">
+        {completed.map((fixture) => {
+          const home = franchiseById(fixture.home);
+          const away = franchiseById(fixture.away);
+          const homeScore = fixture.score?.totals?.[0];
+          const awayScore = fixture.score?.totals?.[1];
+          const winner = fixture.score?.winner;
+          return (
+            <article key={fixture.id} className="card" style={{ borderTop: '3px solid var(--gold)' }}>
+              <div className="row spread" style={{ gap: 10, flexWrap: 'wrap' }}>
+                <span className="eyebrow">{STAGE_LABELS[fixture.stage] || 'Playoff'}</span>
+                <span className="muted" style={{ fontSize: 11 }}>{new Date(fixture.start).toLocaleDateString('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+              </div>
+              <div style={{ marginTop: 14 }}>
+                <div className="row spread" style={{ padding: '8px 0', gap: 12 }}><span className="row" style={{ gap: 8 }}><img src={home?.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /><b>{home?.name}</b></span><b className="num" style={{ color: winner === 'home' ? 'var(--win)' : 'var(--text)', fontSize: 22 }}>{homeScore}</b></div>
+                <div className="row spread" style={{ padding: '8px 0', gap: 12 }}><span className="row" style={{ gap: 8 }}><img src={away?.logo} alt="" style={{ width: 30, height: 30, objectFit: 'contain' }} /><b>{away?.name}</b></span><b className="num" style={{ color: winner === 'away' ? 'var(--win)' : 'var(--text)', fontSize: 22 }}>{awayScore}</b></div>
+              </div>
+              <Link to="/live" className="btn ghost" style={{ display: 'block', textAlign: 'center', marginTop: 12 }}>View rubber breakdown →</Link>
+            </article>
+          );
+        })}
+      </div>
+
+      {upcoming.length > 0 && <>
+        <div className="row spread mt" style={{ gap: 12, flexWrap: 'wrap' }}><div><span className="eyebrow">Next up</span><h3 className="display" style={{ margin: '4px 0', fontSize: 26 }}>Upcoming playoff fixtures</h3></div></div>
+        <div className="grid cols-2 mt">
+          {upcoming.map((fixture) => {
+            const home = franchiseById(fixture.home);
+            const away = franchiseById(fixture.away);
+            return <article key={fixture.id} className="card"><span className="eyebrow">{STAGE_LABELS[fixture.stage] || 'Playoff'}</span><h3 className="display" style={{ margin: '8px 0 4px', fontSize: 22 }}>{home?.name} v {away?.name}</h3><p className="muted" style={{ margin: 0 }}>{new Date(fixture.start).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' })}</p></article>;
+          })}
+        </div>
+      </>}
+
+      <div className="card mt" style={{ textAlign: 'center' }}>
+        <span className="eyebrow">Final confirmed</span>
+        <h3 className="display" style={{ margin: '6px 0', fontSize: 28 }}>Sonic Viboras v Desert Falcons</h3>
+        <p className="muted" style={{ margin: '0 0 12px' }}>The Sonics reached a third consecutive Franchise League Final. The Falcons survived the Lions 12–11 in the semi-final to book the other place.</p>
+        <Link to="/live" className="btn gold">Open Match Centre →</Link>
       </div>
     </div>
   );
@@ -138,14 +191,9 @@ function MensLeague() {
     {season === 's1' && <div className="mt"><PlaceholderSeason season="Season 1" league="Men's Franchise League" /></div>}
     {season === 's2' && <div className="mt"><PlaceholderSeason season="Season 2" league="Men's Franchise League" /></div>}
     {season === 's3' && <>
-      <div className="tabbar mt league-tabs">{[['standings','Standings'],['franchises','Franchises'],['rankings','Rankings']].map(([key,label]) => <button key={key} className={subTab===key?'on':''} onClick={() => setSubTab(key)}>{label}</button>)}</div>
-      {subTab === 'standings' && <div className="mt">
-        <p className="muted league-rules">Rubber win = 3 pts · draw = 1 pt · bonus point for a 4–0 win. The six-round regular season is complete; playoff results are separate.</p>
-        <div className="tabbar mt league-tabs league-tier-tabs">{[['franchise','Franchise'],['P1','P1'],['P2','P2'],['P3','P3']].map(([value,label]) => <button key={value} className={tier2===value?'on':''} onClick={() => setTier2(value)}>{label}</button>)}</div>
-        {tier2 !== 'franchise' && TIER_SPONSORS[tier2] && <div className="row mt league-sponsor" style={{ gap: 10, alignItems: 'center' }}><img src={TIER_SPONSORS[tier2].logo} alt={TIER_SPONSORS[tier2].name} /><span className="muted">{tier2} Log · presented by {TIER_SPONSORS[tier2].name}</span></div>}
-        <div className="mt"><LeagueStandingsTable tier={tier2} /></div>
-        {tier2 === 'franchise' && <p className="muted mt" style={{ fontSize: 12 }}>Top 4 qualified for Finals Night.</p>}
-      </div>}
+      <div className="tabbar mt league-tabs">{[['standings','Standings'],['playoffs','Playoffs'],['franchises','Franchises'],['rankings','Rankings']].map(([key,label]) => <button key={key} className={subTab===key?'on':''} onClick={() => setSubTab(key)}>{label}</button>)}</div>
+      {subTab === 'standings' && <div className="mt"><p className="muted league-rules">Rubber win = 3 pts · draw = 1 pt · bonus point for a 4–0 win. The six-round regular season is complete; playoff results are separate.</p><div className="tabbar mt league-tabs league-tier-tabs">{[['franchise','Franchise'],['P1','P1'],['P2','P2'],['P3','P3']].map(([value,label]) => <button key={value} className={tier2===value?'on':''} onClick={() => setTier2(value)}>{label}</button>)}</div>{tier2 !== 'franchise' && TIER_SPONSORS[tier2] && <div className="row mt league-sponsor" style={{ gap: 10, alignItems: 'center' }}><img src={TIER_SPONSORS[tier2].logo} alt={TIER_SPONSORS[tier2].name} /><span className="muted">{tier2} Log · presented by {TIER_SPONSORS[tier2].name}</span></div>}<div className="mt"><LeagueStandingsTable tier={tier2} /></div>{tier2 === 'franchise' && <p className="muted mt" style={{ fontSize: 12 }}>Top 4 qualified for Finals Night.</p>}</div>}
+      {subTab === 'playoffs' && <PlayoffsCentre />}
       {subTab === 'franchises' && <div className="grid cols-2 mt">{STANDINGS.mens.franchise.map((row,index) => { const franchise=franchiseById(row.franchise_id); return <Link key={franchise.id} to={`/franchise/${franchise.id}`} className="card stripe row spread" style={{ '--stripe': stripeVar(franchise.id) }}><div className="row"><img src={franchise.logo} alt="" style={{ width:44,height:44,objectFit:'contain' }}/><div><b style={{fontFamily:'var(--display)',textTransform:'uppercase',fontSize:16}}>{franchise.name}</b><div className="muted" style={{fontSize:12}}>R{completedFixtures(row)} · P{row.played} · W{row.won} · {row.points} pts</div><div className="muted" style={{fontSize:11}}>Owner: {franchise.owner}</div></div></div><span className={`pos-badge ${index<4?'q':''}`} style={{width:30,height:30,fontSize:14}}>{index+1}</span></Link>; })}</div>}
       {subTab === 'rankings' && <MensRankingsStage />}
     </>}

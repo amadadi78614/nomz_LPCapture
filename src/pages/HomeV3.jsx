@@ -122,37 +122,37 @@ export default function HomeV3() {
     <main className="hv3">
       <section className="hv3-hero">
         <div>
-          <span className="hv3-kicker">MEN'S FRANCHISE LEAGUE · FINAL SET</span>
-          <h1>Falcons survive the Lions. Sonics await.</h1>
-          <p>Desert Falcons edged Sahara Lions 12–11 in a semi-final thriller and will face Sonic Viboras in the Franchise League final.</p>
+          <span className="hv3-kicker">MEN'S FRANCHISE LEAGUE · SEASON 3 CHAMPIONS</span>
+          <h1>Desert Falcons dethrone the champions.</h1>
+          <p>Desert Falcons beat two-time champions Sonic Viboras 14–8 in the Franchise League Final to claim the Season 3 crown.</p>
           <div className="hv3-actions">
-            <Link to="/live" className="hv3-primary">View semi-final results</Link>
-            <Link to="/rankings">Updated MVP rankings</Link>
+            <Link to="/leagues" className="hv3-primary">View Franchise League</Link>
+            <Link to="/rankings">Final MVP rankings</Link>
           </div>
         </div>
         <div className="hv3-hero-panel">
-          <span>FRANCHISE LEAGUE FINAL</span>
-          <strong>Sonic Viboras v Desert Falcons</strong>
-          <b>One match for the title</b>
-          <small>Sonics chase a third straight crown. Falcons arrive after surviving an 11–12 semi-final battle.</small>
+          <span>FRANCHISE LEAGUE FINAL · 14 AUGUST</span>
+          <strong>Desert Falcons 14–8 Sonic Viboras</strong>
+          <b>FALCONS ARE SEASON 3 CHAMPIONS</b>
+          <small>After knocking on the door in previous seasons, the Falcons finally topple the back-to-back champions and lift the Franchise League title.</small>
         </div>
       </section>
 
       <section className="hv3-grid">
         <article>
-          <span className="hv3-kicker">SEMI-FINAL · 13 AUGUST</span>
-          <h2>Falcons 12–11 Lions.</h2>
-          <p>The tie finished three rubbers apiece, but the Falcons held the aggregate edge by a single point to reach the final.</p>
+          <span className="hv3-kicker">THE CHAMPIONS</span>
+          <h2>Falcons finish the job.</h2>
+          <p>The final was locked at 4–4 before the Falcons surged ahead and closed out a memorable 14–8 championship victory.</p>
         </article>
         <article>
-          <span className="hv3-kicker">P1 TURNING POINT</span>
-          <h2>Cian Maritz & Yusuf Packery land a major win.</h2>
-          <p>The Lions pair beat Uwais Patel & Yusuf Patel 3–0, handing the Falcons’ leading P1 partnership a second consecutive defeat.</p>
+          <span className="hv3-kicker">P1 · FINAL</span>
+          <h2>Uwais & Yusuf deliver on the biggest night.</h2>
+          <p>Uwais Patel and Yusuf Patel beat Heinrich Coomans and Anton Grote in the final, adding one last chapter to an extraordinary P1 MVP race.</p>
         </article>
         <article>
-          <span className="hv3-kicker">YOUTH WATCH</span>
-          <h2>Jude van den Berg delivers again.</h2>
-          <p>Jude and Danie Rautenbach claimed a 4–0 P3 win in the semi-final, strengthening Jude’s Young Player of the Tournament case.</p>
+          <span className="hv3-kicker">P3 · YOUTH WATCH</span>
+          <h2>Jude & Danie finish with another win.</h2>
+          <p>Jude van den Berg and Danie Rautenbach won together again in the final, capping a remarkable campaign for the Falcons' P3 pair.</p>
         </article>
       </section>
 
@@ -183,7 +183,7 @@ export default function HomeV3() {
         </div>
 
         <div className="hv3-note">
-          <strong>Six-round regular season:</strong> every franchise played six fixtures before the playoffs. Eliminator, qualifier and semi-final results appear in Match Centre and player statistics but do not change the regular-season table.
+          <strong>Six-round regular season:</strong> every franchise played six fixtures before the playoffs. Playoff and final results appear separately and do not change the regular-season table.
           <br />
           R = rounds · P = rubbers · RD = rubber difference · SD = set difference · GD = game difference · BP = bonus points.
         </div>

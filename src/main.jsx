@@ -10,6 +10,7 @@ import './data/franchiseFinalsRunUpdate';
 import './data/regularSeasonSixRoundFix';
 import './data/mvpPairIntegrity';
 import './data/rankingRubberCorrections';
+import './data/verifiedSeason3PlayerStats';
 import './data/ladiesSeason2Data';
 import './data/ladiesSeason2HomeSync';
 import './data/ladiesSeason2LeagueSync';

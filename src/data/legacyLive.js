@@ -20,23 +20,23 @@ export const LEGACY_LIVE_FIXTURES = [
   ]}},
 
   { id:'lg-2026-08-15-jackals-badgers', round:10, league:'legacy', home:'lp-jackals', away:'lp-honey-badgers', start:new Date('2026-08-15T13:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[3,7], rubbers:[
-    {slot:'13:00',winner:'away',games:[0,3],homeIds:['Joe','Fahad Patel'],awayIds:['Scharl van den Berg','Jameel Valley'],sets:[[6,3],[3,6],[6,10]]},
+    {slot:'13:00',winner:'away',games:[0,3],homeIds:['Yusuf Ismail','Fahad Patel'],awayIds:['Scharl van den Berg','Jameel Valley'],sets:[[6,3],[3,6],[6,10]]},
     {slot:'13:00',winner:'away',games:[0,4],homeIds:['Mohamed Hoosein Patel','Spanner Mescht'],awayIds:['Jude van den Berg','Zandre de Kok'],sets:[[2,6],[2,6],[3,10]]},
     {slot:'15:00',winner:'home',games:[3,0],homeIds:['Mohamed Hoosein Patel','Zuhayr Ismail'],awayIds:['Seth van den Berg','Reyhaan Seedat'],sets:[[5,7],[6,3],[10,6]]},
   ]}},
   { id:'lg-2026-08-15-leopards-cheetahs', round:11, league:'legacy', home:'lp-leopards', away:'lp-cheetahs', start:new Date('2026-08-15T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[4,7], rubbers:[
     {slot:'14:00',winner:'home',games:[4,0],homeIds:['Ozayr Shaik','Muhammad Mangerah'],awayIds:['Sandeep Daya','Mauritz van der Mescht'],sets:[[6,0],[6,0],[10,0]]},
-    {slot:'16:00',winner:'away',games:[0,3],homeIds:['Jovan Erasmus','Beast'],awayIds:['Mohamed Nomani','Shoaib Nomani'],sets:[[6,4],[1,6],[2,10]]},
+    {slot:'16:00',winner:'away',games:[0,3],homeIds:['Jovan Erasmus','Adil Amod'],awayIds:['Mohamed Nomani','Shoaib Nomani'],sets:[[6,4],[1,6],[2,10]]},
     {slot:'17:00',winner:'away',games:[0,4],homeIds:['Huzaifah Sujee','Muhammed Ruhaan Shaik'],awayIds:['Aadam Nomani','Abdurahmaan Jogee'],sets:[[2,6],[0,6],[4,10]]},
   ]}},
   { id:'lg-2026-08-15-leopards-rhinos', round:12, league:'legacy', home:'lp-leopards', away:'lp-rhinos', start:new Date('2026-08-15T18:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[3,7], rubbers:[
     {slot:'18:00',winner:'home',games:[3,0],homeIds:['Ozayr Shaik','Ridhwaan Sujee'],awayIds:['Rafiq Mohamed','Irshaad Moola'],sets:[[7,5],[6,4],[6,10]]},
-    {slot:'18:00',winner:'away',games:[0,3],homeIds:['Jovan Erasmus','Beast'],awayIds:['Christiaan van Aardt','Yusuf Amod'],sets:[[7,6],[3,6],[4,10]]},
+    {slot:'18:00',winner:'away',games:[0,3],homeIds:['Jovan Erasmus','Adil Amod'],awayIds:['Christiaan van Aardt','Yusuf Amod'],sets:[[7,6],[3,6],[4,10]]},
     {slot:'19:00',winner:'away',games:[0,4],homeIds:['Huzaifah Sujee','Ebrahim Mangerah'],awayIds:['Muhammed Moola','Ayaan Mohamed'],sets:[[1,6],[3,6],[3,10]]},
   ]}},
   { id:'lg-2026-08-15-rhinos-eagles', round:12, league:'legacy', home:'lp-rhinos', away:'lp-eagles', start:new Date('2026-08-15T18:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[3,6], rubbers:[
     {slot:'18:00',winner:'away',games:[0,3],homeIds:['Christiaan van Aardt','Zinidine Morgan'],awayIds:['Sahal Yunus','Akmeer Amod'],sets:[[1,6],[6,4],[4,10]]},
-    {slot:'18:00',winner:'home',games:[3,0],homeIds:['Muhammed Moola','Eesa Moola'],awayIds:['Armaan Bhikhoo','Shaheen'],sets:[[3,6],[7,6],[10,6]]},
+    {slot:'18:00',winner:'home',games:[3,0],homeIds:['Muhammed Moola','Eesa Moola'],awayIds:['Armaan Bhikhoo','Shaheen Mohamed'],sets:[[3,6],[7,6],[10,6]]},
     {slot:'19:00',winner:'away',games:[0,3],homeIds:['Rafiq Mohamed','Irshaad Moola'],awayIds:['Fiaz Bhikhoo','Mohamed Azhar Sujee'],sets:[[1,6],[3,6],[12,10]]},
   ]}},
 ];
@@ -52,7 +52,12 @@ LEGACY_LIVE_FIXTURES.forEach((fixture) => {
 });
 LEGACY_LIVE_STANDINGS.sort((a,b) => b.points-a.points || b.won-a.won || b.gd-a.gd);
 
-const playerMap = new Map(DRAFT_PLAYERS.map((p) => [p.name, { ...p, stats: blankStats() }]));
+const correctedDraftPlayers = DRAFT_PLAYERS.map((player) =>
+  player.name === 'Nathan Mckenzie'
+    ? { ...player, name: 'Shaheen Mohamed' }
+    : player,
+);
+const playerMap = new Map(correctedDraftPlayers.map((p) => [p.name, { ...p, stats: blankStats() }]));
 const franchiseForName = (name, fallback) => playerMap.get(name)?.franchise_id || fallback;
 const ensurePlayer = (name, fallbackFranchise) => {
   if (!playerMap.has(name)) playerMap.set(name, { id:`lg-live-${name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}`, name, franchise_id:fallbackFranchise, league:'legacy', kind:'adult', draftRound:null, lp_rating:1400, stats:blankStats() });

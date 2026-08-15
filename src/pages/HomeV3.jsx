@@ -3,8 +3,10 @@ import { FIXTURES, FRANCHISES, STANDINGS, franchiseById } from '../data/seed';
 import '../styles/home-v3.css';
 
 const LEGACY_RESULTS = [
-  { winner: 'Honey Badgers', score: '7–4', loser: 'LP Cheetahs' },
-  { winner: 'LP Jackals', score: '8–4', loser: 'LP Eagles' },
+  { winner: 'LP Rhinos', score: '7–3', loser: 'LP Leopards' },
+  { winner: 'LP Cheetahs', score: '7–4', loser: 'LP Leopards' },
+  { winner: 'LP Eagles', score: '6–3', loser: 'LP Rhinos' },
+  { winner: 'Honey Badgers', score: '7–3', loser: 'LP Jackals' },
 ];
 
 const isRegularSeasonFixture = (fixture) =>
@@ -217,10 +219,10 @@ export default function HomeV3() {
       </section>
 
       <section className="hv3-section hv3-closing">
-        <span className="hv3-kicker">LP LEGACY · ROUND 3</span>
-        <h2>Badgers and Jackals win.</h2>
+        <span className="hv3-kicker">LP LEGACY · 15 AUGUST 2026</span>
+        <h2>Four fresh Legacy results reshape the table.</h2>
         {LEGACY_RESULTS.map((result) => (
-          <div className="hv3-score" key={result.winner}>
+          <div className="hv3-score" key={`${result.winner}-${result.loser}`}>
             <span>{result.winner}</span><strong>{result.score}</strong><span>{result.loser}</span>
           </div>
         ))}

@@ -124,6 +124,7 @@ function PlayoffsCentre() {
 
   const completed = playoffFixtures.filter((fixture) => fixture.status === 'final');
   const upcoming = playoffFixtures.filter((fixture) => fixture.status !== 'final');
+  const champions = franchiseById('desert-falcons');
 
   return (
     <div className="mt">
@@ -167,11 +168,27 @@ function PlayoffsCentre() {
         </div>
       </>}
 
-      <div className="card mt" style={{ textAlign: 'center' }}>
-        <span className="eyebrow">Final confirmed</span>
-        <h3 className="display" style={{ margin: '6px 0', fontSize: 28 }}>Sonic Viboras v Desert Falcons</h3>
-        <p className="muted" style={{ margin: '0 0 12px' }}>The Sonics reached a third consecutive Franchise League Final. The Falcons survived the Lions 12–11 in the semi-final to book the other place.</p>
-        <Link to="/live" className="btn gold">Open Match Centre →</Link>
+      <div className="card mt" style={{ textAlign: 'center', border: '1px solid var(--gold)' }}>
+        <span className="eyebrow">Season 3 Champions</span>
+        <div className="row" style={{ justifyContent: 'center', gap: 12, marginTop: 8 }}>
+          <img src={champions?.logo} alt="Desert Falcons" style={{ width: 58, height: 58, objectFit: 'contain' }} />
+          <div style={{ textAlign: 'left' }}>
+            <h3 className="display" style={{ margin: 0, fontSize: 30 }}>Desert Falcons</h3>
+            <div className="num" style={{ color: 'var(--gold)', fontSize: 20, marginTop: 4 }}>14–8 over Sonic Viboras</div>
+          </div>
+        </div>
+        <p className="muted" style={{ margin: '12px auto', maxWidth: 680 }}>The Falcons dethroned the back-to-back champions in the 14 August Grand Final, breaking away from 4–4 to seal the Season 3 Franchise League title.</p>
+        <Link to="/live" className="btn gold">View Grand Final breakdown →</Link>
+      </div>
+
+      <div className="mt">
+        <span className="eyebrow">Season 3 Awards</span>
+        <h3 className="display" style={{ margin: '5px 0 12px', fontSize: 28 }}>MVPs</h3>
+        <div className="grid cols-3">
+          <div className="card" style={{ textAlign: 'center', borderTop: '3px solid var(--win)' }}><span className="eyebrow">P1 Joint MVPs</span><h3 style={{ margin: '10px 0 4px' }}>Yusuf Patel & Uwais Patel</h3><p className="muted" style={{ margin: 0 }}>Desert Falcons</p></div>
+          <div className="card" style={{ textAlign: 'center', borderTop: '3px solid var(--gold)' }}><span className="eyebrow">P2 MVP</span><h3 style={{ margin: '10px 0 4px' }}>Adil Patel</h3><p className="muted" style={{ margin: 0 }}>Sahara Lions</p></div>
+          <div className="card" style={{ textAlign: 'center', borderTop: '3px solid #5da9ff' }}><span className="eyebrow">P3 Joint MVPs</span><h3 style={{ margin: '10px 0 4px' }}>Danie Rautenbach & Jude van den Berg</h3><p className="muted" style={{ margin: 0 }}>Desert Falcons</p></div>
+        </div>
       </div>
     </div>
   );

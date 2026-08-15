@@ -41,19 +41,25 @@
   .league-standings-table:has(.league-rounds) td:nth-child(11)::before{content:'BP'}
   .league-standings-table:has(.league-rounds) td:nth-child(12)::before{content:'Pts'}
 
-  /* Legacy portrait cards: use a simple 2-column metric grid. This deliberately overrides
-     the generic desktop/table nth-child positioning that caused the huge blank card height. */
-  .legacy-standings-table tr{display:grid!important;grid-template-columns:42px minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:center!important;min-height:0!important;height:auto!important;padding:12px!important;gap:8px 6px!important}
-  .legacy-standings-table td:first-child{grid-column:1!important;grid-row:1!important;align-self:center!important;padding:0!important}
-  .legacy-standings-table td:nth-child(2){grid-column:2!important;grid-row:1!important;padding:0!important;min-height:38px!important}
-  .legacy-standings-table td:nth-child(n+3){grid-column:auto!important;grid-row:auto!important;position:static!important;width:auto!important;height:auto!important;min-height:0!important;padding:5px 2px!important;transform:none!important}
-  .legacy-standings-table td:nth-child(3){grid-column:1!important;grid-row:2!important}
-  .legacy-standings-table td:nth-child(4){grid-column:2!important;grid-row:2!important}
-  .legacy-standings-table td:nth-child(n+5){display:none!important}
+  /* Legacy standings need to stay compact in portrait. Keep the team identity on top,
+     then show P/W/L/Pts in one clean row instead of the oversized two-metric cards. */
+  .legacy-standings-table tr{display:grid!important;grid-template-columns:38px minmax(0,1fr) repeat(4,minmax(38px,.45fr))!important;grid-template-rows:auto auto!important;align-items:center!important;min-height:0!important;height:auto!important;padding:10px 10px 9px!important;gap:5px 4px!important}
+  .legacy-standings-table td:first-child{grid-column:1!important;grid-row:1!important;align-self:center!important;padding:0!important;justify-content:flex-start!important}
+  .legacy-standings-table td:nth-child(2){grid-column:2/7!important;grid-row:1!important;padding:0 0 7px!important;min-height:34px!important;justify-content:flex-start!important}
+  .legacy-standings-table td:nth-child(3){grid-column:3!important;grid-row:2!important}
+  .legacy-standings-table td:nth-child(4){grid-column:4!important;grid-row:2!important}
+  .legacy-standings-table td:nth-child(5){grid-column:5!important;grid-row:2!important}
+  .legacy-standings-table td:nth-child(6){grid-column:6!important;grid-row:2!important}
+  .legacy-standings-table td:nth-child(n+3){position:static!important;width:auto!important;height:auto!important;min-height:32px!important;padding:3px 1px!important;transform:none!important;display:flex!important;flex-direction:column!important;gap:3px!important}
+  .legacy-standings-table td:nth-child(n+7){display:none!important}
   .legacy-standings-table td:nth-child(3)::before{content:'P'!important}
   .legacy-standings-table td:nth-child(4)::before{content:'W'!important}
-  .legacy-standings-table .league-team-cell a{overflow:visible!important}
-  .legacy-standings-table .league-team-cell b{font-size:14px!important;white-space:normal!important;text-overflow:clip!important;overflow:visible!important}
+  .legacy-standings-table td:nth-child(5)::before{content:'L'!important}
+  .legacy-standings-table td:nth-child(6)::before{content:'Pts'!important}
+  .legacy-standings-table .league-team-cell a{overflow:visible!important;min-width:0!important}
+  .legacy-standings-table .league-team-cell b{font-size:14px!important;white-space:normal!important;text-overflow:clip!important;overflow:visible!important;line-height:1.15!important}
+  .legacy-standings-table .league-team-cell img{width:30px!important;height:30px!important;flex:0 0 30px!important}
+  .legacy-standings-table .pos-badge{width:28px!important;height:28px!important;flex:0 0 28px!important}
 
   .league-team-cell a{gap:7px;min-width:0;width:100%;overflow:hidden}
   .league-team-cell b{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.2;font-size:13px}

@@ -159,6 +159,33 @@ export default function HomeV3() {
       <section className="hv3-section">
         <div className="hv3-heading">
           <div>
+            <span className="hv3-kicker">SEASON 3 AWARDS</span>
+            <h2>Men's Franchise League MVPs</h2>
+          </div>
+          <Link to="/rankings">Full player rankings →</Link>
+        </div>
+        <div className="hv3-grid">
+          <article>
+            <span className="hv3-kicker">P1 MVP · JOINT WINNERS</span>
+            <h2>Yusuf Patel & Uwais Patel</h2>
+            <p>The Desert Falcons pair were inseparable across the season and finished the job together in the final.</p>
+          </article>
+          <article>
+            <span className="hv3-kicker">P2 MVP</span>
+            <h2>Adil Patel</h2>
+            <p>The Sahara Lions standout takes the P2 MVP award after an exceptional Season 3 campaign.</p>
+          </article>
+          <article>
+            <span className="hv3-kicker">P3 MVP · JOINT WINNERS</span>
+            <h2>Danie Rautenbach & Jude van den Berg</h2>
+            <p>The Falcons pair close out Season 3 as joint P3 MVPs after another winning performance in the Grand Final.</p>
+          </article>
+        </div>
+      </section>
+
+      <section className="hv3-section">
+        <div className="hv3-heading">
+          <div>
             <span className="hv3-kicker">FINAL REGULAR-SEASON POSITION</span>
             <h2>Men's Franchise League standings</h2>
           </div>

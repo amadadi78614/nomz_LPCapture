@@ -7,21 +7,55 @@
 
 @media(max-width:650px){
   .leagues-page{padding-left:var(--pad);padding-right:var(--pad)}
-  .league-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:transparent;border:none;padding:0}
-  .league-main-tabs{grid-template-columns:1fr 1fr}
-  .league-tier-tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .league-tabs button{min-width:0;padding:10px 6px;font-size:11px;line-height:1.2;border:1px solid var(--line);background:var(--surface)}
+  .league-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;background:transparent;border:none;padding:0;overflow:visible}
+  .league-main-tabs{grid-template-columns:1fr}
+  .league-tabs:has(button:nth-child(4)){grid-template-columns:repeat(2,minmax(0,1fr))}
+  .league-tier-tabs,.league-tier-tabs:has(button:nth-child(4)){grid-template-columns:repeat(4,minmax(0,1fr))}
+  .league-tabs button{min-width:0;padding:10px 6px;font-size:11px;line-height:1.2;border:1px solid var(--line);background:var(--surface);white-space:normal;text-align:center}
   .league-tabs button.on{background:var(--surface-2);border-color:var(--line-strong)}
-  .league-standings-shell{margin-left:calc(-1 * var(--pad));margin-right:calc(-1 * var(--pad));border-radius:0;border-left:none;border-right:none}
-  .league-standings-table{min-width:680px}
-  .league-standings-table th,.league-standings-table td{padding:11px 8px!important;font-size:11px}
-  .league-standings-table th:first-child,.league-standings-table td:first-child{position:sticky;left:0;z-index:3;background:var(--surface)}
-  .league-standings-table th:nth-child(2),.league-standings-table td:nth-child(2){position:sticky;left:45px;z-index:2;background:var(--surface);min-width:175px;box-shadow:8px 0 14px rgba(0,0,0,.18)}
-  .league-team-cell b{display:block;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .league-team-cell img{width:22px;height:22px}
-  .league-team-stripe{display:none}
-  .league-rounds,.league-points{font-size:14px}
-  .league-standings-key{font-size:10px;line-height:1.45}
+
+  /* Mobile standings become stacked cards instead of a wide desktop table. */
+  .league-standings-shell{margin-left:0;margin-right:0;overflow:visible;border:none;background:transparent;border-radius:0}
+  .league-standings-table{display:block;width:100%;min-width:0;background:transparent;border-collapse:separate}
+  .league-standings-table thead{display:none}
+  .league-standings-table tbody{display:grid;gap:10px;width:100%}
+  .league-standings-table tr{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:auto auto auto;width:100%;padding:12px 10px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface);box-sizing:border-box;overflow:hidden}
+  .league-standings-table td{position:static!important;display:flex;min-width:0;padding:7px 5px!important;border:none!important;background:transparent!important;box-shadow:none!important;white-space:normal;font-size:12px!important;align-items:center;justify-content:center;text-align:center}
+  .league-standings-table td:first-child{grid-column:1;grid-row:1;justify-content:flex-start;padding-left:2px!important}
+  .league-standings-table td:nth-child(2){grid-column:2/-1;grid-row:1;justify-content:flex-start;min-width:0;padding:4px 2px 8px!important}
+  .league-standings-table td:nth-child(3){grid-column:1;grid-row:2}.league-standings-table td:nth-child(4){grid-column:2;grid-row:2}.league-standings-table td:nth-child(5){grid-column:3;grid-row:2}.league-standings-table td:nth-child(6){grid-column:4;grid-row:2}.league-standings-table td:nth-child(7){grid-column:5;grid-row:2}
+  .league-standings-table td:nth-child(8){grid-column:1;grid-row:3}.league-standings-table td:nth-child(9){grid-column:2;grid-row:3}.league-standings-table td:nth-child(10){grid-column:3;grid-row:3}.league-standings-table td:nth-child(11){grid-column:4;grid-row:3}.league-standings-table td:nth-child(12){grid-column:5;grid-row:3}
+  .league-standings-table td:nth-child(n+3){flex-direction:column;gap:3px;font-family:var(--body)}
+  .league-standings-table td:nth-child(n+3)::before{display:block;font-size:8px;line-height:1;font-weight:800;letter-spacing:.08em;color:var(--muted);text-transform:uppercase}
+
+  /* Men's Franchise/P1/P2/P3 labels. */
+  .league-standings-table:has(.league-rounds) td:nth-child(3)::before{content:'R'}
+  .league-standings-table:has(.league-rounds) td:nth-child(4)::before{content:'P'}
+  .league-standings-table:has(.league-rounds) td:nth-child(5)::before{content:'W'}
+  .league-standings-table:has(.league-rounds) td:nth-child(6)::before{content:'L'}
+  .league-standings-table:has(.league-rounds) td:nth-child(7)::before{content:'D'}
+  .league-standings-table:has(.league-rounds) td:nth-child(8)::before{content:'RD'}
+  .league-standings-table:has(.league-rounds) td:nth-child(9)::before{content:'SD'}
+  .league-standings-table:has(.league-rounds) td:nth-child(10)::before{content:'GD'}
+  .league-standings-table:has(.league-rounds) td:nth-child(11)::before{content:'BP'}
+  .league-standings-table:has(.league-rounds) td:nth-child(12)::before{content:'Pts'}
+
+  /* Legacy table has five metrics, so it fits neatly on one metric row. */
+  .league-standings-table:not(:has(.league-rounds)) tr{grid-template-rows:auto auto}
+  .league-standings-table:not(:has(.league-rounds)) td:nth-child(3)::before{content:'P'}
+  .league-standings-table:not(:has(.league-rounds)) td:nth-child(4)::before{content:'W'}
+  .league-standings-table:not(:has(.league-rounds)) td:nth-child(5)::before{content:'L'}
+  .league-standings-table:not(:has(.league-rounds)) td:nth-child(6)::before{content:'GD'}
+  .league-standings-table:not(:has(.league-rounds)) td:nth-child(7)::before{content:'Pts'}
+
+  .league-team-cell a{gap:8px;min-width:0;width:100%}
+  .league-team-cell b{display:block;max-width:none;overflow:visible;text-overflow:clip;white-space:normal;line-height:1.2;font-size:13px}
+  .league-team-cell img{width:28px;height:28px}
+  .league-team-stripe{display:block;width:3px;min-height:28px}
+  .league-rounds,.league-points{font-size:14px!important}
+  .league-points b{color:var(--gold)}
+  .pos-badge{width:30px;height:30px;font-size:12px}
+  .league-standings-key{margin-top:8px;padding:10px 4px;font-size:10px;line-height:1.5;border-top:none}
   .league-sponsor{align-items:flex-start!important}
   .league-sponsor img{height:22px}
   .league-sponsor span{line-height:1.4}

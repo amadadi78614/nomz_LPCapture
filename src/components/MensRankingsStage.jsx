@@ -57,8 +57,8 @@ export default function MensRankingsStage({ showHeader = true }) {
 
   return <section className="mt">
     {showHeader && <div className="row spread" style={{gap:12,flexWrap:'wrap',alignItems:'end'}}>
-      <div><span className="eyebrow">Verified through 13 August 2026 semi-final</span><h2 className="display" style={{margin:'4px 0',fontSize:30}}>Men's Season 3 Rankings</h2></div>
-      <span className="muted" style={{fontSize:12}}>Regular season + completed playoff rubbers</span>
+      <div><span className="eyebrow">Final · verified through 14 August 2026</span><h2 className="display" style={{margin:'4px 0',fontSize:30}}>Men's Season 3 Rankings</h2></div>
+      <span className="muted" style={{fontSize:12}}>Regular season + all completed playoff and grand-final rubbers</span>
     </div>}
 
     <div className="card mt" style={{borderLeft:'4px solid var(--gold)',padding:16}}>

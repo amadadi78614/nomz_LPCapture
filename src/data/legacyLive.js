@@ -2,7 +2,10 @@ import { LEGACY_PLAYERS as DRAFT_PLAYERS } from './seed';
 
 const blankStats = () => ({ played: 0, wins: 0, losses: 0, rubbers_won: 0, sets_won: 0, sets_lost: 0, bonus_points: 0, mvp_points: 0 });
 
+// Complete verified Legacy League result set currently on record.
+// The standings, rankings and power order below are derived from these fixtures.
 export const LEGACY_LIVE_FIXTURES = [
+  // MATCH DAY 1 · 18 JULY 2026
   { id:'lg-md1-rhinos-cheetahs', round:1, league:'legacy', home:'lp-rhinos', away:'lp-cheetahs', start:new Date('2026-07-18T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[3,8], rubbers:[
     {slot:'14:00',winner:'home',games:[3,0],homeIds:['Christiaan van Aardt','Zinidine Morgan'],awayIds:['Mauritz van der Mescht','Michael Smit'],sets:[[6,4],[6,3],[1,10]]},
     {slot:'15:00',winner:'away',games:[0,4],homeIds:['Irshaad Moola','Yusuf Amod'],awayIds:['Shoaib Nomani','Mohamed Nomani'],sets:[[4,6],[2,6],[8,10]]},
@@ -19,6 +22,36 @@ export const LEGACY_LIVE_FIXTURES = [
     {slot:'16:00',winner:'away',games:[0,3],homeIds:['Armaan Bhikhoo','Yahya Sujee'],awayIds:['Seth van den Berg','Reyhaan Seedat'],sets:[[2,6],[6,4],[7,10]]},
   ]}},
 
+  // MATCH DAY 2 · 25 JULY 2026
+  { id:'lg-md2-badgers-leopards', round:2, league:'legacy', home:'lp-honey-badgers', away:'lp-leopards', start:new Date('2026-07-25T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'home', totals:[7,4], rubbers:[
+    {slot:'14:00',winner:'home',games:[3,0],homeIds:['Scharl van den Berg','Jameel Valley'],awayIds:['Ozayr Shaik','Ebrahim Mangerah'],sets:[[7,5],[3,6],[10,5]]},
+    {slot:'15:00',winner:'home',games:[4,0],homeIds:['Jude van den Berg','Seth van den Berg'],awayIds:['Huzaifah Sujee','Muhammed Ruhaan Shaik'],sets:[[6,0],[6,1],[10,6]]},
+    {slot:'16:00',winner:'away',games:[0,4],homeIds:['Zandre de Kok','Faheem Seedat'],awayIds:['Ridhwaan Sujee','Adil Amod'],sets:[[2,6],[4,6],[5,10]]},
+  ]}},
+  { id:'lg-md2-jackals-rhinos', round:2, league:'legacy', home:'lp-jackals', away:'lp-rhinos', start:new Date('2026-07-25T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'home', totals:[7,4], rubbers:[
+    {slot:'14:00',winner:'home',games:[3,0],homeIds:['Fahad Patel','Mohamed Hoosein Patel'],awayIds:['Christiaan van Aardt','Zinidine Morgan'],sets:[[6,3],[4,6],[10,6]]},
+    {slot:'15:00',winner:'away',games:[0,4],homeIds:['Yusuf Ismail','Zunaid Ganchi'],awayIds:['Rafiq Mohamed','Yusuf Amod'],sets:[[2,6],[1,6],[5,10]]},
+    {slot:'16:00',winner:'home',games:[4,0],homeIds:['Mohamed Hoosein Patel','Zuhayr Ismail'],awayIds:['Eesa Moola','Muhammed Moola'],sets:[[6,3],[6,4],[10,6]]},
+  ]}},
+  { id:'lg-md2-cheetahs-eagles', round:2, league:'legacy', home:'lp-cheetahs', away:'lp-eagles', start:new Date('2026-07-25T17:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'home', totals:[8,3], rubbers:[
+    {slot:'17:00',winner:'home',games:[4,0],homeIds:['Sandeep Daya','Michael Smit'],awayIds:['Dian Erasmus','Akmeer Amod'],sets:[[6,0],[6,1],[10,2]]},
+    {slot:'17:00',winner:'home',games:[4,0],homeIds:['Aadam Nomani','Mikel Pillay'],awayIds:['Armaan Bhikhoo','Yahya Sujee'],sets:[[6,1],[6,2],[10,6]]},
+    {slot:'18:00',winner:'away',games:[0,3],homeIds:['Mohamed Nomani','Shoaib Nomani'],awayIds:['Mohamed Azhar Sujee','Sahal Yunus'],sets:[[3,6],[6,4],[3,10]]},
+  ]}},
+
+  // MATCH DAY 3 · 1 AUGUST 2026
+  { id:'lg-md3-badgers-cheetahs', round:3, league:'legacy', home:'lp-honey-badgers', away:'lp-cheetahs', start:new Date('2026-08-01T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'home', totals:[7,4], rubbers:[
+    {slot:'14:00',winner:'away',games:[0,4],homeIds:['Sailesh Nagar','Faheem Seedat'],awayIds:['Aadam Nomani','Mauritz van der Mescht'],sets:[[4,6],[0,6],[0,10]]},
+    {slot:'15:00',winner:'home',games:[4,0],homeIds:['Jude van den Berg','Reyhaan Seedat'],awayIds:['Mikel Pillay','Abdurahmaan Jogee'],sets:[[6,3],[6,1],[10,7]]},
+    {slot:'16:00',winner:'home',games:[3,0],homeIds:['Jameel Valley','Scharl van den Berg'],awayIds:['Shoaib Nomani','Mohamed Nomani'],sets:[[3,6],[6,3],[10,3]]},
+  ]}},
+  { id:'lg-md3-jackals-eagles', round:3, league:'legacy', home:'lp-jackals', away:'lp-eagles', start:new Date('2026-08-01T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'home', totals:[8,4], rubbers:[
+    {slot:'14:00',winner:'home',games:[4,0],homeIds:['Zuhayr Ismail','Dewan Duvenhage'],awayIds:['Shaheen Mohamed','Armaan Bhikhoo'],sets:[[6,1],[6,4],[12,10]]},
+    {slot:'15:00',winner:'away',games:[0,4],homeIds:['Yusuf Ismail','Stiaan Duvenhage'],awayIds:['Mohamed Azhar Sujee','Sahal Yunus'],sets:[[1,6],[4,6],[7,10]]},
+    {slot:'16:00',winner:'home',games:[4,0],homeIds:['Fahad Patel','Mohamed Hoosein Patel'],awayIds:['Akmeer Amod','Fiaz Bhikhoo'],sets:[[6,4],[6,4],[10,8]]},
+  ]}},
+
+  // 15 AUGUST 2026
   { id:'lg-2026-08-15-jackals-badgers', round:10, league:'legacy', home:'lp-jackals', away:'lp-honey-badgers', start:new Date('2026-08-15T13:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[3,7], rubbers:[
     {slot:'13:00',winner:'away',games:[0,3],homeIds:['Yusuf Ismail','Fahad Patel'],awayIds:['Scharl van den Berg','Jameel Valley'],sets:[[6,3],[3,6],[6,10]]},
     {slot:'13:00',winner:'away',games:[0,4],homeIds:['Mohamed Hoosein Patel','Spanner Mescht'],awayIds:['Jude van den Berg','Zandre de Kok'],sets:[[2,6],[2,6],[3,10]]},

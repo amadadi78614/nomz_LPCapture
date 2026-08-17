@@ -124,38 +124,65 @@ export default function HomeV3() {
     <main className="hv3">
       <section className="hv3-hero">
         <div>
-          <span className="hv3-kicker">MEN'S FRANCHISE LEAGUE · SEASON 3 CHAMPIONS</span>
-          <h1>Desert Falcons dethrone the champions.</h1>
-          <p>Desert Falcons beat two-time champions Sonic Viboras 14–8 in the Franchise League Final to claim the Season 3 crown.</p>
+          <span className="hv3-kicker">LADIES FRANCHISE LEAGUE · SEASON 2 · STARTS THIS WEEK</span>
+          <h1>The spotlight turns to the ladies.</h1>
+          <p>With the Men's Franchise League concluded and the Legacy League charging towards the playoff stages, the highly anticipated Season 2 of the Lowveld Ladies Franchise League is ready to take centre court.</p>
           <div className="hv3-actions">
-            <Link to="/leagues" className="hv3-primary">View Franchise League</Link>
-            <Link to="/rankings">Final MVP rankings</Link>
+            <Link to="/leagues?league=ladies" className="hv3-primary">Enter Ladies League</Link>
+            <Link to="/leagues?league=legacy">Legacy playoff race</Link>
           </div>
         </div>
         <div className="hv3-hero-panel">
-          <span>FRANCHISE LEAGUE FINAL · 14 AUGUST</span>
-          <strong>Desert Falcons 14–8 Sonic Viboras</strong>
-          <b>FALCONS ARE SEASON 3 CHAMPIONS</b>
-          <small>After knocking on the door in previous seasons, the Falcons finally topple the back-to-back champions and lift the Franchise League title.</small>
+          <span>THE BIGGEST LADIES FRANCHISE FIELD YET</span>
+          <strong>Season 2 starts this week</strong>
+          <b>A NEW CHAPTER FOR LOWVELD PADEL</b>
+          <small>More ladies than ever before are entering a Lowveld franchise league. New teams, new rivalries and a new title race are about to begin.</small>
         </div>
       </section>
 
       <section className="hv3-grid">
         <article>
-          <span className="hv3-kicker">THE CHAMPIONS</span>
-          <h2>Falcons finish the job.</h2>
-          <p>The final was locked at 4–4 before the Falcons surged ahead and closed out a memorable 14–8 championship victory.</p>
+          <span className="hv3-kicker">LADIES SEASON 2</span>
+          <h2>Our biggest ladies league yet.</h2>
+          <p>The largest group of ladies ever assembled for a Lowveld franchise league is ready to compete. The anticipation is huge — and the countdown is on.</p>
         </article>
         <article>
-          <span className="hv3-kicker">P1 · FINAL</span>
-          <h2>Uwais & Yusuf deliver on the biggest night.</h2>
-          <p>Uwais Patel and Yusuf Patel beat Heinrich Coomans and Anton Grote in the final, adding one last chapter to an extraordinary P1 MVP race.</p>
+          <span className="hv3-kicker">MEN'S SEASON 3 · COMPLETE</span>
+          <h2>Falcons leave the stage as champions.</h2>
+          <p>Desert Falcons closed the Men's Franchise League with a memorable 14–8 Grand Final victory over two-time champions Sonic Viboras.</p>
         </article>
         <article>
-          <span className="hv3-kicker">P3 · YOUTH WATCH</span>
-          <h2>Jude & Danie finish with another win.</h2>
-          <p>Jude van den Berg and Danie Rautenbach won together again in the final, capping a remarkable campaign for the Falcons' P3 pair.</p>
+          <span className="hv3-kicker">LP LEGACY · RUN-IN</span>
+          <h2>The playoff race is heating up.</h2>
+          <p>With the Legacy League moving towards its playoff stages, every remaining match carries serious weight before the postseason picture is locked in.</p>
         </article>
+      </section>
+
+      <section className="hv3-section">
+        <div className="hv3-heading">
+          <div>
+            <span className="hv3-kicker">STAY CLOSE TO THE ACTION</span>
+            <h2>Fixtures, results and updates all week.</h2>
+          </div>
+          <Link to="/leagues?league=ladies">Ladies League centre →</Link>
+        </div>
+        <div className="hv3-grid">
+          <article>
+            <span className="hv3-kicker">WHATSAPP COMMUNITY</span>
+            <h2>Watch the Lowveld Padel WhatsApp group.</h2>
+            <p>Further Ladies League fixtures, team news, match updates and announcements will be shared through the Lowveld Padel WhatsApp group as the season gets underway.</p>
+          </article>
+          <article>
+            <span className="hv3-kicker">NEW RIVALRIES</span>
+            <h2>Fresh teams. Fresh pressure.</h2>
+            <p>Season 2 brings a deeper field and a new set of match-ups, with every franchise starting from zero and every point there to be won.</p>
+          </article>
+          <article>
+            <span className="hv3-kicker">THIS WEEK</span>
+            <h2>It all begins now.</h2>
+            <p>The men's champions have been crowned. Legacy is heading for the playoffs. Now the ladies take centre stage.</p>
+          </article>
+        </div>
       </section>
 
       <section className="hv3-section">

@@ -1,7 +1,7 @@
 import { FRANCHISES, PLAYERS } from './seed';
 
 const S = {
-  'arctic-angels': { name: 'Arctic Angels', owner: 'Michelle Wagner', captain: 'Noerien Moolla', players: ['Aldorette Van Der Mescht','Annelle Whyte','Brigitte du Preez','Deeja Badat','Lana Nel','Michelle Wagner','Mieke Swart','Nazrana Meer','Noerien Moolla','Storme Spearpoint'] },
+  'arctic-angels': { name: 'Arctic Angels', owner: 'Michelle Wagner', captain: 'Noerien Moolla', players: ['Aldorette Van Der Mescht','Zantelle Hopkins','Brigitte du Preez','Deeja Badat','Lana Nel','Michelle Wagner','Mieke Swart','Nazrana Meer','Noerien Moolla','Storme Spearpoint'] },
   'backhand-blossoms': { name: 'Backhand Blossoms', owner: 'Nasreen Methar', captain: 'Sunel Grote', players: ['Amor Caromba','Dhiya Ismail','Diyaana Nomani','Faeeza Patel','Imaan Packery','Jana Kotze','Nasreen Methar','Rinie De Klerk','Sunel Grote','Zahra Jogi'] },
   'desert-roses': { name: 'Desert Roses', owner: 'Michelle Human', captain: 'Lia Odendaal', players: ['Aletia Van Rooyen','Anje Hope','Annali Hugo','Fazila Hafesji','Hunaynah Mungalee','Icem Wilken','Lia Odendaal','Michelle Human','Tasneem Sheikh','Marise Schutte'] },
   'lunar-lillies': { name: 'Lunar Lillies', owner: 'Dirkie Coomans', captain: 'Jeanetha Boshoff', players: ['Bianca Renell Morgan','Dalene Minnaar','Dirkie Coomans','Firdaus Hoosen','Heleen Van Der Mescht','Jeanetha Boshoff','Lizle Tilburn','Mari Jaquire','Miané Swart','Stephanie Steenekamp'] },

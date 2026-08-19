@@ -1,7 +1,7 @@
 import { LADIES_S2_TEAMS } from './ladiesSeason2Data';
 
 // Ladies Franchise League Season 2 — Matchweek 1 results received 19 August 2026.
-// Lunar Lillies v Desert Roses is currently a PARTIAL fixture: two rubbers supplied, running score 3-4.
+// Lunar Lillies v Desert Roses is currently PARTIAL: two rubbers supplied, running score 3–4.
 export const LADIES_S2_ROUND1_RESULTS = [
   {
     id: 'ladies-s2-2026-08-19-phoenix-arctic', date: '2026-08-19', venue: 'Play 360', status: 'FT',
@@ -36,22 +36,27 @@ const teamByName = Object.fromEntries(LADIES_S2_TEAMS.map((team) => [team.name, 
 const playerByName = Object.fromEntries(LADIES_S2_TEAMS.flatMap((team) => team.players.map((player) => [player.name, player])));
 
 LADIES_S2_TEAMS.forEach((team) => {
-  team.stats = { played: 0, wins: 0, losses: 0, points: 0, pointsFor: 0, pointsAgainst: 0, differential: 0 };
+  team.stats = { played: 0, wins: 0, losses: 0, points: 0, pointsFor: 0, pointsAgainst: 0, differential: 0, status: 'Awaiting result' };
   team.players.forEach((player) => Object.assign(player.stats, { played: 0, wins: 0, losses: 0, rubbers_won: 0, bonus_points: 0, mvp_points: 0 }));
 });
 
 LADIES_S2_ROUND1_RESULTS.forEach((match) => {
   const home = teamByName[match.home]; const away = teamByName[match.away];
-  // Only completed franchise fixtures count as P/W/L in the league table. Partial rubber points are displayed but not tabled yet.
-  if (home && away && match.status === 'FT') {
-    home.stats.played += 1; away.stats.played += 1;
+  if (home && away) {
+    // Rubber points always count immediately in the live table, including partial fixtures.
     home.stats.points += match.homePoints; away.stats.points += match.awayPoints;
     home.stats.pointsFor += match.homePoints; home.stats.pointsAgainst += match.awayPoints;
     away.stats.pointsFor += match.awayPoints; away.stats.pointsAgainst += match.homePoints;
     home.stats.differential = home.stats.pointsFor - home.stats.pointsAgainst;
     away.stats.differential = away.stats.pointsFor - away.stats.pointsAgainst;
-    if (match.homePoints > match.awayPoints) { home.stats.wins += 1; away.stats.losses += 1; }
-    else { away.stats.wins += 1; home.stats.losses += 1; }
+    home.stats.status = match.status; away.stats.status = match.status;
+
+    // Played / won / lost is only final once the franchise fixture is complete.
+    if (match.status === 'FT') {
+      home.stats.played += 1; away.stats.played += 1;
+      if (match.homePoints > match.awayPoints) { home.stats.wins += 1; away.stats.losses += 1; }
+      else { away.stats.wins += 1; home.stats.losses += 1; }
+    }
   }
   match.rubbers.forEach((rubber) => {
     const homeWon = rubber.homePoints > rubber.awayPoints;
@@ -72,7 +77,7 @@ function renderLadiesRound1Live() {
   const root = document.querySelector('.lpv2');
   if (root && !root.querySelector('[data-ladies-round1-live]')) {
     const section = document.createElement('section'); section.className = 'lpv2-section'; section.dataset.ladiesRound1Live = 'true';
-    section.innerHTML = `<div class="lpv2-section-heading"><span class="lpv2-kicker">LADIES FRANCHISE LEAGUE · MATCHWEEK 1</span><h2>Season 2 is underway</h2><p class="muted">Opening-night results · 19 August 2026</p></div><div class="grid cols-2">${LADIES_S2_ROUND1_RESULTS.map(m => `<div class="card" style="padding:16px"><span class="eyebrow">${m.status} · ${m.venue}</span><div class="row spread" style="margin-top:10px"><b>${m.home}</b><strong>${m.homePoints}</strong></div><div class="row spread"><b>${m.away}</b><strong>${m.awayPoints}</strong></div></div>`).join('')}</div><p class="muted" style="font-size:11px;margin-top:8px">Lunar Lillies v Desert Roses currently reflects the two officially supplied rubbers only (3–4 running score). The franchise result will finalise when the remaining scores are received.</p>`;
+    section.innerHTML = `<div class="lpv2-section-heading"><span class="lpv2-kicker">LADIES FRANCHISE LEAGUE · MATCHWEEK 1</span><h2>Season 2 is underway</h2><p class="muted">Opening-night scores · 19 August 2026</p></div><div class="grid cols-2">${LADIES_S2_ROUND1_RESULTS.map(m => `<div class="card" style="padding:16px"><span class="eyebrow">${m.status} · ${m.venue}</span><div class="row spread" style="margin-top:10px"><b>${m.home}</b><strong>${m.homePoints}</strong></div><div class="row spread"><b>${m.away}</b><strong>${m.awayPoints}</strong></div></div>`).join('')}</div><p class="muted" style="font-size:11px;margin-top:8px">Lunar Lillies v Desert Roses reflects the two officially supplied rubbers only: Lunar 3–4 Desert. The fixture remains partial until the remaining scores are received.</p>`;
     const pulse = root.querySelector('.lpv2-pulse'); if (pulse?.nextSibling) root.insertBefore(section, pulse.nextSibling); else root.appendChild(section);
   }
 
@@ -81,7 +86,7 @@ function renderLadiesRound1Live() {
     const ladiesActive = page && [...page.querySelectorAll('button')].some(b => b.classList.contains('on') && b.textContent.includes('Ladies Franchise League'));
     if (ladiesActive && !page.querySelector('[data-ladies-round1-table]')) {
       const section = document.createElement('section'); section.dataset.ladiesRound1Table = 'true'; section.className = 'card'; section.style.cssText = 'padding:18px;margin:16px 0';
-      section.innerHTML = `<span class="eyebrow">Season 2 · Live table</span><h2 class="display" style="margin:5px 0 12px">Standings after completed Matchweek 1 fixtures</h2>${LADIES_S2_STANDINGS.map((t,i) => `<div class="row spread" style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>${i+1}. ${t.name}</span><b>${t.points} pts</b></div>`).join('')}<h3 class="display" style="margin:18px 0 8px">Player rankings</h3>${LADIES_S2_RANKINGS.slice(0,20).map((p,i) => `<div class="row spread" style="padding:7px 0"><span>${i+1}. ${p.name} <small class="muted">· ${p.team}</small></span><b>${p.mvp_points}</b></div>`).join('')}`;
+      section.innerHTML = `<span class="eyebrow">Season 2 · Matchweek 1 live</span><h2 class="display" style="margin:5px 0 6px">Live standings</h2><p class="muted" style="margin:0 0 12px;font-size:11px">Pts = rubber points accumulated from results received. P/W/L only finalise when a franchise fixture is complete.</p>${LADIES_S2_STANDINGS.map((t,i) => `<div class="row spread" style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>${i+1}. ${t.name}${t.status !== 'FT' && t.status !== 'Awaiting result' ? ` <small class="muted">· partial</small>` : ''}</span><b>${t.points} pts</b></div>`).join('')}<h3 class="display" style="margin:18px 0 4px">Player rankings</h3><p class="muted" style="margin:0 0 8px;font-size:11px">MVP pts = points earned in completed individual rubbers received so far.</p>${LADIES_S2_RANKINGS.slice(0,20).map((p,i) => `<div class="row spread" style="padding:7px 0"><span>${i+1}. ${p.name} <small class="muted">· ${p.team}</small></span><b>${p.mvp_points} MVP pts</b></div>`).join('')}`;
       page.prepend(section);
     }
   }

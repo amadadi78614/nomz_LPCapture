@@ -15,6 +15,7 @@ import './data/grandFinalUpdate';
 import './data/ladiesSeason2Data';
 import './data/ladiesSeason2HomeSync';
 import './data/ladiesSeason2LeagueSync';
+import './data/ladiesSeason2Round1Update';
 import './styles/global.css';
 import './styles/career-table-mobile.css';
 import './styles/home-premium.css';

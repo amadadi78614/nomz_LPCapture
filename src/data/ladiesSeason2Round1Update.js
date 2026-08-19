@@ -1,10 +1,10 @@
 import { LADIES_S2_TEAMS } from './ladiesSeason2Data';
 
 // Ladies Franchise League Season 2 — Matchweek 1 results received 19 August 2026.
-// Note: Lunar Lillies v Desert Roses is intentionally not recorded here because no result was supplied.
+// Lunar Lillies v Desert Roses is currently a PARTIAL fixture: two rubbers supplied, running score 3-4.
 export const LADIES_S2_ROUND1_RESULTS = [
   {
-    id: 'ladies-s2-2026-08-19-phoenix-arctic', date: '2026-08-19', venue: 'Play 360',
+    id: 'ladies-s2-2026-08-19-phoenix-arctic', date: '2026-08-19', venue: 'Play 360', status: 'FT',
     home: 'Phoenix Flames', away: 'Arctic Angels', homePoints: 8, awayPoints: 7,
     rubbers: [
       { home: ['Martinette Meyer','Samantha de Araujo'], away: ['Mieke Swart','Deeja Badat'], sets: ['6-4','6-2','10-4'], homePoints: 4, awayPoints: 0 },
@@ -13,13 +13,21 @@ export const LADIES_S2_ROUND1_RESULTS = [
     ],
   },
   {
-    id: 'ladies-s2-2026-08-19-blossoms-novas', date: '2026-08-19', venue: 'Padel 24',
+    id: 'ladies-s2-2026-08-19-blossoms-novas', date: '2026-08-19', venue: 'Padel 24', status: 'FT',
     home: 'Backhand Blossoms', away: 'Net Novas', homePoints: 8, awayPoints: 7,
     rubbers: [
       { home: ['Amor Caromba','Diyaana Nomani'], away: ['Maxine Lambourn','Mufeedah Hoosen'], sets: ['1-6','4-6','10-6'], homePoints: 0, awayPoints: 3 },
       { home: ['Sunel Grote','Imaan Packery'], away: ['Simone Maritz','Carien Vos'], sets: ['6-2','6-4','10-5'], homePoints: 4, awayPoints: 0 },
       { home: ['Rinie De Klerk','Jana Kotze'], away: ['Emily Anders','Mariette Venter'], sets: ['4-6','3-6','6-10'], homePoints: 0, awayPoints: 4 },
       { home: ['Nasreen Methar','Zahra Jogi'], away: ['Imaan Shaik','Larisa de Kock'], sets: ['6-3','6-0','10-5'], homePoints: 4, awayPoints: 0 },
+    ],
+  },
+  {
+    id: 'ladies-s2-2026-08-19-lunar-desert', date: '2026-08-19', venue: 'Padel 24', status: 'LIVE / PARTIAL',
+    home: 'Lunar Lillies', away: 'Desert Roses', homePoints: 3, awayPoints: 4,
+    rubbers: [
+      { home: ['Bianca Renell Morgan','Lizle Tilburn'], away: ['Aletia Van Rooyen','Annali Hugo'], sets: ['1-6','1-6','4-10'], homePoints: 0, awayPoints: 4 },
+      { home: ['Stephanie Steenekamp','Dalene Minnaar'], away: ['Icem Wilken','Tasneem Sheikh'], sets: ['6-2','6-3','12-14'], homePoints: 3, awayPoints: 0 },
     ],
   },
 ];
@@ -34,7 +42,8 @@ LADIES_S2_TEAMS.forEach((team) => {
 
 LADIES_S2_ROUND1_RESULTS.forEach((match) => {
   const home = teamByName[match.home]; const away = teamByName[match.away];
-  if (home && away) {
+  // Only completed franchise fixtures count as P/W/L in the league table. Partial rubber points are displayed but not tabled yet.
+  if (home && away && match.status === 'FT') {
     home.stats.played += 1; away.stats.played += 1;
     home.stats.points += match.homePoints; away.stats.points += match.awayPoints;
     home.stats.pointsFor += match.homePoints; home.stats.pointsAgainst += match.awayPoints;
@@ -63,7 +72,7 @@ function renderLadiesRound1Live() {
   const root = document.querySelector('.lpv2');
   if (root && !root.querySelector('[data-ladies-round1-live]')) {
     const section = document.createElement('section'); section.className = 'lpv2-section'; section.dataset.ladiesRound1Live = 'true';
-    section.innerHTML = `<div class="lpv2-section-heading"><span class="lpv2-kicker">LADIES FRANCHISE LEAGUE · MATCHWEEK 1</span><h2>Season 2 is underway</h2><p class="muted">Opening-night results · 19 August 2026</p></div><div class="grid cols-2">${LADIES_S2_ROUND1_RESULTS.map(m => `<div class="card" style="padding:16px"><span class="eyebrow">FT · ${m.venue}</span><div class="row spread" style="margin-top:10px"><b>${m.home}</b><strong>${m.homePoints}</strong></div><div class="row spread"><b>${m.away}</b><strong>${m.awayPoints}</strong></div></div>`).join('')}</div><p class="muted" style="font-size:11px;margin-top:8px">Lunar Lillies v Desert Roses will update when the official result is received.</p>`;
+    section.innerHTML = `<div class="lpv2-section-heading"><span class="lpv2-kicker">LADIES FRANCHISE LEAGUE · MATCHWEEK 1</span><h2>Season 2 is underway</h2><p class="muted">Opening-night results · 19 August 2026</p></div><div class="grid cols-2">${LADIES_S2_ROUND1_RESULTS.map(m => `<div class="card" style="padding:16px"><span class="eyebrow">${m.status} · ${m.venue}</span><div class="row spread" style="margin-top:10px"><b>${m.home}</b><strong>${m.homePoints}</strong></div><div class="row spread"><b>${m.away}</b><strong>${m.awayPoints}</strong></div></div>`).join('')}</div><p class="muted" style="font-size:11px;margin-top:8px">Lunar Lillies v Desert Roses currently reflects the two officially supplied rubbers only (3–4 running score). The franchise result will finalise when the remaining scores are received.</p>`;
     const pulse = root.querySelector('.lpv2-pulse'); if (pulse?.nextSibling) root.insertBefore(section, pulse.nextSibling); else root.appendChild(section);
   }
 
@@ -72,7 +81,7 @@ function renderLadiesRound1Live() {
     const ladiesActive = page && [...page.querySelectorAll('button')].some(b => b.classList.contains('on') && b.textContent.includes('Ladies Franchise League'));
     if (ladiesActive && !page.querySelector('[data-ladies-round1-table]')) {
       const section = document.createElement('section'); section.dataset.ladiesRound1Table = 'true'; section.className = 'card'; section.style.cssText = 'padding:18px;margin:16px 0';
-      section.innerHTML = `<span class="eyebrow">Season 2 · Live table</span><h2 class="display" style="margin:5px 0 12px">Standings after reported Matchweek 1 results</h2>${LADIES_S2_STANDINGS.map((t,i) => `<div class="row spread" style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>${i+1}. ${t.name}</span><b>${t.points} pts</b></div>`).join('')}<h3 class="display" style="margin:18px 0 8px">Player rankings</h3>${LADIES_S2_RANKINGS.slice(0,20).map((p,i) => `<div class="row spread" style="padding:7px 0"><span>${i+1}. ${p.name} <small class="muted">· ${p.team}</small></span><b>${p.mvp_points}</b></div>`).join('')}`;
+      section.innerHTML = `<span class="eyebrow">Season 2 · Live table</span><h2 class="display" style="margin:5px 0 12px">Standings after completed Matchweek 1 fixtures</h2>${LADIES_S2_STANDINGS.map((t,i) => `<div class="row spread" style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,.08)"><span>${i+1}. ${t.name}</span><b>${t.points} pts</b></div>`).join('')}<h3 class="display" style="margin:18px 0 8px">Player rankings</h3>${LADIES_S2_RANKINGS.slice(0,20).map((p,i) => `<div class="row spread" style="padding:7px 0"><span>${i+1}. ${p.name} <small class="muted">· ${p.team}</small></span><b>${p.mvp_points}</b></div>`).join('')}`;
       page.prepend(section);
     }
   }

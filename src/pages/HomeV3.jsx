@@ -1,262 +1,197 @@
 import { Link } from 'react-router-dom';
-import { FIXTURES, FRANCHISES, STANDINGS, franchiseById } from '../data/seed';
+import { FRANCHISES, STANDINGS, franchiseById, legacyFranchiseById } from '../data/seed';
+import { LEGACY_LIVE_STANDINGS } from '../data/legacyLive';
 import '../styles/home-v3.css';
 
-const LEGACY_RESULTS = [
-  { winner: 'LP Rhinos', score: '7–3', loser: 'LP Leopards' },
-  { winner: 'LP Cheetahs', score: '7–4', loser: 'LP Leopards' },
-  { winner: 'LP Eagles', score: '6–3', loser: 'LP Rhinos' },
-  { winner: 'Honey Badgers', score: '7–3', loser: 'LP Jackals' },
+const TODAY_RESULTS = [
+  { home: 'LP Cheetahs', homeScore: 9, awayScore: 0, away: 'LP Jackals' },
+  { home: 'LP Eagles', homeScore: 4, awayScore: 7, away: 'LP Leopards' },
+  { home: 'Honey Badgers', homeScore: 4, awayScore: 8, away: 'LP Rhinos' },
 ];
 
-const isRegularSeasonFixture = (fixture) =>
-  fixture.league === 'mens'
-  && fixture.status === 'final'
-  && !fixture.stage
-  && Number(fixture.round) <= 6;
-
-function buildHomepageDifferentials() {
-  const stats = Object.fromEntries(
-    FRANCHISES.filter((franchise) => franchise.league === 'mens')
-      .map((franchise) => [franchise.id, { sd: 0, gd: 0, scoredRubbers: 0 }]),
-  );
-
-  FIXTURES.filter(isRegularSeasonFixture).forEach((fixture) => {
-    (fixture.score?.rubbers || []).forEach((rubber) => {
-      if (!Array.isArray(rubber.sets) || rubber.sets.length === 0) return;
-
-      let homeSets = 0;
-      let awaySets = 0;
-      let homeGames = 0;
-      let awayGames = 0;
-      let hasValidSet = false;
-
-      rubber.sets.forEach((setScore) => {
-        if (!Array.isArray(setScore) || setScore.length < 2) return;
-        const home = Number(setScore[0]);
-        const away = Number(setScore[1]);
-        if (!Number.isFinite(home) || !Number.isFinite(away)) return;
-
-        hasValidSet = true;
-        homeGames += home;
-        awayGames += away;
-        if (home > away) homeSets += 1;
-        if (away > home) awaySets += 1;
-      });
-
-      if (!hasValidSet) return;
-
-      if (stats[fixture.home]) {
-        stats[fixture.home].sd += homeSets - awaySets;
-        stats[fixture.home].gd += homeGames - awayGames;
-        stats[fixture.home].scoredRubbers += 1;
-      }
-      if (stats[fixture.away]) {
-        stats[fixture.away].sd += awaySets - homeSets;
-        stats[fixture.away].gd += awayGames - homeGames;
-        stats[fixture.away].scoredRubbers += 1;
-      }
-    });
-  });
-
-  return stats;
-}
-
-const HOMEPAGE_DIFFERENTIALS = buildHomepageDifferentials();
+const channels = [
+  {
+    eyebrow: 'LP LEGACY',
+    title: 'The league phase is complete.',
+    copy: 'Cheetahs finish top on 36 points after a dominant final-round statement. The playoff picture is locked.',
+    stat: '36',
+    statLabel: 'PTS · CHEETAHS',
+    to: '/leagues?league=legacy',
+    cta: 'Open Legacy League',
+    tone: 'gold',
+  },
+  {
+    eyebrow: 'LADIES FRANCHISE LEAGUE',
+    title: 'Season 2 takes centre court.',
+    copy: 'A deeper field, fresh rivalries and the biggest ladies franchise season yet. Follow fixtures, teams and the title race.',
+    stat: 'S2',
+    statLabel: 'NOW LIVE',
+    to: '/leagues?league=ladies',
+    cta: 'Enter Ladies League',
+    tone: 'blue',
+  },
+  {
+    eyebrow: "MEN'S FRANCHISE LEAGUE",
+    title: 'Falcons reign as champions.',
+    copy: 'Season 3 is in the books after Desert Falcons beat two-time champions Sonic Viboras 14–8 in the Grand Final.',
+    stat: '14–8',
+    statLabel: 'GRAND FINAL',
+    to: '/leagues?league=mens',
+    cta: 'Season 3 archive',
+    tone: 'red',
+  },
+];
 
 function signed(value) {
-  const number = Number(value) || 0;
-  return number > 0 ? `+${number}` : String(number);
+  const n = Number(value) || 0;
+  return n > 0 ? `+${n}` : String(n);
 }
 
-function differentialClass(value) {
-  const number = Number(value) || 0;
-  if (number > 0) return 'hv3-pos';
-  if (number < 0) return 'hv3-neg';
-  return '';
+function legacyRows() {
+  return [...LEGACY_LIVE_STANDINGS].map((row) => ({ ...row, franchise: legacyFranchiseById(row.franchise_id) }));
 }
 
-function regularSeasonRows() {
+function mensLeaders() {
   return [...(STANDINGS.mens?.franchise || [])]
-    .map((row) => ({
-      id: row.franchise_id,
-      r: Math.min(6, Math.round((Number(row.played) || 0) / 6)),
-      p: Number(row.played) || 0,
-      w: Number(row.won) || 0,
-      l: Number(row.lost) || 0,
-      bp: Number(row.bp) || 0,
-      pts: Number(row.points) || 0,
-    }))
-    .sort((a, b) => b.pts - a.pts || b.w - a.w || b.bp - a.bp || a.l - b.l);
-}
-
-function StandingRow({ row, index }) {
-  const franchise = franchiseById(row.id);
-  const differential = HOMEPAGE_DIFFERENTIALS[row.id] || { sd: 0, gd: 0, scoredRubbers: 0 };
-  const rd = row.w - row.l;
-
-  return (
-    <tr>
-      <td data-label="#">{index + 1}</td>
-      <td data-label="Franchise">
-        <Link to={`/franchise/${row.id}`} className="hv3-team">
-          <img src={franchise.logo} alt="" />
-          <span>{franchise.name}</span>
-        </Link>
-      </td>
-      <td data-label="Rounds">{row.r}</td>
-      <td data-label="Rubbers">{row.p}</td>
-      <td data-label="Won">{row.w}</td>
-      <td data-label="Lost">{row.l}</td>
-      <td data-label="RD" className={differentialClass(rd)}>{signed(rd)}</td>
-      <td data-label="SD" className={differentialClass(differential.sd)} title={`From ${differential.scoredRubbers} regular-season rubbers with recorded set scores`}>{signed(differential.sd)}</td>
-      <td data-label="GD" className={differentialClass(differential.gd)} title={`From ${differential.scoredRubbers} regular-season rubbers with recorded set scores`}>{signed(differential.gd)}</td>
-      <td data-label="BP">{row.bp}</td>
-      <td data-label="Points"><strong>{row.pts}</strong></td>
-    </tr>
-  );
+    .sort((a, b) => Number(b.points || 0) - Number(a.points || 0))
+    .slice(0, 3)
+    .map((row) => ({ ...row, franchise: franchiseById(row.franchise_id) }));
 }
 
 export default function HomeV3() {
-  const standings = regularSeasonRows();
+  const legacy = legacyRows();
+  const topThree = legacy.slice(0, 3);
+  const mensTopThree = mensLeaders();
+  const mensCount = FRANCHISES.filter((f) => f.league === 'mens').length;
 
   return (
     <main className="hv3">
       <section className="hv3-hero">
-        <div>
-          <span className="hv3-kicker">LADIES FRANCHISE LEAGUE · SEASON 2 · STARTS THIS WEEK</span>
-          <h1>The spotlight turns to the ladies.</h1>
-          <p>With the Men's Franchise League concluded and the Legacy League charging towards the playoff stages, the highly anticipated Season 2 of the Lowveld Ladies Franchise League is ready to take centre court.</p>
+        <div className="hv3-hero-copy">
+          <div className="hv3-live-pill"><span /> LOWVELD PADEL · 22 AUGUST 2026</div>
+          <p className="hv3-overline">LP LEGACY LEAGUE · FINAL REGULAR-SEASON TABLE</p>
+          <h1>CHEETAHS<br /><em>FINISH ON TOP.</em></h1>
+          <p className="hv3-lead">Five fixtures. Four wins. Thirty-six points. The Cheetahs close the league phase at No. 1 and carry the momentum into the playoffs.</p>
           <div className="hv3-actions">
-            <Link to="/leagues?league=ladies" className="hv3-primary">Enter Ladies League</Link>
-            <Link to="/leagues?league=legacy">Legacy playoff race</Link>
+            <Link to="/leagues?league=legacy" className="hv3-primary">View final table</Link>
+            <Link to="/rankings">Player rankings</Link>
           </div>
         </div>
-        <div className="hv3-hero-panel">
-          <span>THE BIGGEST LADIES FRANCHISE FIELD YET</span>
-          <strong>Season 2 starts this week</strong>
-          <b>A NEW CHAPTER FOR LOWVELD PADEL</b>
-          <small>More ladies than ever before are entering a Lowveld franchise league. New teams, new rivalries and a new title race are about to begin.</small>
-        </div>
-      </section>
 
-      <section className="hv3-grid">
-        <article>
-          <span className="hv3-kicker">LADIES SEASON 2</span>
-          <h2>Our biggest ladies league yet.</h2>
-          <p>The largest group of ladies ever assembled for a Lowveld franchise league is ready to compete. The anticipation is huge — and the countdown is on.</p>
-        </article>
-        <article>
-          <span className="hv3-kicker">MEN'S SEASON 3 · COMPLETE</span>
-          <h2>Falcons leave the stage as champions.</h2>
-          <p>Desert Falcons closed the Men's Franchise League with a memorable 14–8 Grand Final victory over two-time champions Sonic Viboras.</p>
-        </article>
-        <article>
-          <span className="hv3-kicker">LP LEGACY · RUN-IN</span>
-          <h2>The playoff race is heating up.</h2>
-          <p>With the Legacy League moving towards its playoff stages, every remaining match carries serious weight before the postseason picture is locked in.</p>
-        </article>
-      </section>
-
-      <section className="hv3-section">
-        <div className="hv3-heading">
-          <div>
-            <span className="hv3-kicker">STAY CLOSE TO THE ACTION</span>
-            <h2>Fixtures, results and updates all week.</h2>
+        <aside className="hv3-hero-scoreboard">
+          <div className="hv3-scoreboard-head">
+            <span>FINAL TABLE</span>
+            <b>TOP 3</b>
           </div>
-          <Link to="/leagues?league=ladies">Ladies League centre →</Link>
-        </div>
-        <div className="hv3-grid">
-          <article>
-            <span className="hv3-kicker">WHATSAPP COMMUNITY</span>
-            <h2>Watch the Lowveld Padel WhatsApp group.</h2>
-            <p>Further Ladies League fixtures, team news, match updates and announcements will be shared through the Lowveld Padel WhatsApp group as the season gets underway.</p>
-          </article>
-          <article>
-            <span className="hv3-kicker">NEW RIVALRIES</span>
-            <h2>Fresh teams. Fresh pressure.</h2>
-            <p>Season 2 brings a deeper field and a new set of match-ups, with every franchise starting from zero and every point there to be won.</p>
-          </article>
-          <article>
-            <span className="hv3-kicker">THIS WEEK</span>
-            <h2>It all begins now.</h2>
-            <p>The men's champions have been crowned. Legacy is heading for the playoffs. Now the ladies take centre stage.</p>
-          </article>
-        </div>
-      </section>
-
-      <section className="hv3-section">
-        <div className="hv3-heading">
-          <div>
-            <span className="hv3-kicker">SEASON 3 AWARDS</span>
-            <h2>Men's Franchise League MVPs</h2>
+          {topThree.map((row, index) => (
+            <Link className={`hv3-podium-row hv3-podium-${index + 1}`} to={`/legacy-franchise/${row.franchise_id}`} key={row.franchise_id}>
+              <span className="hv3-rank">{index + 1}</span>
+              {row.franchise?.logo && <img src={row.franchise.logo} alt="" />}
+              <span className="hv3-podium-name">{row.franchise?.name || row.franchise_id}</span>
+              <strong>{row.points}</strong>
+              <small>PTS</small>
+            </Link>
+          ))}
+          <div className="hv3-hero-foot">
+            <span>League phase complete</span>
+            <Link to="/leagues?league=legacy">Full standings →</Link>
           </div>
-          <Link to="/rankings">Full player rankings →</Link>
-        </div>
-        <div className="hv3-grid">
-          <article>
-            <span className="hv3-kicker">P1 MVP · JOINT WINNERS</span>
-            <h2>Yusuf Patel & Uwais Patel</h2>
-            <p>The Desert Falcons pair were inseparable across the season and finished the job together in the final.</p>
-          </article>
-          <article>
-            <span className="hv3-kicker">P2 MVP</span>
-            <h2>Adil Patel</h2>
-            <p>The Sahara Lions standout takes the P2 MVP award after an exceptional Season 3 campaign.</p>
-          </article>
-          <article>
-            <span className="hv3-kicker">P3 MVP · JOINT WINNERS</span>
-            <h2>Danie Rautenbach & Jude van den Berg</h2>
-            <p>The Falcons pair close out Season 3 as joint P3 MVPs after another winning performance in the Grand Final.</p>
-          </article>
-        </div>
+        </aside>
       </section>
 
-      <section className="hv3-section">
-        <div className="hv3-heading">
-          <div>
-            <span className="hv3-kicker">FINAL REGULAR-SEASON POSITION</span>
-            <h2>Men's Franchise League standings</h2>
-          </div>
-          <Link to="/leagues">Full league centre →</Link>
+      <section className="hv3-score-strip" aria-label="Latest results">
+        <div className="hv3-score-strip-title">
+          <span className="hv3-dot" />
+          <div><b>LATEST RESULTS</b><small>22 AUG · MATCHDAYS 13–14</small></div>
         </div>
-
-        <div className="hv3-table-wrap">
-          <table className="hv3-table">
-            <thead>
-              <tr>
-                <th>#</th><th>Franchise</th><th>R</th><th>P</th><th>W</th><th>L</th>
-                <th title="Rubber difference">RD</th>
-                <th title="Set difference">SD</th>
-                <th title="Game difference">GD</th>
-                <th>BP</th><th>Pts</th>
-              </tr>
-            </thead>
-            <tbody>
-              {standings.map((row, index) => <StandingRow key={row.id} row={row} index={index} />)}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="hv3-note">
-          <strong>Six-round regular season:</strong> every franchise played six fixtures before the playoffs. Playoff and final results appear separately and do not change the regular-season table.
-          <br />
-          R = rounds · P = rubbers · RD = rubber difference · SD = set difference · GD = game difference · BP = bonus points.
-        </div>
-      </section>
-
-      <section className="hv3-section hv3-closing">
-        <span className="hv3-kicker">LP LEGACY · 15 AUGUST 2026</span>
-        <h2>Four fresh Legacy results reshape the table.</h2>
-        {LEGACY_RESULTS.map((result) => (
-          <div className="hv3-score" key={`${result.winner}-${result.loser}`}>
-            <span>{result.winner}</span><strong>{result.score}</strong><span>{result.loser}</span>
+        {TODAY_RESULTS.map((result) => (
+          <div className="hv3-result" key={`${result.home}-${result.away}`}>
+            <span>{result.home}</span>
+            <strong>{result.homeScore}<i>–</i>{result.awayScore}</strong>
+            <span>{result.away}</span>
           </div>
         ))}
+        <Link className="hv3-results-link" to="/leagues?league=legacy">All results →</Link>
+      </section>
+
+      <section className="hv3-channel-section">
+        <div className="hv3-section-heading">
+          <div>
+            <span className="hv3-kicker">YOUR LEAGUES</span>
+            <h2>Three competitions. One Lowveld.</h2>
+          </div>
+          <p>Move straight into the competition you follow.</p>
+        </div>
+        <div className="hv3-channel-grid">
+          {channels.map((channel) => (
+            <Link to={channel.to} className={`hv3-channel hv3-channel-${channel.tone}`} key={channel.title}>
+              <div>
+                <span className="hv3-kicker">{channel.eyebrow}</span>
+                <h3>{channel.title}</h3>
+                <p>{channel.copy}</p>
+              </div>
+              <div className="hv3-channel-bottom">
+                <div className="hv3-channel-stat"><strong>{channel.stat}</strong><span>{channel.statLabel}</span></div>
+                <b>{channel.cta} →</b>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="hv3-split">
+        <div className="hv3-panel hv3-table-panel">
+          <div className="hv3-panel-head">
+            <div><span className="hv3-kicker">LP LEGACY</span><h2>Final standings</h2></div>
+            <Link to="/leagues?league=legacy">League centre →</Link>
+          </div>
+          <div className="hv3-legacy-table">
+            <div className="hv3-legacy-head"><span>#</span><span>TEAM</span><span>P</span><span>W</span><span>GD</span><span>PTS</span></div>
+            {legacy.map((row, index) => (
+              <Link to={`/legacy-franchise/${row.franchise_id}`} className={index === 0 ? 'hv3-legacy-row is-leader' : 'hv3-legacy-row'} key={row.franchise_id}>
+                <span>{index + 1}</span>
+                <span className="hv3-legacy-team">{row.franchise?.logo && <img src={row.franchise.logo} alt="" />}<b>{row.franchise?.name || row.franchise_id}</b></span>
+                <span>{row.played}</span>
+                <span>{row.won}</span>
+                <span className={row.gd > 0 ? 'pos' : row.gd < 0 ? 'neg' : ''}>{signed(row.gd)}</span>
+                <strong>{row.points}</strong>
+              </Link>
+            ))}
+          </div>
+          <p className="hv3-table-note">All six teams have completed five league fixtures. Rankings are ordered by accumulated Legacy League points.</p>
+        </div>
+
+        <aside className="hv3-panel hv3-feature-panel">
+          <span className="hv3-kicker">THIS WEEK'S SPOTLIGHT</span>
+          <div className="hv3-feature-number">S2</div>
+          <h2>Now the ladies take over.</h2>
+          <p>The men's champions have been crowned. Legacy has completed its league phase. The next chapter belongs to the Ladies Franchise League.</p>
+          <div className="hv3-feature-list">
+            <span><b>01</b> Fresh franchises and rivalries</span>
+            <span><b>02</b> Fixtures and standings in one hub</span>
+            <span><b>03</b> Rankings updated through the season</span>
+          </div>
+          <Link to="/leagues?league=ladies" className="hv3-primary hv3-wide">Follow Season 2</Link>
+        </aside>
+      </section>
+
+      <section className="hv3-data-row">
+        <article><span className="hv3-kicker">MEN'S SEASON 3</span><strong>{mensCount}</strong><p>franchises competed in the men's season.</p></article>
+        <article><span className="hv3-kicker">LEGACY LEADER</span><strong>36</strong><p>points put Cheetahs at the top of the final table.</p></article>
+        <article><span className="hv3-kicker">FINAL DAY</span><strong>3</strong><p>Legacy fixtures completed on 22 August.</p></article>
+        <article><span className="hv3-kicker">MEN'S PODIUM</span><strong>{mensTopThree.length}</strong><p>regular-season leaders remain available in the full league archive.</p></article>
+      </section>
+
+      <section className="hv3-cta-band">
+        <div>
+          <span className="hv3-kicker">LOWVELD PADEL</span>
+          <h2>Everything happening on court, in one place.</h2>
+        </div>
         <div className="hv3-actions">
-          <Link to="/leagues?league=legacy" className="hv3-primary">Legacy standings</Link>
-          <Link to="/rankings">Player rankings</Link>
-          <Link to="/leagues?league=ladies">Ladies League</Link>
+          <Link to="/live" className="hv3-primary">Match centre</Link>
+          <Link to="/rankings">Rankings</Link>
+          <Link to="/tv">Lowveld TV</Link>
+          <Link to="/community">Community</Link>
         </div>
       </section>
     </main>

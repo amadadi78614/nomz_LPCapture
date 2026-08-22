@@ -18,6 +18,7 @@ import './data/ladiesSeason2LeagueSync';
 import './data/ladiesSeason2Round1Update';
 import './data/ladiesSeason2RankingsSync';
 import './data/superCupSquadSync';
+import './data/legacyDetailedTableSync';
 import './styles/global.css';
 import './styles/career-table-mobile.css';
 import './styles/home-premium.css';

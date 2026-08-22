@@ -72,6 +72,25 @@ export const LEGACY_LIVE_FIXTURES = [
     {slot:'18:00',winner:'home',games:[3,0],homeIds:['Muhammed Moola','Eesa Moola'],awayIds:['Armaan Bhikhoo','Shaheen Mohamed'],sets:[[3,6],[7,6],[10,6]]},
     {slot:'19:00',winner:'away',games:[0,3],homeIds:['Rafiq Mohamed','Irshaad Moola'],awayIds:['Fiaz Bhikhoo','Mohamed Azhar Sujee'],sets:[[1,6],[3,6],[12,10]]},
   ]}},
+
+  // MATCH DAY 13 · 22 AUGUST 2026
+  { id:'lg-md13-cheetahs-jackals', round:13, league:'legacy', home:'lp-cheetahs', away:'lp-jackals', start:new Date('2026-08-22T12:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'home', totals:[9,0], rubbers:[
+    {slot:'12:00',winner:'home',games:[3,0],homeIds:['Mikel Pillay','Abdurahmaan Jogee'],awayIds:['Zuhayr Ismail','Dewan Duvenhage'],sets:[[6,2],[6,4],[3,10]]},
+    {slot:'13:00',winner:'home',games:[3,0],homeIds:['Michael Smit','Mauritz van der Mescht'],awayIds:['Stiaan Duvenhage','Spanner Mescht'],sets:[[7,5],[4,6],[11,9]]},
+    {slot:'15:00',winner:'home',games:[3,0],homeIds:['Shoaib Nomani','Aadam Nomani'],awayIds:['Zunaid Ganchi','Yusuf Ismail'],sets:[[6,2],[6,0],[8,10]]},
+  ]}},
+  { id:'lg-md13-eagles-leopards', round:13, league:'legacy', home:'lp-eagles', away:'lp-leopards', start:new Date('2026-08-22T14:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[4,7], rubbers:[
+    {slot:'14:00',winner:'away',games:[0,4],homeIds:['Dian Erasmus','Sahal Yunus'],awayIds:['Muhammad Mangerah','Adil Amod'],sets:[[0,6],[1,6],[7,10]]},
+    {slot:'15:00',winner:'home',games:[4,0],homeIds:['Mohamed Azhar Sujee','Fiaz Bhikhoo'],awayIds:['Ozayr Shaik','Ridhwaan Sujee'],sets:[[6,3],[6,4],[10,2]]},
+    {slot:'16:00',winner:'away',games:[0,3],homeIds:['Shaheen Mohamed','Yahya Sujee'],awayIds:['Ebrahim Mangerah','Huzaifah Sujee'],sets:[[6,4],[6,7],[9,11]]},
+  ]}},
+
+  // MATCH DAY 14 · 22 AUGUST 2026
+  { id:'lg-md14-badgers-rhinos', round:14, league:'legacy', home:'lp-honey-badgers', away:'lp-rhinos', start:new Date('2026-08-22T13:00:00+02:00'), court:'Play 360', status:'final', score:{ winner:'away', totals:[4,8], rubbers:[
+    {slot:'13:00',winner:'away',games:[0,4],homeIds:['Scharl van den Berg','Zandre de Kok'],awayIds:['Rafiq Mohamed','Irshaad Moola'],sets:[[0,6],[1,6],[1,10]]},
+    {slot:'14:00',winner:'home',games:[4,0],homeIds:['Seth van den Berg','Jude van den Berg'],awayIds:['Ayaan Mohamed','Eesa Moola'],sets:[[6,0],[6,1],[10,5]]},
+    {slot:'17:00',winner:'away',games:[0,4],homeIds:['Jameel Valley','Faheem Seedat'],awayIds:['Christiaan van Aardt','Yusuf Amod'],sets:[[3,6],[1,6],[12,14]]},
+  ]}},
 ];
 
 const teamIds = ['lp-cheetahs','lp-leopards','lp-honey-badgers','lp-eagles','lp-jackals','lp-rhinos'];

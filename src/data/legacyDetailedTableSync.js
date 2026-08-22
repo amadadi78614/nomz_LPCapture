@@ -104,7 +104,9 @@ function syncLegacyDetailedLog() {
       return;
     }
 
-    const tables = [...page.querySelectorAll('table')];
+    // CRITICAL: never inspect our replacement table as the source table.
+    // The previous implementation matched the replacement itself, then hid it on the next MutationObserver pass.
+    const tables = [...page.querySelectorAll('table')].filter((table) => !table.closest('[data-legacy-detailed-log]'));
     const legacyTable = tables.find((table) => {
       const text = (table.textContent || '').toUpperCase();
       return text.includes('FRANCHISE') && text.includes('GD') && text.includes('PTS');
@@ -112,15 +114,17 @@ function syncLegacyDetailedLog() {
 
     if (legacyTable) {
       const shell = legacyTable.closest('.card, .league-standings-shell') || legacyTable.parentElement;
+      if (!page.querySelector('[data-legacy-detailed-log]')) {
+        shell?.insertAdjacentHTML('beforebegin', buildDetailedTable());
+      }
       if (shell && !shell.hasAttribute('data-legacy-base-table-hidden')) {
         shell.setAttribute('data-legacy-base-table-hidden', 'true');
         shell.style.display = 'none';
       }
-      if (!page.querySelector('[data-legacy-detailed-log]')) {
-        shell?.insertAdjacentHTML('beforebegin', buildDetailedTable());
-      }
     } else if (!page.querySelector('[data-legacy-detailed-log]')) {
-      const anchor = page.querySelector('.tabbar.mt') || page.firstElementChild;
+      // Fallback: place the table immediately after the active sub-tab bar so standings can never disappear.
+      const tabbars = [...page.querySelectorAll('.tabbar')];
+      const anchor = tabbars.find((bar) => /Standings/i.test(bar.textContent || '')) || tabbars[tabbars.length - 1] || page.firstElementChild;
       anchor?.insertAdjacentHTML('afterend', buildDetailedTable());
     }
   }
@@ -139,15 +143,15 @@ function syncLegacyDetailedLog() {
       return;
     }
 
-    const table = page.querySelector('table');
+    const table = [...page.querySelectorAll('table')].find((candidate) => !candidate.closest('[data-legacy-detailed-log]'));
     if (table) {
       const shell = table.closest('.card') || table.parentElement;
+      if (!page.querySelector('[data-legacy-detailed-log]')) {
+        shell?.insertAdjacentHTML('beforebegin', buildDetailedTable());
+      }
       if (shell && !shell.hasAttribute('data-legacy-base-table-hidden')) {
         shell.setAttribute('data-legacy-base-table-hidden', 'true');
         shell.style.display = 'none';
-      }
-      if (!page.querySelector('[data-legacy-detailed-log]')) {
-        shell?.insertAdjacentHTML('beforebegin', buildDetailedTable());
       }
     }
   }

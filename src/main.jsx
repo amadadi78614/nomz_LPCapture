@@ -17,6 +17,7 @@ import './data/ladiesSeason2HomeSync';
 import './data/ladiesSeason2LeagueSync';
 import './data/ladiesSeason2Round1Update';
 import './data/ladiesSeason2RankingsSync';
+import './data/ladiesSeason2UiPolish';
 import './data/superCupSquadSync';
 import './data/legacyDetailedTableSync';
 import './styles/global.css';

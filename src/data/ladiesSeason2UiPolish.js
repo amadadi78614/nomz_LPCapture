@@ -16,9 +16,36 @@ function logoImg(src, alt, size = 28) {
   return img;
 }
 
+function ensureBackToLeagues(section) {
+  if (!section || document.querySelector('[data-ladies-back-to-leagues]')) return;
+  const back = document.createElement('a');
+  back.href = '/leagues';
+  back.dataset.ladiesBackToLeagues = 'true';
+  back.setAttribute('aria-label', 'Back to Leagues');
+  back.textContent = '← Back to Leagues';
+  back.style.display = 'inline-flex';
+  back.style.alignItems = 'center';
+  back.style.gap = '7px';
+  back.style.margin = '0 0 12px';
+  back.style.padding = '9px 13px';
+  back.style.border = '1px solid rgba(148,163,184,.35)';
+  back.style.borderRadius = '10px';
+  back.style.background = 'rgba(15,23,42,.55)';
+  back.style.color = '#e5e7eb';
+  back.style.fontWeight = '700';
+  back.style.fontSize = '13px';
+  back.style.textDecoration = 'none';
+  back.style.width = 'fit-content';
+  section.parentNode?.insertBefore(back, section);
+}
+
 function polishLadiesLog() {
   const section = document.querySelector('[data-ladies-round1-table]');
   if (!section) return;
+
+  // This is the actual Ladies League view shown on /leagues, so the back
+  // control must be injected here rather than only on /rankings.
+  ensureBackToLeagues(section);
 
   const rows = [...section.querySelectorAll('.row')];
   rows.forEach((row) => {
@@ -32,7 +59,6 @@ function polishLadiesLog() {
     firstBold.prepend(logoImg(team.logo, team.name, 30));
   });
 
-  // Player MVP rows: add the franchise logo next to the player name as well.
   rows.forEach((row) => {
     if (row.dataset.ladiesPlayerLogo === 'true') return;
     const text = row.textContent || '';

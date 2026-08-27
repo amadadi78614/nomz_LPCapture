@@ -1,6 +1,8 @@
 import { LADIES_S2_RANKINGS, LADIES_S2_STANDINGS, ladiesRankNumber } from './ladiesSeason2Round1Update';
+import { FRANCHISES } from './seed';
 
 const signed=(value)=>Number(value)>0?`+${value}`:String(value);
+const ladiesFranchise=(name)=>FRANCHISES.find((franchise)=>franchise.league==='ladies'&&franchise.name===name);
 
 function syncLadiesRankingsPage() {
   if (location.pathname !== '/rankings') return;
@@ -21,19 +23,20 @@ function syncLadiesRankingsPage() {
   section.dataset.ladiesS2RankingsLive='true';
   section.className='mt';
   section.innerHTML=`
+    <div style="margin-bottom:12px"><a href="/leagues" class="btn ghost" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none">← Back to Leagues</a></div>
     <div class="card" style="border-left:4px solid #f0abcc;padding:18px">
       <span class="eyebrow">Ladies Season 2 · Through Matchweek 2</span>
       <h2 class="display" style="margin:5px 0 6px">Official player MVP rankings</h2>
       <p class="muted" style="margin:0;font-size:12px">Updated from all verified played rubbers through 26 August 2026. 3 MVP points per rubber win + 1 bonus for a clean 4–0. Partners receive identical points. Administrative awards carry no player appearance, win, bonus or MVP credit.</p>
     </div>
     <div class="grid mt">
-      ${LADIES_S2_RANKINGS.map((p,i)=>`<div class="card" style="padding:12px"><div class="row spread"><span><b class="num muted" style="display:inline-block;width:30px">${ladiesRankNumber(LADIES_S2_RANKINGS,i)}</b><b>${p.name}</b><div class="muted" style="font-size:11px;margin-left:30px">${p.team} · ${p.played} played · ${p.wins} W · ${p.losses} L${p.bonus_points?` · ${p.bonus_points} BP`:''}</div></span><b class="num" style="font-size:17px">${p.mvp_points} MVP pts</b></div></div>`).join('')}
+      ${LADIES_S2_RANKINGS.map((p,i)=>{const f=ladiesFranchise(p.team);return `<div class="card" style="padding:12px"><div class="row spread"><span class="row" style="gap:10px;align-items:center"><span class="num muted" style="display:inline-block;width:30px"><b>${ladiesRankNumber(LADIES_S2_RANKINGS,i)}</b></span>${f?.logo?`<img src="${f.logo}" alt="${p.team}" style="width:28px;height:28px;object-fit:contain;border-radius:6px"/>`:''}<span><b>${p.name}</b><div class="muted" style="font-size:11px">${p.team} · ${p.played} played · ${p.wins} W · ${p.losses} L${p.bonus_points?` · ${p.bonus_points} BP`:''}</div></span></span><b class="num" style="font-size:17px">${p.mvp_points} MVP pts</b></div></div>`}).join('')}
     </div>
     <div class="card mt" style="padding:18px;overflow-x:auto">
       <span class="eyebrow">Ladies Season 2 · Franchise log</span>
       <h3 class="display" style="margin:5px 0 8px">Table through Matchweek 2</h3>
       <p class="muted" style="font-size:11px;margin:0 0 10px">P/W/L = completed franchise fixtures · Pts/PF/PA = rubber points · GD = PF−PA · SW/SL/SD = played-set totals only.</p>
-      <table class="tbl" style="min-width:760px;width:100%"><thead><tr><th>#</th><th>Franchise</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th>PF</th><th>PA</th><th>GD</th><th>SW</th><th>SL</th><th>SD</th></tr></thead><tbody>${LADIES_S2_STANDINGS.map((t,i)=>`<tr><td>${i+1}</td><td><b>${t.name}</b></td><td>${t.played}</td><td>${t.wins}</td><td>${t.losses}</td><td><b>${t.points}</b></td><td>${t.pointsFor}</td><td>${t.pointsAgainst}</td><td>${signed(t.differential)}</td><td>${t.setsWon}</td><td>${t.setsLost}</td><td>${signed(t.setDifferential)}</td></tr>`).join('')}</tbody></table>
+      <table class="tbl" style="min-width:760px;width:100%"><thead><tr><th>#</th><th>Franchise</th><th>P</th><th>W</th><th>L</th><th>Pts</th><th>PF</th><th>PA</th><th>GD</th><th>SW</th><th>SL</th><th>SD</th></tr></thead><tbody>${LADIES_S2_STANDINGS.map((t,i)=>{const f=ladiesFranchise(t.name);return `<tr><td>${i+1}</td><td><span class="row" style="gap:8px;align-items:center">${f?.logo?`<img src="${f.logo}" alt="${t.name}" style="width:26px;height:26px;object-fit:contain;border-radius:6px"/>`:''}<b>${t.name}</b></span></td><td>${t.played}</td><td>${t.wins}</td><td>${t.losses}</td><td><b>${t.points}</b></td><td>${t.pointsFor}</td><td>${t.pointsAgainst}</td><td>${signed(t.differential)}</td><td>${t.setsWon}</td><td>${t.setsLost}</td><td>${signed(t.setDifferential)}</td></tr>`}).join('')}</tbody></table>
       <p class="muted" style="font-size:11px;margin:10px 0 0">Week 1 Lunar Lillies v Desert Roses: one unfulfilled rubber was awarded 4–0 to Lunar Lillies as a team-only administrative award. No individual player or set statistics were created for that rubber.</p>
     </div>`;
   anchor.insertAdjacentElement('afterend',section);

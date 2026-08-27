@@ -34,10 +34,11 @@ export const LADIES_S2_ROUND2_RESULTS = [
     {home:['Stephanie Steenekamp','Firdaus Hoosen'],away:['Emily Anders','Mariette Venter'],sets:['3-6','6-2','10-5'],homePoints:3,awayPoints:0},
     {home:['Jeanetha Boshoff','Miané Swart'],away:['Simone Maritz','Carien Vos'],sets:['6-2','6-2','10-1'],homePoints:4,awayPoints:0},
   ]},
-  { id:'ladies-s2-2026-08-26-phoenix-blossoms',date:'2026-08-26',venue:'Play 360',status:'LIVE / PARTIAL',home:'Phoenix Flames',away:'Backhand Blossoms',homePoints:0,awayPoints:11,rubbers:[
+  { id:'ladies-s2-2026-08-26-phoenix-blossoms',date:'2026-08-26',venue:'Play 360',status:'FT',home:'Phoenix Flames',away:'Backhand Blossoms',homePoints:0,awayPoints:15,rubbers:[
     {home:['Nasreen Omar','Tanija De Villiers'],away:['Sunel Grote','Rinie De Klerk'],sets:['5-7','2-6','9-11'],homePoints:0,awayPoints:4},
     {home:['Anneri Duvenage','Gizelle Taylor'],away:['Zahra Jogi','Amor Caromba'],sets:['3-6','1-6','4-10'],homePoints:0,awayPoints:4},
     {home:['Helene Van der Merwe','Martinette Meyer'],away:['Jana Kotze','Dhiya Ismail'],sets:['6-2','4-6','8-10'],homePoints:0,awayPoints:3},
+    {home:['Marz Asvat','Maryke Botha'],away:['Faeeza Patel','Diyaana Nomani'],sets:['3-6','1-6','4-10'],homePoints:0,awayPoints:4},
   ]},
 ];
 

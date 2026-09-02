@@ -16,6 +16,7 @@ import './data/ladiesSeason2Data';
 import './data/ladiesSeason2HomeSync';
 import './data/ladiesSeason2LeagueSync';
 import './data/ladiesSeason2Round1Update';
+import './data/ladiesSeason2Matchweek3Update';
 import './data/ladiesSeason2RankingsSync';
 import './data/ladiesSeason2UiPolish';
 import './data/superCupSquadSync';

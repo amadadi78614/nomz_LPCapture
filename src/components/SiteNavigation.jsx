@@ -10,14 +10,15 @@ const DESKTOP_NAV = [
   ['/all-time-rankings', 'All-Time'],
   ['/tv', 'Lowveld TV'],
   ['/news', 'News'],
-  ['/sponsors', 'Sponsors'],
+  ['/register', 'Register'],
+  ['/privacy', 'POPIA'],
 ];
 
 const MOBILE_NAV = [
   ['/', '⌂', 'Home'],
   ['/live', '●', 'Matches'],
   ['/leagues', '≡', 'Leagues'],
-  ['/cups', '🏆', 'Cups'],
+  ['/register', '✎', 'Register'],
   ['/more', '⋯', 'More'],
 ];
 
@@ -35,7 +36,7 @@ export function TopBar() {
         </NavLink>
         <nav>
           {DESKTOP_NAV.map(([to, label]) => (
-            <NavLink key={to} to={to} end={to === '/'} className={navClass}>
+            <NavLink key={to} to={to} end={to === '/'} className={navClass} style={to === '/register' ? { color: 'var(--gold)', fontWeight: 800 } : undefined}>
               {label}
             </NavLink>
           ))}

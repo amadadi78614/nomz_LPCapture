@@ -1,10 +1,15 @@
 // Keep the Ladies Season 2 league page labels aligned with the latest verified results.
 const replacements = [
   ['Ladies Season 2 · Through Matchweek 2', 'Ladies Season 2 · Through Matchweek 4 · 9 September 2026'],
+  ['Season 2 · Through Matchweek 2', 'Season 2 · Through Matchweek 4 · 9 September 2026'],
   ['Through Matchweek 2', 'Through Matchweek 4 · 9 September 2026'],
   ['Table through Matchweek 2', 'Standings through Matchweek 4'],
   ['Updated from all verified played rubbers through 26 August 2026.', 'Updated from all verified played rubbers through 9 September 2026.'],
-  ['Season 2 · Through Matchweek 2', 'Season 2 · Through Matchweek 4 · 9 September 2026'],
+  ['Latest verified scores · through 26 August 2026', 'Latest verified scores · through 9 September 2026'],
+  ['LADIES FRANCHISE LEAGUE · MATCHWEEK 2', 'LADIES FRANCHISE LEAGUE · MATCHWEEK 4'],
+  ['Ladies Franchise League · Matchweek 2', 'Ladies Franchise League · Matchweek 4'],
+  ['MATCHWEEK 2 COMPLETE', 'MATCHWEEK 4 COMPLETE'],
+  ['Matchweek 2 complete', 'Matchweek 4 complete'],
 ];
 
 function refreshLadiesLabels() {

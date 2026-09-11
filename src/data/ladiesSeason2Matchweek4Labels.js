@@ -17,6 +17,10 @@ function refreshLadiesLabels() {
   const params = new URLSearchParams(location.search);
   if (params.get('league') !== 'ladies') return;
 
+  // Matchweek 3 remains in the data/history, but its old promotional summary
+  // should no longer appear above the current Matchweek 4 league dashboard.
+  document.querySelectorAll('[data-ladies-mw3]').forEach((node) => node.remove());
+
   const root = document.querySelector('.page');
   if (!root) return;
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);

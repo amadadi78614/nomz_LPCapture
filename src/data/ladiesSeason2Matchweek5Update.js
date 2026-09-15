@@ -1,7 +1,8 @@
 import { LADIES_S2_RESULTS, LADIES_S2_STANDINGS, LADIES_S2_RANKINGS } from './ladiesSeason2Round1Update';
 import { LADIES_S2_TEAMS } from './ladiesSeason2Data';
 
-// Result supplied by league administration — 15 September 2026.
+// Verified result supplied by league administration — 15 September 2026.
+// Official standings tiebreak: PTS -> SD -> GD -> H2H.
 export const LADIES_S2_ROUND5_RESULTS = [
   {id:'ladies-s2-2026-09-15-novas-arctic',date:'2026-09-15',venue:'',status:'FT',home:'Net Novas',away:'Arctic Angels',homePoints:6,awayPoints:7,rubbers:[
     {time:'18:00',home:['Mariette Venter','Larisa de Kock'],away:['Brigitte du Preez','Aldorette Van Der Mescht'],sets:['6-2','6-3','7-10'],homePoints:3,awayPoints:0},
@@ -32,7 +33,8 @@ for(const match of LADIES_S2_ROUND5_RESULTS){
   }
 }
 LADIES_S2_TEAMS.forEach(t=>{t.stats.setDifferential=t.stats.setsWon-t.stats.setsLost;});
-LADIES_S2_STANDINGS.splice(0,LADIES_S2_STANDINGS.length,...LADIES_S2_TEAMS.map(t=>({...t.stats,id:t.id,name:t.name,logo:t.logo})).sort((a,b)=>b.points-a.points||b.wins-a.wins||b.differential-a.differential||b.setDifferential-a.setDifferential||a.name.localeCompare(b.name)));
+// Official order: points, set difference, point/game difference. H2H is only required if still tied.
+LADIES_S2_STANDINGS.splice(0,LADIES_S2_STANDINGS.length,...LADIES_S2_TEAMS.map(t=>({...t.stats,id:t.id,name:t.name,logo:t.logo})).sort((a,b)=>b.points-a.points||b.setDifferential-a.setDifferential||b.differential-a.differential||a.name.localeCompare(b.name)));
 const ranked=LADIES_S2_TEAMS.flatMap(t=>t.players.map(p=>({...p.stats,id:p.id,name:p.name,team:t.name,logo:t.logo}))).filter(p=>p.played>0).sort((a,b)=>b.mvp_points-a.mvp_points||b.wins-a.wins||b.sets_won-a.sets_won||a.name.localeCompare(b.name));
 LADIES_S2_RANKINGS.splice(0,LADIES_S2_RANKINGS.length,...ranked);
 

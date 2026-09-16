@@ -19,6 +19,7 @@ import './data/ladiesSeason2Round1Update';
 import './data/ladiesSeason2Matchweek3Update';
 import './data/ladiesSeason2Matchweek4Update';
 import './data/ladiesSeason2Matchweek5Update';
+import './data/ladiesSeason2Matchweek5FinalUpdate';
 import './data/ladiesSeason2RankingsSync';
 import './data/ladiesSeason2Matchweek4Labels';
 import './data/ladiesSeason2UiPolish';

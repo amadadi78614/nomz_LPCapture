@@ -15,7 +15,7 @@ import LowveldTV from './pages/tv';
 import { Rivalries, RivalryPage, HallOfFame, DraftHistory, Dynasty, FanZone } from './pages/community';
 import { RoadTo360, LegacyFranchise, Predictor, Community, SportsHub } from './pages/leagues';
 import UnityCup from './pages/UnityCup';
-import { SuperCup360 } from './pages/leagues';
+import SuperCup360 from './pages/SuperCup360';
 import { Leagues } from './pages/leagues_new';
 import { AllTimeSeason1 } from './pages/AllTimeSeason1';
 import { LadiesSeason2Franchise } from './pages/LadiesSeason2';

@@ -23,8 +23,6 @@ import './data/ladiesSeason2Matchweek5FinalUpdate';
 import './data/ladiesSeason2RankingsSync';
 import './data/ladiesSeason2Matchweek4Labels';
 import './data/ladiesSeason2UiPolish';
-import './data/superCupSquadSync';
-import './data/superCupResultsSync';
 import './data/legacyDetailedTableSync';
 import './styles/global.css';
 import './styles/career-table-mobile.css';

@@ -120,3 +120,16 @@
  .legacy-gallery-main,.legacy-gallery-wide{grid-column:auto;min-height:260px!important}
  .legacy-gallery figure{min-height:240px}
 }
+
+
+/* Keep legacy and men's league views free of Ladies-only DOM injections. */
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-mw3],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-mw4],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-mw5],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-mw5-final],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-live-standings],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-round1-table],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-s2-rankings-live],
+[data-active-league]:not([data-active-league="ladies"]) [data-ladies-back-to-leagues] {
+  display: none !important;
+}

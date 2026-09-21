@@ -98,7 +98,11 @@ function syncLegacyDetailedLog() {
       button.classList.contains('on') && /legacy/i.test(button.textContent || '')
     );
 
-    if (!legacyActive) {
+    const standingsActive = [...page.querySelectorAll('button')].some((button) =>
+      button.classList.contains('on') && (button.textContent || '').trim() === 'Standings'
+    );
+
+    if (!(legacyActive && standingsActive)) {
       page.querySelector('[data-legacy-detailed-log]')?.remove();
       restoreLegacyBaseTable(page);
       return;

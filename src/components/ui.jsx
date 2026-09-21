@@ -49,7 +49,7 @@ const NAV = [
   { to: '/', label: 'Home', ico: '⌂' },
   { to: '/live', label: 'Matches', ico: '●' },
   { to: '/leagues', label: 'Leagues', ico: '≡' },
-  { to: '/cups', label: 'Cups', ico: '🏆' },
+  { to: '/360-super-cup', label: 'Super Cup', ico: '🏆' },
   { to: '/more', label: 'More', ico: '⋯' },
 ];
 function isActivePath(path) {
@@ -78,7 +78,7 @@ export function TopBar() {
           <HardNavLink to="/">Home</HardNavLink>
           <HardNavLink to="/live">Match Centre</HardNavLink>
           <HardNavLink to="/leagues">Leagues</HardNavLink>
-          <HardNavLink to="/cups">Cups</HardNavLink>
+          <HardNavLink to="/360-super-cup">Super Cup</HardNavLink>
           <HardNavLink to="/players">Players</HardNavLink>
           <HardNavLink to="/all-time-rankings">All-Time</HardNavLink>
           <HardNavLink to="/tv">Lowveld TV</HardNavLink>

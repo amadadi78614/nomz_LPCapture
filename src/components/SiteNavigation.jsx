@@ -5,7 +5,7 @@ const DESKTOP_NAV = [
   ['/', 'Home'],
   ['/live', 'Match Centre'],
   ['/leagues', 'Leagues'],
-  ['/cups', 'Cups'],
+  ['/360-super-cup', 'Super Cup'],
   ['/players', 'Players'],
   ['/all-time-rankings', 'All-Time'],
   ['/tv', 'Lowveld TV'],

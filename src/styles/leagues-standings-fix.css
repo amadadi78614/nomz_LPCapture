@@ -133,3 +133,30 @@
 [data-active-league]:not([data-active-league="ladies"]) [data-ladies-back-to-leagues] {
   display: none !important;
 }
+
+
+/* Legacy League 2026 official podium */
+.legacy-podium{overflow:hidden;border:1px solid rgba(201,162,39,.42);border-radius:var(--r);background:radial-gradient(circle at 50% 0,rgba(201,162,39,.18),transparent 43%),linear-gradient(155deg,#11151d,#070a0f 72%);box-shadow:0 18px 55px rgba(0,0,0,.34)}
+.legacy-podium-intro{text-align:center;padding:32px 22px 20px}
+.legacy-podium-intro h3{margin:7px 0 10px;font-size:clamp(32px,6vw,56px);line-height:.94}
+.legacy-podium-intro p{max-width:760px;margin:0 auto;color:var(--muted);font-size:14px}
+.legacy-podium-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:6px 18px 20px}
+.legacy-podium-card{position:relative;display:flex;align-items:center;gap:14px;min-height:142px;padding:20px 16px;border:1px solid rgba(255,255,255,.11);border-radius:14px;background:rgba(8,12,18,.8);text-decoration:none;color:inherit;transition:transform .2s ease,border-color .2s ease}
+.legacy-podium-card:hover{transform:translateY(-3px)}
+.legacy-podium-card img{width:74px;height:74px;object-fit:contain;filter:drop-shadow(0 7px 14px rgba(0,0,0,.55))}
+.legacy-podium-card div{display:flex;flex-direction:column;min-width:0}
+.legacy-podium-card small{font-size:10px;font-weight:800;letter-spacing:.12em}
+.legacy-podium-card b{font-family:var(--display);font-size:22px;line-height:1;text-transform:uppercase;margin:4px 0}
+.legacy-podium-card div span{font-size:11px;color:var(--muted);font-weight:700}
+.legacy-medal{position:absolute;right:12px;top:10px;font-size:25px}
+.legacy-podium-gold{border-color:rgba(245,197,66,.6);background:linear-gradient(145deg,rgba(201,162,39,.24),rgba(8,12,18,.9))}
+.legacy-podium-gold small{color:#f5c542}
+.legacy-podium-silver{border-color:rgba(214,220,229,.4)}
+.legacy-podium-silver small{color:#d6dce5}
+.legacy-podium-bronze{border-color:rgba(205,127,50,.48)}
+.legacy-podium-bronze small{color:#cd7f32}
+.legacy-podium-message{padding:20px 24px 26px;border-top:1px solid rgba(255,255,255,.08);text-align:center;background:rgba(0,0,0,.18)}
+.legacy-podium-message p{max-width:850px;margin:0 auto 8px;color:var(--muted);font-size:13px}
+.legacy-podium-message b{display:block;margin-top:15px;font-family:var(--display);font-size:22px;text-transform:uppercase;color:var(--gold)}
+@media(max-width:860px){.legacy-podium-grid{grid-template-columns:1fr}.legacy-podium-card{min-height:112px}.legacy-podium-card img{width:62px;height:62px}}
+@media(max-width:460px){.legacy-podium-intro{padding:26px 16px 18px}.legacy-podium-grid{padding:4px 12px 16px}.legacy-podium-card b{font-size:19px}.legacy-podium-message{padding:18px 16px 22px}}

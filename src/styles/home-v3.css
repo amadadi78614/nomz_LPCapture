@@ -789,3 +789,30 @@
   .hv3-ladies-art { min-height: 280px; }
   .hv3-season-row > strong { font-size: 20px; }
 }
+
+/* Ladies Season 2 homepage lead */
+.hv3-ladies-hero {
+  background: linear-gradient(90deg, rgba(5, 10, 18, 0.97) 0%, rgba(5, 10, 18, 0.89) 52%, rgba(5, 10, 18, 0.5) 100%), url('/ladies-league-s2.png') center 38%/cover no-repeat;
+}
+.hv3-ladies-hero:after { background: radial-gradient(circle, rgba(236, 72, 153, 0.13), transparent 68%); }
+.hv3-playoff-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 28px;
+  margin-top: 14px;
+  padding: 28px 30px;
+  border: 1px solid rgba(245, 196, 81, 0.48);
+  border-radius: 20px;
+  background: radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.13), transparent 28%), linear-gradient(115deg, #111a2a, #0a111c);
+}
+.hv3-playoff-banner h2 { max-width: 800px; font-size: clamp(31px, 4.4vw, 52px); line-height: 0.94; }
+.hv3-playoff-banner p { max-width: 760px; margin: 14px 0 0; color: #96a3bb; line-height: 1.6; }
+.hv3-playoff-banner .hv3-actions { flex: 0 0 auto; }
+@media (max-width: 860px) {
+  .hv3-playoff-banner { align-items: flex-start; flex-direction: column; }
+}
+@media (max-width: 640px) {
+  .hv3-ladies-hero { background-position: 57% center; }
+  .hv3-playoff-banner { padding: 21px; border-radius: 17px; }
+}

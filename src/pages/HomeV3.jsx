@@ -34,6 +34,7 @@ const headlines = [
 
 export default function HomeV3() {
   const ladiesTop = LADIES_S2_STANDINGS.slice(0, 3);
+  const playoffTeams = LADIES_S2_STANDINGS.slice(0, 4);
   const mvpTop = LADIES_S2_RANKINGS.slice(0, 3);
 
   useEffect(() => {
@@ -75,8 +76,8 @@ export default function HomeV3() {
     <section className="hv3-split">
       <div className="hv3-panel hv3-table-panel">
         <div className="hv3-panel-head"><div><span className="hv3-kicker">LADIES SEASON 2</span><h2>The playoff race</h2></div><Link to="/leagues?league=ladies">Full log →</Link></div>
-        <div className="hv3-legacy-table"><div className="hv3-legacy-head"><span>#</span><span>TEAM</span><span>P</span><span>W</span><span>GD</span><span>PTS</span></div>{ladiesTop.map((row, index) => <Link to="/leagues?league=ladies" className={index === 0 ? 'hv3-legacy-row is-leader' : 'hv3-legacy-row'} key={row.id}><span>{index + 1}</span><span className="hv3-legacy-team">{row.logo && <img src={row.logo} alt="" />}<b>{row.name}</b></span><span>{row.played}</span><span>{row.wins}</span><span className={row.differential > 0 ? 'pos' : row.differential < 0 ? 'neg' : ''}>{signed(row.differential)}</span><strong>{row.points}</strong></Link>)}</div>
-        <p className="hv3-table-note">Official order: accumulated points, set differential, game/points differential, then head-to-head.</p>
+        <div className="hv3-legacy-table"><div className="hv3-legacy-head"><span>#</span><span>TEAM</span><span>P</span><span>W</span><span>GD</span><span>PTS</span></div>{playoffTeams.map((row, index) => <Link to="/leagues?league=ladies" className={index === 0 ? 'hv3-legacy-row is-leader' : 'hv3-legacy-row'} key={row.id}><span>{index + 1}</span><span className="hv3-legacy-team">{row.logo && <img src={row.logo} alt="" />}<b>{row.name}</b></span><span>{row.played}</span><span>{row.wins}</span><span className={row.differential > 0 ? 'pos' : row.differential < 0 ? 'neg' : ''}>{signed(row.differential)}</span><strong>{row.points}</strong></Link>)}</div>
+        <p className="hv3-table-note"><b>Top four qualify for the playoffs.</b> Official order: accumulated points, set differential, game/points differential, then head-to-head.</p>
       </div>
       <aside className="hv3-panel hv3-feature-panel"><span className="hv3-kicker">LADIES MVP WATCH</span><div className="hv3-feature-number">MVP</div><h2>Form heading into the playoffs.</h2><p>The players setting the standard through every verified rubber.</p><div className="hv3-feature-list">{mvpTop.map((player, index) => <span key={player.id}><b>0{index + 1}</b> {player.name} · {player.mvp_points} pts</span>)}</div><Link to="/rankings" className="hv3-primary hv3-wide">Full MVP rankings</Link></aside>
     </section>

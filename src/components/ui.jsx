@@ -6,23 +6,13 @@ import { displayPoints, scoreSummary } from '../lib/scoringEngine';
 /* ---------------- Live ticker (signature spine) ---------------- */
 function TickerItems() {
   const live = FIXTURES.filter((f) => f.status === 'live');
-  const finals = FIXTURES.filter((f) => f.status === 'final').slice(-3);
-  const upcoming = FIXTURES.filter((f) => f.status === 'scheduled').slice(0, 3);
-  return (
-    <>
-      {live.map((f) => <LiveTickerItem key={f.id} fixture={f} />)}
-      {finals.map((f) => (
-        <span className="ticker-item" key={f.id}>
-          <b>FT</b> {franchiseById(f.home).name} {(f.score?.totals || f.score?.rubberWins || ['', '']).join('\u2013')} {franchiseById(f.away).name}
-        </span>
-      ))}
-      {upcoming.map((f) => (
-        <span className="ticker-item" key={f.id}>
-          {new Date(f.start).toLocaleDateString('en-ZA', { weekday: 'short' })} {franchiseById(f.home).name} v {franchiseById(f.away).name}
-        </span>
-      ))}
-    </>
-  );
+  if (live.length) return <>{live.map((f) => <LiveTickerItem key={f.id} fixture={f} />)}</>;
+  return <>
+    <Link to="/360-super-cup" className="ticker-item"><b>SUPER CUP</b> Lowveld Padel · 3rd nationally</Link>
+    <Link to="/leagues?league=legacy" className="ticker-item"><b>LEGACY CHAMPIONS</b> LP Honey Badgers</Link>
+    <Link to="/leagues" className="ticker-item"><b>SEASON 3 CHAMPIONS</b> Desert Falcons</Link>
+    <Link to="/leagues?league=ladies" className="ticker-item"><b>LADIES SEASON 2</b> Results · standings · rankings</Link>
+  </>;
 }
 function LiveTickerItem({ fixture }) {
   const st = useLiveMatch(fixture.id);

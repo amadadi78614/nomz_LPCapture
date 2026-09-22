@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { LADIES_S2_STANDINGS, LADIES_S2_RANKINGS } from '../data/ladiesSeason2Round1Update';
 import '../styles/home-v3.css';
@@ -36,16 +35,6 @@ export default function HomeV3() {
   const ladiesTop = LADIES_S2_STANDINGS.slice(0, 3);
   const playoffTeams = LADIES_S2_STANDINGS.slice(0, 4);
   const mvpTop = LADIES_S2_RANKINGS.slice(0, 3);
-
-  useEffect(() => {
-    const removeDuplicatePromos = () => {
-      document.querySelectorAll('[data-ladies-mw3], [data-ladies-mw4], [data-ladies-mw5], [data-ladies-mw5-final]').forEach((node) => node.remove());
-    };
-    removeDuplicatePromos();
-    const observer = new MutationObserver(removeDuplicatePromos);
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => observer.disconnect();
-  }, []);
 
   return <main className="hv3">
     <section className="hv3-hero hv3-ladies-hero">

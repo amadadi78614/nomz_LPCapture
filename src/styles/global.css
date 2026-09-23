@@ -131,6 +131,8 @@ h2.display { font-size: clamp(22px, 5vw, 32px); }
 .news-card .kicker { color: var(--live); font-weight: 800; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
 .news-card h3 { font-family: var(--display); font-size: 20px; line-height: 1.1; text-transform: uppercase; }
 .news-card .meta { font-size: 12px; color: var(--muted); }
+.news-centre-page>h1{margin:5px 0 0}.news-card{min-height:210px}.news-card-lead{grid-column:1/-1;background:radial-gradient(circle at 90% 10%,rgba(239,79,160,.15),transparent 38%),var(--card);padding:24px}.news-card-lead h3{font-size:clamp(24px,3vw,34px);max-width:850px}.news-card-lead p{max-width:900px;line-height:1.65}.news-read-link{color:var(--text);font-size:12px;font-weight:800;text-decoration:none}.news-read-link:hover{color:var(--gold)}
+@media(max-width:700px){.news-card-lead{grid-column:auto}.news-centre-page .tabbar{overflow-x:auto;justify-content:flex-start}.news-centre-page .tabbar button{white-space:nowrap}.news-card{min-height:0}}
 
 /* ---------- Misc ---------- */
 .row { display: flex; align-items: center; gap: 10px; }

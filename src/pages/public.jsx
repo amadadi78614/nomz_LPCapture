@@ -2065,21 +2065,24 @@ export function Rankings() {
 export function NewsCentre() {
   const [tag, setTag] = useState('all');
   const list = NEWS.filter((n) => tag === 'all' || n.tag === tag);
+  const tabs = [['all', 'Latest'], ['ladies', 'Ladies'], ['legacy', 'Legacy'], ['supercup', 'Super Cup'], ['mens', "Men's"]];
   return (
-    <div className="page">
+    <div className="page news-centre-page">
+      <span className="eyebrow">Lowveld Padel · Current stories</span>
       <h1 className="display">News Centre</h1>
+      <p className="muted" style={{maxWidth:720,marginTop:4}}>Results, champions and the road to the Ladies Season 2 playoffs.</p>
       <div className="tabbar mt">
-        {['all', 'mens', 'ladies', 'league', 'analysis'].map((t) => (
-          <button key={t} className={tag === t ? 'on' : ''} onClick={() => setTag(t)}>{t[0].toUpperCase() + t.slice(1)}</button>
+        {tabs.map(([value, label]) => (
+          <button key={value} className={tag === value ? 'on' : ''} onClick={() => setTag(value)}>{label}</button>
         ))}
       </div>
       <div className="grid cols-2 mt">
-        {list.map((n) => (
-          <article key={n.id} className="card news-card stripe" style={{ '--stripe': 'var(--court)' }}>
+        {list.map((n, index) => (
+          <article key={n.id} className={`card news-card stripe ${tag === 'all' && index === 0 ? 'news-card-lead' : ''}`} style={{ '--stripe': n.tag === 'ladies' ? '#ef4fa0' : n.tag === 'legacy' ? 'var(--gold)' : n.tag === 'supercup' ? '#20c77a' : 'var(--court)' }}>
             <span className="kicker">{n.kicker}</span>
             <h3>{n.title}</h3>
             <p className="muted" style={{ fontSize: 13.5 }}>{n.body}</p>
-            <span className="meta">{new Date(n.date).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long' })}</span>
+            <div className="row spread" style={{marginTop:'auto',paddingTop:8}}><span className="meta">{new Date(`${n.date}T12:00:00`).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' })}</span>{n.href && <Link to={n.href} className="news-read-link">Read more →</Link>}</div>
           </article>
         ))}
       </div>

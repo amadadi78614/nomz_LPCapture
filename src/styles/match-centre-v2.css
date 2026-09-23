@@ -2,6 +2,11 @@
 .mc2-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
 .mc2-head h1{margin:4px 0 6px}.mc2-head p{margin:0;max-width:620px}
 .mc2-live{color:var(--live);border-color:var(--live)}
+.mc2-next{color:#f7c64b;border-color:#f7c64b;font-weight:900;letter-spacing:.08em}
+.mc2-competition{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:22px;max-width:720px}
+.mc2-competition button{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--muted);cursor:pointer;text-align:left}
+.mc2-competition button.on{border-color:#ef4fa0;background:linear-gradient(135deg,rgba(239,79,160,.18),rgba(77,113,255,.12));color:var(--text);box-shadow:inset 3px 0 #ef4fa0}
+.mc2-competition small{font-size:9px;font-weight:900;letter-spacing:.14em}.mc2-competition b{font-size:14px}
 .mc2-tabs{max-width:420px}
 .mc2-rounds{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .mc2-rounds .chip{cursor:pointer}
@@ -12,6 +17,13 @@
 .mc2-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .mc2-fixtures{display:flex;flex-direction:column;gap:8px}
 .mc2-empty{text-align:center;padding:30px;color:var(--muted)}
+.mc2-current-section{margin-top:18px}.mc2-result-meta{display:flex;justify-content:space-between;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.mc2-ladies-result>div:not(.mc2-result-meta){display:grid;grid-template-columns:32px 1fr auto;align-items:center;gap:9px;padding:8px 0;border-top:1px solid var(--line)}
+.mc2-ladies-result img{width:28px;height:28px;object-fit:contain}.mc2-ladies-result strong{font-family:var(--display);font-size:24px}.mc2-ladies-result .winner strong{color:var(--win)}
+.mc2-playoff-now{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;margin-top:18px}.mc2-playoff-copy,.mc2-qualifiers{border:1px solid var(--line);border-radius:16px;background:var(--card);padding:24px}
+.mc2-playoff-copy{background:radial-gradient(circle at 95% 0,rgba(239,79,160,.22),transparent 45%),var(--card)}.mc2-playoff-copy h2{font-family:var(--display);font-size:38px;line-height:.95;text-transform:uppercase;margin:8px 0 12px}.mc2-playoff-copy p{color:var(--muted);line-height:1.6;margin:0 0 18px;max-width:600px}
+.mc2-qualifier-head,.mc2-qualifier{display:grid;align-items:center}.mc2-qualifier-head{grid-template-columns:1fr auto;padding-bottom:12px;border-bottom:1px solid var(--line);font-size:10px;letter-spacing:.12em}.mc2-qualifier-head b{color:#f7c64b}.mc2-qualifier{grid-template-columns:24px 34px 1fr auto;gap:9px;padding:11px 0;border-bottom:1px solid var(--line)}.mc2-qualifier:last-child{border-bottom:0}.mc2-qualifier img{width:30px;height:30px;object-fit:contain}.mc2-qualifier>span{font-family:var(--display);color:#f7c64b}.mc2-qualifier strong{font-family:var(--display);font-size:18px}
+.mc2-archive-section{margin-top:18px}.mc2-stage-label{margin:0 0 6px 4px;color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
 @media(max-width:700px){
   .mc2-page{padding-left:var(--pad);padding-right:var(--pad)}
   .mc2-head{align-items:flex-start;flex-direction:column}
@@ -21,4 +33,5 @@
   .mc2-rounds .chip{width:100%;padding:9px 6px;text-align:center;font-size:11px}
   .mc2-grid{grid-template-columns:1fr}
   .mc2-round-heading{align-items:flex-start;flex-direction:column}
+  .mc2-competition,.mc2-playoff-now{grid-template-columns:1fr}.mc2-playoff-copy h2{font-size:31px}.mc2-qualifier{grid-template-columns:20px 30px 1fr auto}.mc2-qualifier strong{font-size:16px}
 }

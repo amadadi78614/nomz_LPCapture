@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "Lowveld Padel",
+    "slug": "lowveld-padel",
+    "scheme": "lowveldpadel",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/brand/lp-mark-native.png",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#070b15",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "za.co.lowveldpadel.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#070B15",
+        "foregroundImage": "./assets/brand/lp-mark-native.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "package": "za.co.lowveldpadel.app"
+    },
+    "web": {
+      "favicon": "./assets/brand/lp-mark-native.png"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {"typedRoutes": true}
+  }
+}

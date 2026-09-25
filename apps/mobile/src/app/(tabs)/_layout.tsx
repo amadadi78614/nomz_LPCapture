@@ -1,0 +1,5 @@
+import { Tabs } from 'expo-router';
+import { Text, type ColorValue } from 'react-native';
+import { colors } from '@/theme';
+const Icon=({label,color}:{label:string;color:ColorValue})=><Text style={{color,fontSize:18,fontWeight:'900'}}>{label}</Text>;
+export default function TabsLayout(){return <Tabs screenOptions={{headerShown:false,tabBarActiveTintColor:colors.gold,tabBarInactiveTintColor:colors.muted,tabBarStyle:{backgroundColor:'#0b1120',borderTopColor:colors.line,height:76,paddingTop:7,paddingBottom:10},tabBarLabelStyle:{fontSize:10,fontWeight:'800'}}}><Tabs.Screen name="index" options={{title:'Home',tabBarIcon:({color})=><Icon label="LP" color={color}/>}}/><Tabs.Screen name="matches" options={{title:'Matches',tabBarIcon:({color})=><Icon label="●" color={color}/>}}/><Tabs.Screen name="leagues" options={{title:'Leagues',tabBarIcon:({color})=><Icon label="≡" color={color}/>}}/><Tabs.Screen name="profile" options={{title:'My LP',tabBarIcon:({color})=><Icon label="◎" color={color}/>}}/></Tabs>}

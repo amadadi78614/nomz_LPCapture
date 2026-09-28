@@ -256,6 +256,9 @@ export function Registration() {
         .registration-note span{color:var(--muted)}
         .form-section-title{margin:24px 0 10px;font-family:var(--display);font-size:15px;text-transform:uppercase;letter-spacing:.04em}
         .registration-fields{gap:14px}
+        .registration-fields select option{color:#08111f;background:#fff}
+        .registration-fields select option:disabled{color:#526070}
+        .registration-fields select:focus{color:#f7f9ff;background:var(--card)}
         .rules-consent{display:flex;gap:11px;align-items:flex-start;margin-top:22px;font-size:12px;line-height:1.6}
         .rules-consent input{margin-top:4px}
         .payment-panel{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:22px;padding:18px;border:1px solid rgba(48,180,94,.32);border-radius:12px;background:rgba(48,180,94,.06)}

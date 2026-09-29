@@ -174,3 +174,11 @@ export async function trashRegistration(id, trashed) {
   if (error) throw new Error('Could not update this entry. Check your admin access and refresh before retrying.');
   return data;
 }
+
+export async function permanentlyDeleteRegistration(id) {
+  if (!supabase) throw new Error('Registration service is unavailable.');
+  const { data, error } = await supabase.from('app_registrations')
+    .delete().eq('id', id).not('deleted_at', 'is', null).select('id').single();
+  if (error || !data) throw new Error('Could not permanently delete this entry. It must still be in trash and you must have admin access. Refresh and try again.');
+  return data;
+}

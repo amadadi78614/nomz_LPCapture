@@ -14,11 +14,36 @@ import { createClient } from '@supabase/supabase-js';
 import { newMatch, applyPoint } from './scoringEngine';
 import { FIXTURES } from '../data/seed';
 
-const url = import.meta.env.VITE_SUPABASE_URL;
-const anon = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// The URL and publishable key are intentionally safe to ship to browsers.
+// All sensitive access remains protected by RLS and server-side credentials.
+const url = import.meta.env.VITE_SUPABASE_URL || 'https://xkxmnljalxqjovokfmub.supabase.co';
+const anon = import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_U6nbcH9-z7u_mth63-isbw_QwuVIWyr';
 
 export const supabase = url && anon ? createClient(url, anon) : null;
 export const isLive = Boolean(supabase);
+
+/**
+ * Submit a public competition registration through the server-side Edge
+ * Function. The browser never receives database write credentials and public
+ * users cannot read registration records.
+ */
+export async function submitRegistration(payload) {
+  if (!supabase) {
+    throw new Error('Registration service is not connected yet. Please try again shortly.');
+  }
+
+  const { data, error } = await supabase.functions.invoke('submit-registration', {
+    body: payload,
+  });
+
+  if (error) {
+    throw new Error(error.message || 'We could not submit your registration.');
+  }
+  if (!data?.ok || !data?.reference) {
+    throw new Error(data?.error || 'We could not submit your registration.');
+  }
+  return data;
+}
 
 // ------------------------------------------------------------
 // LOCAL DEMO ENGINE — simulates two live courts so the Match

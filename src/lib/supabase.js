@@ -45,6 +45,46 @@ export async function submitRegistration(payload) {
   return data;
 }
 
+export async function adminSignIn(email, password) {
+  if (!supabase) throw new Error('Admin service is unavailable.');
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error) throw error;
+  return data;
+}
+
+export async function adminSignOut() {
+  if (supabase) await supabase.auth.signOut();
+}
+
+export async function getAdminSession() {
+  if (!supabase) return null;
+  const { data } = await supabase.auth.getSession();
+  return data.session;
+}
+
+export async function hasAdminAccess() {
+  if (!supabase) return false;
+  const { data, error } = await supabase.from('app_admin_users').select('user_id').maybeSingle();
+  return !error && Boolean(data);
+}
+
+export async function listRegistrations() {
+  if (!supabase) throw new Error('Admin service is unavailable.');
+  const { data, error } = await supabase.from('app_registrations')
+    .select('id,reference,event_code,registration_type,division,pair_name,participants,primary_name,primary_email,primary_mobile,is_minor,registration_status,payment_status,payment_amount_cents,confirmation_email_status,submitted_at')
+    .order('submitted_at', { ascending: false });
+  if (error) throw error;
+  return data || [];
+}
+
+export async function updateRegistration(id, changes) {
+  if (!supabase) throw new Error('Admin service is unavailable.');
+  const allowed = ['registration_status', 'payment_status'];
+  const safe = Object.fromEntries(Object.entries(changes).filter(([key]) => allowed.includes(key)));
+  const { error } = await supabase.from('app_registrations').update({ ...safe, updated_at: new Date().toISOString() }).eq('id', id);
+  if (error) throw error;
+}
+
 // ------------------------------------------------------------
 // LOCAL DEMO ENGINE — simulates two live courts so the Match
 // Centre, ticker and dashboards are fully demonstrable.

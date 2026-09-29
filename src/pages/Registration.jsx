@@ -56,7 +56,7 @@ function SubmissionMessage({ result, error }) {
     <div className={`registration-message ${error ? 'is-error' : 'is-success'}`} role={error ? 'alert' : 'status'}>
       {error ? <><b>Registration not submitted</b><span>{error}</span></> : <>
         <b>Registration received</b>
-        <span>Your reference is <strong>{result.reference}</strong>. Save this reference for payment and enquiries.</span>
+        <span>Your reference is <strong>{result.reference}</strong>. Save it for payment and enquiries. {result.emailStatus === 'sent' ? 'A confirmation email has been sent.' : result.emailStatus === 'failed' ? 'We could not send the email; please save this on-screen reference.' : 'Email confirmation is not active yet, so please save this on-screen reference.'}</span>
       </>}
     </div>
   );
@@ -194,6 +194,7 @@ function UbuntuRegistration() {
           name: fields.name,
           surname: fields.surname,
           mobile: fields.mobile,
+          email: fields.email,
           dateOfBirth: fields.dob,
           gender: fields.gender,
           team: fields.team,
@@ -230,6 +231,7 @@ function UbuntuRegistration() {
           <Field label="Name"><input name="name" required autoComplete="given-name" style={inputStyle} /></Field>
           <Field label="Surname"><input name="surname" required autoComplete="family-name" style={inputStyle} /></Field>
           <Field label="Mobile number"><input name="mobile" required type="tel" autoComplete="tel" style={inputStyle} /></Field>
+          <Field label="Email address"><input name="email" required type="email" autoComplete="email" style={inputStyle} /></Field>
           <Field label="Date of birth">
             <input name="dob" required type="date" style={inputStyle} onChange={(e) => {
               const d = new Date(e.target.value); const now = new Date();

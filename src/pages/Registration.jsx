@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { submitRegistration } from '../lib/supabase';
 
 const TABS = [
   { id: 'kruger-cup', label: 'Kruger Cup', status: 'open' },
@@ -49,9 +50,52 @@ function Consent({ consent, setConsent, children }) {
   );
 }
 
+function SubmissionMessage({ result, error }) {
+  if (!result && !error) return null;
+  return (
+    <div className={`registration-message ${error ? 'is-error' : 'is-success'}`} role={error ? 'alert' : 'status'}>
+      {error ? <><b>Registration not submitted</b><span>{error}</span></> : <>
+        <b>Registration received</b>
+        <span>Your reference is <strong>{result.reference}</strong>. Save this reference for payment and enquiries.</span>
+      </>}
+    </div>
+  );
+}
+
+function normaliseForm(form) {
+  return Object.fromEntries([...new FormData(form).entries()].map(([key, value]) => [key, typeof value === 'string' ? value.trim() : value]));
+}
+
 function KrugerCupRegistration() {
   const [consent, setConsent] = useState(false);
   const [rulesAccepted, setRulesAccepted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitting(true); setError(''); setResult(null);
+    const fields = normaliseForm(e.currentTarget);
+    try {
+      const response = await submitRegistration({
+        event: 'kruger-cup-2026',
+        division: fields.division,
+        pairName: fields.pairName || null,
+        players: [
+          { name: fields.player1Name, mobile: fields.player1Mobile, email: fields.player1Email, level: fields.player1Level },
+          { name: fields.player2Name, mobile: fields.player2Mobile, email: fields.player2Email, level: fields.player2Level },
+        ],
+        rulesAccepted,
+        popiaConsent: consent,
+      });
+      setResult(response);
+      e.currentTarget.reset();
+      setConsent(false); setRulesAccepted(false);
+    } catch (err) {
+      setError(err.message || 'Please try again or contact Lowveld Padel.');
+    } finally { setSubmitting(false); }
+  }
 
   return (
     <div className="card" style={{ padding: 22, borderTop: '3px solid var(--gold)' }}>
@@ -81,10 +125,7 @@ function KrugerCupRegistration() {
         <span>The stronger player determines the appropriate division. Lowveld Padel may reclassify a pair before the official draw to protect competitive balance.</span>
       </div>
 
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        alert('Kruger Cup registration and secure payment will activate once the registration database and PayFast merchant account are connected. No payment has been taken.');
-      }}>
+      <form onSubmit={handleSubmit}>
         <h3 className="form-section-title">Pair details</h3>
         <div className="grid cols-2 registration-fields">
           <Field label="Preferred division">
@@ -124,11 +165,12 @@ function KrugerCupRegistration() {
         </Consent>
 
         <div className="payment-panel">
-          <div><span className="chip">PAYMENT READY</span><h3>Secure online payment</h3><p>Once the PayFast merchant account is connected, approved pairs will pay the R800 entry fee by card or Instant EFT. No card or banking details will be stored by Lowveld Padel.</p></div>
-          <button type="submit" className="btn" disabled={!consent || !rulesAccepted} style={{ opacity: consent && rulesAccepted ? 1 : .55 }}>
-            Continue registration
+          <div><span className="chip">REGISTRATION FIRST</span><h3>Reserve your pair</h3><p>Submit your pair now. You will receive a unique reference for payment and enquiries. Entry remains pending until Lowveld Padel verifies the division and payment.</p></div>
+          <button type="submit" className="btn" disabled={!consent || !rulesAccepted || submitting} style={{ opacity: consent && rulesAccepted && !submitting ? 1 : .55 }}>
+            {submitting ? 'Submitting…' : 'Submit pair registration'}
           </button>
         </div>
+        <SubmissionMessage result={result} error={error} />
       </form>
     </div>
   );
@@ -137,6 +179,35 @@ function KrugerCupRegistration() {
 function UbuntuRegistration() {
   const [consent, setConsent] = useState(false);
   const [minor, setMinor] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState('');
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setSubmitting(true); setError(''); setResult(null);
+    const fields = normaliseForm(e.currentTarget);
+    try {
+      const response = await submitRegistration({
+        event: 'ubuntu-challenge-01',
+        player: {
+          name: fields.name,
+          surname: fields.surname,
+          mobile: fields.mobile,
+          dateOfBirth: fields.dob,
+          gender: fields.gender,
+          team: fields.team,
+        },
+        isMinor: minor,
+        popiaConsent: consent,
+      });
+      setResult(response);
+      e.currentTarget.reset();
+      setConsent(false); setMinor(false);
+    } catch (err) {
+      setError(err.message || 'Please try again or contact Lowveld Padel.');
+    } finally { setSubmitting(false); }
+  }
 
   return (
     <div className="card" style={{ padding: 22, borderTop: '3px solid var(--gold)' }}>
@@ -149,14 +220,8 @@ function UbuntuRegistration() {
         Your partner changes. Your score doesn’t. Register your player profile for the Lowveld Padel Ubuntu Series.
       </p>
 
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        alert('Your form is ready. Online submission will activate once the Google Sheets endpoint is connected.');
-      }}>
+      <form onSubmit={handleSubmit}>
         <div className="grid cols-2" style={{ gap: 14, marginTop: 20 }}>
-          <Field label="Profile image / player photo">
-            <input name="photo" type="file" accept="image/*" style={inputStyle} />
-          </Field>
           <Field label="Gender">
             <select name="gender" required style={inputStyle} defaultValue="">
               <option value="" disabled>Select gender</option><option>Male</option><option>Female</option>
@@ -197,9 +262,10 @@ function UbuntuRegistration() {
           </span>
         </label>
 
-        <button type="submit" className="btn" disabled={!consent} style={{ marginTop: 20, opacity: consent ? 1 : .55 }}>
-          Submit Ubuntu Series Registration
+        <button type="submit" className="btn" disabled={!consent || submitting} style={{ marginTop: 20, opacity: consent && !submitting ? 1 : .55 }}>
+          {submitting ? 'Submitting…' : 'Submit Ubuntu Series Registration'}
         </button>
+        <SubmissionMessage result={result} error={error} />
       </form>
     </div>
   );
@@ -265,6 +331,10 @@ export function Registration() {
         .payment-panel h3{margin:8px 0 4px;font-family:var(--display);text-transform:uppercase;font-size:16px}
         .payment-panel p{margin:0;color:var(--muted);font-size:11px;line-height:1.55;max-width:650px}
         .payment-panel .btn{white-space:nowrap}
+        .registration-message{display:grid;gap:5px;margin-top:16px;padding:14px;border-radius:10px;font-size:12px;line-height:1.5}
+        .registration-message.is-success{border:1px solid rgba(48,180,94,.45);background:rgba(48,180,94,.09);color:#baf5ce}
+        .registration-message.is-error{border:1px solid rgba(255,92,92,.45);background:rgba(255,92,92,.09);color:#ffd0d0}
+        .registration-message strong{color:var(--gold);letter-spacing:.06em}
         @media(max-width:850px){.registration-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media(max-width:850px){.registration-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media(max-width:650px){.grid.cols-2{grid-template-columns:1fr!important}.registration-tabs{display:flex;overflow-x:auto;padding-bottom:5px}.registration-tabs button{min-width:220px;flex-shrink:0}.registration-hero,.payment-panel{display:grid}.kruger-price{text-align:left}.registration-facts{grid-template-columns:1fr}.payment-panel .btn{width:100%}}

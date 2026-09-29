@@ -71,7 +71,7 @@ export async function hasAdminAccess() {
 export async function listRegistrations() {
   if (!supabase) throw new Error('Admin service is unavailable.');
   const { data, error } = await supabase.from('app_registrations')
-    .select('id,reference,event_code,registration_type,division,pair_name,participants,primary_name,primary_email,primary_mobile,is_minor,registration_status,payment_status,payment_amount_cents,confirmation_email_status,submitted_at')
+    .select('id,reference,event_code,registration_type,division,pair_name,participants,primary_name,primary_email,primary_mobile,is_minor,registration_status,payment_status,payment_amount_cents,confirmation_email_status,submitted_at,deleted_at')
     .order('submitted_at', { ascending: false });
   if (error) throw error;
   return data || [];
@@ -165,4 +165,12 @@ export async function undoPoint(matchId, events, opts) {
     return null;
   }
   return null;
+}
+
+// Reversible removal; existing RLS limits writes to administrators.
+export async function trashRegistration(id, trashed) {
+  if (!supabase) throw new Error('Registration service is unavailable.');
+  const { data, error } = await supabase.from('app_registrations').update({deleted_at: trashed ? new Date().toISOString() : null}).eq('id', id).select('id,deleted_at').single();
+  if (error) throw new Error('Could not update this entry. Check your admin access and refresh before retrying.');
+  return data;
 }

@@ -75,8 +75,9 @@ function KrugerCupRegistration() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const form = e.currentTarget;
     setSubmitting(true); setError(''); setResult(null);
-    const fields = normaliseForm(e.currentTarget);
+    const fields = normaliseForm(form);
     try {
       const response = await submitRegistration({
         event: 'kruger-cup-2026',
@@ -90,7 +91,7 @@ function KrugerCupRegistration() {
         popiaConsent: consent,
       });
       setResult(response);
-      e.currentTarget.reset();
+      form.reset();
       setConsent(false); setRulesAccepted(false);
     } catch (err) {
       setError(err.message || 'Please try again or contact Lowveld Padel.');
@@ -185,8 +186,9 @@ function UbuntuRegistration() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const form = e.currentTarget;
     setSubmitting(true); setError(''); setResult(null);
-    const fields = normaliseForm(e.currentTarget);
+    const fields = normaliseForm(form);
     try {
       const response = await submitRegistration({
         event: 'ubuntu-challenge-01',
@@ -203,7 +205,7 @@ function UbuntuRegistration() {
         popiaConsent: consent,
       });
       setResult(response);
-      e.currentTarget.reset();
+      form.reset();
       setConsent(false); setMinor(false);
     } catch (err) {
       setError(err.message || 'Please try again or contact Lowveld Padel.');

@@ -71,7 +71,7 @@ export async function hasAdminAccess() {
 export async function listRegistrations() {
   if (!supabase) throw new Error('Admin service is unavailable.');
   const { data, error } = await supabase.from('app_registrations')
-    .select('id,reference,event_code,registration_type,division,pair_name,participants,primary_name,primary_email,primary_mobile,is_minor,registration_status,payment_status,payment_amount_cents,confirmation_email_status,submitted_at,deleted_at')
+    .select('id,reference,event_code,registration_type,division,pair_name,participants,primary_name,primary_email,primary_mobile,is_minor,registration_status,payment_status,payment_amount_cents,confirmation_email_status,submitted_at,deleted_at,updated_at')
     .order('submitted_at', { ascending: false });
   if (error) throw error;
   return data || [];
@@ -81,8 +81,9 @@ export async function updateRegistration(id, changes) {
   if (!supabase) throw new Error('Admin service is unavailable.');
   const allowed = ['registration_status', 'payment_status'];
   const safe = Object.fromEntries(Object.entries(changes).filter(([key]) => allowed.includes(key)));
-  const { error } = await supabase.from('app_registrations').update({ ...safe, updated_at: new Date().toISOString() }).eq('id', id);
+  const { data, error } = await supabase.from('app_registrations').update({ ...safe, updated_at: new Date().toISOString() }).eq('id', id).select('registration_status,payment_status,updated_at').single();
   if (error) throw error;
+  return data;
 }
 
 // ------------------------------------------------------------
@@ -180,5 +181,15 @@ export async function permanentlyDeleteRegistration(id) {
   const { data, error } = await supabase.from('app_registrations')
     .delete().eq('id', id).not('deleted_at', 'is', null).select('id').single();
   if (error || !data) throw new Error('Could not permanently delete this entry. It must still be in trash and you must have admin access. Refresh and try again.');
+  return data;
+}
+
+export async function updateRegistrationDetails(id, changes, expectedUpdatedAt) {
+  const allowed = ['participants','pair_name','division','primary_name','primary_email','primary_mobile','is_minor'];
+  const safe = Object.fromEntries(Object.entries(changes).filter(([key])=>allowed.includes(key)));
+  let query = supabase.from('app_registrations').update({...safe,updated_at:new Date().toISOString()}).eq('id',id).is('deleted_at',null);
+  if (expectedUpdatedAt) query=query.eq('updated_at',expectedUpdatedAt);
+  const {data,error}=await query.select('participants,pair_name,division,primary_name,primary_email,primary_mobile,is_minor,updated_at').single();
+  if(error||!data)throw new Error('Could not save. The entry may have changed or your account may lack edit access. Cancel, refresh and try again.');
   return data;
 }

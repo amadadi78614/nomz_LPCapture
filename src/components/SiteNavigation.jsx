@@ -18,7 +18,6 @@ const MOBILE_NAV = [
   ['/', '⌂', 'Home'],
   ['/live', '●', 'Matches'],
   ['/leagues', '≡', 'Leagues'],
-  ['/register', '✎', 'Register'],
   ['/more', '⋯', 'More'],
 ];
 
@@ -35,6 +34,7 @@ export function TopBar() {
           <span className="wordmark">Lowveld Padel</span>
         </NavLink>
         <nav>
+          <a href="/kruger-cup/" style={{color:'var(--gold)',fontWeight:800}}>🏆 Kruger Cup</a>
           {DESKTOP_NAV.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === '/'} className={navClass} style={to === '/register' ? { color: 'var(--gold)', fontWeight: 800 } : undefined}>
               {label}
@@ -57,6 +57,7 @@ export function BottomNav() {
         </NavLink>
       )}
       <nav className="bottomnav" aria-label="Primary navigation">
+        <a href="/kruger-cup/" style={{color:'var(--gold)'}}><span className="ico" aria-hidden="true">🏆</span>Kruger Cup</a>
         {MOBILE_NAV.map(([to, icon, label]) => (
           <NavLink key={to} to={to} end={to === '/'} className={navClass}>
             <span className="ico" aria-hidden="true">{icon}</span>

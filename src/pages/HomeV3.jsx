@@ -37,6 +37,14 @@ export default function HomeV3() {
   const mvpTop = LADIES_S2_RANKINGS.slice(0, 3);
 
   return <main className="hv3">
+    <section aria-label="Kruger Cup 2026" style={{margin:'16px auto 22px',padding:'22px 23px',border:'1px solid #ad8147',borderRadius:18,background:'linear-gradient(105deg,#101722,#271c13)',color:'#ffdb9e',display:'flex',gap:20,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
+      <div style={{flex:'1 1 250px'}}>
+        <p style={{fontSize:11,fontWeight:800,letterSpacing:2,margin:'0 0 7px',color:'#e8b363'}}>SATURDAY · 10 OCTOBER 2026 · PADEL 24</p>
+        <h2 style={{fontFamily:'Georgia,serif',fontSize:'clamp(24px,4vw,35px)',margin:'0 0 6px',color:'#f9d39a'}}>THE KRUGER CUP</h2>
+        <p style={{fontSize:14,margin:0,color:'#f3e8d6'}}>Championship and Challenger draws, fixtures, results, standings and your next match — all in one place.</p>
+      </div>
+      <a href="/kruger-cup/" style={{minHeight:48,background:'linear-gradient(130deg,#f1b654,#e4c084)',color:'#131820',fontWeight:800,borderRadius:10,textDecoration:'none',display:'inline-flex',justifyContent:'center',alignItems:'center',padding:'12px 19px',flex:'0 0 auto'}}>🏆 Open Kruger Cup App →</a>
+    </section>
     <section className="hv3-hero hv3-ladies-hero">
       <div className="hv3-hero-copy">
         <div className="hv3-live-pill"><span /> LOWVELD PADEL · LADIES SEASON 2</div>

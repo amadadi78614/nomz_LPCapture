@@ -183,7 +183,7 @@ function groupScheduleIssues(){
  return errs;
 }
 function adminStepOne(){
- const data=matches(),errs=groupScheduleIssues(),courts=scheduleMeta?.courts||3,approved=publishedFixtureIds.size===MATCHES.length;
+ const data=matches(),errs=groupScheduleIssues(),courts=3,approved=publishedFixtureIds.size===MATCHES.length;
  const courtRows=Array.from({length:courts},(_,i)=>{
   const c=String(i+1),list=data.filter(m=>String(m.court)===c).sort((a,b)=>a.time.localeCompare(b.time));
   return `<details class="court-review"><summary>Court ${c} <span>${list.length} group matches ▾</span></summary><div class="court-review-rows">${list.map(m=>`<div class="review-row"><strong>${esc(m.time)}</strong><div><b>${esc(team(m.a).name)}</b><small>vs ${esc(team(m.b).name)}</small><em>${esc(m.division)} · Group ${esc(m.group)}</em></div></div>`).join('')}</div></details>`;
@@ -198,7 +198,7 @@ function adminStepOne(){
  <details class="planning-opt"><summary>↻ Change / regenerate courts (optional)</summary>
  <p class="subline">Only use this if the allocations need changing. An approved and published schedule must be republished after edits.</p>
  <div class="admin-grid">
- <label>Courts<select id="courtCount"><option value="3" ${courts!==4?'selected':''}>3 courts</option><option value="4" ${courts===4?'selected':''}>4 courts</option></select></label>
+ <label>Available courts<select id="courtCount"><option value="3" selected>3 courts (Padel 24)</option></select></label>
  <label>Knockout duration<select id="fullDuration">${[60,75,90,105,120].map(n=>`<option value="${n}" ${(scheduleMeta?.fullMatchMinutes||60)===n?'selected':''}>${n} minutes</option>`).join('')}</select></label>
  <label>Knockout recovery<select id="restMinutes">${[10,20,30].map(n=>`<option value="${n}" ${(scheduleMeta?.rest??10)===n?'selected':''}>${n} minutes</option>`).join('')}</select></label>
  </div>

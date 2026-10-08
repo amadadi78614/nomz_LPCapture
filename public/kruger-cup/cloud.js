@@ -1,0 +1,14 @@
+(function(root){'use strict';
+const endpoint='https://xkxmnljalxqjovokfmub.supabase.co',key='sb_publishable_U6nbcH9-z7u_mth63-isbw_QwuVIWyr',api=endpoint+'/rest/v1/kruger_cup_match_updates',sessionKey='kruger-cup-pwa-admin-session';
+let creds=null,mode='checking';try{creds=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{}
+function headers(extra={}){return {apikey:key,Authorization:'Bearer '+(creds?.access_token||key),'Content-Type':'application/json',...extra}}
+async function parse(r){let d;try{d=await r.json()}catch{}if(!r.ok)throw Error((d?.message||d?.msg||d?.error_description||d?.error||'Network error')+' ('+r.status+')');return d}
+async function load(){const r=await fetch(api+'?select=id,payload,published,updated_at&order=updated_at.asc&limit=500',{headers:headers(),cache:'no-store',signal:AbortSignal.timeout(6500)});const d=await parse(r);mode='ready';return d||[]}
+async function probe(){try{await load();return true}catch{mode='unavailable';return false}}
+function logout(){creds=null;sessionStorage.removeItem(sessionKey)}
+function signedIn(){return Boolean(creds?.access_token)&&Number(creds?.expires_at||0)*1000>Date.now()+60000}
+async function login(email,password){const r=await fetch(endpoint+'/auth/v1/token?grant_type=password',{method:'POST',headers:headers(),body:JSON.stringify({email,password})}),d=await parse(r);creds=d;sessionStorage.setItem(sessionKey,JSON.stringify(d));try{const role=await parse(await fetch(endpoint+'/rest/v1/app_admin_users?select=access_level&user_id=eq.'+encodeURIComponent(d.user?.id||''),{headers:headers()}));if(!role.some(x=>x.access_level==='admin'))throw Error('Not authorised as a tournament administrator');return d.user}catch(e){logout();throw e}}
+async function refreshIfNeeded(){if(!creds||signedIn())return;if(!creds.refresh_token){logout();return}try{const d=await parse(await fetch(endpoint+'/auth/v1/token?grant_type=refresh_token',{method:'POST',headers:headers(),body:JSON.stringify({refresh_token:creds.refresh_token})}));creds=d;sessionStorage.setItem(sessionKey,JSON.stringify(d))}catch{logout()}}
+async function upsert(rows){if(!creds?.access_token)throw Error('Please sign in');await refreshIfNeeded();if(!signedIn())throw Error('Session expired');const d=rows.map(x=>({id:x.id,payload:x.payload,published:Boolean(x.published)}));const r=await fetch(api+'?on_conflict=id',{method:'POST',headers:headers({Prefer:'resolution=merge-duplicates,return=minimal'}),body:JSON.stringify(d)});await parse(r);return true}
+root.KrugerSync={probe,load,login,logout,signedIn,refreshIfNeeded,upsert,get mode(){return mode}};
+})(globalThis);

@@ -353,8 +353,55 @@ function hydrateSingleScoreResets(){
 function hydrateSchedule(){
  const button=$('autoSchedule');if(!button)return;
  $('signOutAdmin')?.addEventListener('click',()=>{KrugerSync.logout();adminAuthenticated=false;render()});
- $('publishKnockouts')?.addEventListener('click',async()=>{const label=$('publishStatus');if(!scheduleMeta?.meetsHardStop){label.textContent='Blocked: knockout draft exceeds the 22:00 cutoff.';return}if(!knockoutDraft.length){label.textContent='Generate the schedule first.';return}if(!confirm('Publish provisional knockout slots to all players? They depend on group winners and can change if earlier matches run late.'))return;label.textContent='Publishing knockout slots…';try{await KrugerSync.upsert([...knockoutDraft.map(k=>({id:k.id,payload:k,published:true})),{id:'INFO-SCHEDULE',payload:{summary:scheduleMeta,warnings:scheduleWarnings},published:true}]);label.textContent='✅ Knockout slots published to every phone.'}catch(err){label.textContent='⚠ '+err.message}});
- $('publishGroups')?.addEventListener('click',async()=>{const label=$('publishStatus');if(!cloudReady||!adminAuthenticated){label.textContent='Sign in first.';return}if(matches().some(m=>!m.time||!m.court)){label.textContent='Some fixtures lack times or courts. Regenerate the schedule first.';return}if(!confirm('Publish these GROUP fixture times and existing scores to all players? Knockout times are not published until reviewed.'))return;label.textContent='Publishing 60 group fixtures…';try{const groupRows=matches().map(m=>({id:m.id,payload:{time:m.time,court:m.court,date:m.date,status:m.status,aScore:m.aScore,bScore:m.bScore,division:m.division,group:m.group},published:true}));await KrugerSync.upsert(groupRows);publishedFixtureIds=new Set(MATCHES.map(m=>m.id));label.textContent='✅ All 60 fixtures, courts and times published to every phone.'}catch(err){label.textContent='⚠ Publish failed: '+err.message}});
+
+ // Step 2 is always visible. Checking the box is the explicit administrator approval action.
+ const approval=$('confirmCourtReview'),publishButton=$('publishGroups');
+ const updatePublishButton=()=>{
+  const able=cloudReady&&adminAuthenticated&&KrugerSync.signedIn()&&groupScheduleIssues().length===0;
+  if(publishButton)publishButton.disabled=!(able&&approval?.checked);
+ };
+ approval?.addEventListener('change',updatePublishButton);
+ updatePublishButton();
+ $('retryLive')?.addEventListener('click',async()=>{
+  const btn=$('retryLive'),notice=$('retryLiveStatus');
+  btn.disabled=true;notice.textContent='Checking secure live connection…';
+  try{
+   cloudReady=await KrugerSync.probe();
+   if(!cloudReady){notice.textContent='Connection unavailable: '+esc(KrugerSync.lastError||'Please try again');btn.disabled=false;return}
+   adminAuthenticated=adminAuthenticated&&KrugerSync.signedIn();
+   await reloadCloud();syncStatus();render();
+  }catch(err){notice.textContent='Unable to connect: '+(err?.message||'Network error');btn.disabled=false}
+ });
+ $('publishKnockouts')?.addEventListener('click',async()=>{
+  const label=$('publishStatus');
+  if(!cloudReady||!adminAuthenticated||!KrugerSync.signedIn()){label.textContent='Publishing unavailable. Reconnect and sign in first.';return}
+  if(publishedFixtureIds.size!==MATCHES.length){label.textContent='Publish the group schedule before provisional knockout slots.';return}
+  if(!scheduleMeta?.meetsHardStop){label.textContent='Knockout draft exceeds the 22:00 planning deadline.';return}
+  if(!knockoutDraft.length){label.textContent='Create knockout slots first.';return}
+  if(!confirm('Publish estimated knockout time slots? Actual times may change as matches finish.'))return;
+  label.textContent='Publishing provisional knockout slots…';
+  try{
+   await KrugerSync.upsert([...knockoutDraft.map(k=>({id:k.id,payload:k,published:true})),{id:'INFO-SCHEDULE',payload:{summary:scheduleMeta,warnings:scheduleWarnings},published:true}]);
+   label.textContent='✓ Provisional knockout slots published to players.';
+  }catch(err){label.textContent='Not published: '+err.message}
+ });
+ publishButton?.addEventListener('click',async()=>{
+  const label=$('publishStatus');
+  if(!approval?.checked){label.textContent='First tick the checkbox confirming that you reviewed all three courts.';return}
+  if(!cloudReady||!adminAuthenticated||!KrugerSync.signedIn()){label.textContent='Not published. Sign in and restore the live connection first.';return}
+  const problems=groupScheduleIssues();
+  if(problems.length){label.textContent='Not published — '+problems[0];return}
+  if(!confirm('FINAL APPROVAL: Publish all 60 group match times and Courts 1–3 to every player?'))return;
+  publishButton.disabled=true;label.textContent='Publishing approved schedule…';
+  try{
+   const groupRows=matches().map(m=>({id:m.id,payload:{time:m.time,court:m.court,date:m.date,status:m.status,aScore:m.aScore,bScore:m.bScore,division:m.division,group:m.group},published:true}));
+   await KrugerSync.upsert(groupRows);
+   publishedFixtureIds=new Set(MATCHES.map(m=>m.id));
+   await reloadCloud();
+   syncStatus();render();
+   $('publishStatus').textContent='✓ Approved schedule published. All 60 group fixtures are available on players’ phones.';
+  }catch(err){publishButton.disabled=false;label.textContent='Not published: '+(err.message||'Connection failed')}
+ });
  button.addEventListener('click',()=>{
   const existing=Object.values(edits).some(m=>m.time||m.court);
   if(existing&&!window.confirm('Replace existing group match times and courts with a new draft? Scores will not be changed.'))return;
@@ -385,10 +432,16 @@ function hydrateSchedule(){
   });
  }
 }
-function hydrateLogin(){const form=$('loginForm');form?.addEventListener('submit',async e=>{e.preventDefault();const message=$('loginStatus');message.textContent='Verifying organiser account…';try{await KrugerSync.login(form.elements.email.value.trim(),form.elements.password.value);adminAuthenticated=true;await reloadCloud();render()}catch(err){message.textContent='Sign-in failed: '+err.message}})}
+function hydrateLogin(){const form=$('loginForm');form?.addEventListener('submit',async e=>{e.preventDefault();const message=$('loginStatus');message.textContent='Verifying organiser account…';try{await KrugerSync.login(form.elements.email.value.trim(),form.elements.password.value);adminAuthenticated=true;cloudReady=await KrugerSync.probe();if(!cloudReady){message.textContent='Signed in, but the live database is unavailable: '+KrugerSync.lastError;return}await reloadCloud();render()}catch(err){message.textContent='Sign-in failed: '+err.message}})}
 function syncStatus(){const box=$('syncbar');if(!box)return;box.className='sync-strip '+(cloudReady?'ready':'fail');box.firstElementChild.innerHTML=publishedFixtureIds.size===MATCHES.length?'● <b>OFFICIAL SCHEDULE</b> · All courts and times published':cloudReady?'◌ <b>AUTO-ASSIGNED DRAFT</b> · Courts 1–3 visible, awaiting organiser approval':'◌ <b>OFFLINE DRAFT</b> · Automatic court assignments; edits remain local';}
 async function reloadCloud(){if(!cloudReady)return;try{await KrugerSync.refreshIfNeeded();const rows=await KrugerSync.load();const next={};const ko=[];let smeta=null,warnings=[],newTieOrders={};const released=new Set(),releasedKO=new Set();for(const row of rows){const d=row.payload||{};if(MATCHES.some(x=>x.id===row.id)){next[row.id]=d;if(row.published)released.add(row.id)}else if(row.id.startsWith('K-')){ko.push({...d,id:row.id});if(row.published)releasedKO.add(row.id)}else if(row.id==='INFO-SCHEDULE'){smeta=d.summary||null;warnings=d.warnings||[]}else if(row.id==='INFO-TIEBREAKS'){newTieOrders=d.orders||{}}}edits=next;directorTieOrders=newTieOrders;publishedFixtureIds=released;publishedKnockoutIds=releasedKO;knockoutDraft=ko.length?ko:AUTO_SCHEDULE.knockouts.map(x=>({...x}));scheduleMeta=smeta||AUTO_SCHEDULE.summary;scheduleWarnings=warnings.length?warnings:AUTO_SCHEDULE.warnings;adminAuthenticated=KrugerSync.signedIn()&&adminAuthenticated;lastCloudUpdate=Date.now();save();syncStatus();if(!ADMIN_PAGE||!adminAuthenticated)render()}catch(e){syncStatus()}}
-async function launchCloud(){cloudReady=await KrugerSync.probe();if(cloudReady)await reloadCloud();syncStatus();render();if(cloudReady)setInterval(()=>{if(!document.hidden&&!(ADMIN_PAGE&&adminAuthenticated))reloadCloud()},20000)}
+async function launchCloud(){
+ if(ADMIN_PAGE&&KrugerSync.signedIn())adminAuthenticated=true;
+ cloudReady=await KrugerSync.probe();
+ if(cloudReady)await reloadCloud();
+ syncStatus();render();
+ setInterval(async()=>{if(!document.hidden&&cloudReady&&!(ADMIN_PAGE&&adminAuthenticated))await reloadCloud()},20000);
+}
 let installPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e});$('installApp').addEventListener('click',async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null}else $('installHelp').classList.toggle('show')});
 function hydrateKnockoutResult(){const form=$('koResultForm');if(!form)return;form.addEventListener('submit',async e=>{
  e.preventDefault();const m=knockoutDraft.find(x=>x.id===form.elements.match.value);if(!m)return;const label=$('koResultStatus');const raw=form.elements.sets.value.trim();const winner=form.elements.winner.value;

@@ -1,0 +1,19 @@
+{
+  "name": "Lowveld Padel — Kruger Cup 2026",
+  "short_name": "Kruger Cup",
+  "id": "/kruger-cup/",
+  "start_url": "/kruger-cup/index.html",
+  "scope": "/kruger-cup/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#07111d",
+  "theme_color": "#071322",
+  "icons": [
+    {
+      "src": "assets/lion.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -9,11 +9,11 @@ function generate(teams,fixtures,options={}){
  const map=new Map(fixtures.map(x=>[key(x.a,x.b),x])),busy=Array.from({length:courts},()=>[]),previous=new Map(),list=[],warnings=[];
  function add(m,start,c,duration,extras={}){const x={...m,...extras,date:start>=1440?'2026-10-11':'2026-10-10',time:fmt(start),court:String(c+1),duration,start,end:start+duration};if(busy[c].some(o=>o.start<x.end&&x.start<o.end))throw Error('Court double-booked at '+fmt(start));if(x.phase==='group'){for(const p of [m.a,m.b]){if(start<(previous.get(p)??-100)+20)throw Error('Insufficient pair rest '+p);previous.set(p,x.end)}}busy[c].push(x);list.push(x);return x}
  const ids=(d,g)=>teams.filter(t=>t.division===d&&t.group===g).sort((a,b)=>a.id.localeCompare(b.id)).map(t=>t.id);
- for(let r=0;r<7;r++)for(const [g,offset] of [['A',0],['B',20]])rounds(ids('Challenger',g))[r].forEach(([a,b],i)=>{const m=map.get(key(a,b));if(!m)throw Error('Missing Challenger fixture');const delay=courts===3&&r===6&&g==='B'&&i===2;add(m,480+r*40+offset+(delay?20:0),delay?0:i,20,{phase:'group'})});
+ for(let r=0;r<7;r++)for(const [g,offset] of [['A',0],['B',20]])(rounds(ids('Challenger',g))[r]||[]).forEach(([a,b],i)=>{const m=map.get(key(a,b));if(!m)throw Error('Missing Challenger fixture');const delay=courts===3&&r===6&&g==='B'&&i===2;add(m,480+r*40+offset+(delay?20:0),delay?0:i,20,{phase:'group'})});
  const championship=[],champLast=new Map();
  for(let r=0;r<3;r++){const pending=[];for(const g of ['A','B','C'])for(const [a,b] of rounds(ids('Championship',g))[r])pending.push(map.get(key(a,b)));
  while(pending.length){let best=null;for(let i=0;i<pending.length;i++)for(let c=0;c<courts;c++){const m=pending[i];if(!m)throw Error('Missing Championship fixture');let start=Math.max(750,(champLast.get(m.a)??0)+20,(champLast.get(m.b)??0)+20);for(const o of [...busy[c]].sort((a,b)=>a.start-b.start)){if(start+30<=o.start)break;if(start<o.end&&o.start<start+30)start=o.end}if(!best||start<best.start||(start===best.start&&c<best.c))best={i,c,start}}const m=pending.splice(best.i,1)[0],x=add(m,best.start,best.c,30,{phase:'group'});championship.push(x);champLast.set(m.a,x.end);champLast.set(m.b,x.end)}}
- const groups=list.slice(),groupEnd=Math.max(...groups.map(x=>x.end));if(groups.length!==60||championship.length!==18)throw Error('Expected 60 fixtures');if(groupEnd>990)warnings.push('Group games extend after 16:30, confirm qualifiers first.');
+ const groups=list.slice(),groupEnd=Math.max(...groups.map(x=>x.end));if(groups.length!==fixtures.length||championship.length!==18)throw Error('Fixture scheduling incomplete');if(groupEnd>990)warnings.push('Group games extend after 16:30, confirm qualifiers first.');
  const defs=new Map(),placed=new Map(),knockouts=[];
  function def(d,p,n,a,b,deps=[]){const id='K-'+d+'-'+p+'-'+n;defs.set(id,{id,division:d==='H'?'Challenger':'Championship',phase:p==='Q'?'Quarterfinal':p==='S'?'Semifinal':'Final',group:'',aLabel:a,bLabel:b,depends:deps})}
  [['A1','B4'],['A2','B3'],['B1','A4'],['B2','A3']].forEach(([a,b],i)=>def('H','Q',i+1,a,b));
@@ -27,7 +27,7 @@ function generate(teams,fixtures,options={}){
  const finish=Math.max(...knockouts.map(x=>x.end)),fit=finish<=1320;
  warnings.unshift(fit?'Estimated finish '+fmt(finish)+', no guarantee of 22:00 finish.':'Over 22:00 cutoff: projected '+fmt(finish)+'.');
  warnings.push('Full-set knockout durations are estimates; the official rules do not impose fixed 60-minute matches.');
- return{groups,knockouts,warnings,summary:{hardStop:'22:00',meetsHardStop:fit,overrunMinutes:Math.max(0,finish-1320),courts,fullMatchMinutes:full,rest,challengerStart:'08:00',championshipStart:'12:30',challengerQFStart:'16:30',championshipQFStart:fmt(Math.min(...knockouts.filter(x=>x.id.startsWith('K-P-Q')).map(x=>x.start))),lastGroupMatch:fmt(groupEnd),finalsEnd:fmt(finish),finalsNextDay:finish>=1440,totalGroupMatches:60,totalKnockouts:14}};
+ return{groups,knockouts,warnings,summary:{hardStop:'22:00',meetsHardStop:fit,overrunMinutes:Math.max(0,finish-1320),courts,fullMatchMinutes:full,rest,challengerStart:'08:00',championshipStart:'12:30',challengerQFStart:'16:30',championshipQFStart:fmt(Math.min(...knockouts.filter(x=>x.id.startsWith('K-P-Q')).map(x=>x.start))),lastGroupMatch:fmt(groupEnd),finalsEnd:fmt(finish),finalsNextDay:finish>=1440,totalGroupMatches:groups.length,totalKnockouts:14}};
 }
 root.KrugerScheduler={generate,rounds};
 })(typeof window==='undefined'?globalThis:window);

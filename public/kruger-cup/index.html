@@ -7,7 +7,7 @@ const TEAMS=[],MATCHES=[];for(const [division,gs] of Object.entries(DATA))for(co
 const AUTO_SCHEDULE=KrugerScheduler.generate(TEAMS,MATCHES,{courts:3,fullMatchMinutes:60,rest:10});
 const AUTO_BY_ID=new Map(AUTO_SCHEDULE.groups.map(m=>[m.id,{date:m.date,time:m.time,court:m.court}]));
 let publishedFixtureIds=new Set();
-const KEY='kruger-cup-live-2026';const ADMIN_PAGE=document.documentElement.dataset.admin==='yes';const LOCAL_DEMO=ADMIN_PAGE&&(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:');let stored={};try{stored=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}let edits=ADMIN_PAGE?(stored.edits||{}):{}; // Public scores always come from Supabase, never saved phone data.
+const KEY='kruger-cup-live-2026';const ADMIN_PAGE=document.documentElement.dataset.admin==='yes';const LOCAL_DEMO=ADMIN_PAGE&&(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:');let stored={};try{stored=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}let edits=stored.edits||{}; // Public scores always come from Supabase, never saved phone data.
  // Withdrawal reversed: never replay the six obsolete 4–0 walkovers from offline storage.
  const MANGERAH_MATCH_IDS=['HB-4','HB-9','HB-13','HB-16','HB-19','HB-20'];
  let staleWalkoversCleared=false;

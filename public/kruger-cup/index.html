@@ -7,7 +7,7 @@ const TEAMS=[],MATCHES=[];for(const [division,gs] of Object.entries(DATA))for(co
 const AUTO_SCHEDULE=KrugerScheduler.generate(TEAMS,MATCHES,{courts:3,fullMatchMinutes:60,rest:10});
 const AUTO_BY_ID=new Map(AUTO_SCHEDULE.groups.map(m=>[m.id,{date:m.date,time:m.time,court:m.court}]));
 let publishedFixtureIds=new Set();
-const KEY='kruger-cup-live-2026';const ADMIN_PAGE=document.documentElement.dataset.admin==='yes';const LOCAL_DEMO=ADMIN_PAGE&&(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:');let stored={};try{stored=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}let edits=stored.edits||{};
+const KEY='kruger-cup-live-2026';const ADMIN_PAGE=document.documentElement.dataset.admin==='yes';const LOCAL_DEMO=ADMIN_PAGE&&(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:');let stored={};try{stored=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}let edits=ADMIN_PAGE?(stored.edits||{}):{}; // Public scores always come from Supabase, never saved phone data.
  // Withdrawal reversed: never replay the six obsolete 4–0 walkovers from offline storage.
  const MANGERAH_MATCH_IDS=['HB-4','HB-9','HB-13','HB-16','HB-19','HB-20'];
  let staleWalkoversCleared=false;
@@ -138,9 +138,20 @@ function hydrateAdmin(){const sel=$('editmatch'),form=$('editForm');if(!sel||!fo
 function hydrateLogin(){const form=$('loginForm');form?.addEventListener('submit',async e=>{e.preventDefault();const message=$('loginStatus');message.textContent='Verifying organiser account…';try{await KrugerSync.login(form.elements.email.value.trim(),form.elements.password.value);adminAuthenticated=true;await reloadCloud();render()}catch(err){message.textContent='Sign-in failed: '+err.message}})}
 function syncStatus(){const box=$('syncbar');if(!box)return;box.className='sync-strip '+(cloudReady?'ready':'fail');box.firstElementChild.innerHTML=publishedFixtureIds.size===MATCHES.length?'● <b>OFFICIAL SCHEDULE</b> · All courts and times published':cloudReady?'◌ <b>AUTO-ASSIGNED DRAFT</b> · Courts 1–3 visible, awaiting organiser approval':'◌ <b>OFFLINE DRAFT</b> · Automatic court assignments; edits remain local';}
 async function reloadCloud(){if(!cloudReady)return;try{await KrugerSync.refreshIfNeeded();const rows=await KrugerSync.load();const next={};const ko=[];let smeta=null,warnings=[],newTieOrders={};const released=new Set();for(const row of rows){const d=row.payload||{};if(MATCHES.some(x=>x.id===row.id)){next[row.id]=d;if(row.published)released.add(row.id)}else if(row.id.startsWith('K-'))ko.push({...d,id:row.id});else if(row.id==='INFO-SCHEDULE'){smeta=d.summary||null;warnings=d.warnings||[]}else if(row.id==='INFO-TIEBREAKS'){newTieOrders=d.orders||{}}}edits=next;directorTieOrders=newTieOrders;publishedFixtureIds=released;knockoutDraft=ko.length?ko:AUTO_SCHEDULE.knockouts.map(x=>({...x}));scheduleMeta=smeta||AUTO_SCHEDULE.summary;scheduleWarnings=warnings.length?warnings:AUTO_SCHEDULE.warnings;adminAuthenticated=KrugerSync.signedIn()&&adminAuthenticated;lastCloudUpdate=Date.now();save();syncStatus();if(!ADMIN_PAGE||!adminAuthenticated)render()}catch(e){syncStatus()}}
-async function launchCloud(){cloudReady=await KrugerSync.probe();if(cloudReady)await reloadCloud();syncStatus();render();if(cloudReady)setInterval(()=>{if(!document.hidden&&!(ADMIN_PAGE&&adminAuthenticated))reloadCloud()},20000)}
+async function launchCloud(){
+ cloudReady=await KrugerSync.probe();
+ if(cloudReady)await reloadCloud();
+ syncStatus();render();
+}
+// Retry even after the first network attempt fails (common on mobile wake / poor reception).
+setInterval(async()=>{
+ if(document.hidden)return;
+ if(!cloudReady){await launchCloud();return}
+ if(!(ADMIN_PAGE&&adminAuthenticated))await reloadCloud();
+},15000);
+window.addEventListener('online',()=>{launchCloud()});
 // Refresh results whenever the user returns to the tournament tab after court play.
- document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(cloudReady)reloadCloud();else launchCloud()}});
+ document.addEventListener('visibilitychange',()=>{if(!document.hidden)launchCloud()});
  window.addEventListener('pageshow',e=>{if(e.persisted&&cloudReady)reloadCloud()});
  let installPrompt=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();installPrompt=e});$('installApp').addEventListener('click',async()=>{if(installPrompt){installPrompt.prompt();await installPrompt.userChoice;installPrompt=null}else $('installHelp').classList.toggle('show')});
 function hydrateKnockoutResult(){const form=$('koResultForm');if(!form)return;form.addEventListener('submit',async e=>{

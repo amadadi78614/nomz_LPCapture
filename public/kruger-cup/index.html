@@ -8,7 +8,7 @@ const AUTO_SCHEDULE=KrugerScheduler.generate(TEAMS,MATCHES,{courts:3,fullMatchMi
 const AUTO_BY_ID=new Map(AUTO_SCHEDULE.groups.map(m=>[m.id,{date:m.date,time:m.time,court:m.court}]));
 let publishedFixtureIds=new Set();
 const KEY='kruger-cup-live-2026';const ADMIN_PAGE=document.documentElement.dataset.admin==='yes';const LOCAL_DEMO=ADMIN_PAGE&&(location.hostname==='localhost'||location.hostname==='127.0.0.1'||location.protocol==='file:');let stored={};try{stored=JSON.parse(localStorage.getItem(KEY)||'{}')}catch{}// Emergency scoreboard snapshot from Supabase (10 Oct). Live cloud refresh supersedes these values.
-const SNAPSHOT_SCORES="HA-10:1-4,HA-11:4-0,HA-12:4-1,HA-13:4-2,HA-14:4-3,HA-15:4-0,HA-16:4-0,HA-17:4-3,HA-2:1-4,HA-20:3-4,HA-21:4-2,HA-3:2-4,HA-4:3-4,HA-5:0-4,HA-6:4-2,HA-7:2-4,HA-8:3-4,HA-9:4-2,HB-10:3-4,HB-11:4-0,HB-12:0-4,HB-13:4-0,HB-14:3-4,HB-15:4-0,HB-16:4-0,HB-17:4-1,HB-2:4-3,HB-20:2-4,HB-3:0-4,HB-4:4-0,HB-5:0-4,HB-6:3-4,HB-7:4-0,HB-9:4-3";
+const SNAPSHOT_SCORES="HA-1:4-1,HA-10:1-4,HA-11:4-0,HA-12:4-1,HA-13:4-2,HA-14:4-3,HA-15:4-0,HA-16:4-0,HA-17:4-3,HA-18:4-0,HA-2:1-4,HA-20:3-4,HA-21:4-2,HA-3:2-4,HA-4:3-4,HA-5:0-4,HA-6:4-2,HA-7:2-4,HA-8:3-4,HA-9:4-2,HB-10:3-4,HB-11:4-0,HB-12:0-4,HB-13:4-0,HB-14:3-4,HB-15:4-0,HB-16:4-0,HB-17:4-1,HB-2:4-3,HB-20:2-4,HB-21:4-0,HB-3:0-4,HB-4:4-0,HB-5:0-4,HB-6:3-4,HB-7:4-0,HB-8:1-4,HB-9:4-3";
 const SNAPSHOT_EDITS=Object.fromEntries(SNAPSHOT_SCORES.split(',').map(item=>{const [id,score]=item.split(':');const [a,b]=score.split('-').map(Number);return [id,{status:'final',aScore:a,bScore:b}]}));
 let edits=ADMIN_PAGE?(stored.edits||{}):SNAPSHOT_EDITS; // Public scores always come from Supabase, never saved phone data.
  // Withdrawal reversed: never replay the six obsolete 4–0 walkovers from offline storage.

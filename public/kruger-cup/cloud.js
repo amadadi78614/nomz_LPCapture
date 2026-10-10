@@ -3,7 +3,7 @@ const endpoint='https://xkxmnljalxqjovokfmub.supabase.co',key='sb_publishable_U6
 let creds=null,mode='checking',lastError='';try{creds=JSON.parse(sessionStorage.getItem(sessionKey)||'null')}catch{}
 function headers(extra={}){const base={apikey:key,'Content-Type':'application/json'};if(creds?.access_token)base.Authorization='Bearer '+creds.access_token;return {...base,...extra}}
 async function parse(r){let d;try{d=await r.json()}catch{}if(!r.ok)throw Error((d?.message||d?.msg||d?.error_description||d?.error||'Network error')+' ('+r.status+')');return d}
-async function load(){const r=await fetch(api+'?select=id,payload,published,updated_at&order=updated_at.asc&limit=500',{headers:headers(),cache:'no-store',signal:AbortSignal.timeout(6500)});const d=await parse(r);mode='ready';lastError='';return d||[]}
+async function load(){const r=await fetch(api+'?select=id,payload,published,updated_at&order=updated_at.asc&limit=500',{headers:headers({'Cache-Control':'no-cache'}),cache:'no-store',signal:AbortSignal.timeout(6500)});const d=await parse(r);mode='ready';lastError='';return d||[]}
 async function probe(){try{await refreshIfNeeded();await load();return true}catch(error){mode='unavailable';lastError=error?.message||'Connection failed';return false}}
 function logout(){creds=null;sessionStorage.removeItem(sessionKey)}
 function signedIn(){return Boolean(creds?.access_token)&&Number(creds?.expires_at||0)*1000>Date.now()+60000}

@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Kruger Cup — Refreshing Scores</title><style>body{font:18px system-ui,sans-serif;background:#091726;color:#fff;padding:3rem;text-align:center}strong{color:#dfaf63}</style></head><body><h2>Kruger Cup — refreshing scores</h2><p id="status">Clearing outdated tournament data…</p><script>
+(async()=>{
+const el=document.getElementById('status');
+try{
+const key='kruger-cup-live-2026';
+const s=JSON.parse(localStorage.getItem(key)||'{}');
+if(s.edits){for(const id of ['HB-4','HB-9','HB-13','HB-16','HB-19','HB-20'])delete s.edits[id];localStorage.setItem(key,JSON.stringify(s));}
+if('serviceWorker' in navigator){const regs=await navigator.serviceWorker.getRegistrations();await Promise.all(regs.filter(r=>r.scope.includes('/kruger-cup/')).map(r=>r.unregister()));}
+if('caches' in window){const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith('lowveld-kruger-')).map(k=>caches.delete(k)));}
+el.textContent='Score cache reset. Opening live standings…';
+}catch(e){el.textContent='Reset attempted. Opening live standings…';}
+location.replace('./index.html?fresh=20261010-restore#standings');
+})();
+</script></body></html>

@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+const galleryPhotos = Array.from({length:57},(_,i)=>`/kruger-cup-media/photos/photo-${String(i+1).padStart(2,'0')}.webp`);
+const galleryVideos = Array.from({length:3},(_,i)=>`/kruger-cup-media/videos/video-${String(i+1).padStart(2,'0')}.mp4`);
 const championship = [
  ['Group A winners','Faeez Sebastian / Durell Pillay'],['Group A runners-up','Bryan Theron / Anton Grote'],
  ['Group B winners','Yusuf Packery / Ahmed Mungalee'],['Group B runners-up','Uwaiz Patel / M Ashraf Arabi'],
  ['Group C winners','Ridwan Sujee / Justin van Staden'],['Group C runners-up','Yusuf Asvat / Joshua Hoffman']
 ];
 export default function KrugerCup2026(){
+ const [mediaReady,setMediaReady]=useState(false);
+ useEffect(()=>{let alive=true;fetch(galleryPhotos[0],{method:'HEAD',cache:'no-store'}).then(r=>{if(alive)setMediaReady(r.ok&&(r.headers.get('content-type')||'').startsWith('image/'))}).catch(()=>{});return()=>{alive=false}},[]);
  return <main style={{maxWidth:1150,margin:'0 auto',padding:'24px 18px 90px',color:'#f5f1e8'}}>
  <section style={{padding:'clamp(26px,5vw,58px)',border:'1px solid #ae823c',borderRadius:24,background:'radial-gradient(circle at 75% 8%,#594020 0%,transparent 46%),linear-gradient(135deg,#101a26,#101217)',boxShadow:'0 14px 40px #0005'}}>
  <p style={{color:'#dbad62',fontWeight:900,letterSpacing:3}}>LOWVELD PADEL · EVENT RECAP</p>
@@ -31,9 +36,13 @@ export default function KrugerCup2026(){
  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(275px,1fr))',gap:12}}>
  {championship.map(([title,n])=><div key={title} style={{padding:'17px 20px',background:'#152431',border:'1px solid #31475a',borderRadius:13}}><p style={{fontSize:12,color:'#e8b674',fontWeight:800,margin:0}}>{title.toUpperCase()}</p><h3 style={{margin:'8px 0 0',fontSize:17}}>{n}</h3></div>)}
  </div></section>
- <section id="gallery" style={{marginTop:45,padding:28,background:'#152431',border:'1px solid #37516b',borderRadius:18}}>
- <p style={{color:'#d8ad6f',fontWeight:900,letterSpacing:2}}>EVENT MEMORIES</p><h2 style={{fontSize:30,margin:'0 0 10px'}}>Photos & videos</h2>
- <p style={{color:'#c7d6df',lineHeight:1.7}}>The full event gallery is being prepared from the tournament media. More match-day images, presentations and videos will appear here as soon as media publishing is completed.</p>
+ <section id="gallery" style={{marginTop:45,padding:'clamp(18px,3vw,28px)',background:'#152431',border:'1px solid #37516b',borderRadius:18}}>
+ <p style={{color:'#d8ad6f',fontWeight:900,letterSpacing:2}}>EVENT MEMORIES</p><h2 style={{fontSize:30,margin:'0 0 10px'}}>The Kruger Cup in pictures</h2>
+ {mediaReady?<><p style={{color:'#c7d6df'}}>57 match-day photographs and 3 event videos. Tap a photo to view the original gallery image.</p>
+ <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(180px,1fr))',gap:11}}>
+ {galleryPhotos.map((p,i)=><a key={p} href={p} target="_blank" rel="noreferrer" aria-label={`Open Kruger Cup photograph ${i+1}`}><img src={p} alt={`Kruger Cup 2026 photograph ${i+1}`} loading="lazy" style={{width:'100%',aspectRatio:'4/3',objectFit:'cover',borderRadius:10,background:'#243744'}}/></a>)}</div>
+ <h3 style={{fontSize:24,marginTop:30}}>Event videos</h3><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))',gap:14}}>{galleryVideos.map((p,i)=><div key={p}><p style={{color:'#e8b674',fontWeight:800}}>Highlight video {i+1}</p><video controls preload="none" playsInline style={{width:'100%',borderRadius:12,background:'#000'}}><source src={p} type="video/mp4"/>Your browser cannot play this video.</video></div>)}</div>
+ </>:<p style={{color:'#c7d6df',lineHeight:1.7}}>The event media gallery is being published. Photos and videos will appear automatically once the 57 photographs and 3 videos have been uploaded.</p>}
  </section><p style={{marginTop:26}}><Link to="/" style={{color:'#ecc585'}}>← Back to Lowveld Padel</Link></p>
  </main>
 }

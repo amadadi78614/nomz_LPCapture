@@ -20,12 +20,12 @@ export default function KrugerCup2026(){
  <article style={{padding:25,border:'1px solid #9a713b',background:'#172430',borderRadius:18}}>
  <p style={{color:'#f7c97f',fontSize:13,letterSpacing:1.4}}>🏆 CHALLENGER CHAMPIONS</p>
  <h3 style={{fontFamily:'Georgia,serif',fontSize:28,margin:'12px 0'}}>Scharl van den Berg<br/> & Jude van den Berg</h3>
- <p style={{color:'#afc0ca',lineHeight:1.6}}>Champions confirmed by Tournament Control. Runners-up and the final score will be added once verified.</p>
+ <p style={{color:'#afc0ca',lineHeight:1.6}}>🥇 Champions: Scharl van den Berg / Jude van den Berg. 🥈 Runners-up: Uzair Ismail / Zuhayr Ismail.</p>
  </article>
  <article style={{padding:25,border:'1px solid #536879',background:'#172430',borderRadius:18}}>
  <p style={{color:'#e6b97c',fontSize:13,letterSpacing:1.4}}>🏆 CHAMPIONSHIP FINAL</p>
- <h3 style={{fontFamily:'Georgia,serif',fontSize:25,margin:'12px 0'}}>Official podium pending confirmation</h3>
- <p style={{color:'#afc0ca',lineHeight:1.6}}>The final winner and runners-up have not been verified in the recorded tournament results. We will not publish an unconfirmed result.</p>
+ <h3 style={{fontFamily:'Georgia,serif',fontSize:25,margin:'12px 0'}}>Uwaiz Patel / M Ashraf Arabi</h3>
+ <p style={{color:'#afc0ca',lineHeight:1.6}}>🥇 Championship champions: Uwaiz Patel / M Ashraf Arabi. 🥈 Runners-up: Yusuf Packery / Ahmed Mungalee.</p>
  </article></div></section>
  <section style={{marginTop:45}}><p style={{color:'#d5a05b',fontWeight:900,letterSpacing:2}}>ROAD TO THE KNOCKOUTS</p><h2 style={{fontSize:30}}>Championship group honours</h2>
  <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(275px,1fr))',gap:12}}>

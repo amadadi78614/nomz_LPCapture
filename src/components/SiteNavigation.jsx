@@ -1,3 +1,4 @@
+import {CartCount} from '../commerce/store';
 import { NavLink } from 'react-router-dom';
 import { FIXTURES } from '../data/seed';
 
@@ -12,6 +13,7 @@ const DESKTOP_NAV = [
   ['/news', 'News'],
   ['/register', 'Register'],
   ['/shop', 'Shop'],
+  ['/cart', <CartCount/>],
   ['/privacy', 'POPIA'],
 ];
 
@@ -19,6 +21,7 @@ const MOBILE_NAV = [
   ['/', '⌂', 'Home'],
   ['/live', '●', 'Matches'],
   ['/leagues', '≡', 'Leagues'],
+  ['/cart', '▣', 'Cart'],
   ['/more', '⋯', 'More'],
 ];
 

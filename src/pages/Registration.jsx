@@ -1,3 +1,4 @@
+import EventBookings from '../commerce/EventBookings';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { UPCOMING_EVENTS, UpcomingEvent } from '../data/upcomingEvents';
@@ -220,7 +221,7 @@ function UbuntuRegistration() {
       </div>
       <h2 className="display" style={{ margin: '14px 0 8px' }}>Ubuntu Series</h2>
       <p className="muted" style={{ lineHeight: 1.65, maxWidth: 760 }}>
-        Your partner changes. Your score doesn’t. Register your player profile for the Lowveld Padel Ubuntu Series. Dates, venue and fees are TBC. No payment is due now.
+        Your partner changes. Your score doesn’t. Register your player profile for the Lowveld Padel Ubuntu Series. R250 per player per event. Dates and venue are TBC. No payment is due now.
       </p>
 
       <form onSubmit={handleSubmit}>
@@ -292,11 +293,12 @@ export function Registration() {
         <span className="chip">Lowveld Padel</span>
         <h1 className="display" style={{ marginBottom: 8 }}>Registration Centre</h1>
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, maxWidth: 700 }}>
-          Ubuntu Series player registration is open; dates and fees are TBC. Explore our upcoming competitions below. The first Kruger Cup is complete.
+          Ubuntu Series player registration is open; R250 per player per event, with dates and venue TBC. Explore our upcoming competitions below. The first Kruger Cup is complete.
         </p>
       </div>
 
       <p><Link to="/shop">LP apparel &amp; padel gear — shop coming soon →</Link></p>
+      <EventBookings/>
       <div className="registration-tabs" role="tablist" aria-label="Lowveld Padel registrations">
         {TABS.map((item) => (
           <button key={item.id} type="button" role="tab" aria-selected={tab === item.id}

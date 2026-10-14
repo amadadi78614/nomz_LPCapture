@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { UPCOMING_EVENTS, UpcomingEvent } from '../data/upcomingEvents';
 import { submitRegistration } from '../lib/supabase';
 
 const TABS = [
   { id: 'ubuntu', label: 'Ubuntu Series', status: 'open' },
   { id: 'kruger-cup', label: 'Kruger Cup', status: 'closed' },
-  { id: 'mens-franchise', label: "Men's Franchise League", status: 'closed' },
+  ...UPCOMING_EVENTS.map(event => ({id: event.id, label: event.name, status: 'soon'})),
   { id: 'ladies-franchise', label: 'Ladies Franchise League', status: 'closed' },
   { id: 'mens-legacy', label: "Men's Legacy League", status: 'closed' },
   { id: 'ladies-legacy', label: 'Ladies Legacy League', status: 'closed' },
-  { id: 'youth', label: 'Youth Championship Series', status: 'closed' },
 ];
 
 const TEAMS = [
@@ -220,7 +220,7 @@ function UbuntuRegistration() {
       </div>
       <h2 className="display" style={{ margin: '14px 0 8px' }}>Ubuntu Series</h2>
       <p className="muted" style={{ lineHeight: 1.65, maxWidth: 760 }}>
-        Your partner changes. Your score doesn’t. Register your player profile for the Lowveld Padel Ubuntu Series.
+        Your partner changes. Your score doesn’t. Register your player profile for the Lowveld Padel Ubuntu Series. Dates, venue and fees are TBC. No payment is due now.
       </p>
 
       <form onSubmit={handleSubmit}>
@@ -292,16 +292,17 @@ export function Registration() {
         <span className="chip">Lowveld Padel</span>
         <h1 className="display" style={{ marginBottom: 8 }}>Registration Centre</h1>
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, maxWidth: 700 }}>
-          Ubuntu Series registrations are open. Kruger Cup registrations are closed. Each competition has its own format, eligibility rules and registration form.
+          Ubuntu Series player registration is open; dates and fees are TBC. Explore our upcoming competitions below. The first Kruger Cup is complete.
         </p>
       </div>
 
+      <p><Link to="/shop">LP apparel &amp; padel gear — shop coming soon →</Link></p>
       <div className="registration-tabs" role="tablist" aria-label="Lowveld Padel registrations">
         {TABS.map((item) => (
           <button key={item.id} type="button" role="tab" aria-selected={tab === item.id}
             className={tab === item.id ? 'on' : ''} onClick={() => setTab(item.id)}>
             <span>{item.label}</span>
-            <small className={item.status === 'open' ? 'status-open' : 'status-closed'}>{item.status === 'open' ? 'OPEN' : 'CLOSED'}</small>
+            <small className={item.status === 'open' ? 'status-open' : 'status-closed'}>{item.status === 'open' ? 'OPEN' : item.status === 'soon' ? 'SOON' : 'CLOSED'}</small>
           </button>
         ))}
       </div>
@@ -309,6 +310,7 @@ export function Registration() {
       <div style={{ marginTop: 20 }}>
         {tab === 'kruger-cup' && active?.status === 'open' && <KrugerCupRegistration />}
         {tab === 'ubuntu' && <UbuntuRegistration />}
+        {active?.status === 'soon' && <UpcomingEvent event={UPCOMING_EVENTS.find(event => event.id === tab)} />}
         {active?.status === 'closed' && <ClosedRegistration name={active?.label} />}
       </div>
 

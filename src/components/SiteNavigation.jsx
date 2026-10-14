@@ -11,6 +11,7 @@ const DESKTOP_NAV = [
   ['/tv', 'Lowveld TV'],
   ['/news', 'News'],
   ['/register', 'Register'],
+  ['/shop', 'Shop'],
   ['/privacy', 'POPIA'],
 ];
 

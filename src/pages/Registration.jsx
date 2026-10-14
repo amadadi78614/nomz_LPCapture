@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { submitRegistration } from '../lib/supabase';
 
 const TABS = [
-  { id: 'kruger-cup', label: 'Kruger Cup', status: 'open' },
+  { id: 'ubuntu', label: 'Ubuntu Series', status: 'open' },
+  { id: 'kruger-cup', label: 'Kruger Cup', status: 'closed' },
   { id: 'mens-franchise', label: "Men's Franchise League", status: 'closed' },
   { id: 'ladies-franchise', label: 'Ladies Franchise League', status: 'closed' },
   { id: 'mens-legacy', label: "Men's Legacy League", status: 'closed' },
   { id: 'ladies-legacy', label: 'Ladies Legacy League', status: 'closed' },
-  { id: 'ubuntu', label: 'Ubuntu Series', status: 'open' },
   { id: 'youth', label: 'Youth Championship Series', status: 'closed' },
 ];
 
@@ -224,7 +224,7 @@ function UbuntuRegistration() {
       </p>
 
       <form onSubmit={handleSubmit}>
-        <div className="grid cols-2" style={{ gap: 14, marginTop: 20 }}>
+        <div className="grid cols-2 registration-fields" style={{ gap: 14, marginTop: 20 }}>
           <Field label="Gender">
             <select name="gender" required style={inputStyle} defaultValue="">
               <option value="" disabled>Select gender</option><option>Male</option><option>Female</option>
@@ -276,7 +276,14 @@ function UbuntuRegistration() {
 }
 
 export function Registration() {
-  const [tab, setTab] = useState('kruger-cup');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const requestedTab = searchParams.get('event');
+  const tab = TABS.some((item) => item.id === requestedTab) ? requestedTab : 'ubuntu';
+  function setTab(id) {
+    const next = new URLSearchParams(searchParams);
+    next.set('event', id);
+    setSearchParams(next);
+  }
   const active = TABS.find((item) => item.id === tab);
 
   return (
@@ -285,7 +292,7 @@ export function Registration() {
         <span className="chip">Lowveld Padel</span>
         <h1 className="display" style={{ marginBottom: 8 }}>Registration Centre</h1>
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, maxWidth: 700 }}>
-          Kruger Cup and Ubuntu Series registrations are open. Each competition has its own format, eligibility rules and registration form.
+          Ubuntu Series registrations are open. Kruger Cup registrations are closed. Each competition has its own format, eligibility rules and registration form.
         </p>
       </div>
 
@@ -300,7 +307,7 @@ export function Registration() {
       </div>
 
       <div style={{ marginTop: 20 }}>
-        {tab === 'kruger-cup' && <KrugerCupRegistration />}
+        {tab === 'kruger-cup' && active?.status === 'open' && <KrugerCupRegistration />}
         {tab === 'ubuntu' && <UbuntuRegistration />}
         {active?.status === 'closed' && <ClosedRegistration name={active?.label} />}
       </div>
@@ -341,7 +348,7 @@ export function Registration() {
         .registration-message strong{color:var(--gold);letter-spacing:.06em}
         @media(max-width:850px){.registration-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}}
         @media(max-width:850px){.registration-facts{grid-template-columns:repeat(2,minmax(0,1fr))}}
-        @media(max-width:650px){.grid.cols-2{grid-template-columns:1fr!important}.registration-tabs{display:flex;overflow-x:auto;padding-bottom:5px}.registration-tabs button{min-width:220px;flex-shrink:0}.registration-hero,.payment-panel{display:grid}.kruger-price{text-align:left}.registration-facts{grid-template-columns:1fr}.payment-panel .btn{width:100%}}
+        @media(max-width:650px){.grid.cols-2{grid-template-columns:1fr!important}.registration-tabs{grid-template-columns:1fr}.registration-tabs button{min-width:0;width:100%}.registration-hero,.payment-panel{display:grid}.kruger-price{text-align:left}.registration-facts{grid-template-columns:1fr}.payment-panel .btn{width:100%}}
       `}</style>
     </div>
   );

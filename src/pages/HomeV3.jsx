@@ -1,3 +1,4 @@
+import LadiesLatestResult from '../components/LadiesLatestResult';
 import { Link } from 'react-router-dom';
 import { LADIES_S2_STANDINGS, LADIES_S2_RANKINGS } from '../data/ladiesSeason2Round1Update';
 import '../styles/home-v3.css';
@@ -7,10 +8,10 @@ const signed = (value) => Number(value) > 0 ? `+${value}` : String(value);
 
 const headlines = [
   {
-    eyebrow: 'MATCHWEEK 5 · 16 SEPTEMBER 2026',
-    title: 'Lillies roar. Flames win. Blossoms still lead.',
-    copy: 'Lunar Lillies stunned Backhand Blossoms 11–4, while Phoenix Flames beat Desert Roses 10–3. The leaders remain top—but the pressure is real.',
-    stat: '11–4',
+    eyebrow: '20 OCTOBER 2026 · PLAY 360',
+    title: 'Blossoms beat Net Novas 12–3.',
+    copy: 'Three 4–0 wins power Backhand Blossoms to victory. Mariette Venter and Imaan Shaik earn Net Novas three points in the final rubber.',
+    stat: '12–3',
     statLabel: 'STATEMENT WIN',
     tone: 'blue',
   },
@@ -48,6 +49,7 @@ export default function HomeV3() {
       <Link to="/leagues?league=ladies" aria-label="Open Ladies playoff fixtures" style={{display:'block',maxWidth:350,width:'100%',justifySelf:'center',position:'relative',zIndex:1}}><img src="/ladies-playoffs-2026.jpg" alt="Four franchises. One dream. Backhand Blossoms vs Lunar Lillies and Phoenix Flames vs Net Novas, 14 October 2026 at 17:30, Padel 24 Nelspruit" width="1024" height="1536" style={{display:'block',width:'100%',height:'auto',borderRadius:16}}/></Link>
     </section>
 
+    <LadiesLatestResult/>
     <LadiesPlayoffs/>
 
     <section className="hv3-channel-section">

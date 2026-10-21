@@ -1,29 +1,19 @@
 import { Link } from 'react-router-dom';
 import { FRANCHISES } from '../data/seed';
-
-const fixtures = [
-  ['backhand-blossoms', 'lunar-lillies'],
-  ['phoenix-flames', 'net-novas'],
-];
+import '../styles/grand-final.css';
 
 export default function LadiesPlayoffs() {
-  return <section className="mt" aria-label="Ladies playoff fixtures">
-    <p style={{color:'#f5bad6',fontWeight:700}}>Wednesday 14 October 2026 · From 17:30 · Padel 24, Nelspruit</p>
-    <div className="grid cols-2">
-      {fixtures.map((ids) => <article className="card" key={ids[0]} style={{borderTop:'3px solid #ef4fa0'}}>
-        <span className="eyebrow">Ladies Franchise League · Playoffs</span>
-        {ids.map((id, index) => {
-          const team = FRANCHISES.find((item) => item.id === id && item.league === 'ladies');
-          return <div key={id}>
-            {index > 0 && <div style={{color:'#ef4fa0',fontWeight:900,margin:'5px 0'}}>VS</div>}
-            <Link to={`/ladies-franchise/${id}`} className="row" style={{gap:12,padding:'12px 0'}}>
-              {team?.logo && <img src={team.logo} alt="" style={{width:42,height:42,objectFit:'contain'}}/>}
-              <b>{team?.name || id}</b>
-            </Link>
-          </div>;
-        })}
-      </article>)}
-    </div>
-    <p className="muted" style={{fontSize:12}}>Four teams. One dream. Higher stakes. Brighter stories.</p>
+  return <section className="gf-finalists mt" aria-label="Ladies Grand Final">
+    <span className="gf-label">THE GRAND FINAL · 22 OCTOBER 2026 · PLAY 360</span>
+    <h2 className="display">Two teams. One final. One legacy.</h2>
+    <div className="gf-teams">{['backhand-blossoms','lunar-lillies'].map((id,i)=>{
+      const team=FRANCHISES.find(t=>t.id===id&&t.league==='ladies');
+      return <Link key={id} className={`gf-team gf-team-${i}`} to={`/ladies-franchise/${id}`}>
+        {team?.logo&&<img src={team.logo} alt="" width="100" height="100"/>}
+        <span className="gf-label">FINALIST / {i+1===1?'BLOSSOMS':'LILLIES'}</span>
+        <h3>{team?.name}</h3><p>{i===0?'Grit. Grace. Game.':'Focus. Flow. Rise.'}</p><b>Meet the squad →</b>
+      </Link>;
+    })}</div>
+    <p className="gf-final-time">Grand Final <b>19:00–21:00</b> <span> / </span> Presentation <b>21:00–22:00</b> · SAST</p>
   </section>;
 }

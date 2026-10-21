@@ -1,71 +1,33 @@
-import LadiesLatestResult from '../components/LadiesLatestResult';
 import { Link } from 'react-router-dom';
-import { LADIES_S2_STANDINGS, LADIES_S2_RANKINGS } from '../data/ladiesSeason2Round1Update';
-import '../styles/home-v3.css';
+import LadiesLatestResult from '../components/LadiesLatestResult';
 import LadiesPlayoffs from '../components/LadiesPlayoffs';
-
-const signed = (value) => Number(value) > 0 ? `+${value}` : String(value);
-
-const headlines = [
-  {
-    eyebrow: '20 OCTOBER 2026 · PLAY 360',
-    title: 'Blossoms beat Net Novas 12–3.',
-    copy: 'Three 4–0 wins power Backhand Blossoms to victory. Mariette Venter and Imaan Shaik earn Net Novas three points in the final rubber.',
-    stat: '12–3',
-    statLabel: 'STATEMENT WIN',
-    tone: 'blue',
-  },
-  {
-    eyebrow: 'MATCHWEEK 5 · 15 SEPTEMBER 2026',
-    title: 'Angels edge Novas in a 7–6 thriller.',
-    copy: 'The teams split the four rubbers, but Lana Nel and Nazrana Meer’s four-point win proved decisive for Arctic Angels.',
-    stat: '7–6',
-    statLabel: 'ONE-POINT THRILLER',
-    tone: 'red',
-  },
-  {
-    eyebrow: '14 OCTOBER · 17:30 · PADEL 24',
-    title: 'Four franchises. One dream.',
-    copy: 'Backhand Blossoms vs Lunar Lillies. Phoenix Flames vs Net Novas. Join us at Padel 24 in Nelspruit for the Ladies playoffs.',
-    stat: '14 OCT',
-    statLabel: 'PLAYOFF STAGE',
-    tone: 'gold',
-  },
-];
+import '../styles/home-v3.css';
+import '../styles/grand-final.css';
 
 export default function HomeV3() {
-  const playoffTeams = LADIES_S2_STANDINGS.slice(0, 4);
-  const mvpTop = LADIES_S2_RANKINGS.slice(0, 3);
-
-  return <main className="hv3">
-    <section className="hv3-hero hv3-ladies-hero">
-      <div className="hv3-hero-copy">
-        <div className="hv3-live-pill"><span /> LOWVELD PADEL · LADIES PLAYOFFS</div>
-        <p className="hv3-overline">WEDNESDAY 14 OCTOBER · 17:30 · PADEL 24</p>
-        <h1>FOUR FRANCHISES.<br/><em>ONE DREAM.</em></h1>
-        <p className="hv3-lead">Backhand Blossoms face Lunar Lillies. Phoenix Flames take on Net Novas. The Ladies Franchise League playoffs take centre stage at Padel 24, Nelspruit.</p>
-        <div className="hv3-actions"><Link to="/leagues?league=ladies" className="hv3-primary">Explore Ladies playoffs</Link><Link to="/leagues?league=ladies">View playoff fixtures</Link></div>
+  return <main className="hv3 gf-home">
+    <section className="gf-hero" aria-labelledby="final-title">
+      <div className="gf-copy">
+        <span className="gf-label">LOWVELD PADEL · LADIES FRANCHISE LEAGUE</span>
+        <p className="gf-date">22 OCTOBER 2026 / PLAY 360</p>
+        <h1 id="final-title">ONE NIGHT.<br/><em>ONE LEGACY.</em></h1>
+        <p className="gf-intro">The stage is set. Backhand Blossoms and Lunar Lillies meet in the <strong>Season 2 Grand Final.</strong></p>
+        <div className="gf-matchup"><span>BACKHAND<br/><b>BLOSSOMS</b></span><i>VS</i><span>LUNAR<br/><b>LILLIES</b></span></div>
+        <div className="hv3-actions"><a className="hv3-primary" href="#final-night">Explore final night ↓</a><Link to="/leagues?league=ladies">League hub →</Link></div>
+        <p className="gf-invite">Pick your side. Bring the energy. Be there for the final point.</p>
       </div>
-      <Link to="/leagues?league=ladies" aria-label="Open Ladies playoff fixtures" style={{display:'block',maxWidth:350,width:'100%',justifySelf:'center',position:'relative',zIndex:1}}><img src="/ladies-playoffs-2026.jpg" alt="Four franchises. One dream. Backhand Blossoms vs Lunar Lillies and Phoenix Flames vs Net Novas, 14 October 2026 at 17:30, Padel 24 Nelspruit" width="1024" height="1536" style={{display:'block',width:'100%',height:'auto',borderRadius:16}}/></Link>
+      <a className="gf-poster" href="/ladies-grand-final-2026.webp" target="_blank" rel="noreferrer" aria-label="Open the full Grand Final poster">
+        <img src="/ladies-grand-final-2026.webp" alt="Ladies Grand Final: Backhand Blossoms versus Lunar Lillies. 22 October 2026, Play 360. Final 7–9pm, presentation 9–10pm." width="1024" height="1536" fetchPriority="high"/>
+        <span>THE OFFICIAL GRAND FINAL POSTER ↗</span>
+      </a>
     </section>
-
-    <LadiesLatestResult/>
+    <div className="gf-ticker" aria-label="Grand Final tagline"><span>TWO TEAMS</span><i>✦</i><span>ONE FINAL</span><i>✦</i><span>ONE LEGACY</span></div>
+    <section id="final-night" className="gf-night">
+      <div className="hv3-section-heading"><div><span className="hv3-kicker">THURSDAY 22 OCTOBER · ALL TIMES SAST</span><h2>Your final-night lineup.</h2></div><p>Play 360. An evening built around the final point.</p></div>
+      <div className="gf-schedule"><article><span>01 / THE SHOWDOWN</span><strong>19:00—21:00</strong><h3>Grand Final</h3><p>Backhand Blossoms vs Lunar Lillies</p></article><article><span>02 / THE CELEBRATION</span><strong>21:00—22:00</strong><h3>Presentation</h3><p>Stay for the presentation after the final.</p></article></div>
+    </section>
     <LadiesPlayoffs/>
-
-    <section className="hv3-channel-section">
-      <div className="hv3-section-heading"><div><span className="hv3-kicker">LADIES LEAGUE HEADLINES</span><h2>The stories shaping the playoffs.</h2></div><p>The confirmed playoff matchups and the regular-season results behind them.</p></div>
-      <div className="hv3-channel-grid">{headlines.map((item) => <Link to="/leagues?league=ladies" className={`hv3-channel hv3-channel-${item.tone}`} key={item.title}><div><span className="hv3-kicker">{item.eyebrow}</span><h3>{item.title}</h3><p>{item.copy}</p></div><div className="hv3-channel-bottom"><div className="hv3-channel-stat"><strong>{item.stat}</strong><span>{item.statLabel}</span></div><b>Open Ladies Season 2 →</b></div></Link>)}</div>
-    </section>
-
-    <section className="hv3-split">
-      <div className="hv3-panel hv3-table-panel">
-        <div className="hv3-panel-head"><div><span className="hv3-kicker">LADIES SEASON 2</span><h2>The playoff four</h2></div><Link to="/leagues?league=ladies">Full log →</Link></div>
-        <div className="hv3-legacy-table"><div className="hv3-legacy-head"><span>#</span><span>TEAM</span><span>P</span><span>W</span><span>GD</span><span>PTS</span></div>{playoffTeams.map((row, index) => <Link to="/leagues?league=ladies" className={index === 0 ? 'hv3-legacy-row is-leader' : 'hv3-legacy-row'} key={row.id}><span>{index + 1}</span><span className="hv3-legacy-team">{row.logo && <img src={row.logo} alt="" />}<b>{row.name}</b></span><span>{row.played}</span><span>{row.wins}</span><span className={row.differential > 0 ? 'pos' : row.differential < 0 ? 'neg' : ''}>{signed(row.differential)}</span><strong>{row.points}</strong></Link>)}</div>
-        <p className="hv3-table-note"><b>Your four playoff teams.</b> Official order: accumulated points, set differential, game/points differential, then head-to-head.</p>
-      </div>
-      <aside className="hv3-panel hv3-feature-panel"><span className="hv3-kicker">LADIES MVP WATCH</span><div className="hv3-feature-number">MVP</div><h2>Form heading into the playoffs.</h2><p>The players setting the standard through every verified rubber.</p><div className="hv3-feature-list">{mvpTop.map((player, index) => <span key={player.id}><b>0{index + 1}</b> {player.name} · {player.mvp_points} pts</span>)}</div><Link to="/rankings" className="hv3-primary hv3-wide">Full MVP rankings</Link></aside>
-    </section>
-
+    <section className="gf-result-section"><div className="hv3-section-heading"><div><span className="hv3-kicker">LATEST RESULT · 20 OCTOBER</span><h2>Blossoms bring the momentum.</h2></div><Link to="/live">Match Centre →</Link></div><LadiesLatestResult/></section>
     <section aria-label="Kruger Cup 2026" style={{margin:'16px auto 22px',padding:'22px 23px',border:'1px solid #ad8147',borderRadius:18,background:'linear-gradient(105deg,#101722,#271c13)',color:'#ffdb9e',display:'flex',gap:20,alignItems:'center',justifyContent:'space-between',flexWrap:'wrap'}}>
       <div style={{flex:'1 1 250px'}}>
         <p style={{fontSize:11,fontWeight:800,letterSpacing:2,margin:'0 0 7px',color:'#e8b363'}}>SATURDAY · 10 OCTOBER 2026 · PADEL 24</p>
@@ -75,7 +37,7 @@ export default function HomeV3() {
       <a href="/kruger-cup-2026" style={{minHeight:48,background:'linear-gradient(130deg,#f1b654,#e4c084)',color:'#131820',fontWeight:800,borderRadius:10,textDecoration:'none',display:'inline-flex',justifyContent:'center',alignItems:'center',padding:'12px 19px',flex:'0 0 auto'}}>🏆 Explore Kruger Cup 2026 →</a>
     </section>
     <section className="hv3-channel-section">
-      <div className="hv3-section-heading"><div><span className="hv3-kicker">FROM ACROSS LOWVELD PADEL</span><h2>Champions and national pride.</h2></div><p>Completed competitions remain easy to find without taking the spotlight away from the Ladies playoff race.</p></div>
+      <div className="hv3-section-heading"><div><span className="hv3-kicker">FROM ACROSS LOWVELD PADEL</span><h2>Champions and national pride.</h2></div><p>Completed competitions remain easy to find without taking the spotlight away from the Ladies Grand Final.</p></div>
       <div className="hv3-destination-grid">
         <Link to="/360-super-cup" className="hv3-destination"><span className="hv3-kicker">360 SUPER CUP · 2026</span><h3>Lowveld finishes third nationally.</h3><p>20 matches. 10 wins. 28 points. A +7 game differential.</p><b>Relive the Super Cup →</b></Link>
         <Link to="/leagues?league=legacy" className="hv3-destination"><span className="hv3-kicker">LEGACY LEAGUE · COMPLETE</span><h3>Honey Badgers make history.</h3><p>LP Cheetahs finish second and LP Rhinos complete the inaugural podium.</p><b>Celebrate the Legacy →</b></Link>
@@ -83,6 +45,6 @@ export default function HomeV3() {
       </div>
     </section>
 
-    <section className="hv3-cta-band"><div><span className="hv3-kicker">LADIES FRANCHISE LEAGUE · SEASON 2</span><h2>Every point led here.</h2></div><div className="hv3-actions"><Link to="/leagues?league=ladies" className="hv3-primary">Follow the playoffs</Link><Link to="/rankings">MVP rankings</Link><Link to="/tv">Lowveld TV</Link></div></section>
+    <section className="hv3-cta-band"><div><span className="hv3-kicker">22 OCTOBER · PLAY 360 · FROM 19:00</span><h2>See you at the final.</h2></div><div className="hv3-actions"><Link to="/leagues?league=ladies" className="hv3-primary">Grand Final hub →</Link><Link to="/live">Latest results</Link></div></section>
   </main>;
 }

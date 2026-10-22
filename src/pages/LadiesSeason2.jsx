@@ -7,7 +7,7 @@ export function LadiesSeason2Franchise() {
   if (!team) return <div className="page"><p className="muted">Ladies franchise not found.</p></div>;
   const owner = team.players.find((player) => player.role === 'owner');
   const captain = team.players.find((player) => player.role === 'captain');
-  const squad = team.players.filter((player) => player.role === 'player');
+  const squad = [...team.players].sort((a,b)=>(a.seed ?? 99)-(b.seed ?? 99));
 
   return (
     <div className="page">
@@ -17,7 +17,7 @@ export function LadiesSeason2Franchise() {
         <div>
           <span className="eyebrow">Ladies Franchise League · Season 2</span>
           <h1 className="display" style={{ margin: '5px 0 8px' }}>{team.name}</h1>
-          <p className="muted" style={{ margin: 0 }}>Auction complete · 10-player squad confirmed</p>
+          <p className="muted" style={{ margin: 0 }}>Submitted team seedings · Season 2</p>
           <div className="row" style={{ gap: 8, flexWrap: 'wrap', marginTop: 12 }}>
             <span className="chip">Owner: {owner?.name}</span>
             <span className="chip">Captain: {captain?.name}</span>
@@ -26,13 +26,13 @@ export function LadiesSeason2Franchise() {
       </section>
 
       <section style={{ marginTop: 20 }}>
-        <div className="row spread" style={{ alignItems: 'end' }}><div><span className="eyebrow">Official squad</span><h2 className="display" style={{ margin: '4px 0 0' }}>Season 2 roster</h2></div><span className="chip">10 players</span></div>
+        <div className="row spread" style={{ alignItems: 'end' }}><div><span className="eyebrow">Official squad</span><h2 className="display" style={{ margin: '4px 0 0' }}>Season 2 seedings</h2></div><span className="chip">{team.players.filter(p=>p.seed).length} seeded players</span></div>
         <div className="grid cols-2 mt">
-          {[owner, captain, ...squad].filter(Boolean).map((player) => (
+          {squad.map((player) => (
             <article key={player.id} className="card row spread" style={{ gap: 12 }}>
               <div className="row" style={{ gap: 10 }}>
-                <span className="avatar">{player.name.split(' ').filter(Boolean).map((part) => part[0]).join('').slice(0, 2)}</span>
-                <div><b>{player.name}</b><div className="muted" style={{ fontSize: 11 }}>{player.role === 'owner' ? 'Franchise Owner' : player.role === 'captain' ? 'Captain' : 'Player'}</div></div>
+                <span className="avatar">{player.seed ?? '—'}</span>
+                <div><b>{player.name}</b><div className="muted" style={{ fontSize: 11 }}>{player.seed ? `Seed ${player.seed}` : 'Previous roster · seed not assigned'} · {player.stats.played} played · {player.stats.wins} wins · {player.stats.mvp_points} MVP pts</div></div>
               </div>
               {player.role !== 'player' && <span className="chip">{player.role}</span>}
             </article>

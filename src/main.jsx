@@ -20,7 +20,6 @@ import './data/ladiesSeason2Matchweek4Update';
 import './data/ladiesSeason2Matchweek5Update';
 import './data/ladiesSeason2Matchweek5FinalUpdate';
 import './data/ladiesSeason2OctoberMvpUpdate';
-import './data/ladiesSeason2RankingsSync';
 import './data/legacyDetailedTableSync';
 import './styles/global.css';
 import './styles/career-table-mobile.css';

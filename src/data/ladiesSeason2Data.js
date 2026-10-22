@@ -1,3 +1,4 @@
+import { LADIES_S2_SEEDINGS } from './ladiesSeason2Seedings';
 import { FRANCHISES, PLAYERS } from './seed';
 
 const S = {
@@ -22,9 +23,10 @@ export const LADIES_S2_TEAMS = Object.entries(S).map(([id, team]) => ({
   captain: team.captain,
   venue: 'Lowveld Padel',
   founded: 2025,
-  players: team.players.map((name) => ({
+  players: [...LADIES_S2_SEEDINGS[id], ...team.players.filter(name => !LADIES_S2_SEEDINGS[id].includes(name))].map((name) => ({
     id: `ladies-s2-${id}-${slug(name)}`,
     name,
+    seed: LADIES_S2_SEEDINGS[id].includes(name) ? LADIES_S2_SEEDINGS[id].indexOf(name) + 1 : null,
     franchise_id: id,
     league: 'ladies',
     tier: 'Ladies',

@@ -46,8 +46,8 @@ export function applyOctoberPlayerResults() {
     applied.add(match.id);
   }
   const ranked = LADIES_S2_TEAMS.flatMap(team => team.players.map(player => ({
-    ...player.stats, id: player.id, name: player.name, team: team.name, logo: team.logo,
-  }))).filter(player => player.played > 0).sort((a, b) =>
+    ...player.stats, id: player.id, name: player.name, seed: player.seed, team: team.name, logo: team.logo,
+  }))).sort((a, b) =>
     b.mvp_points - a.mvp_points || b.wins - a.wins || b.sets_won - a.sets_won || a.name.localeCompare(b.name));
   LADIES_S2_RANKINGS.splice(0, LADIES_S2_RANKINGS.length, ...ranked);
 }

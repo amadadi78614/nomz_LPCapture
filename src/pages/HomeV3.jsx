@@ -16,9 +16,9 @@ export default function HomeV3() {
         <div className="hv3-actions"><a className="hv3-primary" href="#final-night">Relive the final ↓</a><Link to="/leagues?league=ladies">League hub →</Link></div>
         <p className="gf-invite">Two rubbers each. One decisive bonus point. A final to remember.</p>
       </div>
-      <a className="gf-poster" href="/ladies-grand-final-2026.webp" target="_blank" rel="noreferrer" aria-label="Open the full Grand Final poster">
-        <img src="/ladies-grand-final-2026.webp" alt="Ladies Grand Final: Backhand Blossoms versus Lunar Lillies. 22 October 2026, Play 360. Final 7–9pm, presentation 9–10pm." width="1024" height="1536" fetchPriority="high"/>
-        <span>THE OFFICIAL GRAND FINAL POSTER ↗</span>
+      <a className="gf-poster" href="/ladies-champions-2026.webp" target="_blank" rel="noreferrer" aria-label="Open the Backhand Blossoms champions poster">
+        <img src="/ladies-champions-2026.webp" alt="Backhand Blossoms, Ladies Franchise League champions, beat Lunar Lillies 7–6 in the Grand Final." width="1024" height="1536" fetchPriority="high"/>
+        <span>THE CHAMPIONS POSTER ↗</span>
       </a>
     </section>
     <div className="gf-ticker" aria-label="Grand Final tagline"><span>TWO TEAMS</span><i>✦</i><span>ONE FINAL</span><i>✦</i><span>ONE LEGACY</span></div>

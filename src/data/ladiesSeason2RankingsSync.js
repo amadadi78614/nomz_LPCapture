@@ -25,9 +25,9 @@ function syncLadiesRankingsPage() {
   section.innerHTML=`
     <div style="margin-bottom:12px"><a href="/leagues?league=ladies" class="btn ghost" style="display:inline-flex;align-items:center;gap:7px;text-decoration:none">← Back to Ladies League</a></div>
     <div class="card" style="border-left:4px solid #f0abcc;padding:18px">
-      <span class="eyebrow">Ladies Season 2 · Through 16 September 2026</span>
-      <h2 class="display" style="margin:5px 0 6px">Official Player MVP Rankings</h2>
-      <p class="muted" style="margin:0;font-size:12px">Updated from all verified played rubbers through 16 September 2026. 3 MVP points per rubber win + 1 bonus for a clean 4–0. Partners receive identical points. Administrative awards carry no player appearance, win, bonus or MVP credit.</p>
+      <span class="eyebrow">Ladies Season 2 · Latest included result: 20 October 2026</span>
+      <h2 class="display" style="margin:5px 0 6px">Player MVP Rankings</h2>
+      <p class="muted" style="margin:0;font-size:12px">Includes the recorded regular-season results and Backhand Blossoms v Net Novas on 20 October 2026. 3 MVP points per rubber win + 1 bonus for a clean 4–0. Partners receive identical points. Administrative awards carry no player appearance, win, bonus or MVP credit.</p>
     </div>
     <div class="grid mt">
       ${LADIES_S2_RANKINGS.map((p,i)=>{const f=ladiesFranchise(p.team);return `<div class="card" style="padding:12px"><div class="row spread"><span class="row" style="gap:10px;align-items:center"><span class="num muted" style="display:inline-block;width:30px"><b>${ladiesRankNumber(LADIES_S2_RANKINGS,i)}</b></span>${f?.logo?`<img src="${f.logo}" alt="${p.team}" style="width:28px;height:28px;object-fit:contain;border-radius:6px"/>`:''}<span><b>${p.name}</b><div class="muted" style="font-size:11px">${p.team} · ${p.played} played · ${p.wins} W · ${p.losses} L${p.bonus_points?` · ${p.bonus_points} BP`:''}</div></span></span><b class="num" style="font-size:17px">${p.mvp_points} MVP pts</b></div></div>`}).join('')}

@@ -2141,7 +2141,7 @@ export function SponsorCentre() {
 export function More() {
   const items = [
     ['Registrations & Upcoming Events', '/register'], ['LP Shop', '/shop'],
-    ['360 Super Cup', '/360-super-cup'], ['Legacy League', '/legacy-league'], ['Predictor', '/predictor'], ['Lowveld TV', '/tv'],
+    ['360 Super Cup', '/360-super-cup'], ['Legacy League', '/legacy-league'], ['Predictor', '/predictor'], ['Lowveld TV', '/tv'], ['Photo Gallery', '/gallery'],
     ['Rivalries', '/rivalries'], ['Hall of Fame', '/hall-of-fame'], ['Draft & Auction', '/draft'], ['Dynasty Tracker', '/dynasty'],
     ['Fan Zone', '/fan-zone'], ['Community', '/community'], ['Sports Hub', '/sports-hub'], ['Rankings', '/rankings'],
     ['Franchises', '/franchises'], ['News Centre', '/news'], ['Sponsors', '/sponsors'],

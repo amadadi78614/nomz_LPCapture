@@ -10,6 +10,7 @@ const DESKTOP_NAV = [
   ['/players', 'Players'],
   ['/all-time-rankings', 'All-Time'],
   ['/tv', 'Lowveld TV'],
+  ['/gallery', 'Photo Gallery'],
   ['/news', 'News'],
   ['/register', 'Register'],
   ['/shop', 'Shop'],
@@ -21,6 +22,7 @@ const MOBILE_NAV = [
   ['/', '⌂', 'Home'],
   ['/live', '●', 'Matches'],
   ['/leagues', '≡', 'Leagues'],
+  ['/gallery', '▧', 'Gallery'],
   ['/cart', '▣', 'Cart'],
   ['/more', '⋯', 'More'],
 ];
@@ -37,7 +39,7 @@ export function TopBar() {
           <img src="/brand/lp-mark.png" alt="Lowveld Padel" style={{ borderRadius: '50%' }} />
           <span className="wordmark">Lowveld Padel</span>
         </NavLink>
-        <nav>
+        <nav style={{flexWrap:'wrap',justifyContent:'flex-end'}}>
           <a href="/kruger-cup-2026" style={{color:'var(--gold)',fontWeight:800}}>🏆 Kruger Cup</a>
           {DESKTOP_NAV.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === '/'} className={navClass} style={to === '/register' ? { color: 'var(--gold)', fontWeight: 800 } : undefined}>
@@ -60,7 +62,7 @@ export function BottomNav() {
           {liveCount} Live
         </NavLink>
       )}
-      <nav className="bottomnav" aria-label="Primary navigation">
+      <nav className="bottomnav" aria-label="Primary navigation" style={{gridTemplateColumns:`repeat(${MOBILE_NAV.length + 1}, minmax(0, 1fr))`}}>
         <a href="/kruger-cup-2026" style={{color:'var(--gold)'}}><span className="ico" aria-hidden="true">🏆</span>Kruger Cup</a>
         {MOBILE_NAV.map(([to, icon, label]) => (
           <NavLink key={to} to={to} end={to === '/'} className={navClass}>

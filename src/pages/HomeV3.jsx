@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import LadiesLatestResult from '../components/LadiesLatestResult';
 import LadiesPlayoffs from '../components/LadiesPlayoffs';
+import LadiesFinalGallery from '../components/LadiesFinalGallery';
 import '../styles/home-v3.css';
 import '../styles/grand-final.css';
 
@@ -13,7 +14,7 @@ export default function HomeV3() {
         <h1 id="final-title">BLOSSOMS.<br/><em>CHAMPIONS.</em></h1>
         <p className="gf-intro">Backhand Blossoms defeat Lunar Lillies <strong>7–6 to win the Season 2 title.</strong></p>
         <div className="gf-matchup"><span>BACKHAND<br/><b>BLOSSOMS</b></span><i>7–6</i><span>LUNAR<br/><b>LILLIES</b></span></div>
-        <div className="hv3-actions"><a className="hv3-primary" href="#final-night">Relive the final ↓</a><Link to="/leagues?league=ladies">League hub →</Link></div>
+        <div className="hv3-actions"><a className="hv3-primary" href="#ladies-final-gallery">Champions & photo gallery ↓</a><Link to="/leagues?league=ladies">League hub →</Link></div>
         <p className="gf-invite">Two rubbers each. One decisive bonus point. A final to remember.</p>
       </div>
       <a className="gf-poster" href="/ladies-champions-2026.webp" target="_blank" rel="noreferrer" aria-label="Open the Backhand Blossoms champions poster">
@@ -21,6 +22,7 @@ export default function HomeV3() {
         <span>THE CHAMPIONS POSTER ↗</span>
       </a>
     </section>
+    <LadiesFinalGallery/>
     <div className="gf-ticker" aria-label="Grand Final tagline"><span>TWO TEAMS</span><i>✦</i><span>ONE FINAL</span><i>✦</i><span>ONE LEGACY</span></div>
     <section id="final-night" className="gf-night">
       <div className="hv3-section-heading"><div><span className="hv3-kicker">THURSDAY 22 OCTOBER · ALL TIMES SAST</span><h2>The title is theirs.</h2></div><p>Play 360. 22 October 2026. Full time.</p></div>

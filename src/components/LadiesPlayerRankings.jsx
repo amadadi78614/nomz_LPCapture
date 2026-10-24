@@ -13,7 +13,8 @@ export default function LadiesPlayerRankings() {
     <div className="card" style={{borderTop:'3px solid #f0abcc'}}>
       <span className="eyebrow">Ladies Season 2 · Latest included result: 22 October 2026</span>
       <h2 className="display">All player MVP rankings</h2>
-      <p className="muted">Recorded regular-season results plus 20 October and the 22 October Grand Final. Other October playoff results are not yet recorded. MVP points: 3 per rubber win + 1 for a clean sweep. Ranking: MVP points → wins → sets won; equal records share a rank.</p>
+      <p className="muted">Recorded regular-season results plus both 14 October playoffs, the 20 October semi-final and the 22 October Grand Final. Reconciled with the supplied WhatsApp text on 24 October. MVP points: 3 per rubber win + 1 for a clean sweep. Ranking: MVP points → wins → sets won; equal records share a rank.</p>
+      <p className="muted"><strong>Provisional historical record:</strong> the earlier Blossoms–Lillies line-up remains disputed. The supplied export starts on 5 October and cannot verify that earlier match. Two 14 October rubbers have only two reported sets; no third-set scores have been invented. Regular-season team standings exclude playoffs.</p>
       <p className="muted">Seed is the submitted position within each team. Players with no recorded appearance are listed without a competitive rank.</p>
       <div className="row" style={{gap:12,flexWrap:'wrap'}}>
         <label>Franchise <select value={team} onChange={e=>setTeam(e.target.value)} style={{maxWidth:'100%',padding:10}}><option value="all">All franchises</option>{LADIES_S2_TEAMS.map(t=><option key={t.id} value={t.name}>{t.name}</option>)}</select></label>

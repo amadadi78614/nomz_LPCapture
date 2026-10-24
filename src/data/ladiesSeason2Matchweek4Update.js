@@ -15,11 +15,11 @@ export const LADIES_S2_ROUND4_RESULTS = [
     {time:'18:30',home:['Emily Anders','Elsa Fryer'],away:['Debbie','Tasneem Sheikh'],sets:['7-5','6-1','10-5'],homePoints:4,awayPoints:0},
     {time:'19:30',home:['Maxine Lambourn','Mufeedah Hoosen'],away:['Annali Hugo','Fazila Hafesji'],sets:['6-2','6-2','10-6'],homePoints:4,awayPoints:0}
   ]},
-  {id:'ladies-s2-2026-09-09-lunar-phoenix',date:'2026-09-09',venue:'Play 360',status:'FT',home:'Lunar Lillies',away:'Phoenix Flames',homePoints:4,awayPoints:10,rubbers:[
+  {id:'ladies-s2-2026-09-09-lunar-phoenix',date:'2026-09-09',venue:'Play 360',status:'FT',home:'Lunar Lillies',away:'Phoenix Flames',homePoints:4,awayPoints:9,rubbers:[
     {time:'18:00',home:['Dirkie Coomans','Stephanie Steenekamp'],away:['Karlien Janse van Rensburg','Helene Van der Merwe'],sets:['2-6','7-5','12-14'],homePoints:0,awayPoints:3},
     {time:'18:00',home:['Bianca Renell Morgan','Heleen Van Der Mescht'],away:['Gizelle Taylor','Maryke Botha'],sets:['7-6','1-6','10-12'],homePoints:0,awayPoints:3},
     {time:'19:00',home:['Jeanetha Boshoff','Miané Swart'],away:['Nasreen Omar','Tanija De Villiers'],sets:['6-2','6-0','10-7'],homePoints:4,awayPoints:0},
-    {time:'19:00',home:['Dalene Minnaar','Firdaus Hoosen'],away:['Samantha de Araujo','Anneri Duvenage'],sets:['6-7','2-6','6-10'],homePoints:0,awayPoints:4}
+    {time:'19:00',home:['Dalene Minnaar','Firdaus Hoosen'],away:['Samantha de Araujo','Anneri Duvenage'],sets:['6-7','2-6','10-12'],homePoints:0,awayPoints:3,note:'Organiser correction on 9–10 September awards Flames 3–0 points and corrects their tiebreak to 12–10. Published set scores suggest a sweep; preserve the explicit points award pending confirmation.'}
   ]}
 ];
 

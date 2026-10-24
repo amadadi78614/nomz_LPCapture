@@ -1,11 +1,16 @@
 import assert from 'node:assert/strict';
 import '../src/data/ladiesSeason2Matchweek3Update';
-import '../src/data/ladiesSeason2Matchweek4Update';
+import { LADIES_S2_ROUND4_RESULTS } from '../src/data/ladiesSeason2Matchweek4Update';
 import '../src/data/ladiesSeason2Matchweek5Update';
 import '../src/data/ladiesSeason2Matchweek5FinalUpdate';
 import { LADIES_S2_TEAMS } from '../src/data/ladiesSeason2Data';
 import { LADIES_S2_STANDINGS, LADIES_S2_RANKINGS } from '../src/data/ladiesSeason2Round1Update';
 import { LADIES_S2_OCTOBER_RESULTS } from '../src/data/ladiesSeason2OctoberResults';
+const corrected = LADIES_S2_ROUND4_RESULTS.find(m => m.id === 'ladies-s2-2026-09-09-lunar-phoenix');
+assert.equal(corrected.awayPoints, 9, '9 September organiser correction awards Flames nine points');
+assert.equal(corrected.rubbers.reduce((sum,r)=>sum+r.awayPoints,0), corrected.awayPoints);
+assert.equal(LADIES_S2_STANDINGS.find(t=>t.name==='Phoenix Flames').points,38);
+assert.equal(LADIES_S2_STANDINGS.find(t=>t.name==='Backhand Blossoms').points,53);
 const baseline = structuredClone(LADIES_S2_TEAMS);
 const standings = JSON.stringify(LADIES_S2_STANDINGS);
 const { applyOctoberPlayerResults } = await import('../src/data/ladiesSeason2OctoberMvpUpdate');

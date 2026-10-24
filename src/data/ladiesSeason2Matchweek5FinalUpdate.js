@@ -10,20 +10,20 @@ export const LADIES_S2_ROUND5_FINAL_RESULTS = [
     id:'ladies-s2-2026-09-16-lunar-blossoms',date:'2026-09-16',venue:'Padel 24',status:'FT',
     home:'Lunar Lillies',away:'Backhand Blossoms',homePoints:11,awayPoints:4,
     rubbers:[
-      {time:'17:30',home:['Bianca Renell Morgan','Mari Jaquire'],away:['Faeeza Patel','Diyaana Nomani'],sets:[],homePoints:0,awayPoints:4},
-      {time:'18:30',home:['Jeanetha Boshoff','Miané Swart'],away:['Imaan Packery','Rinie De Klerk'],sets:[],homePoints:4,awayPoints:0},
-      {time:'18:30',home:['Firdaus Hoosen','Dalene Minnaar'],away:['Nasreen Methar','Amor Caromba'],sets:[],homePoints:4,awayPoints:0},
-      {time:'19:30',home:['Dirkie Coomans','Stephanie Steenekamp'],away:['Jana Kotze','Dhiya Ismail'],sets:[],homePoints:3,awayPoints:0}
+      {time:'17:30',home:['Bianca Renell Morgan','Mari Jaquire'],away:['Faeeza Patel','Diyaana Nomani'],sets:['0-6','0-6','1-10'],homePoints:0,awayPoints:4},
+      {time:'18:30',home:['Jeanetha Boshoff','Miané Swart'],away:['Imaan Packery','Rinie De Klerk'],sets:['6-3','6-2','10-6'],homePoints:4,awayPoints:0},
+      {time:'18:30',home:['Firdaus Hoosen','Dalene Minnaar'],away:['Nasreen Methar','Amor Caromba'],sets:['7-6','6-0','10-6'],homePoints:4,awayPoints:0},
+      {time:'19:30',home:['Dirkie Coomans','Stephanie Steenekamp'],away:['Jana Kotze','Dhiya Ismail'],sets:['3-6','6-4','10-4'],homePoints:3,awayPoints:0}
     ]
   },
   {
     id:'ladies-s2-2026-09-16-phoenix-desert',date:'2026-09-16',venue:'',status:'FT',
     home:'Phoenix Flames',away:'Desert Roses',homePoints:10,awayPoints:3,
     rubbers:[
-      {time:'17:30',home:['Tanija De Villiers','Helene Van der Merwe'],away:['Lia Odendaal','Simone'],sets:[],homePoints:3,awayPoints:0},
-      {time:'17:30',home:['Karlien Janse van Rensburg','Martinette Meyer'],away:['Debbie','Michelle Human'],sets:[],homePoints:0,awayPoints:3},
-      {time:'18:30',home:['Samantha de Araujo','Anneri Duvenage'],away:['Icem Wilken','Aletia Van Rooyen'],sets:[],homePoints:4,awayPoints:0},
-      {time:'19:30',home:['Maryke Botha','Marz Asvat'],away:['Annali Hugo','Fazila Hafesji'],sets:[],homePoints:3,awayPoints:0}
+      {time:'17:30',home:['Tanija De Villiers','Helene Van der Merwe'],away:['Lia Odendaal','Simone'],sets:['6-3','6-4','8-10'],homePoints:3,awayPoints:0},
+      {time:'17:30',home:['Karlien Janse van Rensburg','Martinette Meyer'],away:['Debbie','Michelle Human'],sets:['1-6','1-6','10-8'],homePoints:0,awayPoints:3},
+      {time:'18:30',home:['Samantha de Araujo','Anneri Duvenage'],away:['Icem Wilken','Aletia Van Rooyen'],sets:['6-2','6-1','10-5'],homePoints:4,awayPoints:0},
+      {time:'19:30',home:['Maryke Botha','Marz Asvat'],away:['Annali Hugo','Fazila Hafesji'],sets:['4-6','6-3','12-10'],homePoints:3,awayPoints:0}
     ]
   }
 ];
@@ -31,8 +31,8 @@ export const LADIES_S2_ROUND5_FINAL_RESULTS = [
 const teamByName=Object.fromEntries(LADIES_S2_TEAMS.map(t=>[t.name,t]));
 const playerByName=Object.fromEntries(LADIES_S2_TEAMS.flatMap(t=>t.players.map(p=>[p.name,p])));
 
-// The Matchweek 5 posters publish rubber points rather than individual set scores.
-// League scoring makes the set split deterministic: 4 pts = 3–0 sets, 3 pts = 2–1 sets.
+// Set scores verified against the organiser’s 16 September WhatsApp reports.
+// Retain the points-based fallback for any future result without published scores.
 const setSplit=(homePoints,awayPoints)=>{
   if(homePoints===4&&awayPoints===0)return [3,0];
   if(homePoints===3&&awayPoints===0)return [2,1];
@@ -62,7 +62,7 @@ for(const match of LADIES_S2_ROUND5_FINAL_RESULTS){
     winners.forEach(n=>{const p=playerByName[n];if(p){p.stats.wins++;p.stats.rubbers_won++;p.stats.mvp_points+=3+(wp===4?1:0);if(wp===4)p.stats.bonus_points++;}});
     losers.forEach(n=>{const p=playerByName[n];if(p)p.stats.losses++;});
 
-    const [hs,as]=setSplit(r.homePoints,r.awayPoints);
+    const [hs,as]=r.sets.length ? r.sets.reduce(([h,a],score)=>{const [x,y]=score.split('-').map(Number);return [h+(x>y?1:0),a+(y>x?1:0)];},[0,0]) : setSplit(r.homePoints,r.awayPoints);
     home.stats.setsWon+=hs;home.stats.setsLost+=as;
     away.stats.setsWon+=as;away.stats.setsLost+=hs;
     r.home.forEach(n=>{const p=playerByName[n];if(p){p.stats.sets_won+=hs;p.stats.sets_lost+=as;}});

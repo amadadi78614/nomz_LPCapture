@@ -1,3 +1,4 @@
+import DaisyCupFeature from '../components/DaisyCupFeature';
 import EventBookings from '../commerce/EventBookings';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -5,6 +6,7 @@ import { UPCOMING_EVENTS, UpcomingEvent } from '../data/upcomingEvents';
 import { submitRegistration } from '../lib/supabase';
 
 const TABS = [
+  { id: 'daisy-cup', label: 'Daisy Cup', status: 'open' },
   { id: 'ubuntu', label: 'Ubuntu Series', status: 'open' },
   { id: 'kruger-cup', label: 'Kruger Cup', status: 'closed' },
   ...UPCOMING_EVENTS.map(event => ({id: event.id, label: event.name, status: 'soon'})),
@@ -279,7 +281,7 @@ function UbuntuRegistration() {
 export function Registration() {
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedTab = searchParams.get('event');
-  const tab = TABS.some((item) => item.id === requestedTab) ? requestedTab : 'ubuntu';
+  const tab = TABS.some((item) => item.id === requestedTab) ? requestedTab : 'daisy-cup';
   function setTab(id) {
     const next = new URLSearchParams(searchParams);
     next.set('event', id);
@@ -293,12 +295,12 @@ export function Registration() {
         <span className="chip">Lowveld Padel</span>
         <h1 className="display" style={{ marginBottom: 8 }}>Registration Centre</h1>
         <p className="muted" style={{ fontSize: 13, lineHeight: 1.6, maxWidth: 700 }}>
-          Ubuntu Series player registration is open; R250 per player per event, with dates and venue TBC. Explore our upcoming competitions below. The first Kruger Cup is complete.
+          Daisy Cup: 28 November 2026 at Padel 24. R800 per pair, limited to 24 pairs. Register both players and proceed to payment. Ubuntu remains a separate expression of interest.
         </p>
       </div>
 
       <p><Link to="/shop">LP apparel &amp; padel gear — shop coming soon →</Link></p>
-      <EventBookings/>
+      {tab !== 'daisy-cup' && <EventBookings/>}
       <div className="registration-tabs" role="tablist" aria-label="Lowveld Padel registrations">
         {TABS.map((item) => (
           <button key={item.id} type="button" role="tab" aria-selected={tab === item.id}
@@ -311,6 +313,7 @@ export function Registration() {
 
       <div style={{ marginTop: 20 }}>
         {tab === 'kruger-cup' && active?.status === 'open' && <KrugerCupRegistration />}
+        {tab === 'daisy-cup' && <><DaisyCupFeature/><EventBookings eventSlug="daisy-cup-2026" directCheckout/></>}
         {tab === 'ubuntu' && <UbuntuRegistration />}
         {active?.status === 'soon' && <UpcomingEvent event={UPCOMING_EVENTS.find(event => event.id === tab)} />}
         {active?.status === 'closed' && <ClosedRegistration name={active?.label} />}

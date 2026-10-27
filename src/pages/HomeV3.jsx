@@ -1,3 +1,4 @@
+import DaisyCupFeature from '../components/DaisyCupFeature';
 import { Link } from 'react-router-dom';
 import LadiesLatestResult from '../components/LadiesLatestResult';
 import LadiesPlayoffs from '../components/LadiesPlayoffs';
@@ -7,6 +8,7 @@ import '../styles/grand-final.css';
 
 export default function HomeV3() {
   return <main className="hv3 gf-home">
+    <DaisyCupFeature/>
     <section className="gf-hero" aria-labelledby="final-title">
       <div className="gf-copy">
         <span className="gf-label">LOWVELD PADEL · LADIES FRANCHISE LEAGUE</span>

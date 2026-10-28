@@ -1,26 +1,32 @@
-# LP shop preparation
+# LP shop launch
 
-Public /shop is a coming-soon page, not a functioning checkout. No products, partner affiliations or stock availability are claimed.
+The shop is published as a range enquiry page until real products are approved.
+No speculative prices, stock, affiliate codes or supplier agreements are published.
 
-## Local supplier / resale
-Obtain supplier name, authorised product descriptions and images, brand, SKU, size/colour variants, unit cost inclusive of any supplier tax, confirmed stock, fulfilment lead time, return/warranty terms and collection/delivery costs. Publish only approved retail prices and customer-facing data. Keep costs, margins and supplier terms server-side.
+## Direct products
+Create a product in /admin/orders > Manage products. Confirm supplier permission,
+landed cost, selling price, stock allocation, photos, size guide, collection timing
+and returns information. Put collection location and timing in fulfilment; put
+product-specific sizing and returns information in rules. Use description for
+pre-order deadlines and lead times when applicable. Only publish a confirmed offer.
 
-Sliding pricing helper: scripts/price-supplier-product.mjs. Bands are inclusive upper cost limits in cents and a percentage markup on cost, applied to the entire unit cost. Final null limit covers all higher costs. No commercial rates are configured yet. Confirm whether this cost-band interpretation is intended, rather than quantity discounts, before use. Markup is not gross margin. Add payment, packaging and fulfilment costs to the pricing decision; do not promise profit from markup alone.
-
-## Payment setup pending
-FNB account holder: LOWVELD PADEL (PTY)LTD
-Bank: FNB
-Account type: Gold Business Account
-Account number: 63112387097
-Branch code: 250955
-Source: user-supplied FNB account confirmation dated 28 September 2026. Letter was read, not independently authenticated through FNB.
-
-When checkout is implemented, generate a unique order reference and a server-calculated total; reserve/recheck stock. EFT stays pending until an authorised administrator checks actual bank receipt. Uploaded proof is not payment verification. No payments are requested for TBC fees or unpublished products.
-
-Payfast needs server-side credentials and passphrase, signed checkout, verified and idempotent ITN processing (merchant, reference, amount, signature and Payfast validation), order status and stock updates, cancellation/retry flow and confirmation email. Returning to a success URL must not mark an order paid. Sandbox tests precede live activation. No secrets belong in the browser, git or this document.
+Each size/colour must have a separate catalogue row and explicit SKU title.
+For grouped selectors, add each SKU slug to productInfo in src/commerce/shop.js:
+{category:'LP Apparel',group:'LP match shirt',option:'Black / Medium',sizeGuide:'Verified measurements...',deadline:'Confirmed closing date...'}.
+Group only variants of the same product. The selected catalogue ID reaches checkout,
+so server pricing and capacity validation remain authoritative.
+Categories can be assigned explicitly in productInfo; fallback title classification
+covers apparel, rackets/bags and essentials.
 
 ## Affiliates
-Separate retailer referral links from LP-sold products. Obtain approval and tracked URLs before publishing. Disclose commission. Retailer handles its checkout, delivery and returns. No Adidas or other brand partnership is currently asserted.
+Add only approved offers to partnerOffers in src/commerce/shop.js, using the exact
+issued HTTPS tracking URL, retailer name, product title and verified description.
+No affiliate commissions or approvals have been obtained as part of this launch.
+Partner offers never enter LP's cart. Partner checkout handles delivery and returns.
 
-## Upcoming registrations
-Registration Centre shows planned competitions, not open registration forms for the new events. Men's Franchise S4: Feb/Mar 2027 target; Kruger Cup 2: November 2026 target, men/women; Youth Cup: November 2026 target, boys/girls U10/U11/U15/U19; Franchise Cup: proposed two-day event with current league players. Exact dates and fees TBC. Youth entry unit and age cutoff, franchise cup divisions, rules and venue remain unconfirmed. Ubuntu existing profile registration remains open without a payment request.
+## Launch status
+Product catalogue had no products at implementation. Eight enquiry cards are public,
+explicitly not paid pre-orders. Enquiry buttons open the customer's email client;
+no customer data is stored until they choose to send the enquiry.
+Payfast live configuration was detected earlier; a successful real payment and
+automatic confirmation still need end-to-end verification. No real charge was made.

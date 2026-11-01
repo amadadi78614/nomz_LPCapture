@@ -26,7 +26,7 @@ Deno.serve(async(req)=>{
   const {error}=await db.rpc('lp_settle_order',{p_id:fields.m_payment_id,p_amount:Math.round(Number(fields.amount_gross)*100),p_pf:fields.pf_payment_id,p_note:'Verified Payfast ITN'});
   if(error)throw Error('Order verification failed');
   // "You're in" email: the commerce function owns the template; ask it to send (service role, internal).
-  try{await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/commerce`,{method:'POST',headers:{'Content-Type':'application/json',apikey:Deno.env.get('SUPABASE_ANON_KEY')!,Authorization:`Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,'x-lp-internal':Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!},body:JSON.stringify({action:'internal-confirm',id:fields.m_payment_id}),signal:AbortSignal.timeout(10000)});}catch{/* the payment is settled either way; LP can resend from admin */}
+  try{await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/commerce`,{method:'POST',headers:{'Content-Type':'application/json',apikey:Deno.env.get('SUPABASE_ANON_KEY')||'sb_publishable_U6nbcH9-z7u_mth63-isbw_QwuVIWyr','x-lp-internal':Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!},body:JSON.stringify({action:'internal-confirm',id:fields.m_payment_id}),signal:AbortSignal.timeout(10000)});}catch{/* the payment is settled either way; LP can resend from admin */}
   return new Response('OK');
  }catch{return new Response('Payment notification rejected',{status:400});}
 });

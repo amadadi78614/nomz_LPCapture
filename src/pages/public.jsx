@@ -2150,6 +2150,9 @@ export function More() {
   return (
     <div className="page">
       <h1 className="display">More</h1>
+      <a href="/play/" className="card row spread mt" style={{ background: 'linear-gradient(130deg,#f1b654,#e4c084)', color: '#131820', textDecoration: 'none' }}>
+        <span><b>🎮 Play Padel Doubles 3D</b><br /><span style={{ fontSize: 13 }}>Our free padel game. Play in your browser or install it on your phone.</span></span><span>→</span>
+      </a>
       <div className="grid cols-2 mt">
         {items.map(([l, to]) => (
           <Link key={to} to={to} className="card row spread"><b>{l}</b><span className="muted">→</span></Link>

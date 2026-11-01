@@ -41,6 +41,7 @@ export function TopBar() {
         </NavLink>
         <nav style={{flexWrap:'wrap',justifyContent:'flex-end'}}>
           <a href="/kruger-cup-2026" style={{color:'var(--gold)',fontWeight:800}}>🏆 Kruger Cup</a>
+          <a href="/play/" style={{color:'var(--gold)',fontWeight:800}}>🎮 Play</a>
           {DESKTOP_NAV.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === '/'} className={navClass} style={to === '/register' ? { color: 'var(--gold)', fontWeight: 800 } : undefined}>
               {label}

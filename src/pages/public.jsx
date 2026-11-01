@@ -2139,22 +2139,27 @@ export function SponsorCentre() {
 
 /* =========================== MORE ============================= */
 export function More() {
-  const items = [
-    ['Registrations & Upcoming Events', '/register'], ['LP Shop', '/shop'],
-    ['360 Super Cup', '/360-super-cup'], ['Legacy League', '/legacy-league'], ['Predictor', '/predictor'], ['Lowveld TV', '/tv'], ['Photo Gallery', '/gallery'],
-    ['Rivalries', '/rivalries'], ['Hall of Fame', '/hall-of-fame'], ['Draft & Auction', '/draft'], ['Dynasty Tracker', '/dynasty'],
-    ['Fan Zone', '/fan-zone'], ['Community', '/community'], ['Sports Hub', '/sports-hub'], ['Rankings', '/rankings'],
-    ['Franchises', '/franchises'], ['News Centre', '/news'], ['Sponsors', '/sponsors'],
-    ['Captain Dashboard', '/captain'], ['Commissioner', '/commissioner'], ['Umpire Console', '/admin'], ['Sponsor Analytics', '/sponsor-analytics'],
+  // Grouped so players find things; organiser tools are no longer listed publicly (their URLs still work).
+  const groups = [
+    ['Enter and shop', [['Daisy Cup: enter your pair', '/register?event=daisy-cup'], ['All registrations', '/register'], ['LP Shop', '/shop']]],
+    ['Events', [['360 Super Cup', '/360-super-cup'], ['Kruger Cup 2026', '/kruger-cup-2026'], ['Photo Gallery', '/gallery'], ['Lowveld TV', '/tv']]],
+    ['League', [['Standings', '/standings'], ['Franchises', '/franchises'], ['Legacy League', '/legacy-league'], ['Rankings', '/rankings'], ['Draft & Auction', '/draft']]],
+    ['Community', [['Rivalries', '/rivalries'], ['Hall of Fame', '/hall-of-fame'], ['Dynasty Tracker', '/dynasty'], ['Predictor', '/predictor'], ['Fan Zone', '/fan-zone'], ['Sponsors', '/sponsors']]],
+    ['About', [['Privacy & POPIA', '/privacy']]],
   ];
   return (
     <div className="page">
       <h1 className="display">More</h1>
-      <div className="grid cols-2 mt">
-        {items.map(([l, to]) => (
-          <Link key={to} to={to} className="card row spread"><b>{l}</b><span className="muted">→</span></Link>
-        ))}
-      </div>
+      {groups.map(([title, items]) => (
+        <section key={title} className="mt">
+          <h2 className="display" style={{ fontSize: 20 }}>{title}</h2>
+          <div className="grid cols-2 mt">
+            {items.map(([l, to]) => (
+              <Link key={to} to={to} className="card row spread"><b>{l}</b><span className="muted">→</span></Link>
+            ))}
+          </div>
+        </section>
+      ))}
     </div>
   );
 }

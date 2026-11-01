@@ -2,27 +2,26 @@ import {CartCount} from '../commerce/store';
 import { NavLink } from 'react-router-dom';
 import { FIXTURES } from '../data/seed';
 
+// The event currently taking entries. Change this one line when the next event opens.
+export const FEATURED = { href: '/register?event=daisy-cup', label: 'Daisy Cup', icon: '🌼' };
+
+// Eight items: everything else (gallery, Super Cup, hall of fame...) lives under More.
 const DESKTOP_NAV = [
   ['/', 'Home'],
   ['/live', 'Match Centre'],
   ['/leagues', 'Leagues'],
-  ['/360-super-cup', 'Super Cup'],
   ['/players', 'Players'],
-  ['/all-time-rankings', 'All-Time'],
-  ['/tv', 'Lowveld TV'],
-  ['/gallery', 'Photo Gallery'],
+  ['/all-time-rankings', 'Rankings'],
   ['/news', 'News'],
-  ['/register', 'Register'],
   ['/shop', 'Shop'],
+  ['/more', 'More'],
   ['/cart', <CartCount/>],
-  ['/privacy', 'POPIA'],
 ];
 
 const MOBILE_NAV = [
   ['/', '⌂', 'Home'],
   ['/live', '●', 'Matches'],
   ['/leagues', '≡', 'Leagues'],
-  ['/gallery', '▧', 'Gallery'],
   ['/cart', '▣', 'Cart'],
   ['/more', '⋯', 'More'],
 ];
@@ -40,7 +39,7 @@ export function TopBar() {
           <span className="wordmark">Lowveld Padel</span>
         </NavLink>
         <nav style={{flexWrap:'wrap',justifyContent:'flex-end'}}>
-          <a href="/kruger-cup-2026" style={{color:'var(--gold)',fontWeight:800}}>🏆 Kruger Cup</a>
+          <a href={FEATURED.href} style={{color:'var(--gold)',fontWeight:800}}>{FEATURED.icon} Enter {FEATURED.label}</a>
           {DESKTOP_NAV.map(([to, label]) => (
             <NavLink key={to} to={to} end={to === '/'} className={navClass} style={to === '/register' ? { color: 'var(--gold)', fontWeight: 800 } : undefined}>
               {label}
@@ -63,7 +62,7 @@ export function BottomNav() {
         </NavLink>
       )}
       <nav className="bottomnav" aria-label="Primary navigation" style={{gridTemplateColumns:`repeat(${MOBILE_NAV.length + 1}, minmax(0, 1fr))`}}>
-        <a href="/kruger-cup-2026" style={{color:'var(--gold)'}}><span className="ico" aria-hidden="true">🏆</span>Kruger Cup</a>
+        <a href={FEATURED.href} style={{color:'var(--gold)'}}><span className="ico" aria-hidden="true">{FEATURED.icon}</span>{FEATURED.label}</a>
         {MOBILE_NAV.map(([to, icon, label]) => (
           <NavLink key={to} to={to} end={to === '/'} className={navClass}>
             <span className="ico" aria-hidden="true">{icon}</span>

@@ -299,10 +299,9 @@ export function Registration() {
         </p>
       </div>
 
-      <p><Link to="/shop">LP apparel &amp; padel gear — shop coming soon →</Link></p>
       {tab !== 'daisy-cup' && <EventBookings/>}
       <div className="registration-tabs" role="tablist" aria-label="Lowveld Padel registrations">
-        {TABS.map((item) => (
+        {TABS.filter((item) => item.status === 'open' || item.id === tab).map((item) => (
           <button key={item.id} type="button" role="tab" aria-selected={tab === item.id}
             className={tab === item.id ? 'on' : ''} onClick={() => setTab(item.id)}>
             <span>{item.label}</span>
@@ -310,6 +309,19 @@ export function Registration() {
           </button>
         ))}
       </div>
+
+      {/* Open events first; coming-soon and closed ones fold away so the open form is on the first screen. */}
+      <details style={{ marginTop: 10 }}>
+        <summary className="muted" style={{ cursor: 'pointer', fontSize: 13 }}>Coming soon and closed events ({TABS.filter((item) => item.status !== 'open').length})</summary>
+        <div className="registration-tabs" style={{ marginTop: 10 }}>
+          {TABS.filter((item) => item.status !== 'open' && item.id !== tab).map((item) => (
+            <button key={item.id} type="button" onClick={() => setTab(item.id)}>
+              <span>{item.label}</span>
+              <small className="status-closed">{item.status === 'soon' ? 'SOON' : 'CLOSED'}</small>
+            </button>
+          ))}
+        </div>
+      </details>
 
       <div style={{ marginTop: 20 }}>
         {tab === 'kruger-cup' && active?.status === 'open' && <KrugerCupRegistration />}

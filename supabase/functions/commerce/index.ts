@@ -20,6 +20,15 @@ async function emailReceipt(id:string){
  const text=`Hi ${o.customer_name},\n\nYour LP order ${o.reference} has been received.\n\n${lines}\n\nTotal: R${(o.total_cents/100).toFixed(2)}\n\n${o.method==='eft'?`FNB EFT: ${bank.holder}\n${bank.type}\nAccount ${bank.account} / branch ${bank.branch}\nUse reference ${o.reference}.`:'Return to your order in the browser where you checked out to complete Payfast payment.'}\n\nReservation expires: ${new Date(o.expires_at).toLocaleString('en-ZA',{timeZone:'Africa/Johannesburg'})} South Africa time. Do not pay after expiry without contacting LP.\n\nThis confirms receipt of your order, not payment or final event acceptance. Event eligibility remains subject to LP approval.\n\nQuestions: admin@lowveldpadel.co.za`;
  try{const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json','Idempotency-Key':`lp-order-${id}`},body:JSON.stringify({from,to:[o.email],subject:`LP order received · ${o.reference}`,text}),signal:AbortSignal.timeout(10000)});await db.from('lp_orders').update({email_status:r.ok?'sent':'failed'}).eq('id',id);}catch{await db.from('lp_orders').update({email_status:'failed'}).eq('id',id);}
 }
+// "You're in" email once payment is verified (PayFast ITN or LP confirming an EFT).
+async function emailConfirmed(id:string,force=false){
+ const key=Deno.env.get('RESEND_API_KEY'),from=Deno.env.get('LP_CONFIRMATION_FROM');if(!key||!from)return 'not_configured';
+ const {data:o}=await db.from('lp_orders').select('id,reference,customer_name,email,total_cents,status,email_status,lp_order_items(title,kind,details)').eq('id',id).single();
+ if(!o||o.status!=='paid'||(!force&&o.email_status==='confirmed'))return 'skipped';
+ const entries=(o.lp_order_items||[]).filter((i:any)=>i.kind==='event').map((i:any)=>{const when=i.details?.eventAt?new Date(i.details.eventAt).toLocaleString('en-ZA',{timeZone:'Africa/Johannesburg',dateStyle:'full',timeStyle:'short'}):'';return `${i.title}${when?`, ${when}`:''}${i.details?.venue?` at ${i.details.venue}`:''}\nPlayers: ${(i.details?.participants||[]).map((p:any)=>p.name).join(' & ')}`;}).join('\n\n');
+ const text=`Hi ${o.customer_name},\n\nPayment received for order ${o.reference} (R${(o.total_cents/100).toFixed(2)}). You're in.\n\n${entries||'Your order is confirmed.'}\n\nThe draw, start times and rules will be shared by LP before the day. Keep this email as your proof of entry.\n\nQuestions: admin@lowveldpadel.co.za`;
+ try{const r=await fetch('https://api.resend.com/emails',{method:'POST',headers:{Authorization:`Bearer ${key}`,'Content-Type':'application/json','Idempotency-Key':`lp-confirmed-${id}${force?'-'+Date.now():''}`},body:JSON.stringify({from,to:[o.email],subject:`You're in · ${o.reference}`,text}),signal:AbortSignal.timeout(10000)});await db.from('lp_orders').update({email_status:r.ok?'confirmed':'failed'}).eq('id',id);return r.ok?'sent':'failed';}catch{await db.from('lp_orders').update({email_status:'failed'}).eq('id',id);return 'failed';}
+}
 const clean=(v:any,n=160)=>typeof v==='string'?v.trim().slice(0,n):'';
 Deno.serve(async(req)=>{
  const origin=req.headers.get('origin');const headers={'Content-Type':'application/json','Cache-Control':'no-store','Access-Control-Allow-Origin':allowed.has(origin||'')?origin!:site,'Access-Control-Allow-Headers':'authorization, x-client-info, apikey, content-type','Access-Control-Allow-Methods':'POST, OPTIONS','Vary':'Origin'};
@@ -32,12 +41,30 @@ Deno.serve(async(req)=>{
   if(api!=='sb_publishable_U6nbcH9-z7u_mth63-isbw_QwuVIWyr' && api!==Deno.env.get('SUPABASE_ANON_KEY'))return reply({error:'Application key required'},401);
   const raw=await req.text();if(raw.length>40000)return reply({error:'Request too large'},413);const b=JSON.parse(raw);
   if(b.action==='config')return reply({ok:true,payfast:config(),bank});
+  if(b.action==='availability'){
+   // Places left per published event: counts only, no personal details.
+   const {data:events}=await db.from('lp_catalog').select('id,slug,capacity').eq('published',true).eq('kind','event');
+   const ids=(events||[]).map((e:any)=>e.id);const places:Record<string,{capacity:number,taken:number,left:number}>={};
+   if(ids.length){const {data:items}=await db.from('lp_order_items').select('catalog_id,quantity,lp_orders!inner(status,expires_at)').in('catalog_id',ids);
+    for(const e of events!){const taken=(items||[]).filter((i:any)=>i.catalog_id===e.id&&(i.lp_orders.status==='paid'||(i.lp_orders.status==='pending'&&new Date(i.lp_orders.expires_at)>new Date()))).reduce((t:number,i:any)=>t+i.quantity,0);places[e.slug]={capacity:e.capacity,taken,left:Math.max(0,e.capacity-taken)};}}
+   return reply({ok:true,places});
+  }
+  if(b.action==='internal-confirm'){
+   const secret=req.headers.get('x-lp-internal');if(!secret||secret!==Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'))return reply({error:'Not allowed'},403);
+   if(!uuid(b.id))throw Error('Invalid order');return reply({ok:true,email:await emailConfirmed(b.id)});
+  }
   if(b.action==='admin-list'){
    await admin(req);const {data,error}=await db.from('lp_orders').select('id,reference,customer_name,email,mobile,total_cents,method,status,expires_at,paid_at,created_at,email_status,payment_note,lp_order_items(*)').order('created_at',{ascending:false}).limit(200);if(error)throw error;return reply({ok:true,orders:data});
   }
   if(b.action==='admin-paid'){
    const user=await admin(req);if(!uuid(b.id)||!Number.isSafeInteger(b.amount)||clean(b.note).length<3)throw Error('Enter the bank amount and reconciliation note.');
-   const {data,error}=await db.rpc('lp_settle_order',{p_id:b.id,p_amount:b.amount,p_admin:user.id,p_note:clean(b.note,500)});if(error)throw Error(error.message);return reply({ok:true,status:data});
+   const {data,error}=await db.rpc('lp_settle_order',{p_id:b.id,p_amount:b.amount,p_admin:user.id,p_note:clean(b.note,500)});if(error)throw Error(error.message);const email=data==='paid'?await emailConfirmed(b.id):'skipped';return reply({ok:true,status:data,email});
+  }
+  if(b.action==='admin-email'){
+   await admin(req);if(!uuid(b.id))throw Error('Invalid order');const result=await emailConfirmed(b.id,true);
+   if(result==='not_configured')throw Error('Email is not set up: add RESEND_API_KEY and LP_CONFIRMATION_FROM to the Supabase function secrets.');
+   if(result==='skipped')throw Error('Only paid orders get a confirmation email.');if(result==='failed')throw Error('The email provider rejected the message. Check the Resend dashboard.');
+   return reply({ok:true,email:result});
   }
   if(b.action==='admin-fulfil'){
    await admin(req);if(!uuid(b.id)||!['confirmed','ready','dispatched','completed'].includes(b.status))throw Error('Invalid fulfilment update');
@@ -57,7 +84,8 @@ Deno.serve(async(req)=>{
    if(!Array.isArray(b.items))throw Error('Your cart is empty.');
    const items=b.items.map((item:any)=>({id:item.id,quantity:item.quantity,details:{
     division:clean(item.details?.division,80),rulesAccepted:item.details?.rulesAccepted===true,
-    participants:Array.isArray(item.details?.participants)?item.details.participants.slice(0,2).map((p:any)=>({name:clean(p.name),dob:clean(p.dob,10),level:clean(p.level,30)})):[],
+    participants:Array.isArray(item.details?.participants)?item.details.participants.slice(0,2).map((p:any)=>({name:clean(p.name),dob:clean(p.dob,10),level:clean(p.level,30),mobile:clean(p.mobile,20).replace(/[^\d+ ]/g,'')})):[],
+    ...(item.details?.ladiesConfirmed===true?{ladiesConfirmed:true}:{}),
     guardianName:clean(item.details?.guardianName),guardianMobile:clean(item.details?.guardianMobile,30),guardianConsent:item.details?.guardianConsent===true,
    }}));
    for(const i of items)for(const p of i.details.participants){const dt=new Date(p.dob);if(!/^\d{4}-\d{2}-\d{2}$/.test(p.dob)||!Number.isFinite(dt.getTime())||dt.toISOString().slice(0,10)!==p.dob||dt>new Date()||dt.getUTCFullYear()<1900)throw Error('Enter a valid participant date of birth.');}

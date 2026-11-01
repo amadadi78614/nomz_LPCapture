@@ -418,6 +418,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
     <p class="eyebrow">Game</p><h2 class="h2">Settings</h2>
     <div class="opts">
       <span class="lab">Controls</span><div class="seg" id="optControls" data-key="controls"><button data-v="stick">Simple (swipe)</button><button data-v="pro">Console</button><button data-v="classic">Classic</button></div>
+      <span class="lab">Court colour</span><div class="seg" id="optCourt" data-key="court"><button data-v="blue">Blue</button><button data-v="green">Green</button><button data-v="grey">Grey</button></div>
       <span class="lab">Players</span><div class="seg" id="optRoster" data-key="roster"><button data-v="lowveld">Lowveld Padel league</button><button data-v="world">World tour</button></div>
       <span class="lab">Aim assist</span><div class="seg" id="optAssist" data-key="assist"><button data-v="1">On</button><button data-v="0">Off</button></div>
       <span class="lab">Running</span><div class="seg" id="optAuto" data-key="auto"><button data-v="0">Manual</button><button data-v="1">Auto-run</button></div>
@@ -549,7 +550,7 @@ const store = { get(k, d) { try { const v = localStorage.getItem('padel3d.' + k)
                 set(k, v) { try { localStorage.setItem('padel3d.' + k, v); } catch (e) {} } };
 const settings = { games: +store.get('games', 3), diff: store.get('diff', 'easy'), cam: store.get('cam_v2', 'behind'), sound: store.get('sound', '1') === '1',
   side: store.get('side', 'left'), first: store.get('first', 'you'), start: 'serve', auto: store.get('auto', '0'), ring: store.get('ring', '1'),
-  controls: store.get('controls_v3', 'stick'), roster: store.get('roster', 'lowveld'), assist: store.get('assist', '1'), voice: store.get('voice', '1'), quality: store.get('quality', 'auto') };
+  controls: store.get('controls_v3', 'stick'), roster: store.get('roster', 'lowveld'), court: store.get('court', 'blue'), assist: store.get('assist', '1'), voice: store.get('voice', '1'), quality: store.get('quality', 'auto') };
 
 // ------------------------------------------------------------------ look options
 const LOOK = {
@@ -783,14 +784,19 @@ function canvasTex(w, h, draw, repeat) {
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), new THREE.MeshStandardMaterial({ color: 0x0c1526, roughness: 1 }));
 ground.rotation.x = -Math.PI / 2; ground.position.y = -0.01; ground.receiveShadow = true; scene.add(ground);
 // court turf
-const turf = canvasTex(256, 256, (g, w, h) => {
-  g.fillStyle = '#1f5fcf'; g.fillRect(0, 0, w, h);
+const COURT_COLOURS = { blue: ['#1f5fcf', 0x173f86], green: ['#2f8a4e', 0x1d5a33], grey: ['#6c7480', 0x434954] };
+const makeTurf = hex => canvasTex(256, 256, (g, w, h) => {
+  g.fillStyle = hex; g.fillRect(0, 0, w, h);
   for (let i = 0; i < 9000; i++) { g.fillStyle = Math.random() < .5 ? 'rgba(255,255,255,.05)' : 'rgba(0,0,40,.08)'; g.fillRect(Math.random() * w, Math.random() * h, 1, 2); }
 }, [6, 12]);
+const turf = makeTurf((COURT_COLOURS[settings.court] || COURT_COLOURS.blue)[0]);
 const court = new THREE.Mesh(new THREE.PlaneGeometry(COURT_X * 2, COURT_Z * 2), new THREE.MeshStandardMaterial({ map: turf, roughness: .95 }));
 court.rotation.x = -Math.PI / 2; court.receiveShadow = true; scene.add(court);
 const apron = new THREE.Mesh(new THREE.PlaneGeometry(COURT_X * 2 + 3, COURT_Z * 2 + 3), new THREE.MeshStandardMaterial({ color: 0x173f86, roughness: 1 }));
 apron.rotation.x = -Math.PI / 2; apron.position.y = -0.005; apron.receiveShadow = true; scene.add(apron);
+function setCourtColour(name) { const c = COURT_COLOURS[name] || COURT_COLOURS.blue; const old = court.material.map;
+  court.material.map = makeTurf(c[0]); court.material.needsUpdate = true; if (old) old.dispose(); apron.material.color.setHex(c[1]); }
+setCourtColour(settings.court);
 const lineMat = new THREE.MeshBasicMaterial({ color: 0xf3f6fb });
 function line(w, d, x, z) { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), lineMat); m.rotation.x = -Math.PI / 2; m.position.set(x, 0.004, z); scene.add(m); }
 line(COURT_X * 2, 0.05, 0, SVC_Z); line(COURT_X * 2, 0.05, 0, -SVC_Z); line(0.05, SVC_Z * 2, 0, 0);
@@ -2227,7 +2233,7 @@ for (const seg of document.querySelectorAll('.seg[data-key]')) {
   const key = seg.dataset.key;
   const sync = () => seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(String(settings[key]) === b.dataset.v)));
   seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.getAttribute('aria-disabled') === 'true') return;
-    settings[key] = key === 'games' ? +b.dataset.v : b.dataset.v; if (key !== 'start') store.set(key === 'controls' ? 'controls_v3' : key === 'cam' ? 'cam_v2' : key, b.dataset.v); sync(); if (key === 'side') applySides(); if (key === 'quality') applyQuality(settings.quality === 'auto' ? (mobile ? 'medium' : 'high') : settings.quality); if (key === 'voice' && settings.voice === '1') speak('Fifteen love'); renderSettingsHint(); if (key === 'controls') applyControlsClass(); if (key === 'roster') applyRoster(); });
+    settings[key] = key === 'games' ? +b.dataset.v : b.dataset.v; if (key !== 'start') store.set(key === 'controls' ? 'controls_v3' : key === 'cam' ? 'cam_v2' : key, b.dataset.v); sync(); if (key === 'side') applySides(); if (key === 'quality') applyQuality(settings.quality === 'auto' ? (mobile ? 'medium' : 'high') : settings.quality); if (key === 'voice' && settings.voice === '1') speak('Fifteen love'); renderSettingsHint(); if (key === 'controls') applyControlsClass(); if (key === 'roster') applyRoster(); if (key === 'court') setCourtColour(settings.court); });
   sync();
 }
 document.querySelectorAll('[data-go="home"]').forEach(b => b.addEventListener('click', goHome));

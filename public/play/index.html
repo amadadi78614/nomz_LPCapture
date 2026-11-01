@@ -418,6 +418,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
     <p class="eyebrow">Game</p><h2 class="h2">Settings</h2>
     <div class="opts">
       <span class="lab">Controls</span><div class="seg" id="optControls" data-key="controls"><button data-v="stick">Simple (swipe)</button><button data-v="pro">Console</button><button data-v="classic">Classic</button></div>
+      <span class="lab">Players</span><div class="seg" id="optRoster" data-key="roster"><button data-v="lowveld">Lowveld Padel league</button><button data-v="world">World tour</button></div>
       <span class="lab">Aim assist</span><div class="seg" id="optAssist" data-key="assist"><button data-v="1">On</button><button data-v="0">Off</button></div>
       <span class="lab">Running</span><div class="seg" id="optAuto" data-key="auto"><button data-v="0">Manual</button><button data-v="1">Auto-run</button></div>
       <span class="lab">Bounce marker</span><div class="seg" id="optRing" data-key="ring"><button data-v="1">On</button><button data-v="0">Off</button></div>
@@ -547,7 +548,7 @@ const store = { get(k, d) { try { const v = localStorage.getItem('padel3d.' + k)
                 set(k, v) { try { localStorage.setItem('padel3d.' + k, v); } catch (e) {} } };
 const settings = { games: +store.get('games', 3), diff: store.get('diff', 'easy'), cam: store.get('cam_v2', 'behind'), sound: store.get('sound', '1') === '1',
   side: store.get('side', 'left'), first: store.get('first', 'you'), start: 'serve', auto: store.get('auto', '0'), ring: store.get('ring', '1'),
-  controls: store.get('controls_v3', 'stick'), assist: store.get('assist', '1'), voice: store.get('voice', '1'), quality: store.get('quality', 'auto') };
+  controls: store.get('controls_v3', 'stick'), roster: store.get('roster', 'lowveld'), assist: store.get('assist', '1'), voice: store.get('voice', '1'), quality: store.get('quality', 'auto') };
 
 // ------------------------------------------------------------------ look options
 const LOOK = {
@@ -653,6 +654,38 @@ function teamRating(partnerId) { const a = career.attrs, p = PART[partnerId].st;
   const me = (a.power + a.control + a.speed + a.reach + a.serve + a.smash) / 60, pa = (p.speed + p.control + p.reach + p.power) / 40;
   return Math.round(((me + pa) / 2) * 100); }
 const partnerRating = p => Math.round((p.st.speed + p.st.control + p.st.reach + p.st.power) / 40 * 100);
+
+
+// ------------------------------------------------------------------ Lowveld Padel league roster (from lowveldpadel.co.za, Season 3 squads + LP ratings)
+const LP_FR = { 'avalanche-aces': ['Avalanche Aces', '#3a86ff'], 'desert-falcons': ['Desert Falcons', '#e0a33a'], 'globo-boomerangs': ['Globo Boomerangs', '#06d6a0'],
+  'ice-breakers': ['Ice Breakers', '#8ecae6'], 'samurai-kicksmashers': ['Samurai Kick Smashers', '#e5484d'], 'sonic-viboras': ['Sonic Viboras', '#9b5de5'], 'sahara-lions': ['Sahara Lions', '#f2c14e'] };
+const LP_ROSTER = [["Wiehann Mohlen", "avalanche-aces", "P1", 1309], ["Hoffmann Maritz", "avalanche-aces", "P1", 1276], ["Patrick Leyden", "avalanche-aces", "P1", 1264], ["Donavan Taylor", "avalanche-aces", "P1", 1270], ["Ryan Tate", "avalanche-aces", "P1", 1295], ["Steven Pinker", "avalanche-aces", "P1", 1330], ["Etienne Grobler", "avalanche-aces", "P2", 1426], ["Ruaan Naude", "avalanche-aces", "P2", 1404], ["Frik de Beer", "avalanche-aces", "P2", 1490], ["Felix Lombard", "avalanche-aces", "P2", 1365], ["Pierre de Villiers", "avalanche-aces", "P2", 1366], ["Luqmaan Hoosen", "avalanche-aces", "P2", 1337], ["Anas Mungalee", "avalanche-aces", "P3", 1435], ["Kobus van Rensburg", "avalanche-aces", "P3", 1385], ["Gerco van Rooyen", "avalanche-aces", "P3", 1425], ["Rishaad Shaik", "avalanche-aces", "P3", 1369], ["Piotr Latusek", "avalanche-aces", "P3", 1396], ["Prashil Nagar", "avalanche-aces", "P3", 1372], ["Uwaiz Patel", "desert-falcons", "P1", 1515], ["Yusuf Patel", "desert-falcons", "P1", 1515], ["Ahmed Ismail", "desert-falcons", "P1", 1403], ["Faheem Nomani", "desert-falcons", "P1", 1403], ["Reinhardt Trollip", "desert-falcons", "P1", 1472], ["Schalk Schutte", "desert-falcons", "P1", 1472], ["Warno Smit", "desert-falcons", "P2", 1459], ["Morne Steenekamp", "desert-falcons", "P2", 1459], ["Ryan Wicht", "desert-falcons", "P2", 1397], ["Fahad Patel", "desert-falcons", "P2", 1405], ["Rayhaan Dinath", "desert-falcons", "P2", 1467], ["Ebrahim Mungalee", "desert-falcons", "P2", 1459], ["Jacques Burger", "desert-falcons", "P3", 1491], ["Reino Grobler", "desert-falcons", "P3", 1450], ["Muhammad Mangerah", "desert-falcons", "P3", 1392], ["Zaeem Sadiq", "desert-falcons", "P3", 1466], ["Danie Rautenbach", "desert-falcons", "P3", 1501], ["Jude van den Berg", "desert-falcons", "P3", 1468], ["Cameron Jacobsz", "sahara-lions", "P1", 1430], ["Cian Maritz", "sahara-lions", "P1", 1375], ["Yusuf Packery", "sahara-lions", "P1", 1442], ["Pieter Badenhorst", "sahara-lions", "P1", 1469], ["Justin van Staaden", "sahara-lions", "P1", 1493], ["Suhayl Packery", "sahara-lions", "P1", 1461], ["Naeem Omar", "sahara-lions", "P2", 1298], ["Alfaiz Mamji", "sahara-lions", "P2", 1298], ["Adil Patel", "sahara-lions", "P2", 1437], ["Soyab Patel", "sahara-lions", "P2", 1437], ["Suliman Patel", "sahara-lions", "P2", 1404], ["Irfaan Mamji", "sahara-lions", "P2", 1404], ["Drikus Prins", "sahara-lions", "P3", 1332], ["Warren Morgan", "sahara-lions", "P3", 1399], ["Irfaan Mahomed", "sahara-lions", "P3", 1332], ["Aadil Asvat", "sahara-lions", "P3", 1409], ["Imtiaz Mohamed", "sahara-lions", "P3", 1325], ["Majid Bapu", "sahara-lions", "P3", 1335], ["Yusuf Asvat", "globo-boomerangs", "P1", 1391], ["Joseph van der Merwe", "globo-boomerangs", "P1", 1379], ["Ahmed Mungalee", "globo-boomerangs", "P1", 1388], ["Liam Morgan", "globo-boomerangs", "P1", 1364], ["Lefa Moganedi", "globo-boomerangs", "P1", 1409], ["Adil Ahmed", "globo-boomerangs", "P1", 1401], ["Bevan Francis", "globo-boomerangs", "P2", 1438], ["Muhammed Shehzad Meer", "globo-boomerangs", "P2", 1493], ["Ryan Kennett", "globo-boomerangs", "P2", 1524], ["Diego Sebastian", "globo-boomerangs", "P2", 1400], ["Duran Greever", "globo-boomerangs", "P2", 1368], ["Nabeel Meer", "globo-boomerangs", "P2", 1437], ["Kiran Hansraj", "globo-boomerangs", "P3", 1311], ["Stefan Erasmus", "globo-boomerangs", "P3", 1304], ["Taahir Mungalee", "globo-boomerangs", "P3", 1296], ["Suhail Patel", "globo-boomerangs", "P3", 1393], ["Shaffique Jeewa", "globo-boomerangs", "P3", 1329], ["Farhaan Shaik", "globo-boomerangs", "P3", 1367], ["Durell Pillay", "samurai-kicksmashers", "P1", 1400], ["Bryan Theron", "samurai-kicksmashers", "P1", 1326], ["Burger Bester", "samurai-kicksmashers", "P1", 1338], ["Muhammad Azhar Sujee", "samurai-kicksmashers", "P1", 1424], ["Siraaj Shaik", "samurai-kicksmashers", "P1", 1426], ["Danyaal Nomani", "samurai-kicksmashers", "P1", 1324], ["Muhammed Jina", "samurai-kicksmashers", "P2", 1313], ["Muneer Shaik", "samurai-kicksmashers", "P2", 1345], ["Armand Esterhuizen", "samurai-kicksmashers", "P2", 1301], ["Shaun Moropa", "samurai-kicksmashers", "P2", 1407], ["Tim Forssman", "samurai-kicksmashers", "P2", 1430], ["Sikander Cassim", "samurai-kicksmashers", "P2", 1356], ["Riaz Ahmed Bellim", "samurai-kicksmashers", "P3", 1343], ["Brent Grix", "samurai-kicksmashers", "P3", 1373], ["Dillon Francis", "samurai-kicksmashers", "P3", 1348], ["Imraan Khan", "samurai-kicksmashers", "P3", 1439], ["Ismail Karodia", "samurai-kicksmashers", "P3", 1442], ["Nuaym Shaik", "samurai-kicksmashers", "P3", 1365], ["Duhan Swart", "ice-breakers", "P1", 1346], ["JD Herbst", "ice-breakers", "P1", 1346], ["Imaad Arabi", "ice-breakers", "P1", 1396], ["Maaz Randera", "ice-breakers", "P1", 1400], ["Zaheer Methar", "ice-breakers", "P1", 1400], ["Salmaan Methar", "ice-breakers", "P1", 1396], ["Jacques Van Zyl", "ice-breakers", "P2", 1419], ["Phil-Mar Van Rensburg", "ice-breakers", "P2", 1411], ["Zayd Methar", "ice-breakers", "P2", 1304], ["Nicky Joubert", "ice-breakers", "P2", 1372], ["Zahid Methar", "ice-breakers", "P2", 1462], ["Chaz Taylor", "ice-breakers", "P2", 1462], ["Wayne Enslin", "ice-breakers", "P3", 1487], ["Sergio Correia", "ice-breakers", "P3", 1446], ["Waldo van Tonder", "ice-breakers", "P3", 1447], ["Irshaad Moola", "ice-breakers", "P3", 1381], ["Shaun Caromba", "ice-breakers", "P3", 1361], ["Aadam Nomani", "ice-breakers", "P3", 1336], ["Heinrich Coomans", "sonic-viboras", "P1", 1541], ["Anton Grote", "sonic-viboras", "P1", 1541], ["Yusuf Moola", "sonic-viboras", "P1", 1431], ["Pieter Boshoff", "sonic-viboras", "P1", 1463], ["Ridhwaan Sujee", "sonic-viboras", "P1", 1372], ["Erlo Olivier", "sonic-viboras", "P1", 1404], ["Warwick Morgan", "sonic-viboras", "P2", 1422], ["Joshua Hoffman", "sonic-viboras", "P2", 1391], ["Marius Loock", "sonic-viboras", "P2", 1431], ["Khalid Jeewa", "sonic-viboras", "P2", 1400], ["Ismail Fakir", "sonic-viboras", "P2", 1301], ["Jacques Henning", "sonic-viboras", "P2", 1301], ["George du Toit", "sonic-viboras", "P3", 1492], ["Dewald Meyer", "sonic-viboras", "P3", 1456], ["Gerrit Smith", "sonic-viboras", "P3", 1424], ["Stefan de Villiers", "sonic-viboras", "P3", 1425], ["Mohamed Dadamia", "sonic-viboras", "P3", 1529], ["Saliem Mahomed", "sonic-viboras", "P3", 1424]];
+const LP_MIN = Math.min(...LP_ROSTER.map(p => p[3])), LP_MAX = Math.max(...LP_ROSTER.map(p => p[3]));
+const lpNorm = r => (r - LP_MIN) / Math.max(1, LP_MAX - LP_MIN);
+const surname = n => n.trim().split(/\s+/).slice(-1)[0], firstName = n => n.trim().split(/\s+/)[0];
+// partners become Lowveld players (weakest → strongest, by LP rating, across franchises); the World option restores the fictional tour players
+const PARTNERS_WORLD = PARTNERS.map(p => ({ name: p.name, short: p.short, bio: p.bio, hair: p.look.hair }));
+function applyRoster() {
+  if (settings.roster !== 'lowveld') { PARTNERS.forEach((p, i) => { const w = PARTNERS_WORLD[i]; p.name = w.name; p.short = w.short; p.bio = w.bio; p.look.hair = w.hair; p.lp = null; }); return; }
+  const sorted = [...LP_ROSTER].sort((a, b) => a[3] - b[3]), used = new Set(), q = [.06, .18, .32, .46, .6, .74, .87, .98];
+  PARTNERS.forEach((p, i) => {
+    let k = Math.round(q[i] * (sorted.length - 1)), pick = null;
+    for (let d = 0; d < sorted.length && !pick; d++) for (const j of [k + d, k - d]) { const c = sorted[j]; if (c && !used.has(c[1]) && !pick) pick = c; }
+    used.add(pick[1]); if (used.size >= Object.keys(LP_FR).length) used.clear();
+    const [name, fr, tier, rating] = pick;
+    p.name = name; p.short = firstName(name); p.lp = { fr, tier, rating };
+    p.bio = `${LP_FR[fr][0]} · ${tier} · LP rating ${rating}. ${PARTNERS_WORLD[i].bio}`;
+    if (['long', 'ponytail'].includes(PARTNERS_WORLD[i].hair)) p.look.hair = i % 2 ? 'short' : 'cap';
+  });
+}
+applyRoster();
+// opponents: a pair from one franchise, picked near the event's level
+function makeLowveldPair(band) {
+  const frs = Object.keys(LP_FR), fr = pick(frs), partnerNames = new Set(PARTNERS.map(x => x.name)), squad = LP_ROSTER.filter(p => p[1] === fr && !partnerNames.has(p[0]) && !(career && career.name && p[0] === career.name));
+  const want = rand(band[0], band[1]);
+  const ranked = squad.map(p => ({ p, d: Math.abs(lpNorm(p[3]) * .8 + .15 - want) + Math.random() * .12 })).sort((a, b) => a.d - b.d);
+  return { fr, players: [ranked[0].p, ranked[1].p] };
+}
 
 // ------------------------------------------------------------------ audio (synthesised, no files)
 let actx = null;
@@ -1437,7 +1470,7 @@ function moveServeAim(dt) {
 function newPoint() {
   setupServer(); renderBoard(); placeForServe();
   S.phase = 'serveWait'; S.rally.active = false; S.rally.serveState = 0; input.tap = false; S.autoServe = 2.2; S.serveStart = performance.now(); PRO.id = null; $('pwr').classList.remove('on'); document.querySelectorAll('.pb.hot').forEach(b => b.classList.remove('hot'));
-  prompt(S.server === 'Player' ? (mobile ? (pro() ? 'Your serve · move with the stick · hold SERVE, steer the target, release' : stick() ? 'Your serve · tap to bounce · swipe up, left or right to aim (middle = T, out = wide)' : 'Left thumb places your serve · tap swing') : 'Arrows place your serve · space to serve') : (mobile ? (pro() || stick() ? (S.server === 'Partner' ? PART[career.partner].short + ' serves' : 'Opponents serve') : 'Tap swing when ready') : 'Press space when ready'));
+  prompt(S.server === 'Player' ? (mobile ? (pro() ? 'Your serve · move with the stick · hold SERVE, steer the target, release' : stick() ? 'Your serve · tap to bounce, then swipe up' : 'Left thumb places your serve · tap swing') : 'Arrows place your serve · space to serve') : (mobile ? (pro() || stick() ? (S.server === 'Partner' ? PART[career.partner].short + ' serves' : 'Opponents serve') : 'Tap swing when ready') : 'Press space when ready'));
 }
 function secondServe() { placeForServe(); S.phase = 'serveWait'; input.tap = false; S.serveStart = performance.now();
   if (S.server === 'Player') prompt(mobile ? (pro() ? 'Second serve · hold SERVE and release' : stick() ? 'Second serve · tap to bounce the ball' : 'Second serve · tap swing') : 'Second serve · space'); else { prompt(''); S.phase = 'aiServe'; S.wait = .9; } }
@@ -1485,7 +1518,7 @@ function startMatch(ctx) {
   $('chipP').style.background = career.look.shirt; $('chipC').style.background = ctx.opp.kit;
   $('round').hidden = !ctx.label; $('round').textContent = ctx.label || '';
   showScreen(null); $('hud').hidden = false; crowd(true);
-  newPoint(); setCamera(true); call(ctx.label || 'Quick match', 'First to ' + ctx.games + ' games · tie-break at ' + ctx.games + '–' + ctx.games, 2.6);
+  newPoint(); setCamera(true); call(ctx.label || 'Quick match', (ctx.opp.full ? 'vs ' + ctx.opp.full.join(' & ') + ' · ' + ctx.opp.team + ' · ' : '') + 'First to ' + ctx.games + ' games', 2.6);
 }
 function togglePause() { if (!inMatch()) return; S.paused = !S.paused; $('pause').hidden = !S.paused;
   $('pauseNote').textContent = S.ctx && S.ctx.mode === 'career' ? 'Quitting a championship match counts as a loss.' : ''; }
@@ -1935,11 +1968,13 @@ function renderOnlineBits() {
 
 // ------------------------------------------------------------------ opponents + tournaments
 function makeOpp(band) {
-  const names = [...SURNAMES].sort(() => Math.random() - .5).slice(0, 2), kit = pick(KITS);
+  const lp = settings.roster === 'lowveld' ? makeLowveldPair(band) : null;
+  const names = lp ? lp.players.map(p => surname(p[0])) : [...SURNAMES].sort(() => Math.random() - .5).slice(0, 2), kit = lp ? LP_FR[lp.fr][1] : pick(KITS);
   const ratings = [rand(band[0], band[1]), rand(band[0], band[1])];
   const looks = [0, 1].map(i => ({ skin: pick(LOOK.skin), hair: pick(LOOK.hair), hairColor: pick(LOOK.hairColor), shirt: i ? shade(kit, .78) : kit, shorts: pick(['#1b2333', '#0b0b0b', '#f3f6fb']), racket: pick(LOOK.racket), hand: Math.random() < .15 ? 'L' : 'R' }));
   return { name: names.join(' / '), short: names.join(' & '), ratings, styles: [pick(['attacker', 'defender', 'allround']), pick(['attacker', 'defender', 'allround'])],
-    looks, nums: [1 + Math.floor(Math.random() * 30), 1 + Math.floor(Math.random() * 30)], kit, rating: Math.round((ratings[0] + ratings[1]) * 50) };
+    looks, nums: [1 + Math.floor(Math.random() * 30), 1 + Math.floor(Math.random() * 30)], kit, rating: Math.round((ratings[0] + ratings[1]) * 50),
+    team: lp ? LP_FR[lp.fr][0] : '', full: lp ? lp.players.map(p => p[0]) : null };
 }
 const ourName = () => (career.name || 'You') + ' + ' + PART[career.partner].short;
 function enterTier(id) {
@@ -2045,7 +2080,7 @@ function showBracket() {
   const t = TIER[T.tier], names = ROUND_NAMES[t.size], m = ourMatch();
   $('brTier').textContent = t.name; $('brTitle').textContent = names[T.round];
   const opp = m ? T.teams[m.a === 0 ? m.b : m.a] : null;
-  $('brSub').textContent = opp ? `${ourName()} (rated ${T.teams[0].rating}) against ${opp.name} (rated ${opp.rating}).` : '';
+  $('brSub').textContent = opp ? `${ourName()} (rated ${T.teams[0].rating}) against ${opp.opp && opp.opp.full ? opp.opp.full.join(' & ') + ' of ' + opp.opp.team : opp.name} (rated ${opp.rating}).` : '';
   let html = '';
   for (let r = 0; r < names.length; r++) {
     const matches = T.rounds[r] || Array.from({ length: t.size / Math.pow(2, r + 1) }, () => null);
@@ -2190,7 +2225,7 @@ for (const seg of document.querySelectorAll('.seg[data-key]')) {
   const key = seg.dataset.key;
   const sync = () => seg.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(String(settings[key]) === b.dataset.v)));
   seg.addEventListener('click', e => { const b = e.target.closest('button'); if (!b || b.getAttribute('aria-disabled') === 'true') return;
-    settings[key] = key === 'games' ? +b.dataset.v : b.dataset.v; if (key !== 'start') store.set(key === 'controls' ? 'controls_v3' : key === 'cam' ? 'cam_v2' : key, b.dataset.v); sync(); if (key === 'side') applySides(); if (key === 'quality') applyQuality(settings.quality === 'auto' ? (mobile ? 'medium' : 'high') : settings.quality); if (key === 'voice' && settings.voice === '1') speak('Fifteen love'); renderSettingsHint(); if (key === 'controls') applyControlsClass(); });
+    settings[key] = key === 'games' ? +b.dataset.v : b.dataset.v; if (key !== 'start') store.set(key === 'controls' ? 'controls_v3' : key === 'cam' ? 'cam_v2' : key, b.dataset.v); sync(); if (key === 'side') applySides(); if (key === 'quality') applyQuality(settings.quality === 'auto' ? (mobile ? 'medium' : 'high') : settings.quality); if (key === 'voice' && settings.voice === '1') speak('Fifteen love'); renderSettingsHint(); if (key === 'controls') applyControlsClass(); if (key === 'roster') applyRoster(); });
   sync();
 }
 document.querySelectorAll('[data-go="home"]').forEach(b => b.addEventListener('click', goHome));

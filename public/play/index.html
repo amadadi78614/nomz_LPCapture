@@ -1561,7 +1561,10 @@ stageEl.addEventListener('pointermove', e => {
       reticle.position.set(a.x, .012, a.z); input.aim = { x: 0, power: 0, kind: 'auto' }; }
     else (stick() ? aimFromSwipeStick : aimFromSwipe)(dx, dy); }
 });
+let dragCancels = 0;
 function endPointer(e) {
+  if (e.type === 'pointercancel' && (e.pointerId === input.joyId || (e.pointerId === GS.id && GS.mode === 'move')) && ++dragCancels === 2)
+    call('Your phone interrupted the drag', EMBEDDED ? 'Tip: play at lowveldpadel.co.za/play in Chrome for full control' : 'Tip: tap full screen (top right) and try again', 4);
   if (stick() && e.pointerId === GS.id) {
     if (GS.mode === null && (e.timeStamp || performance.now()) - GS.t0 < 450) { if (myServeReady() && !S.toss) startToss(); else if (S.phase === 'rally') { input.aim = { x: 0, power: 0, kind: 'tap' }; swingStart(); } }
     if (GS.mode === 'move') stopSteer();
@@ -1570,6 +1573,11 @@ function endPointer(e) {
   if (e.pointerId === input.joyId) { input.joyId = null; input.mx = input.mz = 0; input.steer = false; $('joy').classList.remove('active'); $('joyKnob').style.transform = ''; const j = $('joy'); j.style.left = ''; j.style.top = ''; j.style.bottom = ''; }
   if (e.pointerId === input.swId) { input.swId = null; input.swingT = Math.max(input.swingT, .18); $('swing').classList.remove('hot'); }
 }
+// keep the host app / browser from grabbing drags (scroll, pull-to-refresh, swipe-to-close): otherwise a held drag gets cancelled and the player stops
+for (const t of ['touchstart', 'touchmove']) {
+  stageEl.addEventListener(t, e => { if (inMatch()) e.preventDefault(); }, { passive: false });
+  document.addEventListener(t, e => { if (inMatch() && e.target.closest && !e.target.closest('button, input, select, textarea, a, .overlay')) e.preventDefault(); }, { passive: false }); }
+document.documentElement.style.overscrollBehavior = 'none'; document.body.style.overscrollBehavior = 'none';
 stageEl.addEventListener('pointerup', endPointer); stageEl.addEventListener('pointercancel', endPointer);
 addEventListener('contextmenu', e => e.preventDefault());
 for (const [id, kind] of [['btnLob', 'lob'], ['btnDrop', 'drop']]) {

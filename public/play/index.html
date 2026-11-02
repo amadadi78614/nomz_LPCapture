@@ -291,6 +291,8 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
 .sp-pill b { font: 800 28px var(--display); line-height: 1; } .sp-pill span { font: 700 10px var(--display); letter-spacing: .1em; text-transform: uppercase; }
 .sp-pill.empty { background: var(--panel-2); color: var(--muted); }
 #dbg { position: fixed; left: 4px; bottom: 4px; z-index: 20; margin: 0; max-width: 98vw; white-space: pre-wrap; font: 600 10px/1.25 monospace; color: #d8f23a; background: #000c; padding: 4px 6px; border-radius: 4px; pointer-events: none; }
+#chal { position: absolute; left: 50%; transform: translateX(-50%); top: calc(14px + env(safe-area-inset-top, 0px)); max-width: 60vw; text-align: center; font: 800 13px var(--display); letter-spacing: .06em; color: var(--night); background: var(--gold); border-radius: 999px; padding: 5px 12px; pointer-events: none; box-shadow: 0 4px 12px #0007; }
+@media (orientation: portrait) { #chal { top: auto; bottom: calc(235px + env(safe-area-inset-bottom, 0px)); max-width: 92vw; } }
 </style>
 
 <div id="stage" aria-label="Padel court"></div>
@@ -326,6 +328,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
   </div>
   <div id="meters" class="touchonly"><div class="mt"><span>STAMINA</span><i><b id="stamFill"></b></i></div><div class="mt sup"><span>SUPER</span><i><b id="supFill"></b></i></div></div>
   <div id="errBox" hidden></div>
+  <div id="chal" hidden></div>
   <pre id="dbg" hidden></pre>
   <canvas id="swipeFx"></canvas>
   <div id="legend" class="touchonly"><span class="lg-stick"><b>DRAG</b> (left thumb, or slow drag anywhere) = run · <b>QUICK SWIPE</b> = hit · direction = aim · faster = harder</span><span class="lg-stick"><b>SWIPE DOWN</b> lob · <b>short soft</b> = drop · <b>HIGH BALL:</b> straight = bandeja · hard = smash · <b>angled = víbora</b></span><span class="lg-pro"><b>LEFT THUMB</b> run + aim · <b>HOLD</b> a shot = power · <b>RELEASE</b> on the ring</span></div>
@@ -350,11 +353,22 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
       <button class="tile" id="goQuick"><b>Quick match</b><span>Pick a partner and a level, play one set.</span></button>
       <button class="tile" id="goPlayer"><b>My player</b><span id="playerHint">Skills and look.</span><i class="badge" id="spBadge" hidden></i></button>
       <button class="tile" id="goPartners"><b>Partners</b><span id="partnerHint">Choose who plays beside you.</span></button>
+      <button class="tile" id="goChallenges"><b>Challenges</b><span>15 padel missions. Earn up to 3 stars each.</span></button>
       <button class="tile" id="goTraining"><b>Training</b><span id="trainHint">Ball-machine drills that earn XP.</span></button>
       <button class="tile" id="goLeaders"><b>Leaderboard</b><span id="leadHint">See how you rank against friends.</span></button>
     </div>
     <div class="prefs"><div class="row2" style="gap:8px"><button class="btn ghost small" id="goSettings">Settings</button><button class="btn ghost small online-only" id="goFeedback" hidden>Send feedback</button><button class="btn small" id="btnInstall" hidden>Install app</button></div><p class="sub" id="installHint" hidden style="font-size:13px"></p><span id="settingsHint"></span><span class="save" id="verTag"></span></div>
     <p id="rotate">Turn your phone sideways for the widest view.</p>
+  </div>
+</div>
+
+<!-- CHALLENGES -->
+<div class="overlay" id="challenges" hidden>
+  <div class="card wide">
+    <div class="topbar"><button class="back" data-go="home">← Home</button><span class="coins" id="chalStars" style="color:var(--gold)">0 ★</span></div>
+    <p class="eyebrow">Missions</p><h2 class="h2">Challenges</h2>
+    <p class="sub">One goal per challenge. Finish it for 1 to 3 stars; faster and cleaner earns more. Stars unlock the Pro and Legend tiers. New stars pay 30 coins each.</p>
+    <div class="tiers" id="chalList"></div>
   </div>
 </div>
 
@@ -611,10 +625,10 @@ const ATTRS = [
 function newCareer() {
   return { v: 1, name: 'You', num: 8, look: { skin: '#c68642', hair: 'short', hairColor: '#1b1b1b', shirt: '#ff8a3d', shorts: '#1b2333', racket: '#ff8a3d' },
     level: 1, xp: 0, sp: 2, attrs: { power: 3, control: 3, speed: 3, reach: 3, serve: 3, smash: 3 }, coins: 100,
-    owned: ['sipho', 'carla'], partner: 'sipho', country: '', titles: {}, record: { w: 0, l: 0 }, tour: null, drills: {}, week: { key: '', xp: 0 }, updatedAt: 0 };
+    owned: ['sipho', 'carla'], partner: 'sipho', country: '', titles: {}, record: { w: 0, l: 0 }, tour: null, drills: {}, challenges: {}, week: { key: '', xp: 0 }, updatedAt: 0 };
 }
 function migrate(c) { const base = newCareer(); if (!c || typeof c !== 'object') return base;
-  const out = { ...base, ...c, look: { ...base.look, ...(c.look || {}) }, attrs: { ...base.attrs, ...(c.attrs || {}) }, record: { ...base.record, ...(c.record || {}) }, titles: { ...(c.titles || {}) }, drills: { ...(c.drills || {}) }, week: { ...base.week, ...(c.week || {}) } };
+  const out = { ...base, ...c, look: { ...base.look, ...(c.look || {}) }, attrs: { ...base.attrs, ...(c.attrs || {}) }, record: { ...base.record, ...(c.record || {}) }, titles: { ...(c.titles || {}) }, drills: { ...(c.drills || {}) }, challenges: { ...(c.challenges || {}) }, week: { ...base.week, ...(c.week || {}) } };
   if (!Array.isArray(out.owned) || !out.owned.length) out.owned = base.owned; if (!PART[out.partner]) out.partner = out.owned[0]; return out; }
 let career = (() => { try { return migrate(JSON.parse(store.get('career', 'null'))); } catch (e) { return newCareer(); } })();
 const xpNeed = l => 120 + 70 * (l - 1);
@@ -1231,6 +1245,7 @@ function swingTypeFor(p) {
 }
 function shot(who, aim) {
   const p = players[who], team = p.team, dir = team === 'P' ? -1 : 1;
+  S.prevShot = { who: S.rally.hitter, kind: S.lastKind };          // the shot before this one (forced errors)
   const r = S.rally; r.lastHit = team; r.hitter = who; r.bounces = 0; r.serveState = 0; r.shots++; p.cy = ball.y;   // contact height drives the arm pose
   if (!(p.swing > 0) || p.swing > .17) { if (!(p.swing > 0)) p.swingType = swingTypeFor(p); p.swing = .17; }   // racket meets the ball at the moment of contact p.cool = .35; p.prep = null;
   const Q = p.human ? (aim.quality || 'good') : 'good';
@@ -1642,7 +1657,9 @@ function afterRally() {
   S.stats.longest = Math.max(S.stats.longest, r.shots);
   if (o.winner === 'P') { if (/Ace/.test(o.reason)) S.stats.aces++; if (r.hitter === 'Player' && r.lastHit === 'P') S.stats.winners++; }
   if (o.winner === 'C' && r.hitter === 'Player' && r.lastHit === 'P') S.stats.errors++;
+  const srvTeam = players[S.server].team, servedBy = S.server, gBefore = [S.gP, S.gC];
   const msg = awardPoint(o.winner);
+  if (S.ctx && S.ctx.mode === 'challenge') challengeAfterPoint(o, r, srvTeam, servedBy, gBefore);
   sfx(o.winner === 'P' ? 'cheer' : 'groan', /Game/.test(msg) ? 1.3 : .9); buzz(o.winner === 'P' ? [30, 50, 30] : 70);
   for (const q of Object.values(players)) { q.celebrate = 1; q.celeType = q.team === o.winner ? 'win' : 'lose'; }
   call(o.reason, msg, 2.4); renderBoard(); speak(msg);
@@ -2041,7 +2058,7 @@ $('lbWeek').addEventListener('click', () => setLbTab('week')); $('lbAll').addEve
 function showLeaders() { pushLeaderboard(); renderLeaders(); showScreen('leaders'); loadLeaders(); }
 
 // ------------------------------------------------------------------ online (website + Android app): world leaderboard + feedback via Supabase
-const BUILD = '3f13737', APP_VERSION = '0.9-beta+' + BUILD;
+const BUILD = '41ed2e5', APP_VERSION = '0.9-beta+' + BUILD;
 const SB_URL = 'https://eqyiqkllhqjswqrfqwdp.supabase.co', SB_KEY = 'sb_publishable_oeEGuYG6i3AcHT1Sen6wFQ_zLC0O54U';
 const EMBEDDED = !!(window.claude && typeof window.claude.use === 'function');    // inside Claude the page uses Claude's own storage instead
 const PLATFORM = (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform()) || 'web';
@@ -2182,6 +2199,7 @@ function advanceTour(won, score) {
 
 // ------------------------------------------------------------------ rewards
 function finishMatch(forfeit) {
+  if (S.ctx && S.ctx.mode === 'challenge') { if (forfeit && CH) { CH.done = false; CH.stars = 0; } return finishChallenge(); }
   $('hud').hidden = true; prompt(''); ring.visible = boxHL.visible = reticle.visible = false;
   const ctx = S.ctx, won = !forfeit && S.matchWinner === 'P', st = S.stats, score = S.gP + '–' + S.gC;
   const t = ctx.mode === 'career' ? TIER[career.tour.tier] : null, mult = t ? t.xp : .5;
@@ -2215,11 +2233,11 @@ function finishMatch(forfeit) {
 function gainXp(xp) { addWeekXp(xp); career.xp += xp; let ups = 0;
   while (career.xp >= xpNeed(career.level) && career.level < 40) { career.xp -= xpNeed(career.level); career.level++; career.sp += 2; ups++; } return ups; }
 // ------------------------------------------------------------------ screens
-const SCREENS = ['home', 'champs', 'bracketView', 'player', 'partners', 'quick', 'toss', 'pause', 'result', 'training', 'leaders', 'settings', 'feedback'];
+const SCREENS = ['home', 'challenges', 'champs', 'bracketView', 'player', 'partners', 'quick', 'toss', 'pause', 'result', 'training', 'leaders', 'settings', 'feedback'];
 function showScreen(id) {
   SCREENS.forEach(s => { $(s).hidden = s !== id; });
   if (id) { S.phase = 'menu'; S.paused = false; $('hud').hidden = true; if (id !== 'pause') crowd(false); }
-  document.querySelectorAll('.coins').forEach(el => { if (el.id !== 'homeCoins') el.textContent = career.coins; });
+  document.querySelectorAll('.coins').forEach(el => { if (el.id !== 'homeCoins' && el.id !== 'chalStars') el.textContent = career.coins; });
 }
 function initials(n) { return (n || 'You').split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase(); }
 function renderHome() {
@@ -2308,7 +2326,7 @@ function renderSkills() {
   $('plLvl').textContent = career.level; $('plSp').textContent = career.sp; $('plXp').style.width = Math.round(career.xp / need * 100) + '%';
   $('plXpTxt').textContent = `${career.xp} / ${need} XP to level ${career.level + 1}`;
   document.querySelector('.sp-pill').classList.toggle('empty', !career.sp);
-  document.querySelectorAll('.coins').forEach(el => { if (el.id !== 'homeCoins') el.textContent = career.coins; });
+  document.querySelectorAll('.coins').forEach(el => { if (el.id !== 'homeCoins' && el.id !== 'chalStars') el.textContent = career.coins; });
   $('attrList').innerHTML = ATTRS.map(([k, lab]) => { const v = career.attrs[k], price = skillPrice(v), max = v >= 10;
     const label = max ? 'MAX' : career.sp ? '+1' : '🪙' + price, can = !max && (career.sp > 0 || career.coins >= price);
     return `<div class="attr"><span class="lab">${lab}</span><div class="meter">${Array.from({ length: 10 }, (_, i) => `<i class="${i < v ? 'on' : ''}"></i>`).join('')}</div>
@@ -2438,6 +2456,104 @@ window.__padel = { camera, startDrill, D: () => D, S, ball, players, get career(
   advance(sec, cb) { for (let t = 0; t < sec; t += 1 / 60) { if (cb) cb(); update(1 / 60, 1 / 60); } },
   setAuto(on) { S.lvl = { ...S.lvl, auto: on }; }, gesture(dx, dy) { input.aim = { x: 0, power: 0, kind: 'auto' }; swingStart(); aimFromSwipeStick(dx, dy); }, swing(aim) { input.aim = aim || { x: 0, power: .3, kind: 'auto' }; swingStart(); },
   flick(dx, dy, ms) { input.aim = aimFromFlick(dx, dy, ms); swingStart(); return input.aim; }, GS: () => GS, me, startMatch, makeOpp: makeOpp };
+
+// ------------------------------------------------------------------ challenges (Stick Cricket style): one goal, 1–3 stars, tiers unlock with stars
+const CHALLENGES = [
+  { id: 'first', tier: 1, name: 'First blood', desc: 'Win 3 points before your opponents win 3.', goal: { type: 'points', n: 3, fail: 3 }, band: [.15, .35] },
+  { id: 'ace', tier: 1, name: 'Serve it out', desc: 'Win a point straight off your serve: an ace, or a return they miss. You serve every point, 8 serves.', goal: { type: 'ace', n: 1 }, limit: 8, setup: { server: 'Player', always: true }, band: [.15, .35] },
+  { id: 'drop', tier: 1, name: 'Drop shot artist', desc: 'Win 2 points with a drop shot (short, soft swipe): a winner, or they miss it. 10 points.', goal: { type: 'kind', kinds: ['drop', 'chiquita'], n: 2 }, limit: 10, band: [.15, .4] },
+  { id: 'lob', tier: 1, name: 'Over the top', desc: 'Win a point with a lob over the net players (swipe down): a winner, or they miss it. 12 points.', goal: { type: 'kind', kinds: ['lob'], n: 1 }, limit: 12, band: [.15, .4] },
+  { id: 'hold', tier: 1, name: 'Hold your serve', desc: 'Win your own service game.', goal: { type: 'game', serving: true }, setup: { server: 'Player' }, band: [.2, .45] },
+  { id: 'vibora', tier: 2, name: 'Víbora venom', desc: 'Win 2 points with a víbora (angled swipe on a high ball). 14 points.', goal: { type: 'kind', kinds: ['vibora'], n: 2 }, limit: 14, band: [.3, .55] },
+  { id: 'bandeja', tier: 2, name: 'Bandeja wall', desc: 'Win 3 points with a bandeja (straight swipe on a high ball). 15 points.', goal: { type: 'kind', kinds: ['bandeja'], n: 3 }, limit: 15, band: [.3, .55] },
+  { id: 'break', tier: 2, name: 'Break of serve', desc: 'Win a game while the opponents are serving.', goal: { type: 'game', serving: false }, setup: { server: 'C' }, band: [.35, .6] },
+  { id: 'comeback', tier: 2, name: 'From 0–40', desc: 'You are serving at 0–40. Win the game.', goal: { type: 'game', serving: true }, setup: { server: 'Player', pC: 3 }, band: [.3, .55] },
+  { id: 'cuatro', tier: 2, name: 'Por cuatro', desc: 'Win a point with a smash that bounces out of the court (Overhead 4+, or a super smash). 16 points.', goal: { type: 'reason', re: 'cuatro|bounced back over', n: 1 }, limit: 16, band: [.3, .55] },
+  { id: 'love', tier: 3, name: 'Flawless', desc: 'Win a game to love (4–0). You have 3 games.', goal: { type: 'love' }, limitGames: 3, band: [.5, .75] },
+  { id: 'super', tier: 3, name: 'Super show', desc: 'Win 2 points with super shots (hard flick when SUPER is full). Starts with a full bar. 20 points.', goal: { type: 'kind', kinds: ['superdrive', 'supersmash'], n: 2 }, limit: 20, setup: { energy: 1 }, band: [.5, .75] },
+  { id: 'tiebreak', tier: 3, name: 'Tie-break clutch', desc: 'Tie-break at 6–6 and you are 3–5 down. Win it.', goal: { type: 'set' }, games: 6, setup: { tie: true, gP: 6, gC: 6, pP: 3, pC: 5 }, band: [.55, .8] },
+  { id: 'saveset', tier: 3, name: 'Save the set', desc: 'You are 3–5 down in the set. Win it.', goal: { type: 'set' }, games: 6, setup: { gP: 3, gC: 5 }, band: [.55, .8] },
+  { id: 'giant', tier: 3, name: 'Giant killer', desc: 'Beat a World Finals pair, first to 3 games.', goal: { type: 'set' }, games: 3, band: [.82, .95] },
+];
+const CH_UNLOCK = { 1: 0, 2: 8, 3: 18 }, CH_TIER = { 1: 'Club', 2: 'Pro', 3: 'Legend' };
+const chStars = () => Object.values(career.challenges || {}).reduce((a, b) => a + b, 0);
+let CH = null;
+function startChallenge(id) {
+  const d = CHALLENGES.find(c => c.id === id); if (!d) return;
+  CH = { d, pts: 0, won: 0, lost: 0, count: 0, games: 0, gameLost: 0, done: null, stars: 0 };
+  const opp = makeOpp(d.band || [.2, .5]);
+  startMatch({ mode: 'challenge', id, partner: career.partner, games: d.games || 6, opp, label: 'Challenge · ' + d.name });
+  const su = d.setup || {};
+  Object.assign(S, { pP: su.pP || 0, pC: su.pC || 0, gP: su.gP || 0, gC: su.gC || 0, tie: !!su.tie });
+  if (su.server) S.serverIdx = su.server === 'Player' ? S.order.indexOf('Player') : S.order.findIndex(k => players[k].team === 'C');
+  if (su.energy) S.energy = 1;
+  newPoint(); renderBoard(); chBanner(); $('chal').hidden = false;
+  call(d.name, d.desc, 3.2);
+}
+function chBanner() {
+  if (!CH) return; const g = CH.d.goal, left = CH.d.limit ? ` · ${CH.d.limit - CH.pts} points left` : '';
+  const txt = g.type === 'points' ? `Points ${CH.won}/${g.n} · they have ${CH.lost}/${g.fail}`
+    : g.type === 'ace' ? `Serve winners ${CH.count}/${g.n}${left}` : g.type === 'kind' || g.type === 'reason' ? `${CH.d.name}: ${CH.count}/${g.n}${left}`
+    : g.type === 'game' ? (g.serving ? 'Hold your serve' : 'Break their serve') : g.type === 'love' ? `Win a game to love · game ${CH.games + 1} of ${CH.d.limitGames}` : 'Win the set';
+  $('chal').textContent = '🎯 ' + txt;
+}
+// called after every point while a challenge runs
+function challengeAfterPoint(o, r, srvTeam, servedBy, gBefore) {
+  if (!CH || CH.done !== null) return; const g = CH.d.goal; CH.pts++;
+  if (o.winner === 'P') CH.won++; else { CH.lost++; CH.gameLost++; }
+  const gameEnded = S.gP + S.gC !== gBefore[0] + gBefore[1] || S.matchWinner, gameWonByUs = S.gP > gBefore[0] || S.matchWinner === 'P';
+  const ourKind = o.winner !== 'P' ? null : r.hitter === 'Player' && r.lastHit === 'P' ? S.lastKind      // clean winner
+    : r.lastHit === 'C' && S.prevShot && S.prevShot.who === 'Player' ? S.prevShot.kind : null;                // they missed your shot
+  if (g.type === 'points') { if (CH.won >= g.n) CH.done = true; else if (CH.lost >= g.fail) CH.done = false; }
+  else if (g.type === 'ace') { if (o.winner === 'P' && servedBy === 'Player' && (/Ace/.test(o.reason) || (r.shots <= 1 && r.lastHit === 'C'))) CH.count++; }
+  else if (g.type === 'kind') { if (ourKind && g.kinds.includes(ourKind)) CH.count++; }
+  else if (g.type === 'reason') { if (o.winner === 'P' && new RegExp(g.re, 'i').test(o.reason)) CH.count++; }
+  else if (g.type === 'game') { if (gameEnded) CH.done = gameWonByUs && (srvTeam === 'P') === g.serving; }
+  else if (g.type === 'love') { if (gameEnded) { CH.games++; if (gameWonByUs && CH.gameLost === 0) CH.done = true; else if (CH.games >= CH.d.limitGames) CH.done = false; CH.gameLost = 0; } }
+  else if (g.type === 'set') { if (S.matchWinner) CH.done = S.matchWinner === 'P'; }
+  if (CH.done === null && g.n && CH.count >= g.n) CH.done = true;
+  if (CH.done === null && CH.d.limit && CH.pts >= CH.d.limit) CH.done = false;
+  if (CH.done === null && S.matchWinner) CH.done = false;
+  if (CH.done === null && CH.d.setup && CH.d.setup.always) S.serverIdx = S.order.indexOf('Player');      // you keep serving
+  if (CH.done !== null) {
+    const ratio = CH.d.limit ? CH.pts / CH.d.limit : 0;
+    CH.stars = !CH.done ? 0 : g.type === 'points' ? (CH.lost === 0 ? 3 : CH.lost === 1 ? 2 : 1)
+      : g.type === 'ace' ? (CH.pts <= 2 ? 3 : CH.pts <= 5 ? 2 : 1) : g.type === 'love' ? 4 - CH.games
+      : g.type === 'game' || g.type === 'set' ? (CH.lost <= Math.max(1, CH.won * .3) ? 3 : CH.lost <= CH.won * .7 ? 2 : 1)
+      : (ratio <= .5 ? 3 : ratio <= .8 ? 2 : 1);
+    CH.stars = clamp(CH.stars, 0, 3); S.matchWinner = S.matchWinner || 'X';
+  }
+  chBanner();
+}
+function finishChallenge() {
+  $('hud').hidden = true; $('chal').hidden = true; prompt(''); ring.visible = boxHL.visible = reticle.visible = false;
+  const d = CH.d, prev = (career.challenges || {})[d.id] || 0, gain = Math.max(0, CH.stars - prev);
+  career.challenges = career.challenges || {}; if (CH.stars > prev) career.challenges[d.id] = CH.stars;
+  const coins = gain * 30, xp = 20 + gain * 25 + (CH.done ? 15 : 0); career.coins += coins; const ups = gainXp(xp); saveCareer();
+  $('resEyebrow').textContent = 'Challenge · ' + CH_TIER[d.tier];
+  $('resTitle').innerHTML = CH.done ? `<em>${'★'.repeat(CH.stars)}</em>${'☆'.repeat(3 - CH.stars)}` : 'Not this time';
+  $('resSub').textContent = d.name + ': ' + (CH.done ? 'challenge complete.' : 'challenge failed. ' + d.desc) + (gain ? ` New best: ${CH.stars} stars.` : '');
+  $('resLevel').hidden = !ups; $('resLevel').textContent = 'Level ' + career.level + ' reached · +' + ups * 2 + ' skill points';
+  const rows = [['XP', '+' + xp, 'lime'], ['Coins', '+' + coins, 'gold'], ['Points played', CH.pts], ['Won', CH.won], ['Lost', CH.lost], ['Total stars', chStars() + ' / ' + CHALLENGES.length * 3]];
+  $('resStats').innerHTML = rows.map(([k, v, c]) => `<div class="stat ${c || ''}"><b>${v}</b><span>${k}</span></div>`).join('');
+  $('btnResNext').textContent = CH.done && CH.stars === 3 ? 'Next challenge' : 'Try again';
+  const id = d.id, idx = CHALLENGES.findIndex(c => c.id === id), next = CHALLENGES[idx + 1], perfect = CH.done && CH.stars === 3;
+  $('btnResNext').onclick = () => { if (perfect && next && chStars() >= CH_UNLOCK[next.tier]) startChallenge(next.id); else startChallenge(id); };
+  if (CH.done) { sfx('cheer'); buzz([30, 50, 30]); }
+  CH = null; showScreen('result');
+}
+function showChallenges() {
+  const have = chStars(); let html = '';
+  for (const t of [1, 2, 3]) { const locked = have < CH_UNLOCK[t];
+    html += `<h3 class="eyebrow" style="margin:6px 0 0">${CH_TIER[t]} ${locked ? `· 🔒 needs ${CH_UNLOCK[t]} ★` : ''}</h3>`;
+    html += CHALLENGES.filter(c => c.tier === t).map(c => { const st = (career.challenges || {})[c.id] || 0;
+      return `<div class="tier ${locked ? 'locked' : ''}"><div><h3>${c.name}</h3><p>${c.desc}</p></div><div style="display:grid;gap:8px;justify-items:end"><div class="stars" style="font-size:20px">${'★'.repeat(st)}${'☆'.repeat(3 - st)}</div>
+        <button class="btn small" data-chal="${c.id}" ${locked ? 'disabled' : ''}>${st ? 'Replay' : 'Play'}</button></div></div>`; }).join(''); }
+  $('chalList').innerHTML = html; showScreen('challenges'); $('chalStars').textContent = have + ' / ' + CHALLENGES.length * 3 + ' ★';
+}
+$('chalList').addEventListener('click', e => { const b = e.target.closest('button[data-chal]'); if (b && !b.disabled) { audio(); startChallenge(b.dataset.chal); } });
+$('goChallenges').addEventListener('click', () => { audio(); showChallenges(); });
+
 })();
 </script>
 </body></html>

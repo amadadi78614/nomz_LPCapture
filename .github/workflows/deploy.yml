@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - run: npm run validate:ladies
       - run: npm run build
+        env:
+          VITE_NOMZ_URL: ${{ vars.NOMZ_URL }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

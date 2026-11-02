@@ -326,7 +326,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
   <div id="meters" class="touchonly"><div class="mt"><span>STAMINA</span><i><b id="stamFill"></b></i></div><div class="mt sup"><span>SUPER</span><i><b id="supFill"></b></i></div></div>
   <div id="errBox" hidden></div>
   <canvas id="swipeFx"></canvas>
-  <div id="legend" class="touchonly"><span class="lg-stick"><b>LEFT THUMB</b> run · <b>RIGHT THUMB SWIPE</b> to hit · direction = aim · faster = harder</span><span class="lg-stick"><b>SWIPE DOWN</b> lob · <b>short soft</b> = drop · <b>HIGH BALL:</b> straight = bandeja · hard = smash · <b>angled = víbora</b></span><span class="lg-pro"><b>LEFT THUMB</b> run + aim · <b>HOLD</b> a shot = power · <b>RELEASE</b> on the ring</span></div>
+  <div id="legend" class="touchonly"><span class="lg-stick"><b>DRAG</b> (left thumb, or slow drag anywhere) = run · <b>QUICK SWIPE</b> = hit · direction = aim · faster = harder</span><span class="lg-stick"><b>SWIPE DOWN</b> lob · <b>short soft</b> = drop · <b>HIGH BALL:</b> straight = bandeja · hard = smash · <b>angled = víbora</b></span><span class="lg-pro"><b>LEFT THUMB</b> run + aim · <b>HOLD</b> a shot = power · <b>RELEASE</b> on the ring</span></div>
 </div>
 
 <!-- HOME -->
@@ -1319,6 +1319,7 @@ function shot(who, aim) {
 // ------------------------------------------------------------------ rules
 function endRally(winner, reason, isFault) {
   const r = S.rally; if (!r.active) return; r.active = false;
+  if (GS.mode === 'move') { stopSteer(); GS.mode = 'done'; }
   S.outcome = { winner, reason, fault: !!isFault }; S.phase = 'after'; S.wait = 1.2; ring.visible = false; boxHL.visible = false;
 }
 const pointOther = reason => endRally(other(S.rally.lastHit), reason);
@@ -1483,7 +1484,8 @@ function steerTo(x, y) { let dx = x - GS.ax, dy = y - GS.ay; const d = Math.hypo
   input.mx = dx / m; input.mz = dy / m; input.steer = true; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
 function startSteer(x, y) { GS.mode = 'move'; GS.ax = x; GS.ay = y; const j = $('joy'); j.classList.add('active'); j.style.left = (x - 60) + 'px'; j.style.top = (y - 60) + 'px'; j.style.bottom = 'auto'; }
 function stopSteer() { input.steer = false; input.mx = input.mz = 0; const j = $('joy'); j.classList.remove('active'); j.style.left = j.style.top = j.style.bottom = ''; $('joyKnob').style.transform = ''; }
-function stickTick() { fxDraw(); }
+function stickTick() { fxDraw();             // touch and hold on the right, then drag = run (same as the left thumb)
+  if (stick() && GS.id !== null && GS.mode === null && S.phase === 'rally' && performance.now() - GS.t0 > 260 && (GS.lastD || 0) < 12) { startSteer(GS.x0, GS.y0); GS.auto = true; GS.moved = false; } }
 const myServeReady = () => S.phase === 'serveWait' && S.server === 'Player' && performance.now() - (S.serveStart || 0) > 400;
 const preServePhase = () => (S.phase === 'serveWait' || S.phase === 'aiServe') && S.mode === 'match';
 function walkTo(dx, dy) {                   // drag before the serve: walk to a new spot (server stays behind the service line, in his half)
@@ -1526,7 +1528,7 @@ stageEl.addEventListener('pointerdown', e => {
       input.joyId = e.pointerId; input.joy0 = [e.clientX, e.clientY]; input.steer = true;
       const j = $('joy'); j.classList.add('active'); j.style.left = (e.clientX - 60) + 'px'; j.style.top = (e.clientY - 60) + 'px'; j.style.bottom = 'auto'; return; }
     if (GS.id !== null) return;
-    Object.assign(GS, { id: e.pointerId, t0: performance.now(), x0: e.clientX, y0: e.clientY, mode: null, lastD: 0, px: players.Player.x, pz: players.Player.z }); fx.pts = []; fxAdd(e.clientX, e.clientY);
+    Object.assign(GS, { id: e.pointerId, t0: e.timeStamp || performance.now(), x0: e.clientX, y0: e.clientY, mode: null, lastD: 0, px: players.Player.x, pz: players.Player.z });   // touch time, not processing time fx.pts = []; fxAdd(e.clientX, e.clientY);
     return; }
   if (pro()) { if (input.joyId !== null) return; input.joyId = e.pointerId; input.joy0 = [e.clientX, e.clientY]; input.steer = true;
     const j = $('joy'); j.classList.add('active'); j.style.left = (e.clientX - 60) + 'px'; j.style.top = (e.clientY - 60) + 'px'; j.style.bottom = 'auto'; return; }
@@ -1540,11 +1542,15 @@ stageEl.addEventListener('pointermove', e => {
   if (stick() && e.pointerId === input.joyId) { let dx = e.clientX - input.joy0[0], dy = e.clientY - input.joy0[1]; const d = Math.hypot(dx, dy), m = 55;
     if (d > m) { dx *= m / d; dy *= m / d; } input.mx = dx / m; input.mz = dy / m; input.steer = true; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`; return; }
   if (stick()) { if (e.pointerId !== GS.id) return;
-    const dx = e.clientX - GS.x0, dy = e.clientY - GS.y0, ms = performance.now() - GS.t0; GS.lastD = Math.hypot(dx, dy); fxAdd(e.clientX, e.clientY);
+    const dx = e.clientX - GS.x0, dy = e.clientY - GS.y0, ms = (e.timeStamp || performance.now()) - GS.t0; GS.lastD = Math.hypot(dx, dy); fxAdd(e.clientX, e.clientY);
     if (preServePhase() && !S.toss && (GS.mode === 'walk' || (GS.mode === null && GS.lastD > 10))) { GS.mode = 'walk'; walkTo(dx, dy); return; }
     if (GS.mode === null && GS.lastD > 28) {
       if (myServeReady() && S.toss) { GS.mode = 'serve'; if (S.toss.t > .45) simpleServe(dx, dy, ms); else S.toss.queued = [dx, dy, ms]; }
-      else if (S.phase === 'rally') { GS.mode = 'flick'; input.aim = aimFromFlick(dx, dy, Math.min(ms, 450)); swingStart(); } }
+      else if (S.phase === 'rally' && ms < 280) { GS.mode = 'flick'; input.aim = aimFromFlick(dx, dy, ms); swingStart(); }     // quick swipe = shot
+      else if (S.phase === 'rally') { startSteer(GS.x0, GS.y0); GS.auto = false; GS.moved = true; steerTo(e.clientX, e.clientY); } }                            // slow drag = run
+    else if (GS.mode === 'move' && GS.auto && !GS.moved && ms < 280 && GS.lastD > 28 && S.phase === 'rally') {   // a slow frame started 'run' before the flick arrived: it was a shot
+      stopSteer(); GS.mode = 'flick'; input.aim = aimFromFlick(dx, dy, ms); swingStart(); }
+    else if (GS.mode === 'move') { GS.moved = true; steerTo(e.clientX, e.clientY); }
     else if (GS.mode === 'flick' && input.swingT > 0) input.aim = aimFromFlick(dx, dy, Math.min(ms, 450));        // keep refining until the ball is struck
     return; }
   if (e.pointerId === input.joyId) { let dx = e.clientX - input.joy0[0], dy = e.clientY - input.joy0[1]; const d = Math.hypot(dx, dy), m = 55;
@@ -1557,7 +1563,8 @@ stageEl.addEventListener('pointermove', e => {
 });
 function endPointer(e) {
   if (stick() && e.pointerId === GS.id) {
-    if (GS.mode === null && performance.now() - GS.t0 < 450) { if (myServeReady() && !S.toss) startToss(); else if (S.phase === 'rally') { input.aim = { x: 0, power: 0, kind: 'tap' }; swingStart(); } }
+    if (GS.mode === null && (e.timeStamp || performance.now()) - GS.t0 < 450) { if (myServeReady() && !S.toss) startToss(); else if (S.phase === 'rally') { input.aim = { x: 0, power: 0, kind: 'tap' }; swingStart(); } }
+    if (GS.mode === 'move') stopSteer();
     GS.id = null; GS.mode = null; $('swing').classList.remove('hot');
     if (e.pointerId !== input.swId) return; }
   if (e.pointerId === input.joyId) { input.joyId = null; input.mx = input.mz = 0; input.steer = false; $('joy').classList.remove('active'); $('joyKnob').style.transform = ''; const j = $('joy'); j.style.left = ''; j.style.top = ''; j.style.bottom = ''; }
@@ -2383,7 +2390,7 @@ initPreview(); goHome(); requestAnimationFrame(frame); initCloud(); renderOnline
 window.__padel = { camera, startDrill, D: () => D, S, ball, players, get career() { return career; }, settings, input, awardPoint, scoreText, makeOpp, showToss, startMatch, enterTier,
   advance(sec, cb) { for (let t = 0; t < sec; t += 1 / 60) { if (cb) cb(); update(1 / 60, 1 / 60); } },
   setAuto(on) { S.lvl = { ...S.lvl, auto: on }; }, gesture(dx, dy) { input.aim = { x: 0, power: 0, kind: 'auto' }; swingStart(); aimFromSwipeStick(dx, dy); }, swing(aim) { input.aim = aim || { x: 0, power: .3, kind: 'auto' }; swingStart(); },
-  flick(dx, dy, ms) { input.aim = aimFromFlick(dx, dy, ms); swingStart(); return input.aim; }, me, startMatch, makeOpp: makeOpp };
+  flick(dx, dy, ms) { input.aim = aimFromFlick(dx, dy, ms); swingStart(); return input.aim; }, GS: () => GS, me, startMatch, makeOpp: makeOpp };
 })();
 </script>
 </body></html>

@@ -753,7 +753,7 @@ const SAY = { '0': 'love', '15': 'fifteen', '30': 'thirty', '40': 'forty', 'AD':
 function speak(text) {
   if (!settings.sound || settings.voice !== '1' || !('speechSynthesis' in window)) return;
   try { let t = String(text).replace(/·/g, ',').replace(/\s*–\s*/g, ' ');
-    t = t.replace(/^(\d+|AD) (\d+|AD)$/, (m, a, b) => a === b && a === '40' ? 'deuce' : (SAY[a] || a) + ' ' + (SAY[b] || b));
+    t = t.replace(/^(\d+|AD) (\d+|AD)$/, (m, a, b) => a === b ? (a === '40' ? 'deuce' : (SAY[a] || a) + ' all') : (SAY[a] || a) + ' ' + (SAY[b] || b));
     speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.rate = 1.04; u.pitch = .95; u.volume = .9; speechSynthesis.speak(u); } catch (e) {}
 }
 function buzz(p) { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) {} }
@@ -1365,10 +1365,11 @@ function scoreText() {
   if (S.pP >= 3 && S.pC >= 3) { if (S.pP === S.pC) return ['40', '40']; return S.pP > S.pC ? ['AD', '40'] : ['40', 'AD']; }
   return [CALLS[S.pP], CALLS[S.pC]];
 }
-function callScore() {
-  if (S.tie) return S.pP + ' – ' + S.pC;
+function callScore() {                          // the serving team's score is always called first
+  const srvP = players[S.order[S.serverIdx]].team === 'P', a = srvP ? S.pP : S.pC, b = srvP ? S.pC : S.pP;
+  if (S.tie) return a + ' – ' + b;
   if (S.pP >= 3 && S.pC >= 3) return S.pP === S.pC ? 'Deuce' : (S.pP > S.pC ? 'Advantage your team' : 'Advantage ' + (S.ctx ? S.ctx.opp.short : 'them'));
-  return CALLS[S.pP] + ' – ' + CALLS[S.pC];
+  return CALLS[a] + ' – ' + CALLS[b];
 }
 function awardPoint(w) {
   let msg = '';
@@ -2040,7 +2041,7 @@ $('lbWeek').addEventListener('click', () => setLbTab('week')); $('lbAll').addEve
 function showLeaders() { pushLeaderboard(); renderLeaders(); showScreen('leaders'); loadLeaders(); }
 
 // ------------------------------------------------------------------ online (website + Android app): world leaderboard + feedback via Supabase
-const BUILD = '2bd3779', APP_VERSION = '0.9-beta+' + BUILD;
+const BUILD = '3f13737', APP_VERSION = '0.9-beta+' + BUILD;
 const SB_URL = 'https://eqyiqkllhqjswqrfqwdp.supabase.co', SB_KEY = 'sb_publishable_oeEGuYG6i3AcHT1Sen6wFQ_zLC0O54U';
 const EMBEDDED = !!(window.claude && typeof window.claude.use === 'function');    // inside Claude the page uses Claude's own storage instead
 const PLATFORM = (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform()) || 'web';

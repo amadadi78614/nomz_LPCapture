@@ -26,6 +26,7 @@ body { background: var(--night); color: var(--chalk); font-family: var(--body); 
   -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
 #stage { position: fixed; inset: 0; touch-action: none; }
 #stage canvas { display: block; width: 100%; height: 100%; }
+#stage::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(ellipse at 50% 45%, transparent 58%, rgba(0,0,0,.38) 100%); }
 .hud { position: fixed; inset: 0; pointer-events: none; font-family: var(--display); }
 .hud > * { pointer-events: auto; }
 button { font-family: inherit; }
@@ -961,6 +962,7 @@ function fxTick(dt) {
   const low = typeof qLevel !== 'undefined' && qLevel === 'low', t = performance.now() / 1000;
   beams.forEach(b => { b.visible = !low; });
   // ball effects
+  ballGlow.visible = ballMesh.visible && !low; ballGlow.position.copy(ballMesh.position); ballGlow.material.color.setHex(S.superT > 0 ? 0xff7a2f : 0xe6ff6a);
   if (typeof ball !== 'undefined' && ballMesh.visible) {
     if (FX.pvy < -1 && ball.vy > 0 && ball.y < .35) FX.squash = .09;
     const nearZ = Math.abs(ball.z) > COURT_Z - .45 && ball.y < BACK_GLASS_H, nearX = Math.abs(ball.x) > COURT_X - .45 && ball.y < SIDE_H && Math.abs(ball.z) > SIDE_GLASS_Z;
@@ -982,6 +984,30 @@ function fxTick(dt) {
     d.position.set(s.x, y + .62, s.z); d.rotation.set(0, 0, 0); d.updateMatrix(); CROWD.heads.setMatrixAt(i, d.matrix); }
   CROWD.bodies.instanceMatrix.needsUpdate = CROWD.heads.instanceMatrix.needsUpdate = true;
 }
+// LED scoreboard above the far glass, roof trusses, ball glow
+const SB = (() => { const c = document.createElement('canvas'); c.width = 512; c.height = 160; const tex = new THREE.CanvasTexture(c);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(4.8, 1.5), new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+  m.position.set(0, 5.4, -(COURT_Z + 2.4)); scene.add(m);
+  const frame = new THREE.Mesh(new THREE.BoxGeometry(5.05, 1.75, .14), new THREE.MeshStandardMaterial({ color: 0x0c111b, roughness: .6, metalness: .5 }));
+  frame.position.set(0, 5.4, -(COURT_Z + 2.48)); scene.add(frame);
+  for (const sx of [-1, 1]) { const post = new THREE.Mesh(new THREE.BoxGeometry(.12, 4.6, .12), frame.material); post.position.set(sx * 2.2, 2.3, -(COURT_Z + 2.5)); scene.add(post); }
+  return { c, tex }; })();
+function scoreboardDraw(a, b, gP, gC, srvTeam, tie) {
+  const g = SB.c.getContext('2d'), w = 512, h = 160; g.fillStyle = '#05080e'; g.fillRect(0, 0, w, h);
+  g.fillStyle = 'rgba(120,160,255,.06)'; for (let y = 0; y < h; y += 4) g.fillRect(0, y, w, 1);   // LED rows
+  g.font = 'bold 22px system-ui,sans-serif'; g.fillStyle = '#ffb703'; g.textAlign = 'left'; g.fillText(tie ? 'TIE-BREAK' : 'LOWVELD PADEL', 18, 30);
+  g.textAlign = 'right'; g.fillStyle = '#8ecae6'; g.fillText('GAMES  PTS', w - 18, 30);
+  const row = (name, games, pts, y, srv) => { g.textAlign = 'left'; g.font = 'bold 38px system-ui,sans-serif'; g.fillStyle = '#f3f6fb'; g.fillText(name, 40, y);
+    if (srv) { g.fillStyle = '#d8f23a'; g.beginPath(); g.arc(22, y - 13, 8, 0, 7); g.fill(); }
+    g.textAlign = 'right'; g.fillStyle = '#ffd166'; g.fillText(String(games), w - 150, y); g.fillStyle = '#06d6a0'; g.fillText(String(pts), w - 18, y); };
+  row('HOME', gP, a, 82, srvTeam === 'P'); row('AWAY', gC, b, 136, srvTeam === 'C'); SB.tex.needsUpdate = true; }
+scoreboardDraw(0, 0, 0, 0, 'P', false);
+{ const steel = new THREE.MeshStandardMaterial({ color: 0x2a3344, roughness: .7, metalness: .6 });
+  for (const z of [-12, -6, 0, 6, 12]) { const b = new THREE.Mesh(new THREE.BoxGeometry(18, .22, .22), steel); b.position.set(0, 9.6, z); scene.add(b);
+    const d = new THREE.Mesh(new THREE.BoxGeometry(18, .06, .06), steel); d.position.set(0, 9.1, z); scene.add(d); }
+  for (const sx of [-1, 1]) { const r = new THREE.Mesh(new THREE.BoxGeometry(.2, .2, 26), steel); r.position.set(sx * 8.9, 9.6, 0); scene.add(r); } }
+const ballGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xe6ff6a, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: .35 }));
+ballGlow.scale.set(.55, .55, 1); scene.add(ballGlow);
 
 
 // ------------------------------------------------------------------ players: jointed models
@@ -1006,6 +1032,9 @@ const racketGeo = (() => {
   g.translate(0, 0, -.014); return g;
 })();
 const throatGeo = new THREE.CylinderGeometry(.016, .02, .2, 8);
+const CONTACT_MAT = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, opacity: .55, map: (() => { const c = document.createElement('canvas'); c.width = c.height = 64;
+  const g = c.getContext('2d'), r = g.createRadialGradient(32, 32, 0, 32, 32, 32); r.addColorStop(0, 'rgba(0,0,0,.75)'); r.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = r; g.fillRect(0, 0, 64, 64);
+  return new THREE.CanvasTexture(c); })() });
 const lathe = (pts, seg = 20) => new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), seg);
 const GEO = {
   torso: lathe([[.001, -.25], [.16, -.25], [.175, -.15], [.185, -.02], [.205, .12], [.215, .2], [.2, .245], [.12, .27], [.001, .27]]),     // waist → chest → shoulders
@@ -1014,7 +1043,8 @@ const GEO = {
   upper: new THREE.CapsuleGeometry(.047, .2, 4, 10), fore: new THREE.CapsuleGeometry(.038, .2, 4, 10),
   leg: new THREE.CapsuleGeometry(.074, .05, 4, 12), sleeve: new THREE.CapsuleGeometry(.062, .06, 4, 12),
   shoe: new THREE.CapsuleGeometry(.052, .16, 4, 12), sole: new THREE.BoxGeometry(.1, .022, .25), hand: new THREE.SphereGeometry(.045, 12, 10),
-  collar: new THREE.TorusGeometry(.07, .018, 8, 20), skull: new THREE.SphereGeometry(.115, 24, 18), brow: new THREE.CapsuleGeometry(.008, .035, 2, 6),
+  collar: new THREE.TorusGeometry(.07, .018, 8, 20), toe: new THREE.SphereGeometry(.055, 12, 8), lace: new THREE.BoxGeometry(.006, .03, .12),
+  stripe: new THREE.BoxGeometry(.012, .17, .05), band: new THREE.TorusGeometry(.04, .016, 8, 16), contact: new THREE.CircleGeometry(.55, 24), skull: new THREE.SphereGeometry(.115, 24, 18), brow: new THREE.CapsuleGeometry(.008, .035, 2, 6),
 };
 function makePlayer(look, num, marker) {
   const g = new THREE.Group(), J = {};
@@ -1022,6 +1052,7 @@ function makePlayer(look, num, marker) {
   const shorts = mat(look.shorts, .85), sock = mat('#f3f6fb', .9), shoe = mat('#f3f6fb', .5), sole = mat(shade(look.shirt, .8), .6), hairM = mat(look.hairColor, .9);
   const pelvis = new THREE.Group(); pelvis.position.y = .9; g.add(pelvis); J.pelvis = pelvis;
   const sh = new THREE.Mesh(GEO.shorts, shorts); sh.position.y = -.03; pelvis.add(sh);
+  for (const s of [-1, 1]) { const st = new THREE.Mesh(GEO.stripe, mat(look.shirt, .7)); st.position.set(s * .182, -.06, 0); st.rotation.z = s * .1; pelvis.add(st); }
   J.legs = [];
   for (const s of [-1, 1]) {
     const hip = new THREE.Group(); hip.position.set(s * .095, -.1, 0); pelvis.add(hip);
@@ -1033,6 +1064,8 @@ function makePlayer(look, num, marker) {
     const foot = new THREE.Group(); foot.position.y = -.4; knee.add(foot);
     const sh1 = new THREE.Mesh(GEO.shoe, shoe); sh1.rotation.x = Math.PI / 2; sh1.scale.set(1, 1, .72); sh1.position.set(0, -.012, .05); foot.add(sh1);
     const sh2 = new THREE.Mesh(GEO.sole, sole); sh2.position.set(0, -.05, .05); foot.add(sh2);
+    const cap = new THREE.Mesh(GEO.toe, mat(shade(look.shirt, .9), .5)); cap.position.set(0, -.03, .155); cap.scale.set(1, .55, .8); foot.add(cap);
+    const lace = new THREE.Mesh(GEO.lace, mat(look.racket, .5)); lace.position.set(s * .052, -.012, .05); foot.add(lace);
     J.legs.push({ hip, knee });
   }
   const torso = new THREE.Group(); torso.position.y = .06; pelvis.add(torso); J.torso = torso;
@@ -1047,7 +1080,7 @@ function makePlayer(look, num, marker) {
   for (const s of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(.014, 8, 6), mat('#14161c', .3)); e.position.set(s * .038, .015, .1); head.add(e);
     const ear = new THREE.Mesh(new THREE.SphereGeometry(.025, 8, 6), skin); ear.position.set(s * .108, 0, 0); ear.scale.set(.5, 1, .8); head.add(ear); }
   const nose = new THREE.Mesh(new THREE.ConeGeometry(.016, .04, 6), skin); nose.rotation.x = Math.PI / 2; nose.position.set(0, -.012, .115); head.add(nose);
-  const hairCap = (sc = 1) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.122 * sc, 18, 10, 0, Math.PI * 2, 0, Math.PI * .56), hairM); m.position.set(0, .012, -.008); m.scale.set(.96, 1.04, 1.05); return m; };
+  const hairCap = (sc = 1) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.126 * sc, 20, 12, 0, Math.PI * 2, 0, Math.PI * .58), hairM); m.position.set(0, .016, -.012); m.scale.set(.98, 1.08, 1.08); return m; };
   const st = look.hair;
   if (st === 'short' || st === 'long' || st === 'ponytail' || st === 'headband') head.add(hairCap());
   if (st === 'buzz') { const m = hairCap(.985); m.material = mat(shade(look.hairColor, 1.1), 1); head.add(m); }
@@ -1066,6 +1099,7 @@ function makePlayer(look, num, marker) {
     const elbow = new THREE.Group(); elbow.position.y = -.29; shX.add(elbow);
     const fore = new THREE.Mesh(GEO.fore, skin); fore.position.y = -.13; elbow.add(fore);
     const hand = new THREE.Mesh(GEO.hand, skin); hand.scale.set(1, 1.15, .85); hand.position.y = -.28; elbow.add(hand);
+    if (s === -1) { const band = new THREE.Mesh(GEO.band, mat(look.racket, .8)); band.rotation.x = Math.PI / 2; band.position.y = -.225; elbow.add(band); }
     const arm = { shY, shX, elbow };
     if (s === -1) { const rk = new THREE.Group(); rk.position.y = -.29; elbow.add(rk);
       const grip = new THREE.Mesh(new THREE.CylinderGeometry(.019, .019, .14, 8), mat('#1b1b1b', .5)); grip.position.y = -.02; rk.add(grip);
@@ -1075,6 +1109,7 @@ function makePlayer(look, num, marker) {
     J.arms.push(arm);
   }
   g.traverse(o => { if (o.isMesh) o.castShadow = true; });
+  const contact = new THREE.Mesh(GEO.contact, CONTACT_MAT); contact.rotation.x = -Math.PI / 2; contact.position.y = .009; g.add(contact);   // soft shadow that grounds the feet
   const lefty = look.hand === 'L';
   if (lefty) { g.scale.x = -1; const t = shirtM.map; t.wrapS = THREE.RepeatWrapping; t.repeat.x = -1; t.needsUpdate = true; }   // mirror the body; keep the shirt number readable
   if (marker) { const m = new THREE.Mesh(new THREE.RingGeometry(.42, .5, 32), new THREE.MeshBasicMaterial({ color: marker, transparent: true, opacity: .9, depthWrite: false }));
@@ -1094,8 +1129,11 @@ function animatePlayer(p, dt) {
   const sp = Math.hypot(p.vx, p.vz), m = clamp(sp / 4, 0, 1), ph = p.run;
   let rY = -.4, rX = -.75 + Math.sin(ph) * .35 * m, rE = .6, lY = .35, lX = -.45 - Math.sin(ph) * .5 * m, lE = .7, tw = 0, py = -.05 * (1 - m) + Math.sin(t * 2.2 + (p.x || 0)) * .006;
   let lean = .14 * m, side = 0, headX = 0, spread = .07;
+  const gy = p.mesh.g.rotation.y, fwd = p.vx * Math.sin(gy) + p.vz * Math.cos(gy), lat = p.vx * Math.cos(gy) - p.vz * Math.sin(gy);
+  const shuffle = sp > .6 && Math.abs(lat) > Math.abs(fwd) * 1.15;          // sideways: shuffle steps instead of a running stride
   let legs = [[lerp(-.32, Math.sin(ph) * .8, m), lerp(.6, .25 + Math.max(0, -Math.sin(ph)) * 1.2, m)],
               [lerp(-.32, -Math.sin(ph) * .8, m), lerp(.6, .25 + Math.max(0, Math.sin(ph)) * 1.2, m)]];
+  if (shuffle) { const st = Math.abs(Math.sin(ph * .9)); legs = [[-.25 - st * .15, .55 + st * .25], [-.25 - (1 - st) * .15, .55 + (1 - st) * .25]]; spread = .12 + st * .22; lean = .08; rX = -.9; lX = -.7; py -= .05; }
   if (p.prep && !(p.swing > 0)) {           // racket back early, like a real player reading the ball
     if (p.prep === 'fore') { rY = -1.45; rX = -1.0; rE = .7; tw = -.45; lX = -.9; lY = .9; }
     else if (p.prep === 'back') { rY = 1.35; rX = -.95; rE = .9; tw = .5; lX = -.7; lY = .9; }
@@ -1108,7 +1146,7 @@ function animatePlayer(p, dt) {
     const s = ease(clamp(1 - p.swing / .32, 0, 1));
     if (cy < .7 && p.swingType !== 'over' && p.swingType !== 'serve') { py -= (.7 - cy) * .28; lean += (.7 - cy) * .5; }   // get down to low balls
     switch (p.swingType) {
-      case 'fore': rX = reach; rY = lerp(-1.8, .9, s); rE = lerp(.5, .15, s); tw = lerp(-.55, .5, s); lX = lerp(-.9, -.4, s); lY = lerp(.9, .4, s); break;
+      case 'fore': rX = lerp(reach, reach - .5, Math.max(0, s - .6) * 2.5); rY = lerp(-1.8, 1.3, s); rE = lerp(.5, s > .7 ? .9 : .15, s); tw = lerp(-.6, .6, s); lX = lerp(-.9, -.4, s); lY = lerp(.9, .4, s); break;
       case 'back': rX = reach + .05; rY = lerp(1.6, -1.1, s); rE = lerp(.9, .15, s); tw = lerp(.6, -.45, s); lX = lerp(-.8, -.3, s); lY = lerp(1.0, .5, s); break;
       case 'over': rY = .1; rX = lerp(2.7, 4.5, s); rE = lerp(1.3, .1, s); tw = lerp(.35, -.25, s); lX = lerp(3.0, .3, s); lY = 0; py = Math.sin(s * Math.PI) * .14;
         legs = [[-.15, .3], [-.15, .3]]; lean = lerp(-.1, .25, s); break;
@@ -1119,7 +1157,7 @@ function animatePlayer(p, dt) {
   if (p.lunge > 0) { const s = Math.sin(clamp(p.lunge / .35, 0, 1) * Math.PI); py -= .13 * s; lean += .22 * s; side = (p.lungeDir || 1) * .22 * s;
     legs[0] = [lerp(legs[0][0], -.95, s), lerp(legs[0][1], .95, s)]; legs[1] = [lerp(legs[1][0], .35, s), lerp(legs[1][1], .3, s)]; }
   if (p.celebrate > 0 && !(p.swing > 0)) {
-    if (p.celeType === 'win') { lX = 3.0; lE = .35; lY = .1; if (p.celebrate > .5) { rX = 2.4; rE = .5; rY = .2; } py += Math.abs(Math.sin(t * 9)) * .05 * clamp(p.celebrate, 0, 1); }
+    if (p.celeType === 'win') { const pump = Math.abs(Math.sin(t * 10)); lX = 2.4 + pump * .5; lE = 1.4 + pump * .4; lY = .1; if (p.celebrate > .5) { rX = 2.4; rE = .5; rY = .2; } py += Math.abs(Math.sin(t * 9)) * .05 * clamp(p.celebrate, 0, 1); }
     else { headX = .38; lean = .2; rX = -.25; rE = .2; lX = -.15; lE = .15; } }
   const k2 = Math.min(1, k * (p.swing > 0 ? 3 : 1.6));
   P.rY = lerp(P.rY, rY, k2); P.rX = lerp(P.rX, rX, k2); P.rE = lerp(P.rE, rE, k); P.lY = lerp(P.lY, lY, k); P.lX = lerp(P.lX, lX, k); P.lE = lerp(P.lE, lE, k);
@@ -1131,6 +1169,8 @@ function animatePlayer(p, dt) {
   if (R_.racket) R_.racket.rotation.set(-.15, 0, 0);
   J.torso.rotation.y = P.tw; J.pelvis.position.y = .9 + P.py;
   J.torso.rotation.x = lerp(J.torso.rotation.x, lean, k); J.torso.rotation.z = lerp(J.torso.rotation.z, side, k); J.head.rotation.x = lerp(J.head.rotation.x, headX, k);
+  if (typeof ball !== 'undefined' && p.x != null) { let yaw = Math.atan2(ball.x - p.x, ball.z - p.z) - gy - P.tw; yaw = ((yaw + Math.PI * 3) % (Math.PI * 2)) - Math.PI;   // eyes on the ball
+    J.head.rotation.y = lerp(J.head.rotation.y, clamp(yaw, -.9, .9) * (p.mesh.lefty ? -1 : 1), k); }
   J.legs.forEach((l, i) => { l.hip.rotation.x = P.legs[i][0]; l.knee.rotation.x = P.legs[i][1]; l.hip.rotation.z = lerp(l.hip.rotation.z, (i ? 1 : -1) * spread, k); });
 }
 
@@ -1416,6 +1456,7 @@ function renderBoard() {
   const [a, b] = scoreText(); $('pP').textContent = a; $('pC').textContent = b; $('gP').textContent = S.gP; $('gC').textContent = S.gC;
   const team = players[S.server].team; $('srvP').classList.toggle('on', team === 'P'); $('srvC').classList.toggle('on', team === 'C');
   $('tbtag').hidden = !S.tie;
+  try { scoreboardDraw(a, b, S.gP, S.gC, team, S.tie); } catch (e) {}
 }
 function call(main, sub, secs = 2.2) { const el = $('call'); el.innerHTML = ''; el.append(main); if (sub) { const s = document.createElement('small'); s.textContent = sub; el.append(s); }
   el.classList.add('show'); S.callT = secs; }
@@ -2058,7 +2099,7 @@ $('lbWeek').addEventListener('click', () => setLbTab('week')); $('lbAll').addEve
 function showLeaders() { pushLeaderboard(); renderLeaders(); showScreen('leaders'); loadLeaders(); }
 
 // ------------------------------------------------------------------ online (website + Android app): world leaderboard + feedback via Supabase
-const BUILD = '41ed2e5', APP_VERSION = '0.9-beta+' + BUILD;
+const BUILD = '708d468', APP_VERSION = '0.9-beta+' + BUILD;
 const SB_URL = 'https://eqyiqkllhqjswqrfqwdp.supabase.co', SB_KEY = 'sb_publishable_oeEGuYG6i3AcHT1Sen6wFQ_zLC0O54U';
 const EMBEDDED = !!(window.claude && typeof window.claude.use === 'function');    // inside Claude the page uses Claude's own storage instead
 const PLATFORM = (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform()) || 'web';

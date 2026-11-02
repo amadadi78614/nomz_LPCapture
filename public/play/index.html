@@ -1148,7 +1148,7 @@ function applySides() {
 applySides();
 // your attributes → physical numbers
 function me() { const a = career.attrs; return {
-  move: 4.3 + a.speed * .24, reach: .98 + a.reach * .052, drive: 11 + a.power * .35, powerDrive: 14 + a.power * .45,
+  move: 5.1 + a.speed * .27, reach: 1.06 + a.reach * .055, drive: 11 + a.power * .35, powerDrive: 14 + a.power * .45,
   scatter: .95 - a.control * .07, serveSpeed: 9 + a.serve * .45, serveScatter: .8 - a.serve * .06, smash: 17 + a.smash * .8, kick: a.smash >= 4 }; }
 function buildModels(ctx) {
   const looks = { Player: { look: career.look, num: career.num, marker: 0xff8a3d }, Partner: { look: PART[ctx.partner].look, num: PART[ctx.partner].look.num },
@@ -1484,8 +1484,11 @@ function fxDraw() {
   for (let i = 1; i < fx.pts.length; i++) { const a = fx.pts[i - 1], b = fx.pts[i], age = (now - b[2]) / 320;
     g.strokeStyle = `rgba(216,242,58,${(1 - age) * .85})`; g.lineWidth = 3 + 9 * (1 - age) * (i / fx.pts.length); g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
 }
-function steerTo(x, y) { let dx = x - GS.ax, dy = y - GS.ay; const d = Math.hypot(dx, dy), m = 55; if (d > m) { dx *= m / d; dy *= m / d; }
-  input.mx = dx / m; input.mz = dy / m; input.steer = true; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
+function stickVec(dx, dy, m) { const d = Math.hypot(dx, dy); if (d < 1) return [0, 0, 0, 0];
+  const n = Math.min(1, d / m), k = n < .1 ? 0 : Math.pow((n - .1) / .9, .55);          // 10% dead zone, then fast response
+  return [dx / d * k, dy / d * k, dx / d * Math.min(d, m), dy / d * Math.min(d, m)]; }
+function steerTo(x, y) { const [mx, mz, kx, ky] = stickVec(x - GS.ax, y - GS.ay, 46);
+  input.mx = mx; input.mz = mz; input.steer = true; $('joyKnob').style.transform = `translate(${kx}px,${ky}px)`; }
 function startSteer(x, y) { GS.mode = 'move'; GS.ax = x; GS.ay = y; const j = $('joy'); j.classList.add('active'); j.style.left = (x - 60) + 'px'; j.style.top = (y - 60) + 'px'; j.style.bottom = 'auto'; }
 function stopSteer() { input.steer = false; input.mx = input.mz = 0; const j = $('joy'); j.classList.remove('active'); j.style.left = j.style.top = j.style.bottom = ''; $('joyKnob').style.transform = ''; }
 function stickTick() { fxDraw();             // touch and hold on the right, then drag = run (same as the left thumb)
@@ -1543,8 +1546,8 @@ stageEl.addEventListener('pointerdown', e => {
     input.aim0 = S.serveAim ? { ...S.serveAim } : null; swingStart(); }
 });
 stageEl.addEventListener('pointermove', e => {
-  if (stick() && e.pointerId === input.joyId) { let dx = e.clientX - input.joy0[0], dy = e.clientY - input.joy0[1]; const d = Math.hypot(dx, dy), m = 55;
-    if (d > m) { dx *= m / d; dy *= m / d; } input.mx = dx / m; input.mz = dy / m; input.steer = true; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`; return; }
+  if (stick() && e.pointerId === input.joyId) { const [mx, mz, kx, ky] = stickVec(e.clientX - input.joy0[0], e.clientY - input.joy0[1], 46);
+    input.mx = mx; input.mz = mz; input.steer = true; $('joyKnob').style.transform = `translate(${kx}px,${ky}px)`; return; }
   if (stick()) { if (e.pointerId !== GS.id) return;
     const dx = e.clientX - GS.x0, dy = e.clientY - GS.y0, ms = (e.timeStamp || performance.now()) - GS.t0; GS.lastD = Math.hypot(dx, dy); fxAdd(e.clientX, e.clientY);
     if (preServePhase() && !S.toss && (GS.mode === 'walk' || (GS.mode === null && GS.lastD > 10))) { GS.mode = 'walk'; walkTo(dx, dy); return; }
@@ -1557,8 +1560,8 @@ stageEl.addEventListener('pointermove', e => {
     else if (GS.mode === 'move') { GS.moved = true; steerTo(e.clientX, e.clientY); }
     else if (GS.mode === 'flick' && input.swingT > 0) input.aim = aimFromFlick(dx, dy, Math.min(ms, 450));        // keep refining until the ball is struck
     return; }
-  if (e.pointerId === input.joyId) { let dx = e.clientX - input.joy0[0], dy = e.clientY - input.joy0[1]; const d = Math.hypot(dx, dy), m = 55;
-    if (d > m) { dx *= m / d; dy *= m / d; } input.mx = dx / m; input.mz = dy / m; if (pro()) input.steer = true; $('joyKnob').style.transform = `translate(${dx}px,${dy}px)`; }
+  if (e.pointerId === input.joyId) { const [mx, mz, kx, ky] = stickVec(e.clientX - input.joy0[0], e.clientY - input.joy0[1], 46);
+    input.mx = mx; input.mz = mz; if (pro()) input.steer = true; $('joyKnob').style.transform = `translate(${kx}px,${ky}px)`; }
   if (e.pointerId === input.swId) { const dx = e.clientX - input.sw0[0], dy = e.clientY - input.sw0[1];
     if (stick() && S.phase === 'humanServe' && input.aim0) {          // drag the serve target, release to serve
       const sx = S.serveX, a = S.serveAim; a.x = clamp(input.aim0.x + dx / 55, sx > 0 ? -5.2 : .2, sx > 0 ? -.2 : 5.2); a.z = clamp(input.aim0.z + dy / 55, -7.9, -.9);
@@ -1649,7 +1652,7 @@ function afterRally() {
 function startMatch(ctx) {
   $('legend').classList.remove('gone');
   S.ctx = ctx; S.games = ctx.games; S.mode = 'match'; drillReset();
-  S.lvl = { time: .82, ring: settings.ring === '1', auto: settings.auto === '1' || pro() };
+  S.lvl = { time: .88, ring: settings.ring === '1', auto: settings.auto === '1' || pro() };
   Object.assign(S, { pP: 0, pC: 0, gP: 0, gC: 0, tie: false, serverIdx: 0, matchWinner: null, paused: false, stats: newStats(), energy: 0, stamina: 1, superT: 0 });
   applySides(); buildModels(ctx); configureAI(ctx);
   const ours = settings.first === 'partner' ? ['Partner', 'Player'] : ['Player', 'Partner'];
@@ -1730,8 +1733,9 @@ function movePlayers(dt) {
       const k2 = input.keys; const kx = (k2.has('arrowright') || k2.has('d') ? 1 : 0) - (k2.has('arrowleft') || k2.has('a') ? 1 : 0);
       const kz = (k2.has('arrowdown') || k2.has('s') ? 1 : 0) - (k2.has('arrowup') || k2.has('w') ? 1 : 0);
       let ax = kx + input.mx, az = kz + input.mz; const m = Math.hypot(ax, az); if (m > 1) { ax /= m; az /= m; }
-      const ovx = p.vx, ovz = p.vz, a = Math.min(1, dt * 16); p.vx += (ax * speed - p.vx) * a; p.vz += (az * speed - p.vz) * a;
-      if (settings.assist === '1' && S.hc && S.hc.ttc < .5) { const dx = S.hc.x - p.x, dz = S.hc.z - p.z, d = Math.hypot(dx, dz); if (d > .35) { p.vx += dx / d * 1.6; p.vz += dz / d * 1.6; } }   // gentle step towards the ball
+      const ovx = p.vx, ovz = p.vz, a = Math.min(1, dt * ((ax || az) ? 18 : 24)); p.vx += (ax * speed - p.vx) * a; p.vz += (az * speed - p.vz) * a;
+      if (settings.assist === '1' && S.hc && S.hc.ttc < .55 && legal('P')) { const dx = S.hc.x - p.x, dz = S.hc.z - p.z, d = Math.hypot(dx, dz), want = reachNow() * .55;   // step into the ball
+        if (d > want) { const pull = Math.min(speed * .7, (d - want) / Math.max(.12, S.hc.ttc)); p.vx += (dx / d * pull - p.vx) * .25; p.vz += (dz / d * pull - p.vz) * .25; } }
       if (Math.hypot(ovx - p.vx, ovz - p.vz) > 6 && (p.squeak = (p.squeak || 0) - 1) < 0) { sfx('squeak', .8); p.squeak = 25; }
     } else if (p.target) {
       const dx = p.target[0] - p.x, dz = p.target[1] - p.z, d = Math.hypot(dx, dz), sp = S.phase === 'rally' ? speed : 7;
@@ -2036,7 +2040,7 @@ $('lbWeek').addEventListener('click', () => setLbTab('week')); $('lbAll').addEve
 function showLeaders() { pushLeaderboard(); renderLeaders(); showScreen('leaders'); loadLeaders(); }
 
 // ------------------------------------------------------------------ online (website + Android app): world leaderboard + feedback via Supabase
-const BUILD = 'fc9dce0', APP_VERSION = '0.9-beta+' + BUILD;
+const BUILD = '2bd3779', APP_VERSION = '0.9-beta+' + BUILD;
 const SB_URL = 'https://eqyiqkllhqjswqrfqwdp.supabase.co', SB_KEY = 'sb_publishable_oeEGuYG6i3AcHT1Sen6wFQ_zLC0O54U';
 const EMBEDDED = !!(window.claude && typeof window.claude.use === 'function');    // inside Claude the page uses Claude's own storage instead
 const PLATFORM = (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform()) || 'web';

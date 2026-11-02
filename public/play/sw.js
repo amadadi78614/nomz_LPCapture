@@ -1,5 +1,5 @@
 // Padel Doubles 3D service worker: works offline after the first visit, updates itself on new releases
-const CACHE = 'padel3d-c46a4fd5c9';
+const CACHE = 'padel3d-4a56924a64';
 const SHELL = ['./', 'index.html', 'manifest.json', 'icon-192.png', 'icon-512.png',
   'https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });

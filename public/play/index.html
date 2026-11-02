@@ -290,6 +290,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
 .sp-pill { display: grid; justify-items: center; background: var(--ball); color: var(--night); border-radius: 10px; padding: 6px 12px; min-width: 70px; }
 .sp-pill b { font: 800 28px var(--display); line-height: 1; } .sp-pill span { font: 700 10px var(--display); letter-spacing: .1em; text-transform: uppercase; }
 .sp-pill.empty { background: var(--panel-2); color: var(--muted); }
+#dbg { position: fixed; left: 4px; bottom: 4px; z-index: 20; margin: 0; max-width: 98vw; white-space: pre-wrap; font: 600 10px/1.25 monospace; color: #d8f23a; background: #000c; padding: 4px 6px; border-radius: 4px; pointer-events: none; }
 </style>
 
 <div id="stage" aria-label="Padel court"></div>
@@ -325,6 +326,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
   </div>
   <div id="meters" class="touchonly"><div class="mt"><span>STAMINA</span><i><b id="stamFill"></b></i></div><div class="mt sup"><span>SUPER</span><i><b id="supFill"></b></i></div></div>
   <div id="errBox" hidden></div>
+  <pre id="dbg" hidden></pre>
   <canvas id="swipeFx"></canvas>
   <div id="legend" class="touchonly"><span class="lg-stick"><b>DRAG</b> (left thumb, or slow drag anywhere) = run · <b>QUICK SWIPE</b> = hit · direction = aim · faster = harder</span><span class="lg-stick"><b>SWIPE DOWN</b> lob · <b>short soft</b> = drop · <b>HIGH BALL:</b> straight = bandeja · hard = smash · <b>angled = víbora</b></span><span class="lg-pro"><b>LEFT THUMB</b> run + aim · <b>HOLD</b> a shot = power · <b>RELEASE</b> on the ring</span></div>
 </div>
@@ -519,6 +521,7 @@ body.stick #prompt { white-space: normal; text-align: center; width: 90vw; font-
     <p class="sub" id="pauseNote"></p>
     <div class="row2"><button class="btn" id="btnResume">Resume</button><button class="btn ghost" id="btnQuit">Quit match</button></div>
     <button class="back online-only" id="pauseFeedback" hidden style="justify-self:start">Send feedback</button>
+    <button class="back online-only" id="pauseReport" hidden style="justify-self:start">Player won't move? Send a problem report</button><span class="sub" id="reportMsg" style="font-size:13px"></span>
   </div>
 </div>
 
@@ -1320,6 +1323,7 @@ function shot(who, aim) {
 function endRally(winner, reason, isFault) {
   const r = S.rally; if (!r.active) return; r.active = false;
   if (GS.mode === 'move') { stopSteer(); GS.mode = 'done'; }
+  if (++DIAG.rallies === 3 || DIAG.rallies === 10) diagSend('auto after ' + DIAG.rallies + ' points');
   S.outcome = { winner, reason, fault: !!isFault }; S.phase = 'after'; S.wait = 1.2; ring.visible = false; boxHL.visible = false;
 }
 const pointOther = reason => endRally(other(S.rally.lastHit), reason);
@@ -1800,7 +1804,7 @@ function frame(now) {
 function update(dt, realDt) {
   if (S.callT > 0) { S.callT -= realDt; if (S.callT <= 0) $('call').classList.remove('show'); }
   input.swingT = Math.max(0, input.swingT - dt); S.simT += dt;
-  computeHumanContact(); stickTick(); proTick();
+  computeHumanContact(); stickTick(); proTick(); diagTick(dt);
   { const P = players.Player; if (input.swingT > 0 && S.hc && S.hc.ttc <= .17 && P.swing <= 0 && S.phase === 'rally') { P.swing = .32; P.swingType = S.hc.type; } }
   if (S.phase === 'serveWait') {
     if ((pro() || stick()) && S.server !== 'Player' && (S.autoServe -= realDt) <= 0 && !(stick() && (GS.mode === 'walk' || input.joyId !== null))) input.tap = true;
@@ -2032,7 +2036,7 @@ $('lbWeek').addEventListener('click', () => setLbTab('week')); $('lbAll').addEve
 function showLeaders() { pushLeaderboard(); renderLeaders(); showScreen('leaders'); loadLeaders(); }
 
 // ------------------------------------------------------------------ online (website + Android app): world leaderboard + feedback via Supabase
-const APP_VERSION = '0.9-beta';
+const BUILD = 'fc9dce0', APP_VERSION = '0.9-beta+' + BUILD;
 const SB_URL = 'https://eqyiqkllhqjswqrfqwdp.supabase.co', SB_KEY = 'sb_publishable_oeEGuYG6i3AcHT1Sen6wFQ_zLC0O54U';
 const EMBEDDED = !!(window.claude && typeof window.claude.use === 'function');    // inside Claude the page uses Claude's own storage instead
 const PLATFORM = (window.Capacitor && window.Capacitor.getPlatform && window.Capacitor.getPlatform()) || 'web';
@@ -2105,6 +2109,34 @@ function renderOnlineBits() {
   addEventListener('appinstalled', () => { btn.hidden = true; hint.hidden = true; });
   if (/iphone|ipad|ipod/i.test(navigator.userAgent)) { hint.hidden = false; hint.textContent = 'Install: tap Share, then "Add to Home Screen".'; }
 })();
+
+// ------------------------------------------------------------------ diagnostics: what the phone's touches actually do (sent to the developer from the website version)
+const DIAG = { ev: [], c: {}, steerT: 0, steerDist: 0, sent: 0, px: null, pz: null, mv: 0, rallies: 0 };
+function diagLog(e) {
+  const k = e.type; DIAG.c[k] = (DIAG.c[k] || 0) + 1; if (k === 'pointermove' && (DIAG.mv++ % 6)) return;
+  const t0 = e.touches && e.touches[0] ? e.touches[0] : e.changedTouches && e.changedTouches[0];
+  const x = e.clientX != null ? e.clientX : t0 ? t0.clientX : -1, y = e.clientY != null ? e.clientY : t0 ? t0.clientY : -1;
+  const tg = e.target ? (e.target.id || (e.target.tagName || '').toLowerCase()) : '?';
+  DIAG.ev.push([Math.round(e.timeStamp), k.replace('pointer', 'p.').replace('touch', 't.'), e.pointerType ? e.pointerType[0] : '', e.pointerId != null ? e.pointerId : (e.touches ? e.touches.length : ''),
+    Math.round(x), Math.round(y), tg, S.phase, GS.mode, input.joyId !== null ? 1 : 0, input.steer ? 1 : 0]);
+  if (DIAG.ev.length > 60) DIAG.ev.shift();
+}
+for (const t of ['pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'touchstart', 'touchend', 'touchcancel']) addEventListener(t, diagLog, { capture: true, passive: true });
+function diagTick(dt) {
+  const P = players.Player; if (!P) return;
+  if (S.phase === 'rally' && input.steer) { DIAG.steerT += dt; if (DIAG.px != null) DIAG.steerDist += Math.hypot(P.x - DIAG.px, P.z - DIAG.pz); }
+  DIAG.px = P.x; DIAG.pz = P.z;
+  const el = $('dbg'); if (el && !el.hidden) el.textContent = `${BUILD} ${settings.controls} ${S.phase} gs:${GS.mode} joy:${input.joyId} steer:${input.steer ? 1 : 0} m:${input.mx.toFixed(2)},${input.mz.toFixed(2)} me:${P.x.toFixed(1)},${P.z.toFixed(1)} v:${Math.hypot(P.vx, P.vz).toFixed(1)}\n` +
+    Object.entries(DIAG.c).map(([k, v]) => k.replace('pointer', 'p').replace('touch', 't') + ':' + v).join(' ') + ` steerT:${DIAG.steerT.toFixed(1)} dist:${DIAG.steerDist.toFixed(1)}`;
+}
+async function diagSend(reason) {
+  if (!online.on || DIAG.sent >= 4) return false; DIAG.sent++;
+  const P = players.Player, std = matchMedia('(display-mode: standalone)').matches || matchMedia('(display-mode: fullscreen)').matches;
+  const rep = { b: BUILD, r: reason, ua: navigator.userAgent, scr: [innerWidth, innerHeight, devicePixelRatio], tp: navigator.maxTouchPoints, std, ctl: settings.controls, cam: settings.cam, auto: settings.auto, assist: settings.assist,
+    hand: career.look.hand, c: DIAG.c, steerT: +DIAG.steerT.toFixed(2), steerDist: +DIAG.steerDist.toFixed(2), me: P ? [+P.x.toFixed(2), +P.z.toFixed(2)] : null, q: qLevel, ev: DIAG.ev };
+  let msg = 'DIAG ' + JSON.stringify(rep); while (msg.length > 7900 && rep.ev.length) { rep.ev.shift(); msg = 'DIAG ' + JSON.stringify(rep); }
+  try { await sb('/rest/v1/rpc/send_feedback', { p_id: online.id, p_secret: online.secret, p_rating: null, p_message: msg, p_platform: PLATFORM, p_version: APP_VERSION, p_device: (navigator.userAgent || '').slice(0, 300) }); return true; } catch (e) { return false; }
+}
 
 // ------------------------------------------------------------------ opponents + tournaments
 function makeOpp(band) {
@@ -2376,6 +2408,8 @@ $('goPartners').addEventListener('click', () => { audio(); partnersReturn = 'hom
 $('goTraining').addEventListener('click', () => { audio(); showTraining(); });
 $('goSettings').addEventListener('click', () => { audio(); showScreen('settings'); });
 $('goFeedback').addEventListener('click', () => { audio(); showFeedback(); });
+$('pauseReport').addEventListener('click', async () => { $('reportMsg').textContent = 'Sending…'; $('reportMsg').textContent = (await diagSend('manual from pause menu')) ? 'Sent. Thank you, the developer will look at it.' : 'Could not send. Check your internet connection.'; });
+if (/[?&]debug/.test(location.search)) $('dbg').hidden = false;
 $('pauseFeedback').addEventListener('click', () => { if (S.ctx && S.ctx.mode === 'career') { S.phase = 'done'; finishMatch(true); } showFeedback(); });
 function applyControlsClass() { document.body.classList.toggle('stick', settings.controls === 'stick'); document.body.classList.toggle('pro', settings.controls === 'pro'); }
 function renderSettingsHint() { $('settingsHint').textContent = [({ pro: 'Console controls', stick: 'Simple swipe controls' })[settings.controls] || 'Classic controls', settings.assist === '1' ? 'aim assist on' : 'aim assist off', 'graphics ' + settings.quality].join(' · '); }
